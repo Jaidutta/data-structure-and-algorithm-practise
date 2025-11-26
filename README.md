@@ -1,4 +1,4 @@
-# ⚙️ Git Workflow Sandbox
+# ⚙️ Data Structure and Algorithm Practise Repo
 
 ## 🎯 Purpose and Goal
 
