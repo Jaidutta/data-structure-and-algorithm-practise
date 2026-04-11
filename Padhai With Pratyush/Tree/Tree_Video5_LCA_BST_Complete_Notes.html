@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video 5: LCA in BST - The Split Point Method</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.7;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 60px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 45px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            color: #1e293b;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h3 {
+            color: #334155;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        h4 {
+            color: #475569;
+            font-size: 1.4em;
+            margin: 25px 0 15px 0;
+        }
+
+        .problem-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 15px;
+            padding: 35px;
+            margin: 25px 0;
+            border-left: 8px solid #f59e0b;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+        }
+
+        .tree-visual {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .tree-box {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            line-height: 2.5;
+            display: inline-block;
+            text-align: left;
+        }
+
+        .visual-tree-step {
+            background: white;
+            border: 3px solid #3b82f6;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .decision-box {
+            background: #f1f5f9;
+            border-left: 5px solid #64748b;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .code-box {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            line-height: 1.9;
+            font-size: 1em;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-keyword {
+            color: #c084fc;
+        }
+
+        .code-function {
+            color: #60a5fa;
+        }
+
+        .code-string {
+            color: #34d399;
+        }
+
+        .code-comment {
+            color: #94a3b8;
+        }
+
+        .output-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 3px solid #10b981;
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #065f46;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 6px solid #3b82f6;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 6px solid #f59e0b;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 6px solid #10b981;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+            border-left: 6px solid #ef4444;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 15px;
+        }
+
+        li {
+            margin: 12px 0;
+            line-height: 1.8;
+        }
+
+        strong {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .emoji {
+            font-size: 1.3em;
+        }
+
+        .tree-animation {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #667eea;
+            font-weight: bold;
+            align-self: center;
+        }
+
+        .eliminated {
+            text-decoration: line-through;
+            opacity: 0.3;
+        }
+
+        .path-highlight {
+            background: #fef3c7;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 2px solid #f59e0b;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .comparison-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌲 LCA in Binary Search Tree</h1>
+            <p style="font-size: 1.3em; margin-top: 15px;">The "Split Point" Method</p>
+            <p style="font-size: 1.1em; margin-top: 10px; opacity: 0.9;">Using BST properties for O(log N) solution</p>
+        </header>
+
+        <div class="content">
+
+            <!-- PROBLEM STATEMENT -->
+            <div class="section">
+                <h2><span class="emoji">📋</span> Problem Statement</h2>
+                
+                <div class="problem-box">
+                    <h3 style="margin-top: 0;">What We Need to Solve:</h3>
+                    <p style="font-size: 1.2em; margin: 20px 0;">
+                        Given a <strong>Binary Search Tree (BST)</strong> and two nodes <strong>P</strong> and <strong>Q</strong>, 
+                        find their <strong>Lowest Common Ancestor (LCA)</strong>.
+                    </p>
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
+                        <p style="font-size: 1.15em; margin-bottom: 15px;"><strong>Key Difference from Binary Tree:</strong></p>
+                        <p style="font-size: 1.1em; line-height: 1.9;">
+                            In a BST, we can use the <strong>ordering property</strong> to find LCA much more efficiently!<br>
+                            We don't need to visit the entire tree.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>🎯 BST Property Reminder:</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li><strong>Left subtree values</strong> are ALL <strong>smaller</strong> than parent</li>
+                        <li><strong>Right subtree values</strong> are ALL <strong>larger</strong> than parent</li>
+                        <li>This property holds for <strong>every node</strong> in the tree</li>
+                    </ul>
+                </div>
+
+                <div class="tree-visual">
+                    <h3>🌳 Example BST</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.2em; line-height: 2.8;">
+                    ┌─────┐
+                    │  6  │  ← Root
+                    └──┬──┘
+          ┌────────────┴────────────┐
+       ┌──┴──┐                   ┌──┴──┐
+       │  2  │                   │  8  │
+       └──┬──┘                   └──┬──┘
+     ┌────┴────┐              ┌────┴────┐
+  ┌──┴──┐   ┌──┴──┐        ┌──┴──┐   ┌──┴──┐
+  │  0  │   │  4  │        │  7  │   │  9  │
+  └─────┘   └──┬──┘        └─────┘   └─────┘
+          ┌────┴────┐
+       ┌──┴──┐   ┌──┴──┐
+       │  3  │   │  5  │
+       └─────┘   └─────┘
+
+<span style="background: #dbeafe; padding: 5px 10px; border-radius: 5px;">All left < Parent < All right</span>
+</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THE SPLIT POINT CONCEPT -->
+            <div class="section">
+                <h2><span class="emoji">🔀</span> The "Split Point" Concept</h2>
+
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">💡 The Key Insight:</h3>
+                    <p style="font-size: 1.2em; margin: 20px 0; line-height: 1.9;">
+                        The LCA is the <strong>first node where the paths to P and Q diverge</strong> (split).<br><br>
+                        Think of it as a <strong>fork in the road</strong>:<br>
+                        • Before the fork, P and Q travel together<br>
+                        • At the fork, they go different directions<br>
+                        • <strong>The fork is the LCA!</strong>
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>🎯 Three Cases to Consider:</h3>
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
+                        <div style="background: #fef3c7; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                            <h4 style="margin-top: 0; color: #f59e0b;">Case 1: Both P and Q are SMALLER than current node</h4>
+                            <p style="font-size: 1.1em; margin-top: 10px;">
+                                <strong>Meaning:</strong> Both P and Q are in the LEFT subtree<br>
+                                <strong>Action:</strong> Go LEFT (continue search in left subtree)<br>
+                                <strong>Why:</strong> LCA must also be in left subtree
+                            </p>
+                        </div>
+
+                        <div style="background: #dbeafe; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                            <h4 style="margin-top: 0; color: #3b82f6;">Case 2: Both P and Q are LARGER than current node</h4>
+                            <p style="font-size: 1.1em; margin-top: 10px;">
+                                <strong>Meaning:</strong> Both P and Q are in the RIGHT subtree<br>
+                                <strong>Action:</strong> Go RIGHT (continue search in right subtree)<br>
+                                <strong>Why:</strong> LCA must also be in right subtree
+                            </p>
+                        </div>
+
+                        <div style="background: #d1fae5; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                            <h4 style="margin-top: 0; color: #10b981;">Case 3: One is SMALLER, one is LARGER (or current node is one of them)</h4>
+                            <p style="font-size: 1.1em; margin-top: 10px;">
+                                <strong>Meaning:</strong> P and Q are in DIFFERENT subtrees (SPLIT!)<br>
+                                <strong>Action:</strong> Current node is the LCA!<br>
+                                <strong>Why:</strong> This is the split point - paths diverge here
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h3>✨ The Beauty of BST:</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px;">
+                        We don't need to search the entire tree!<br>
+                        We follow a single path from root, making O(log N) comparisons instead of O(N).
+                    </p>
+                </div>
+            </div>
+
+            <!-- VISUAL EXAMPLES -->
+            <div class="section">
+                <h2><span class="emoji">🎨</span> Visual Examples</h2>
+
+                <div class="tree-visual">
+                    <h3>Example 1: LCA(2, 8)</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.15em;">
+                    6
+                   / \
+         <span style="background: #ef4444; color: white; padding: 5px 12px; border-radius: 50%;">2</span>  <span style="background: #ef4444; color: white; padding: 5px 12px; border-radius: 50%;">8</span>  ← Targets
+                 / \   / \
+                0   4 7   9
+                   / \
+                  3   5
+
+<span style="background: #10b981; color: white; padding: 10px 20px; border-radius: 8px; font-size: 1.1em;">
+Analysis: 2 < 6 and 8 > 6 → They SPLIT at 6 → LCA = 6
+</span>
+</pre>
+                    </div>
+                </div>
+
+                <div class="tree-visual">
+                    <h3>Example 2: LCA(2, 4)</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.15em;">
+                    6
+                   / \
+         <span style="background: #ef4444; color: white; padding: 5px 12px; border-radius: 50%;">2</span>   8  
+                 / \   / \
+                0  <span style="background: #ef4444; color: white; padding: 5px 12px; border-radius: 50%;">4</span> 7   9  ← Targets
+                   / \
+                  3   5
+
+<span style="background: #10b981; color: white; padding: 10px 20px; border-radius: 8px; font-size: 1.1em;">
+Analysis: Both 2 and 4 are < 6 → Go LEFT
+          At node 2: 2 == 2 (one of targets) → LCA = 2
+</span>
+</pre>
+                    </div>
+                </div>
+
+                <div class="tree-visual">
+                    <h3>Example 3: LCA(7, 9)</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.15em;">
+                    6
+                   / \
+                  2   8  
+                 / \   / \
+                0   4 <span style="background: #ef4444; color: white; padding: 5px 12px; border-radius: 50%;">7</span>  <span style="background: #ef4444; color: white; padding: 5px 12px; border-radius: 50%;">9</span>  ← Targets
+                   / \
+                  3   5
+
+<span style="background: #10b981; color: white; padding: 10px 20px; border-radius: 8px; font-size: 1.1em;">
+Analysis: Both 7 and 9 are > 6 → Go RIGHT
+          At node 8: 7 < 8 and 9 > 8 → SPLIT → LCA = 8
+</span>
+</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP BY STEP EXECUTION -->
+            <div class="section">
+                <h2><span class="emoji">🔄</span> Step-by-Step Execution</h2>
+
+                <div class="info-box">
+                    <p style="font-size: 1.2em; font-weight: 600;">
+                        Let's find LCA of <span style="color: #ef4444;">P = 2</span> and <span style="color: #ef4444;">Q = 8</span>
+                    </p>
+                </div>
+
+                <!-- Step 1 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 1</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+                   <span style="background: #f59e0b; color: white; padding: 10px 18px; border-radius: 50%;">6</span> ← Current
+                   / \
+                  2   8  ← Targets
+                 / \   / \
+                0   4 7   9
+                   / \
+                  3   5
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="decision-box">
+                                <p style="font-size: 1.15em; font-weight: 600; margin-bottom: 15px;">Decision Logic:</p>
+                                <p style="margin: 10px 0;"><strong>Current node:</strong> 6</p>
+                                <p style="margin: 10px 0;"><strong>P value:</strong> 2</p>
+                                <p style="margin: 10px 0;"><strong>Q value:</strong> 8</p>
+                                <div style="background: white; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                                    <p style="font-weight: 600; margin-bottom: 10px;">Check:</p>
+                                    <p>• Is P (2) < current (6)? <span style="color: #10b981; font-weight: 600;">YES</span></p>
+                                    <p>• Is Q (8) < current (6)? <span style="color: #ef4444; font-weight: 600;">NO</span></p>
+                                    <p style="margin-top: 15px; background: #d1fae5; padding: 10px; border-radius: 5px;">
+                                        <strong>One is smaller, one is larger → SPLIT POINT!</strong>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="output-box" style="margin-top: 20px;">
+                                ✅ LCA = 6
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h3>🎯 That's It! One Step!</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px;">
+                        We found the LCA in just <strong>ONE comparison</strong>!<br>
+                        Compare this to Binary Tree LCA which visited every node.
+                    </p>
+                </div>
+            </div>
+
+            <!-- DETAILED EXAMPLE 2 -->
+            <div class="section">
+                <h2><span class="emoji">🔍</span> Detailed Example: LCA(0, 5)</h2>
+
+                <div class="info-box">
+                    <p style="font-size: 1.2em; font-weight: 600;">
+                        Finding LCA of <span style="color: #ef4444;">P = 0</span> and <span style="color: #ef4444;">Q = 5</span>
+                    </p>
+                    <p style="margin-top: 10px;">This one requires multiple steps - let's trace the path!</p>
+                </div>
+
+                <!-- Step 1 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 1: At Root (6)</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+                   <span style="background: #f59e0b; color: white; padding: 10px 18px; border-radius: 50%;">6</span>
+                   / \
+                  2   8
+                 / \   / \
+               <span style="background: #ef4444; color: white; padding: 5px 10px; border-radius: 50%;">0</span>   4 7   9
+                   / \
+                  3  <span style="background: #ef4444; color: white; padding: 5px 10px; border-radius: 50%;">5</span>
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="decision-box">
+                                <p style="font-weight: 600;">Compare: P(0) and Q(5) with root(6)</p>
+                                <p style="margin-top: 10px;">• 0 < 6? <strong>YES</strong></p>
+                                <p>• 5 < 6? <strong>YES</strong></p>
+                                <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                                    <strong>Both are smaller → Both in LEFT subtree</strong><br>
+                                    <strong>Action: Go LEFT to node 2</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 2: At Node 2</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+                    6
+                   / \
+                 <span style="background: #f59e0b; color: white; padding: 10px 18px; border-radius: 50%;">2</span>   <span class="eliminated">8</span>
+                 / \  <span class="eliminated">/ \</span>
+               <span style="background: #ef4444; color: white; padding: 5px 10px; border-radius: 50%;">0</span>   4 <span class="eliminated">7   9</span>
+                   / \
+                  3  <span style="background: #ef4444; color: white; padding: 5px 10px; border-radius: 50%;">5</span>
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="decision-box">
+                                <p style="font-weight: 600;">Compare: P(0) and Q(5) with current(2)</p>
+                                <p style="margin-top: 10px;">• 0 < 2? <strong>YES</strong></p>
+                                <p>• 5 < 2? <strong>NO</strong> (5 > 2)</p>
+                                <div style="background: #d1fae5; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                                    <strong>One smaller, one larger → SPLIT!</strong><br>
+                                    <strong>LCA = 2</strong>
+                                </div>
+                            </div>
+                            <div class="output-box" style="margin-top: 20px;">
+                                ✅ LCA(0, 5) = 2
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Path Taken:</h3>
+                    <p style="font-size: 1.2em; margin-top: 15px; font-family: monospace;">
+                        6 → 2 (STOP - found LCA)
+                    </p>
+                    <p style="margin-top: 15px; font-size: 1.1em;">
+                        <strong>Only 2 nodes visited!</strong> Much better than O(N) for binary tree.
+                    </p>
+                </div>
+            </div>
+
+            <!-- JAVA CODE -->
+            <div class="section">
+                <h2><span class="emoji">💻</span> Java Implementation</h2>
+
+                <div class="info-box">
+                    <h3>🎯 Two Approaches:</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px;">
+                        We can solve this either <strong>recursively</strong> or <strong>iteratively</strong>.<br>
+                        Both are simple and efficient!
+                    </p>
+                </div>
+
+                <h3>Approach 1: Recursive Solution</h3>
+                <div class="code-box">
+<pre><span class="code-keyword">class</span> <span class="code-function">Solution</span> {
+    <span class="code-keyword">public</span> Node <span class="code-function">lowestCommonAncestor</span>(Node root, Node p, Node q) {
+        <span class="code-comment">// BASE CASE: If we reach null, no LCA found (shouldn't happen with valid input)</span>
+        <span class="code-keyword">if</span> (root == <span class="code-keyword">null</span>) <span class="code-keyword">return</span> <span class="code-keyword">null</span>;
+        
+        <span class="code-comment">// CASE 1: Both P and Q are SMALLER than current</span>
+        <span class="code-comment">// Meaning: Both are in LEFT subtree</span>
+        <span class="code-keyword">if</span> (p.data < root.data && q.data < root.data) {
+            <span class="code-keyword">return</span> lowestCommonAncestor(root.left, p, q);
+        }
+        
+        <span class="code-comment">// CASE 2: Both P and Q are LARGER than current</span>
+        <span class="code-comment">// Meaning: Both are in RIGHT subtree</span>
+        <span class="code-keyword">if</span> (p.data > root.data && q.data > root.data) {
+            <span class="code-keyword">return</span> lowestCommonAncestor(root.right, p, q);
+        }
+        
+        <span class="code-comment">// CASE 3: SPLIT POINT!</span>
+        <span class="code-comment">// Either: One left, one right OR current is one of the targets</span>
+        <span class="code-keyword">return</span> root;
+    }
+}</pre>
+                </div>
+
+                <h3 style="margin-top: 40px;">Approach 2: Iterative Solution (More Efficient)</h3>
+                <div class="code-box">
+<pre><span class="code-keyword">class</span> <span class="code-function">Solution</span> {
+    <span class="code-keyword">public</span> Node <span class="code-function">lowestCommonAncestor</span>(Node root, Node p, Node q) {
+        Node current = root;
+        
+        <span class="code-keyword">while</span> (current != <span class="code-keyword">null</span>) {
+            <span class="code-comment">// Both in left subtree</span>
+            <span class="code-keyword">if</span> (p.data < current.data && q.data < current.data) {
+                current = current.left;
+            }
+            <span class="code-comment">// Both in right subtree</span>
+            <span class="code-keyword">else if</span> (p.data > current.data && q.data > current.data) {
+                current = current.right;
+            }
+            <span class="code-comment">// Split point found!</span>
+            <span class="code-keyword">else</span> {
+                <span class="code-keyword">return</span> current;
+            }
+        }
+        
+        <span class="code-keyword">return</span> <span class="code-keyword">null</span>;  <span class="code-comment">// Should never reach here with valid input</span>
+    }
+}</pre>
+                </div>
+
+                <h3 style="margin-top: 40px;">Complete Example with Test:</h3>
+                <div class="code-box">
+<pre><span class="code-keyword">class</span> <span class="code-function">Node</span> {
+    <span class="code-keyword">int</span> data;
+    Node left, right;
+    
+    <span class="code-function">Node</span>(<span class="code-keyword">int</span> data) {
+        <span class="code-keyword">this</span>.data = data;
+        <span class="code-keyword">this</span>.left = <span class="code-keyword">this</span>.right = <span class="code-keyword">null</span>;
+    }
+}
+
+<span class="code-keyword">public static void</span> <span class="code-function">main</span>(String[] args) {
+    Solution sol = <span class="code-keyword">new</span> Solution();
+    
+    <span class="code-comment">// Build BST:      6</span>
+    <span class="code-comment">//               /   \</span>
+    <span class="code-comment">//              2     8</span>
+    <span class="code-comment">//             / \   / \</span>
+    <span class="code-comment">//            0  4  7  9</span>
+    <span class="code-comment">//              / \</span>
+    <span class="code-comment">//             3   5</span>
+    
+    Node root = <span class="code-keyword">new</span> Node(<span class="code-string">6</span>);
+    root.left = <span class="code-keyword">new</span> Node(<span class="code-string">2</span>);
+    root.right = <span class="code-keyword">new</span> Node(<span class="code-string">8</span>);
+    root.left.left = <span class="code-keyword">new</span> Node(<span class="code-string">0</span>);
+    root.left.right = <span class="code-keyword">new</span> Node(<span class="code-string">4</span>);
+    root.left.right.left = <span class="code-keyword">new</span> Node(<span class="code-string">3</span>);
+    root.left.right.right = <span class="code-keyword">new</span> Node(<span class="code-string">5</span>);
+    root.right.left = <span class="code-keyword">new</span> Node(<span class="code-string">7</span>);
+    root.right.right = <span class="code-keyword">new</span> Node(<span class="code-string">9</span>);
+    
+    <span class="code-comment">// Test cases</span>
+    Node p = root.left;           <span class="code-comment">// Node 2</span>
+    Node q = root.right;          <span class="code-comment">// Node 8</span>
+    Node lca = sol.lowestCommonAncestor(root, p, q);
+    System.out.println(<span class="code-string">"LCA(2, 8) = "</span> + lca.data);  <span class="code-comment">// Output: 6</span>
+    
+    p = root.left;                <span class="code-comment">// Node 2</span>
+    q = root.left.right;          <span class="code-comment">// Node 4</span>
+    lca = sol.lowestCommonAncestor(root, p, q);
+    System.out.println(<span class="code-string">"LCA(2, 4) = "</span> + lca.data);  <span class="code-comment">// Output: 2</span>
+}</pre>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Code Explanation:</h3>
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li><strong>Line 8-10:</strong> If both nodes smaller, LCA must be in left subtree</li>
+                        <li><strong>Line 14-16:</strong> If both nodes larger, LCA must be in right subtree</li>
+                        <li><strong>Line 20:</strong> Otherwise, we found the split point!</li>
+                        <li><strong>Iterative version:</strong> More efficient - no recursion stack overhead</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- COMPLEXITY ANALYSIS -->
+            <div class="section">
+                <h2><span class="emoji">⚡</span> Complexity Analysis</h2>
+
+                <table>
+                    <tr>
+                        <th>Approach</th>
+                        <th>Time Complexity</th>
+                        <th>Space Complexity</th>
+                        <th>Explanation</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Recursive</strong></td>
+                        <td>O(H)</td>
+                        <td>O(H)</td>
+                        <td>H = height of tree; visit nodes along one path; recursion stack</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Iterative</strong></td>
+                        <td>O(H)</td>
+                        <td>O(1)</td>
+                        <td>H = height of tree; visit nodes along one path; no extra space</td>
+                    </tr>
+                </table>
+
+                <div class="info-box" style="margin-top: 25px;">
+                    <h3>📊 What is H (Height)?</h3>
+                    <p style="font-size: 1.1em; margin-top: 15px; line-height: 1.9;">
+                        <strong>Balanced BST:</strong> H = log(N) → Time = O(log N) ✅<br>
+                        <strong>Skewed BST:</strong> H = N → Time = O(N) ❌<br><br>
+                        For a balanced BST, this is <strong>much faster</strong> than the O(N) binary tree approach!
+                    </p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card" style="border-top-color: #10b981;">
+                        <h4 style="color: #10b981;">✅ Balanced BST</h4>
+                        <div class="tree-box" style="font-size: 0.9em;">
+<pre>
+       6
+      / \
+     2   8
+    / \ / \
+   0  4 7  9
+     / \
+    3   5
+
+Height: 3
+Time: O(log 9) = O(3)
+Space: O(1) (iterative)
+</pre>
+                        </div>
+                    </div>
+
+                    <div class="comparison-card" style="border-top-color: #ef4444;">
+                        <h4 style="color: #ef4444;">❌ Skewed BST</h4>
+                        <div class="tree-box" style="font-size: 0.9em;">
+<pre>
+0
+ \
+  2
+   \
+    4
+     \
+      6
+       \
+        8
+
+Height: 6
+Time: O(6) = O(N)
+Space: O(1) (iterative)
+</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPARISON WITH BINARY TREE -->
+            <div class="section">
+                <h2><span class="emoji">🏆</span> BST LCA vs Binary Tree LCA</h2>
+
+                <table>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Binary Tree LCA</th>
+                        <th>BST LCA</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Approach</strong></td>
+                        <td>Count targets in subtrees</td>
+                        <td>Compare values, find split point</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Nodes Visited</strong></td>
+                        <td>All nodes (entire tree)</td>
+                        <td>Nodes along one path only</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Time (Best)</strong></td>
+                        <td>O(N)</td>
+                        <td>O(log N) for balanced tree</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Time (Worst)</strong></td>
+                        <td>O(N)</td>
+                        <td>O(N) for skewed tree</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Space (Recursive)</strong></td>
+                        <td>O(H)</td>
+                        <td>O(H)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Space (Iterative)</strong></td>
+                        <td>Not applicable</td>
+                        <td>O(1)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Uses BST Property</strong></td>
+                        <td>No</td>
+                        <td>Yes!</td>
+                    </tr>
+                </table>
+
+                <div class="success-box">
+                    <h3>✨ Key Advantage:</h3>
+                    <p style="font-size: 1.2em; margin-top: 15px; line-height: 1.9;">
+                        For a <strong>balanced BST</strong>:<br>
+                        • Binary Tree LCA: O(N) - visit all nodes<br>
+                        • BST LCA: O(log N) - visit only path nodes<br><br>
+                        <strong>For 1,000,000 nodes:</strong><br>
+                        Binary Tree: 1,000,000 nodes visited<br>
+                        BST: ~20 nodes visited<br>
+                        <strong style="color: #10b981;">That's 50,000x faster! 🚀</strong>
+                    </p>
+                </div>
+            </div>
+
+            <!-- KEY TAKEAWAYS -->
+            <div class="section">
+                <h2><span class="emoji">✨</span> Key Takeaways</h2>
+
+                <div class="success-box">
+                    <h3>Remember These Forever:</h3>
+                    <ol style="font-size: 1.15em; line-height: 2; margin-top: 15px;">
+                        <li><strong>Use BST property!</strong> Compare values to decide direction</li>
+                        <li><strong>Three cases:</strong> Both left, both right, or split</li>
+                        <li><strong>Split point = LCA:</strong> When paths diverge</li>
+                        <li><strong>Follow one path only:</strong> Don't need to visit entire tree</li>
+                        <li><strong>Time: O(H) = O(log N)</strong> for balanced BST</li>
+                        <li><strong>Iterative is better:</strong> O(1) space vs O(H) for recursive</li>
+                        <li><strong>Much faster than Binary Tree:</strong> O(log N) vs O(N)</li>
+                        <li><strong>Simple logic:</strong> Just 3 if-else cases</li>
+                    </ol>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🧠 Memory Trick:</h3>
+                    <p style="font-size: 1.2em; line-height: 2; margin-top: 15px;">
+                        <strong>"The Fork in the Road"</strong><br><br>
+                        Imagine two people (P and Q) walking from the root:<br>
+                        • If both go LEFT → Not split yet, keep going left<br>
+                        • If both go RIGHT → Not split yet, keep going right<br>
+                        • If one goes LEFT and one goes RIGHT → <strong>FORK! This is the LCA!</strong>
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>🎯 Decision Flow (Simplified):</h3>
+                    <div class="code-box" style="background: white; color: #1e293b; border: 2px solid #e5e7eb;">
+<pre style="font-size: 1.1em;">
+while (current != null) {
+    if (both < current) {
+        go left;
+    } else if (both > current) {
+        go right;
+    } else {
+        return current;  // SPLIT!
+    }
+}
+</pre>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h3>⚠️ Common Mistakes to Avoid:</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li>Don't use the Binary Tree LCA approach - it wastes the BST property!</li>
+                        <li>Don't forget the case where current node is one of the targets</li>
+                        <li>Don't traverse both subtrees - we only need one path!</li>
+                        <li>Remember: This ONLY works for BST, not regular Binary Tree</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

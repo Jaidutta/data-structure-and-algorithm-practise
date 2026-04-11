@@ -1,0 +1,2838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Priority Queue - Ultimate Visual Guide</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: white;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #e91e63;
+            margin-bottom: 30px;
+            font-size: 2em;
+            border-bottom: 3px solid #e91e63;
+            padding-bottom: 10px;
+        }
+
+        .diagram-section {
+            background: white;
+            border: 2px solid #e91e63;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .diagram-section h2 {
+            color: #e91e63;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            border-bottom: 2px solid #e91e63;
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            color: #e91e63;
+            margin: 15px 0 10px 0;
+            font-size: 1.2em;
+        }
+
+        .explanation {
+            background: #fce4ec;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 4px solid #e91e63;
+        }
+
+        .diagram {
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .highlight-box {
+            background: #fff9c4;
+            border: 2px solid #fbc02d;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            line-height: 1.8;
+            font-size: 11px;
+            white-space: pre;
+        }
+
+        .code-keyword {
+            color: #0000ff;
+            font-weight: bold;
+        }
+
+        .code-comment {
+            color: #008000;
+            font-style: italic;
+        }
+
+        .code-number {
+            color: #098658;
+        }
+        
+        .code-string {
+            color: #a31515;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #e91e63;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: #fce4ec;
+        }
+
+        .pattern-box {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .intuition-box {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .recognition-box {
+            background: #f3e5f5;
+            border: 2px solid #9c27b0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .confusion-box {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .checklist {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .checklist-item {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .checklist-item:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .step-list {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        .step-list li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        strong {
+            color: #e91e63;
+        }
+
+        /* Heap Visualization */
+        .heap-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .heap-level {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+            gap: 20px;
+        }
+
+        .heap-node {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #e91e63;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            font-weight: bold;
+            font-size: 1.2em;
+            position: relative;
+        }
+
+        .heap-node.highlight {
+            background: #fff9c4;
+            border-color: #fbc02d;
+            border-width: 4px;
+        }
+
+        .heap-node.min {
+            background: #c8e6c9;
+            border-color: #4caf50;
+        }
+
+        .heap-node.removed {
+            opacity: 0.3;
+            background: #ffebee;
+        }
+
+        .heap-index {
+            position: absolute;
+            top: -25px;
+            font-size: 0.75em;
+            color: #666;
+            background: #fff3e0;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .array-rep {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 2px;
+        }
+
+        .array-cell {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #e91e63;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .array-cell.highlight {
+            background: #fff9c4;
+            border-color: #fbc02d;
+        }
+
+        .array-index {
+            position: absolute;
+            top: -20px;
+            font-size: 0.7em;
+            color: #666;
+        }
+
+        .code-visual {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .code-step {
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-left: 4px solid #4caf50;
+        }
+
+        .vs-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .vs-item {
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+        }
+
+        .vs-item h4 {
+            margin-bottom: 10px;
+            color: #e91e63;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⛰️ Priority Queue - The Ultimate Visual Guide</h1>
+
+        <!-- Part 1: What is a Priority Queue? -->
+        <div class="diagram-section">
+            <h2>📚 Part 1: What is a Priority Queue?</h2>
+            
+            <div class="explanation">
+                A <strong>Priority Queue</strong> is a data structure where each element has a <strong>priority</strong>, and elements are served based on their priority, NOT the order they were added.
+                <ul class="step-list">
+                    <li><strong>Highest priority</strong> element is always served first</li>
+                    <li>Like a hospital ER: Critical patients (high priority) go before minor injuries (low priority)</li>
+                    <li>NOT First-In-First-Out (FIFO) like a regular queue!</li>
+                </ul>
+            </div>
+
+            <div class="diagram">
+                <h3>Visual: Regular Queue vs Priority Queue</h3>
+                
+                <div class="vs-box">
+                    <div class="vs-item" style="border-color: #2196f3;">
+                        <h4>Regular Queue (FIFO)</h4>
+                        <div style="margin: 10px 0;">
+                            <strong>Add:</strong> 5, 3, 8, 1<br>
+                            <strong>Remove order:</strong> 5, 3, 8, 1
+                        </div>
+                        <div class="array-rep">
+                            <div class="array-cell">5</div>
+                            <div class="array-cell">3</div>
+                            <div class="array-cell">8</div>
+                            <div class="array-cell">1</div>
+                        </div>
+                        <p style="text-align: center;">→ First In, First Out</p>
+                    </div>
+
+                    <div class="vs-item" style="border-color: #e91e63;">
+                        <h4>Priority Queue (Min-Heap)</h4>
+                        <div style="margin: 10px 0;">
+                            <strong>Add:</strong> 5, 3, 8, 1<br>
+                            <strong>Remove order:</strong> 1, 3, 5, 8
+                        </div>
+                        <div class="array-rep">
+                            <div class="array-cell" style="background: #c8e6c9;">1</div>
+                            <div class="array-cell">3</div>
+                            <div class="array-cell">5</div>
+                            <div class="array-cell">8</div>
+                        </div>
+                        <p style="text-align: center;">→ Lowest value first</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                🎯 <strong>Key Insight:</strong> Priority Queue gives you the <strong>min (or max) element instantly!</strong><br>
+                Perfect for "find smallest k", "merge k lists", "top k frequent", etc.
+            </div>
+
+            <h3>How is it Implemented? THE HEAP!</h3>
+            <div class="explanation">
+                Priority Queues are typically implemented using a <strong>Binary Heap</strong>:
+                <ul class="step-list">
+                    <li><strong>Min-Heap:</strong> Parent ≤ Children (smallest at top)</li>
+                    <li><strong>Max-Heap:</strong> Parent ≥ Children (largest at top)</li>
+                    <li>Stored in an <strong>array</strong> for efficiency!</li>
+                    <li>NOT a Binary Search Tree (different structure!)</li>
+                </ul>
+            </div>
+
+            <div class="diagram">
+                <h3>Visual: Min-Heap Structure</h3>
+                
+                <div style="margin: 30px 0;">
+                    <strong>Tree View:</strong>
+                    <div class="heap-visual">
+                        <div class="heap-level">
+                            <div class="heap-node min">
+                                <div class="heap-index">0</div>
+                                1
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin: 10px;">
+                            <span style="font-size: 2em; color: #e91e63;">↙ ↘</span>
+                        </div>
+                        <div class="heap-level">
+                            <div class="heap-node">
+                                <div class="heap-index">1</div>
+                                3
+                            </div>
+                            <div class="heap-node">
+                                <div class="heap-index">2</div>
+                                5
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin: 10px;">
+                            <span style="font-size: 2em; color: #e91e63;">↙ ↘</span>
+                            <span style="margin: 0 60px;"></span>
+                            <span style="font-size: 2em; color: #e91e63;">↙ ↘</span>
+                        </div>
+                        <div class="heap-level">
+                            <div class="heap-node">
+                                <div class="heap-index">3</div>
+                                8
+                            </div>
+                            <div class="heap-node">
+                                <div class="heap-index">4</div>
+                                9
+                            </div>
+                            <div class="heap-node">
+                                <div class="heap-index">5</div>
+                                7
+                            </div>
+                            <div class="heap-node">
+                                <div class="heap-index">6</div>
+                                6
+                            </div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 20px;">
+                        <strong>Min-Heap Property:</strong> Each parent ≤ its children<br>
+                        1 ≤ {3,5}  |  3 ≤ {8,9}  |  5 ≤ {7,6} ✅
+                    </p>
+                </div>
+
+                <div style="margin: 30px 0;">
+                    <strong>Array Representation (How it's actually stored):</strong>
+                    <div class="array-rep">
+                        <div class="array-cell min">
+                            <div class="array-index">0</div>
+                            1
+                        </div>
+                        <div class="array-cell">
+                            <div class="array-index">1</div>
+                            3
+                        </div>
+                        <div class="array-cell">
+                            <div class="array-index">2</div>
+                            5
+                        </div>
+                        <div class="array-cell">
+                            <div class="array-index">3</div>
+                            8
+                        </div>
+                        <div class="array-cell">
+                            <div class="array-index">4</div>
+                            9
+                        </div>
+                        <div class="array-cell">
+                            <div class="array-index">5</div>
+                            7
+                        </div>
+                        <div class="array-cell">
+                            <div class="array-index">6</div>
+                            6
+                        </div>
+                    </div>
+                    
+                    <div class="highlight-box" style="margin-top: 20px;">
+                        📐 <strong>Array Index Formula:</strong><br>
+                        For node at index i:<br>
+                        • Left child = <code>2*i + 1</code><br>
+                        • Right child = <code>2*i + 2</code><br>
+                        • Parent = <code>(i-1) / 2</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="diagram">
+                <h3>Visual: Max-Heap Structure (Same Nodes, Different Organization)</h3>
+                
+                <div style="margin: 30px 0;">
+                    <strong>Tree View:</strong>
+                    <div class="heap-visual">
+                        <div class="heap-level">
+                            <div class="heap-node" style="background: #ffcdd2; border-color: #f44336; border-width: 4px;">
+                                <div class="heap-index">0</div>
+                                9
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin: 10px;">
+                            <span style="font-size: 2em; color: #f44336;">↙ ↘</span>
+                        </div>
+                        <div class="heap-level">
+                            <div class="heap-node" style="border-color: #f44336;">
+                                <div class="heap-index">1</div>
+                                8
+                            </div>
+                            <div class="heap-node" style="border-color: #f44336;">
+                                <div class="heap-index">2</div>
+                                7
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin: 10px;">
+                            <span style="font-size: 2em; color: #f44336;">↙ ↘</span>
+                            <span style="margin: 0 60px;"></span>
+                            <span style="font-size: 2em; color: #f44336;">↙ ↘</span>
+                        </div>
+                        <div class="heap-level">
+                            <div class="heap-node" style="border-color: #f44336;">
+                                <div class="heap-index">3</div>
+                                3
+                            </div>
+                            <div class="heap-node" style="border-color: #f44336;">
+                                <div class="heap-index">4</div>
+                                5
+                            </div>
+                            <div class="heap-node" style="border-color: #f44336;">
+                                <div class="heap-index">5</div>
+                                6
+                            </div>
+                            <div class="heap-node" style="border-color: #f44336;">
+                                <div class="heap-index">6</div>
+                                1
+                            </div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 20px;">
+                        <strong style="color: #f44336;">Max-Heap Property:</strong> Each parent ≥ its children<br>
+                        9 ≥ {8,7}  |  8 ≥ {3,5}  |  7 ≥ {6,1} ✅
+                    </p>
+                </div>
+
+                <div style="margin: 30px 0;">
+                    <strong>Array Representation (Same formula, different values):</strong>
+                    <div class="array-rep">
+                        <div class="array-cell" style="background: #ffcdd2; border-color: #f44336;">
+                            <div class="array-index">0</div>
+                            9
+                        </div>
+                        <div class="array-cell" style="border-color: #f44336;">
+                            <div class="array-index">1</div>
+                            8
+                        </div>
+                        <div class="array-cell" style="border-color: #f44336;">
+                            <div class="array-index">2</div>
+                            7
+                        </div>
+                        <div class="array-cell" style="border-color: #f44336;">
+                            <div class="array-index">3</div>
+                            3
+                        </div>
+                        <div class="array-cell" style="border-color: #f44336;">
+                            <div class="array-index">4</div>
+                            5
+                        </div>
+                        <div class="array-cell" style="border-color: #f44336;">
+                            <div class="array-index">5</div>
+                            6
+                        </div>
+                        <div class="array-cell" style="border-color: #f44336;">
+                            <div class="array-index">6</div>
+                            1
+                        </div>
+                    </div>
+                    
+                    <div class="highlight-box" style="margin-top: 20px; background: #ffebee; border-color: #f44336;">
+                        📐 <strong>Same Formula, Different Property:</strong><br>
+                        Index formulas are IDENTICAL to min-heap<br>
+                        • Left child = <code>2*i + 1</code><br>
+                        • Right child = <code>2*i + 2</code><br>
+                        • Parent = <code>(i-1) / 2</code><br><br>
+                        <strong style="color: #f44336;">Only difference:</strong> Parent ≥ children (instead of ≤)
+                    </div>
+                </div>
+
+                <div style="margin: 30px 0; padding: 20px; background: #fff3e0; border-radius: 8px; border: 2px solid #ff9800;">
+                    <h4 style="color: #ff9800; margin-top: 0;">🔄 Same Elements, Different Organization</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+                        <div style="text-align: center;">
+                            <strong style="color: #4caf50;">Min-Heap</strong><br>
+                            [1, 3, 5, 8, 9, 7, 6]<br>
+                            <div style="margin: 10px 0; padding: 10px; background: #c8e6c9; border-radius: 5px;">
+                                <strong>Root = 1</strong><br>
+                                (Smallest)
+                            </div>
+                        </div>
+                        <div style="text-align: center;">
+                            <strong style="color: #f44336;">Max-Heap</strong><br>
+                            [9, 8, 7, 3, 5, 6, 1]<br>
+                            <div style="margin: 10px 0; padding: 10px; background: #ffcdd2; border-radius: 5px;">
+                                <strong>Root = 9</strong><br>
+                                (Largest)
+                            </div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; font-weight: bold;">
+                        Both contain {1,3,5,6,7,8,9} but organized differently!
+                    </p>
+                </div>
+            </div>
+
+            <h3>Priority Queue Operations</h3>
+            <table>
+                <tr>
+                    <th>Operation</th>
+                    <th>Description</th>
+                    <th>Time Complexity</th>
+                </tr>
+                <tr>
+                    <td><strong>add(element)</strong></td>
+                    <td>Insert element and maintain heap property</td>
+                    <td>O(log n)</td>
+                </tr>
+                <tr>
+                    <td><strong>poll()</strong></td>
+                    <td>Remove and return min/max element</td>
+                    <td>O(log n)</td>
+                </tr>
+                <tr>
+                    <td><strong>peek()</strong></td>
+                    <td>View min/max element without removing</td>
+                    <td>O(1)</td>
+                </tr>
+                <tr>
+                    <td><strong>size()</strong></td>
+                    <td>Get number of elements</td>
+                    <td>O(1)</td>
+                </tr>
+                <tr>
+                    <td><strong>isEmpty()</strong></td>
+                    <td>Check if empty</td>
+                    <td>O(1)</td>
+                </tr>
+            </table>
+
+            <h3>Java PriorityQueue - The Basics</h3>
+            <div class="code-block"><span class="code-comment">// Import</span>
+<span class="code-keyword">import</span> java.util.PriorityQueue;
+
+<span class="code-comment">// Create Min-Heap (default - smallest element first)</span>
+PriorityQueue&lt;Integer&gt; minHeap = <span class="code-keyword">new</span> PriorityQueue&lt;&gt;();
+
+<span class="comment">// Create Max-Heap (largest element first)</span>
+PriorityQueue&lt;Integer&gt; maxHeap = <span class="code-keyword">new</span> PriorityQueue&lt;&gt;(Collections.reverseOrder());
+<span class="code-comment">// OR using lambda:</span>
+PriorityQueue&lt;Integer&gt; maxHeap = <span class="code-keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; b - a);
+
+<span class="code-comment">// Basic Operations</span>
+minHeap.add(<span class="code-number">5</span>);      <span class="code-comment">// Add element - O(log n)</span>
+minHeap.offer(<span class="code-number">3</span>);    <span class="code-comment">// Same as add - O(log n)</span>
+<span class="code-keyword">int</span> min = minHeap.peek();   <span class="code-comment">// View top element - O(1)</span>
+<span class="code-keyword">int</span> removed = minHeap.poll();  <span class="code-comment">// Remove top element - O(log n)</span>
+<span class="code-keyword">int</span> size = minHeap.size();    <span class="code-comment">// Get size - O(1)</span>
+<span class="code-keyword">boolean</span> empty = minHeap.isEmpty();  <span class="code-comment">// Check if empty - O(1)</span></div>
+
+            <h3>Custom Comparators - Sort by Different Criteria</h3>
+            <div class="code-block"><span class="code-comment">// Example: Sort by absolute value</span>
+PriorityQueue&lt;Integer&gt; pq = <span class="code-keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; {
+    <span class="code-keyword">return</span> Math.abs(a) - Math.abs(b);
+});
+
+<span class="code-comment">// Example: Sort custom objects</span>
+<span class="code-keyword">class</span> Task {
+    String name;
+    <span class="code-keyword">int</span> priority;
+    <span class="code-keyword">public</span> Task(String name, <span class="code-keyword">int</span> priority) {
+        <span class="code-keyword">this</span>.name = name;
+        <span class="code-keyword">this</span>.priority = priority;
+    }
+}
+
+<span class="code-comment">// Min-Heap by priority (lower number = higher priority)</span>
+PriorityQueue&lt;Task&gt; tasks = <span class="code-keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; a.priority - b.priority);
+
+<span class="code-comment">// Max-Heap by priority</span>
+PriorityQueue&lt;Task&gt; tasks = <span class="code-keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; b.priority - a.priority);</code></div>
+        </div>
+
+        <!-- Part 2: How Heap Operations Work -->
+        <div class="diagram-section">
+            <h2>🔧 Part 2: How Heap Operations Work (Visual)</h2>
+
+            <h3>Operation 1: Add (Insert) Element</h3>
+            <div class="explanation">
+                <strong>Goal:</strong> Add element while maintaining Min-Heap property (parent ≤ children)
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3; margin-top: 0;">📋 Algorithm Steps for Add (Bubble Up)</h3>
+                <div style="line-height: 1.8;">
+                    <strong>Step 1:</strong> Add the new element to the <strong>end of the array</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• This is index = size of heap<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Temporarily violates heap property!<br><br>
+                    
+                    <strong>Step 2:</strong> <strong>Bubble Up</strong> - Compare with parent and swap if needed<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Calculate parent index: <code>parent = (current - 1) / 2</code><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• <strong>If new element &lt; parent</strong> → SWAP (violates min-heap!)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• <strong>If new element ≥ parent</strong> → STOP (heap property satisfied!)<br><br>
+                    
+                    <strong>Step 3:</strong> Repeat Step 2 with new position<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Keep bubbling up until element ≥ parent OR reach root<br><br>
+                    
+                    <strong>Time Complexity:</strong> O(log n) - At most log n levels to bubble up
+                </div>
+            </div>
+
+            <div class="diagram">
+                <h3>Visual Example: Add 2 to min-heap [1, 3, 5, 8, 9, 7, 6]</h3>
+                
+                <div class="code-visual">
+                    <div class="code-step">
+                        <strong>Initial State:</strong> Min-Heap [1, 3, 5, 8, 9, 7, 6]
+                        <div class="array-rep">
+                            <div class="array-cell">
+                                <div class="array-index">0</div>
+                                1
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">1</div>
+                                3
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">2</div>
+                                5
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">3</div>
+                                8
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">4</div>
+                                9
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">5</div>
+                                7
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">6</div>
+                                6
+                            </div>
+                        </div>
+                        <p>Heap property: Every parent ≤ its children ✅</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Step 1:</strong> Add 2 to end of array (index 7)
+                        <div class="array-rep">
+                            <div class="array-cell">
+                                <div class="array-index">0</div>
+                                1
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">1</div>
+                                3
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">2</div>
+                                5
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">3</div>
+                                8
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">4</div>
+                                9
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">5</div>
+                                7
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">6</div>
+                                6
+                            </div>
+                            <div class="array-cell highlight">
+                                <div class="array-index">7</div>
+                                2
+                            </div>
+                        </div>
+                        <p><strong>Decision Point:</strong> Compare with parent<br>
+                        Current index: 7, Parent index: (7-1)/2 = 3<br>
+                        Current value: 2, Parent value: 8<br>
+                        <strong>Since 2 &lt; 8 → VIOLATES MIN-HEAP!</strong> Must swap ⚠️</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Step 2:</strong> Bubble Up - Swap with parent (index 3)
+                        <div class="array-rep">
+                            <div class="array-cell">
+                                <div class="array-index">0</div>
+                                1
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">1</div>
+                                3
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">2</div>
+                                5
+                            </div>
+                            <div class="array-cell highlight">
+                                <div class="array-index">3</div>
+                                2
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">4</div>
+                                9
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">5</div>
+                                7
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">6</div>
+                                6
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">7</div>
+                                8
+                            </div>
+                        </div>
+                        <p><strong>After Swap:</strong> 2 moved to index 3, 8 moved to index 7<br>
+                        <strong>Decision Point:</strong> Compare with new parent<br>
+                        Current index: 3, Parent index: (3-1)/2 = 1<br>
+                        Current value: 2, Parent value: 3<br>
+                        <strong>Since 2 &lt; 3 → STILL VIOLATES!</strong> Continue bubbling up ⚠️</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Step 3:</strong> Bubble Up - Swap with parent (index 1)
+                        <div class="array-rep">
+                            <div class="array-cell">
+                                <div class="array-index">0</div>
+                                1
+                            </div>
+                            <div class="array-cell highlight">
+                                <div class="array-index">1</div>
+                                2
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">2</div>
+                                5
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">3</div>
+                                3
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">4</div>
+                                9
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">5</div>
+                                7
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">6</div>
+                                6
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">7</div>
+                                8
+                            </div>
+                        </div>
+                        <p><strong>After Swap:</strong> 2 moved to index 1, 3 moved to index 3<br>
+                        <strong>Decision Point:</strong> Compare with new parent<br>
+                        Current index: 1, Parent index: (1-1)/2 = 0<br>
+                        Current value: 2, Parent value: 1<br>
+                        <strong>Since 2 ≥ 1 → HEAP PROPERTY SATISFIED!</strong> STOP ✅</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Final Result:</strong> Heap property restored!
+                        <div class="array-rep">
+                            <div class="array-cell min">
+                                <div class="array-index">0</div>
+                                1
+                            </div>
+                            <div class="array-cell" style="background: #c8e6c9;">
+                                <div class="array-index">1</div>
+                                2
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">2</div>
+                                5
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">3</div>
+                                3
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">4</div>
+                                9
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">5</div>
+                                7
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">6</div>
+                                6
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">7</div>
+                                8
+                            </div>
+                        </div>
+                        <p style="color: #4caf50; font-weight: bold;">Done! All parents ≤ children ✅<br>
+                        1 ≤ {2,5} | 2 ≤ {3,8} | 5 ≤ {7,6} | 3 ≤ {9} ✓</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Operation 2: Poll (Remove Min)</h3>
+            <div class="explanation">
+                <strong>Goal:</strong> Remove and return the minimum element (root) while maintaining Min-Heap property
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3; margin-top: 0;">📋 Algorithm Steps for Poll (Bubble Down)</h3>
+                <div style="line-height: 1.8;">
+                    <strong>Step 1:</strong> Save root element (index 0) - this is what we'll return<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• This is the minimum in min-heap<br><br>
+                    
+                    <strong>Step 2:</strong> Move <strong>last element</strong> to root position<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Remove last element from array<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Place it at index 0<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Temporarily violates heap property!<br><br>
+                    
+                    <strong>Step 3:</strong> <strong>Bubble Down</strong> - Compare with children and swap if needed<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Calculate child indices:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Left child: <code>2 * current + 1</code><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Right child: <code>2 * current + 2</code><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Find the <strong>smallest of current and both children</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• <strong>If current &gt; smallest child</strong> → SWAP with smallest child<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• <strong>If current ≤ both children</strong> → STOP (heap property satisfied!)<br><br>
+                    
+                    <strong>Step 4:</strong> Repeat Step 3 with new position<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Keep bubbling down until element ≤ both children OR reach leaf<br><br>
+                    
+                    <strong>Step 5:</strong> Return the saved root value<br><br>
+                    
+                    <strong>Time Complexity:</strong> O(log n) - At most log n levels to bubble down
+                </div>
+            </div>
+
+            <div class="diagram">
+                <h3>Visual Example: Remove min from [1, 2, 5, 3, 9, 7, 6, 8]</h3>
+                
+                <div class="code-visual">
+                    <div class="code-step">
+                        <strong>Initial State:</strong> Min-Heap [1, 2, 5, 3, 9, 7, 6, 8]
+                        <div class="array-rep">
+                            <div class="array-cell min">
+                                <div class="array-index">0</div>
+                                1
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">1</div>
+                                2
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">2</div>
+                                5
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">3</div>
+                                3
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">4</div>
+                                9
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">5</div>
+                                7
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">6</div>
+                                6
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">7</div>
+                                8
+                            </div>
+                        </div>
+                        <p><strong>Goal:</strong> Remove minimum (root = 1)</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Step 1:</strong> Save root value (1), move last element (8) to root
+                        <div class="array-rep">
+                            <div class="array-cell highlight">
+                                <div class="array-index">0</div>
+                                8
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">1</div>
+                                2
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">2</div>
+                                5
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">3</div>
+                                3
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">4</div>
+                                9
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">5</div>
+                                7
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">6</div>
+                                6
+                            </div>
+                        </div>
+                        <p><strong>Removed:</strong> 1 (will return this)<br>
+                        <strong>Moved:</strong> Last element (8) to root<br>
+                        Array size decreased from 8 to 7<br>
+                        <strong>Problem:</strong> 8 at root violates heap property! ⚠️</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Step 2:</strong> Bubble Down - Compare with children
+                        <div style="margin: 15px 0; padding: 15px; background: #fff3e0; border-radius: 5px; border-left: 4px solid #ff9800;">
+                            <strong>Decision Logic:</strong><br>
+                            Current index: 0, Current value: 8<br>
+                            Left child: index 1, value 2<br>
+                            Right child: index 2, value 5<br><br>
+                            
+                            <strong>Find smallest:</strong> min(8, 2, 5) = 2<br>
+                            <strong>Since 8 &gt; 2 → VIOLATES MIN-HEAP!</strong><br>
+                            <strong>Action:</strong> Swap with smallest child (2 at index 1) ⚠️
+                        </div>
+                        <div class="array-rep">
+                            <div class="array-cell min">
+                                <div class="array-index">0</div>
+                                2
+                            </div>
+                            <div class="array-cell highlight">
+                                <div class="array-index">1</div>
+                                8
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">2</div>
+                                5
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">3</div>
+                                3
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">4</div>
+                                9
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">5</div>
+                                7
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">6</div>
+                                6
+                            </div>
+                        </div>
+                        <p><strong>After Swap:</strong> 2 moved to root, 8 moved to index 1<br>
+                        Continue checking from index 1...</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Step 3:</strong> Continue Bubble Down from index 1
+                        <div style="margin: 15px 0; padding: 15px; background: #fff3e0; border-radius: 5px; border-left: 4px solid #ff9800;">
+                            <strong>Decision Logic:</strong><br>
+                            Current index: 1, Current value: 8<br>
+                            Left child: index 3, value 3<br>
+                            Right child: index 4, value 9<br><br>
+                            
+                            <strong>Find smallest:</strong> min(8, 3, 9) = 3<br>
+                            <strong>Since 8 &gt; 3 → STILL VIOLATES!</strong><br>
+                            <strong>Action:</strong> Swap with smallest child (3 at index 3) ⚠️
+                        </div>
+                        <div class="array-rep">
+                            <div class="array-cell min">
+                                <div class="array-index">0</div>
+                                2
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">1</div>
+                                3
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">2</div>
+                                5
+                            </div>
+                            <div class="array-cell highlight">
+                                <div class="array-index">3</div>
+                                8
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">4</div>
+                                9
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">5</div>
+                                7
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">6</div>
+                                6
+                            </div>
+                        </div>
+                        <p><strong>After Swap:</strong> 3 moved to index 1, 8 moved to index 3<br>
+                        Continue checking from index 3...</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Step 4:</strong> Check if more bubbling needed
+                        <div style="margin: 15px 0; padding: 15px; background: #e8f5e9; border-radius: 5px; border-left: 4px solid #4caf50;">
+                            <strong>Decision Logic:</strong><br>
+                            Current index: 3, Current value: 8<br>
+                            Left child: 2*3+1 = 7 (doesn't exist! Out of bounds)<br>
+                            Right child: 2*3+2 = 8 (doesn't exist! Out of bounds)<br><br>
+                            
+                            <strong>No children exist!</strong><br>
+                            <strong>Since no children to compare → STOP!</strong> ✅<br>
+                            Heap property is satisfied!
+                        </div>
+                        <div class="array-rep">
+                            <div class="array-cell min">
+                                <div class="array-index">0</div>
+                                2
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">1</div>
+                                3
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">2</div>
+                                5
+                            </div>
+                            <div class="array-cell" style="background: #c8e6c9;">
+                                <div class="array-index">3</div>
+                                8
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">4</div>
+                                9
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">5</div>
+                                7
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">6</div>
+                                6
+                            </div>
+                        </div>
+                        <p style="color: #4caf50; font-weight: bold;">Done! Heap property restored ✅<br>
+                        2 ≤ {3,5} | 3 ≤ {8,9} | 5 ≤ {7,6} ✓<br>
+                        <strong>Returned value: 1</strong></p>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top: 20px;">
+                    <strong>Summary of Bubble Down Logic:</strong><br><br>
+                    <strong>At each position:</strong><br>
+                    1. Calculate left child (2*i+1) and right child (2*i+2)<br>
+                    2. Find smallest among: current, left child, right child<br>
+                    3. <strong>If current = smallest</strong> → STOP (heap property satisfied!) ✅<br>
+                    4. <strong>If smallest is a child</strong> → SWAP with that child and continue from child's position<br>
+                    5. <strong>If no children exist</strong> → STOP (reached leaf node) ✅
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                💡 <strong>Key Insight:</strong><br>
+                Add: O(log n) - bubble up at most log n levels<br>
+                Poll: O(log n) - bubble down at most log n levels<br>
+                Peek: O(1) - just look at index 0!
+            </div>
+
+            <h3>⚖️ Min-Heap vs Max-Heap: The Key Differences</h3>
+            
+            <div class="diagram">
+                <div class="vs-box">
+                    <div class="vs-item" style="border-color: #4caf50;">
+                        <h4 style="color: #4caf50;">Min-Heap</h4>
+                        <div style="margin: 10px 0;">
+                            <strong>Heap Property:</strong><br>
+                            Parent ≤ Children<br><br>
+                            <strong>Root:</strong> Minimum element<br><br>
+                            <strong>Use Cases:</strong><br>
+                            • K largest elements<br>
+                            • Smallest element access<br>
+                            • Ascending order processing
+                        </div>
+                        <div class="heap-visual" style="transform: scale(0.8);">
+                            <div class="heap-level">
+                                <div class="heap-node" style="background: #c8e6c9; border-color: #4caf50;">1</div>
+                            </div>
+                            <div style="margin: 5px;">↙ ↘</div>
+                            <div class="heap-level">
+                                <div class="heap-node">3</div>
+                                <div class="heap-node">5</div>
+                            </div>
+                        </div>
+                        <p style="text-align: center; margin-top: 10px;">1 ≤ 3, 1 ≤ 5 ✅</p>
+                    </div>
+
+                    <div class="vs-item" style="border-color: #f44336;">
+                        <h4 style="color: #f44336;">Max-Heap</h4>
+                        <div style="margin: 10px 0;">
+                            <strong>Heap Property:</strong><br>
+                            Parent ≥ Children<br><br>
+                            <strong>Root:</strong> Maximum element<br><br>
+                            <strong>Use Cases:</strong><br>
+                            • K smallest elements<br>
+                            • Largest element access<br>
+                            • Descending order processing
+                        </div>
+                        <div class="heap-visual" style="transform: scale(0.8);">
+                            <div class="heap-level">
+                                <div class="heap-node" style="background: #ffcdd2; border-color: #f44336;">9</div>
+                            </div>
+                            <div style="margin: 5px;">↙ ↘</div>
+                            <div class="heap-level">
+                                <div class="heap-node">5</div>
+                                <div class="heap-node">3</div>
+                            </div>
+                        </div>
+                        <p style="text-align: center; margin-top: 10px;">9 ≥ 5, 9 ≥ 3 ✅</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Max-Heap Operations: Add & Poll</h3>
+            
+            <div class="pattern-box" style="background: #ffebee; border-color: #f44336;">
+                <h3 style="color: #f44336; margin-top: 0;">📋 Max-Heap Add Algorithm (Bubble Up)</h3>
+                <div style="line-height: 1.8;">
+                    <strong>Only ONE thing changes from Min-Heap:</strong><br><br>
+                    
+                    <strong>Step 1:</strong> Add to end (SAME as min-heap)<br><br>
+                    
+                    <strong>Step 2:</strong> Bubble Up with REVERSED comparison<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Calculate parent: <code>parent = (current - 1) / 2</code><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• <strong style="color: #f44336;">If new element &gt; parent</strong> → SWAP (violates max-heap!)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• <strong style="color: #4caf50;">If new element ≤ parent</strong> → STOP (heap property satisfied!)<br><br>
+                    
+                    <strong>Step 3:</strong> Repeat until element ≤ parent OR reach root<br><br>
+                    
+                    <strong>The key difference:</strong> We swap when child is LARGER than parent (opposite of min-heap)
+                </div>
+            </div>
+
+            <div class="diagram">
+                <h3>Visual Comparison: Add 8 to Both Heaps</h3>
+                
+                <div class="vs-box" style="grid-template-columns: 1fr; gap: 30px;">
+                    <div style="border: 3px solid #4caf50; padding: 20px; border-radius: 8px; background: #f1f8e9;">
+                        <h4 style="color: #4caf50; text-align: center;">MIN-HEAP: Add 8 to [1, 3, 5, 9]</h4>
+                        
+                        <div style="margin: 20px 0;">
+                            <strong>Step 1:</strong> Add to end
+                            <div class="array-rep">
+                                <div class="array-cell">1</div>
+                                <div class="array-cell">3</div>
+                                <div class="array-cell">5</div>
+                                <div class="array-cell">9</div>
+                                <div class="array-cell highlight">8</div>
+                            </div>
+                            <p style="margin-top: 10px;">Compare 8 with parent (index 1) = 3<br>
+                            8 &gt; 3 → Don't swap (8 is larger, correct for min-heap children)<br>
+                            <strong style="color: #4caf50;">STOP! Already satisfied ✅</strong></p>
+                        </div>
+                        
+                        <div style="margin: 20px 0;">
+                            <strong>Final:</strong> [1, 3, 5, 9, 8]
+                            <div class="array-rep">
+                                <div class="array-cell" style="background: #c8e6c9;">1</div>
+                                <div class="array-cell" style="background: #c8e6c9;">3</div>
+                                <div class="array-cell" style="background: #c8e6c9;">5</div>
+                                <div class="array-cell" style="background: #c8e6c9;">9</div>
+                                <div class="array-cell" style="background: #c8e6c9;">8</div>
+                            </div>
+                            <p style="color: #4caf50; font-weight: bold;">Min-heap property: 1≤{3,5}, 3≤{9,8} ✅</p>
+                        </div>
+                    </div>
+
+                    <div style="border: 3px solid #f44336; padding: 20px; border-radius: 8px; background: #ffebee;">
+                        <h4 style="color: #f44336; text-align: center;">MAX-HEAP: Add 8 to [9, 5, 3, 1]</h4>
+                        
+                        <div style="margin: 20px 0;">
+                            <strong>Step 1:</strong> Add to end
+                            <div class="array-rep">
+                                <div class="array-cell">9</div>
+                                <div class="array-cell">5</div>
+                                <div class="array-cell">3</div>
+                                <div class="array-cell">1</div>
+                                <div class="array-cell highlight">8</div>
+                            </div>
+                            <p style="margin-top: 10px;">Compare 8 with parent (index 1) = 5<br>
+                            <strong style="color: #f44336;">8 &gt; 5 → VIOLATES MAX-HEAP!</strong><br>
+                            Child should be ≤ parent. Must swap! ⚠️</p>
+                        </div>
+                        
+                        <div style="margin: 20px 0;">
+                            <strong>Step 2:</strong> Bubble up (swap with parent)
+                            <div class="array-rep">
+                                <div class="array-cell">9</div>
+                                <div class="array-cell highlight">8</div>
+                                <div class="array-cell">3</div>
+                                <div class="array-cell">1</div>
+                                <div class="array-cell">5</div>
+                            </div>
+                            <p style="margin-top: 10px;">Compare 8 with new parent (index 0) = 9<br>
+                            8 &lt; 9 → Correct! (child ≤ parent)<br>
+                            <strong style="color: #4caf50;">STOP! Heap property satisfied ✅</strong></p>
+                        </div>
+                        
+                        <div style="margin: 20px 0;">
+                            <strong>Final:</strong> [9, 8, 3, 1, 5]
+                            <div class="array-rep">
+                                <div class="array-cell" style="background: #ffcdd2;">9</div>
+                                <div class="array-cell" style="background: #ffcdd2;">8</div>
+                                <div class="array-cell" style="background: #ffcdd2;">3</div>
+                                <div class="array-cell" style="background: #ffcdd2;">1</div>
+                                <div class="array-cell" style="background: #ffcdd2;">5</div>
+                            </div>
+                            <p style="color: #f44336; font-weight: bold;">Max-heap property: 9≥{8,3}, 8≥{1,5} ✅</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top: 20px; background: #fff3e0; border-color: #ff9800;">
+                    <strong style="color: #ff9800;">🔑 Key Takeaway for Add:</strong><br><br>
+                    <strong>Min-Heap:</strong> Bubble up when child &lt; parent (swap to make parent smaller)<br>
+                    <strong>Max-Heap:</strong> Bubble up when child &gt; parent (swap to make parent larger)<br><br>
+                    <strong>Both:</strong> Stop when heap property is satisfied!
+                </div>
+            </div>
+
+            <div class="pattern-box" style="background: #ffebee; border-color: #f44336; margin-top: 30px;">
+                <h3 style="color: #f44336; margin-top: 0;">📋 Max-Heap Poll Algorithm (Bubble Down)</h3>
+                <div style="line-height: 1.8;">
+                    <strong>What changes from Min-Heap:</strong><br><br>
+                    
+                    <strong>Step 1:</strong> Save root - Maximum element (SAME as min-heap concept)<br><br>
+                    
+                    <strong>Step 2:</strong> Move last to root (SAME)<br><br>
+                    
+                    <strong>Step 3:</strong> Bubble Down with REVERSED logic<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• Calculate children: left = 2*i+1, right = 2*i+2<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• <strong style="color: #f44336;">Find LARGEST</strong> of current and both children (not smallest!)<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• <strong style="color: #f44336;">If current &lt; largest child</strong> → SWAP with largest child<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;• <strong style="color: #4caf50;">If current ≥ both children</strong> → STOP<br><br>
+                    
+                    <strong>Step 4:</strong> Repeat until satisfied or reach leaf<br><br>
+                    
+                    <strong>The key difference:</strong> We find LARGEST child and swap if current is SMALLER (opposite!)
+                </div>
+            </div>
+
+            <div class="diagram">
+                <h3>Visual Comparison: Poll (Remove) from Both Heaps</h3>
+                
+                <div class="vs-box" style="grid-template-columns: 1fr; gap: 30px;">
+                    <div style="border: 3px solid #4caf50; padding: 20px; border-radius: 8px; background: #f1f8e9;">
+                        <h4 style="color: #4caf50; text-align: center;">MIN-HEAP: Remove from [1, 3, 5, 8, 9]</h4>
+                        
+                        <div style="margin: 15px 0;">
+                            <strong>Initial:</strong> Root = 1 (minimum)
+                            <div class="array-rep">
+                                <div class="array-cell min">1</div>
+                                <div class="array-cell">3</div>
+                                <div class="array-cell">5</div>
+                                <div class="array-cell">8</div>
+                                <div class="array-cell">9</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin: 15px 0;">
+                            <strong>Step 1:</strong> Move last (9) to root
+                            <div class="array-rep">
+                                <div class="array-cell highlight">9</div>
+                                <div class="array-cell">3</div>
+                                <div class="array-cell">5</div>
+                                <div class="array-cell">8</div>
+                            </div>
+                            <p style="margin-top: 10px;">
+                            <strong>Decision:</strong> Current=9, Children={3,5}<br>
+                            Find <strong style="color: #4caf50;">SMALLEST</strong>: min(9,3,5) = 3<br>
+                            9 &gt; 3 → Swap with 3 (smaller child)
+                            </p>
+                        </div>
+                        
+                        <div style="margin: 15px 0;">
+                            <strong>Step 2:</strong> After swap
+                            <div class="array-rep">
+                                <div class="array-cell" style="background: #c8e6c9;">3</div>
+                                <div class="array-cell highlight">9</div>
+                                <div class="array-cell" style="background: #c8e6c9;">5</div>
+                                <div class="array-cell" style="background: #c8e6c9;">8</div>
+                            </div>
+                            <p style="margin-top: 10px;">
+                            <strong>Decision:</strong> Current=9, Child={8}<br>
+                            9 &gt; 8 → Swap with 8
+                            </p>
+                        </div>
+                        
+                        <div style="margin: 15px 0;">
+                            <strong>Final:</strong> [3, 8, 5, 9]
+                            <div class="array-rep">
+                                <div class="array-cell" style="background: #c8e6c9;">3</div>
+                                <div class="array-cell" style="background: #c8e6c9;">8</div>
+                                <div class="array-cell" style="background: #c8e6c9;">5</div>
+                                <div class="array-cell" style="background: #c8e6c9;">9</div>
+                            </div>
+                            <p style="color: #4caf50; font-weight: bold;">Removed: 1 | Min-heap restored ✅</p>
+                        </div>
+                    </div>
+
+                    <div style="border: 3px solid #f44336; padding: 20px; border-radius: 8px; background: #ffebee;">
+                        <h4 style="color: #f44336; text-align: center;">MAX-HEAP: Remove from [9, 8, 5, 3, 1]</h4>
+                        
+                        <div style="margin: 15px 0;">
+                            <strong>Initial:</strong> Root = 9 (maximum)
+                            <div class="array-rep">
+                                <div class="array-cell" style="background: #ffcdd2; border-color: #f44336;">9</div>
+                                <div class="array-cell">8</div>
+                                <div class="array-cell">5</div>
+                                <div class="array-cell">3</div>
+                                <div class="array-cell">1</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin: 15px 0;">
+                            <strong>Step 1:</strong> Move last (1) to root
+                            <div class="array-rep">
+                                <div class="array-cell highlight">1</div>
+                                <div class="array-cell">8</div>
+                                <div class="array-cell">5</div>
+                                <div class="array-cell">3</div>
+                            </div>
+                            <p style="margin-top: 10px;">
+                            <strong>Decision:</strong> Current=1, Children={8,5}<br>
+                            Find <strong style="color: #f44336;">LARGEST</strong>: max(1,8,5) = 8<br>
+                            1 &lt; 8 → Swap with 8 (larger child)
+                            </p>
+                        </div>
+                        
+                        <div style="margin: 15px 0;">
+                            <strong>Step 2:</strong> After swap
+                            <div class="array-rep">
+                                <div class="array-cell" style="background: #ffcdd2;">8</div>
+                                <div class="array-cell highlight">1</div>
+                                <div class="array-cell" style="background: #ffcdd2;">5</div>
+                                <div class="array-cell" style="background: #ffcdd2;">3</div>
+                            </div>
+                            <p style="margin-top: 10px;">
+                            <strong>Decision:</strong> Current=1, Child={3}<br>
+                            1 &lt; 3 → Swap with 3
+                            </p>
+                        </div>
+                        
+                        <div style="margin: 15px 0;">
+                            <strong>Final:</strong> [8, 3, 5, 1]
+                            <div class="array-rep">
+                                <div class="array-cell" style="background: #ffcdd2;">8</div>
+                                <div class="array-cell" style="background: #ffcdd2;">3</div>
+                                <div class="array-cell" style="background: #ffcdd2;">5</div>
+                                <div class="array-cell" style="background: #ffcdd2;">1</div>
+                            </div>
+                            <p style="color: #f44336; font-weight: bold;">Removed: 9 | Max-heap restored ✅</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top: 20px; background: #fff3e0; border-color: #ff9800;">
+                    <strong style="color: #ff9800;">🔑 Key Takeaway for Poll:</strong><br><br>
+                    <strong>Min-Heap:</strong> Find SMALLEST child, swap if current &gt; smallest<br>
+                    <strong>Max-Heap:</strong> Find LARGEST child, swap if current &lt; largest<br><br>
+                    <strong>Both:</strong> Keep bubbling down until heap property satisfied!
+                </div>
+            </div>
+
+            <h3>Java Code Comparison</h3>
+            
+            <div class="diagram">
+                <div class="vs-box">
+                    <div class="vs-item" style="border-color: #4caf50;">
+                        <h4 style="color: #4caf50;">Creating Min-Heap</h4>
+                        <div class="code-block" style="margin: 0; font-size: 10px;">
+<span class="code-comment">// Default is Min-Heap</span>
+PriorityQueue&lt;Integer&gt; minHeap = 
+    <span class="code-keyword">new</span> PriorityQueue&lt;&gt;();
+
+<span class="code-comment">// Explicit comparator</span>
+PriorityQueue&lt;Integer&gt; minHeap = 
+    <span class="code-keyword">new</span> PriorityQueue&lt;&gt;(
+        (a, b) -&gt; a - b
+    );
+
+<span class="code-comment">// Natural ordering</span>
+PriorityQueue&lt;Integer&gt; minHeap = 
+    <span class="code-keyword">new</span> PriorityQueue&lt;&gt;(
+        Integer::compare
+    );</div>
+                    </div>
+
+                    <div class="vs-item" style="border-color: #f44336;">
+                        <h4 style="color: #f44336;">Creating Max-Heap</h4>
+                        <div class="code-block" style="margin: 0; font-size: 10px;">
+<span class="code-comment">// Reverse order</span>
+PriorityQueue&lt;Integer&gt; maxHeap = 
+    <span class="code-keyword">new</span> PriorityQueue&lt;&gt;(
+        Collections.reverseOrder()
+    );
+
+<span class="code-comment">// Reverse comparator</span>
+PriorityQueue&lt;Integer&gt; maxHeap = 
+    <span class="code-keyword">new</span> PriorityQueue&lt;&gt;(
+        (a, b) -&gt; b - a
+    );
+
+<span class="code-comment">// Negate comparison</span>
+PriorityQueue&lt;Integer&gt; maxHeap = 
+    <span class="code-keyword">new</span> PriorityQueue&lt;&gt;(
+        Comparator.reverseOrder()
+    );</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick comparison to avoid confusion -->
+        <div class="diagram-section">
+            <h2>⚠️ Common Confusion: Priority Queue vs Other Data Structures</h2>
+            
+            <div class="confusion-box">
+                <h3 style="color: #f44336; margin-top: 0;">❌ Don't Confuse With...</h3>
+                
+                <table style="margin-top: 15px;">
+                    <tr>
+                        <th>Data Structure</th>
+                        <th>Key Difference</th>
+                        <th>When to Use</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Regular Queue</strong></td>
+                        <td>FIFO order, NO priority</td>
+                        <td>BFS, task processing in order</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Stack</strong></td>
+                        <td>LIFO order, NO priority</td>
+                        <td>DFS, undo operations</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Binary Search Tree</strong></td>
+                        <td>All left &lt; root &lt; all right<br>Different structure!</td>
+                        <td>Sorted data, range queries</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sorted Array</strong></td>
+                        <td>Insert is O(n), not O(log n)</td>
+                        <td>Static data, lots of lookups</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TreeSet</strong></td>
+                        <td>Sorted, but NO duplicates allowed</td>
+                        <td>Unique sorted elements</td>
+                    </tr>
+                </table>
+
+                <div class="highlight-box" style="margin-top: 20px; background: #fff;">
+                    ✅ <strong>Use Priority Queue When:</strong><br>
+                    • Need <strong>min/max element quickly</strong> (O(1) peek, O(log n) remove)<br>
+                    • Problem mentions <strong>"k smallest/largest"</strong><br>
+                    • Need to <strong>process in priority order</strong><br>
+                    • Mentioned: <strong>"top k"</strong>, <strong>"merge k"</strong>, <strong>"kth"</strong>, <strong>"closest"</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- PATTERN 1: Top K Elements -->
+        <div class="diagram-section">
+            <h2>🎯 PATTERN 1: Top K Elements (K Smallest/Largest)</h2>
+            
+            <div class="recognition-box">
+                <h3 style="color: #9c27b0; margin-top: 0;">🔍 How to Recognize This Pattern?</h3>
+                <div style="line-height: 1.8;">
+                    <strong>You should think "Top K Elements" when you see:</strong><br><br>
+                    
+                    ✓ <strong>"K smallest elements"</strong><br>
+                    ✓ <strong>"K largest elements"</strong><br>
+                    ✓ <strong>"Kth smallest"</strong> or <strong>"Kth largest"</strong><br>
+                    ✓ <strong>"Top K frequent"</strong> elements<br>
+                    ✓ <strong>"K closest points"</strong><br>
+                    ✓ Any problem with <strong>"K"</strong> and <strong>"smallest/largest/most/least"</strong><br><br>
+                    
+                    <strong>Keywords to watch for:</strong><br>
+                    "top k", "k smallest", "k largest", "kth element", "k closest", "k frequent"
+                </div>
+            </div>
+
+            <div class="intuition-box">
+                <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition - Why Priority Queue?</h3>
+                <div style="line-height: 1.8;">
+                    <strong>The Problem:</strong><br>
+                    Find K smallest elements from [3, 1, 5, 12, 2, 11], K=3<br><br>
+                    
+                    <strong>Naive approach:</strong> Sort entire array → O(n log n)<br>
+                    Then take first k elements<br><br>
+                    
+                    🎯 <strong>Smart approach with Priority Queue:</strong><br><br>
+                    
+                    <strong>For K SMALLEST:</strong> Use MAX-HEAP of size K!<br>
+                    • If element < heap top → Remove top, add element<br>
+                    • Heap always has K smallest!<br>
+                    • Time: O(n log k) - Better than O(n log n) when k &lt;&lt; n<br><br>
+                    
+                    <strong>Why MAX-HEAP for K smallest?</strong><br>
+                    Think of it as a "bouncer" keeping only K smallest:<br>
+                    • Top of heap = largest of our K smallest<br>
+                    • New element smaller? Kick out the largest!<br>
+                    • New element larger? Reject it!<br><br>
+                    
+                    <strong>Similarly, for K LARGEST:</strong> Use MIN-HEAP!<br>
+                    • Top = smallest of our K largest<br>
+                    • New element larger? Kick out smallest!
+                </div>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3; margin-top: 0;">📋 Why This Pattern Applies</h3>
+                <strong>Problem:</strong> Find 3 smallest elements from [3, 1, 5, 12, 2, 11]<br>
+                <strong>Why Max-Heap?</strong> Keep K elements, reject larger ones → top is boundary!<br>
+                <strong>Alternative:</strong> Sort O(n log n) - Priority Queue is O(n log k)<br>
+                <strong>When k is small:</strong> Much faster! (e.g., top 10 from 1 million)
+            </div>
+
+            <div class="diagram">
+                <h3>Visual Code Execution: Find 3 smallest from [3, 1, 5, 12, 2, 11]</h3>
+                
+                <div class="code-visual">
+                    <div class="code-step">
+                        <strong>Initialize:</strong> Max-Heap, K=3
+                        <div style="text-align: center; margin: 20px;">
+                            <div style="display: inline-block; padding: 20px; border: 2px solid #e91e63; border-radius: 10px;">
+                                <strong>Max-Heap (size limit: 3)</strong><br>
+                                <div style="margin: 10px 0;">Empty [ ]</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Process 3:</strong> Heap size &lt; 3, add it
+                        <div style="text-align: center; margin: 20px;">
+                            <div style="display: inline-block; padding: 20px; border: 2px solid #e91e63; border-radius: 10px;">
+                                <strong>Max-Heap</strong><br>
+                                <div class="heap-visual" style="margin: 10px 0;">
+                                    <div class="heap-level">
+                                        <div class="heap-node" style="background: #c8e6c9;">3</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Heap: [3], size=1</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Process 1:</strong> Heap size &lt; 3, add it
+                        <div style="text-align: center; margin: 20px;">
+                            <div style="display: inline-block; padding: 20px; border: 2px solid #e91e63; border-radius: 10px;">
+                                <strong>Max-Heap</strong><br>
+                                <div class="heap-visual" style="margin: 10px 0;">
+                                    <div class="heap-level">
+                                        <div class="heap-node" style="background: #c8e6c9;">3</div>
+                                    </div>
+                                    <div style="margin: 5px;">↙</div>
+                                    <div class="heap-level">
+                                        <div class="heap-node">1</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Heap: [3, 1], size=2</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Process 5:</strong> Heap size &lt; 3, add it
+                        <div style="text-align: center; margin: 20px;">
+                            <div style="display: inline-block; padding: 20px; border: 2px solid #e91e63; border-radius: 10px;">
+                                <strong>Max-Heap</strong><br>
+                                <div class="heap-visual" style="margin: 10px 0;">
+                                    <div class="heap-level">
+                                        <div class="heap-node" style="background: #fff9c4;">5</div>
+                                    </div>
+                                    <div style="margin: 5px;">↙ ↘</div>
+                                    <div class="heap-level">
+                                        <div class="heap-node">3</div>
+                                        <div class="heap-node">1</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Heap: [5, 3, 1], size=3 (FULL!)</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Process 12:</strong> 12 > 5 (top), REJECT!
+                        <div style="text-align: center; margin: 20px;">
+                            <div style="display: inline-block; padding: 20px; border: 2px solid #e91e63; border-radius: 10px;">
+                                <strong>Max-Heap</strong><br>
+                                <div class="heap-visual" style="margin: 10px 0;">
+                                    <div class="heap-level">
+                                        <div class="heap-node" style="background: #fff9c4;">5</div>
+                                    </div>
+                                    <div style="margin: 5px;">↙ ↘</div>
+                                    <div class="heap-level">
+                                        <div class="heap-node">3</div>
+                                        <div class="heap-node">1</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: inline-block; margin-left: 30px; padding: 20px; border: 2px dashed #f44336; border-radius: 10px; background: #ffebee;">
+                                <strong style="color: #f44336;">Rejected: 12</strong><br>
+                                12 > 5 (too large!)
+                            </div>
+                        </div>
+                        <p>Heap unchanged: [5, 3, 1]</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Process 2:</strong> 2 &lt; 5 (top), ACCEPT! Remove 5, add 2
+                        <div style="text-align: center; margin: 20px;">
+                            <div style="display: inline-block; padding: 20px; border: 2px solid #4caf50; border-radius: 10px; background: #e8f5e9;">
+                                <strong>Max-Heap</strong><br>
+                                <div class="heap-visual" style="margin: 10px 0;">
+                                    <div class="heap-level">
+                                        <div class="heap-node" style="background: #c8e6c9;">3</div>
+                                    </div>
+                                    <div style="margin: 5px;">↙ ↘</div>
+                                    <div class="heap-level">
+                                        <div class="heap-node">2</div>
+                                        <div class="heap-node">1</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Removed 5, added 2. Heap: [3, 2, 1]</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Process 11:</strong> 11 > 3 (top), REJECT!
+                        <div style="text-align: center; margin: 20px;">
+                            <div style="display: inline-block; padding: 20px; border: 2px solid #e91e63; border-radius: 10px;">
+                                <strong>Max-Heap (Final)</strong><br>
+                                <div class="heap-visual" style="margin: 10px 0;">
+                                    <div class="heap-level">
+                                        <div class="heap-node" style="background: #c8e6c9; border-width: 5px; border-color: #4caf50;">3</div>
+                                    </div>
+                                    <div style="margin: 5px;">↙ ↘</div>
+                                    <div class="heap-level">
+                                        <div class="heap-node" style="background: #c8e6c9;">2</div>
+                                        <div class="heap-node" style="background: #c8e6c9;">1</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="text-align: center; color: #4caf50; font-weight: bold; font-size: 1.2em;">
+                        Result: 3 smallest elements are [1, 2, 3] ✅</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block"><span class="code-comment">// Pattern 1: K Smallest Elements using Max-Heap</span>
+<span class="code-keyword">public static</span> List&lt;Integer&gt; kSmallest(<span class="code-keyword">int</span>[] nums, <span class="code-keyword">int</span> k) {
+    <span class="code-comment">// Max-Heap (largest on top)</span>
+    PriorityQueue&lt;Integer&gt; maxHeap = <span class="code-keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; b - a);
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> num : nums) {
+        maxHeap.add(num);
+        
+        <span class="code-comment">// If heap size exceeds k, remove largest</span>
+        <span class="code-keyword">if</span> (maxHeap.size() > k) {
+            maxHeap.poll();  <span class="code-comment">// Remove top (largest)</span>
+        }
+    }
+    
+    <span class="code-keyword">return new</span> ArrayList&lt;&gt;(maxHeap);
+}
+
+<span class="code-comment">// Time: O(n log k) - Process n elements, heap operations log k</span>
+<span class="code-comment">// Space: O(k) - Heap size limited to k</span>
+
+<span class="code-comment">// Pattern 1: K Largest Elements using Min-Heap</span>
+<span class="code-keyword">public static</span> List&lt;Integer&gt; kLargest(<span class="code-keyword">int</span>[] nums, <span class="code-keyword">int</span> k) {
+    <span class="code-comment">// Min-Heap (smallest on top)</span>
+    PriorityQueue&lt;Integer&gt; minHeap = <span class="code-keyword">new</span> PriorityQueue&lt;&gt;();
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> num : nums) {
+        minHeap.add(num);
+        
+        <span class="code-keyword">if</span> (minHeap.size() > k) {
+            minHeap.poll();  <span class="code-comment">// Remove top (smallest)</span>
+        }
+    }
+    
+    <span class="code-keyword">return new</span> ArrayList&lt;&gt;(minHeap);
+}
+
+<span class="code-comment">// Time: O(n log k), Space: O(k)</span></div>
+
+            <div class="highlight-box">
+                🎯 <strong>Remember:</strong><br>
+                K SMALLEST → Use MAX-HEAP (kick out largest)<br>
+                K LARGEST → Use MIN-HEAP (kick out smallest)
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Practice Problems - Top K Elements:</strong>
+                <ol class="step-list">
+                    <li><strong>Kth Largest Element in an Array</strong> (LeetCode 215) - Find kth largest</li>
+                    <li><strong>Top K Frequent Elements</strong> (LeetCode 347) - K most frequent</li>
+                    <li><strong>K Closest Points to Origin</strong> (LeetCode 973) - K closest by distance</li>
+                    <li><strong>Kth Smallest Element in a Sorted Matrix</strong> (LeetCode 378) - 2D matrix</li>
+                    <li><strong>Find K Pairs with Smallest Sums</strong> (LeetCode 373) - Pairs from two arrays</li>
+                    <li><strong>Top K Frequent Words</strong> (LeetCode 692) - Words by frequency</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- PATTERN 2: Merge K Sorted Lists/Arrays -->
+        <div class="diagram-section">
+            <h2>🎯 PATTERN 2: Merge K Sorted Lists/Arrays</h2>
+            
+            <div class="recognition-box">
+                <h3 style="color: #9c27b0; margin-top: 0;">🔍 How to Recognize This Pattern?</h3>
+                <div style="line-height: 1.8;">
+                    <strong>You should think "Merge K Sorted" when you see:</strong><br><br>
+                    
+                    ✓ <strong>"Merge K sorted lists"</strong><br>
+                    ✓ <strong>"Merge K sorted arrays"</strong><br>
+                    ✓ <strong>"Find smallest range"</strong> covering k lists<br>
+                    ✓ Multiple <strong>sorted</strong> inputs to combine<br>
+                    ✓ Need to <strong>maintain sorted order</strong> while merging<br><br>
+                    
+                    <strong>Keywords:</strong> "merge", "k lists", "sorted", "combine"
+                </div>
+            </div>
+
+            <div class="intuition-box">
+                <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition</h3>
+                <div style="line-height: 1.8;">
+                    <strong>The Problem:</strong><br>
+                    Merge K=3 sorted lists:<br>
+                    L1: 1→4→5<br>
+                    L2: 1→3→4<br>
+                    L3: 2→6<br><br>
+                    
+                    <strong>Naive approach:</strong> Collect all, sort → O(N log N) where N = total elements<br><br>
+                    
+                    🎯 <strong>Smart approach with Min-Heap:</strong><br><br>
+                    
+                    <strong>Key Insight:</strong> Next smallest element MUST be at the head of one of the k lists!<br><br>
+                    
+                    <strong>Algorithm:</strong><br>
+                    1. Put all k heads in min-heap<br>
+                    2. Poll minimum (that's next in result!)<br>
+                    3. Add the next element from that list to heap<br>
+                    4. Repeat!<br><br>
+                    
+                    <strong>Why this works:</strong><br>
+                    • At any point, heap has ≤ k elements (one from each list)<br>
+                    • Poll gives smallest among all current heads<br>
+                    • That's the global next smallest!<br><br>
+                    
+                    <strong>Time:</strong> O(N log k) where N = total elements<br>
+                    Better than O(N log N) when k &lt;&lt; N!
+                </div>
+            </div>
+
+            <div class="diagram">
+                <h3>Visual: Merge [1→4], [1→3], [2→6]</h3>
+                
+                <div class="code-visual">
+                    <div class="code-step">
+                        <strong>Step 1:</strong> Add all heads to min-heap
+                        <div style="margin: 20px; text-align: center;">
+                            <div style="display: inline-block; padding: 15px; border: 2px solid #2196f3; border-radius: 8px; margin: 10px;">
+                                L1: <strong style="color: #e91e63;">1</strong>→4
+                            </div>
+                            <div style="display: inline-block; padding: 15px; border: 2px solid #2196f3; border-radius: 8px; margin: 10px;">
+                                L2: <strong style="color: #e91e63;">1</strong>→3
+                            </div>
+                            <div style="display: inline-block; padding: 15px; border: 2px solid #2196f3; border-radius: 8px; margin: 10px;">
+                                L3: <strong style="color: #e91e63;">2</strong>→6
+                            </div>
+                        </div>
+                        <div style="text-align: center;">
+                            <strong>Min-Heap:</strong> [1(L1), 1(L2), 2(L3)]
+                        </div>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Step 2:</strong> Poll min = 1 from L1, add next from L1 (4)
+                        <div style="margin: 20px;">
+                            <div style="text-align: center; margin-bottom: 10px;">
+                                <strong style="color: #4caf50;">Result: [1]</strong>
+                            </div>
+                            <div style="text-align: center;">
+                                <strong>Min-Heap:</strong> [1(L2), 2(L3), 4(L1)]
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Step 3:</strong> Poll min = 1 from L2, add next from L2 (3)
+                        <div style="margin: 20px;">
+                            <div style="text-align: center; margin-bottom: 10px;">
+                                <strong style="color: #4caf50;">Result: [1, 1]</strong>
+                            </div>
+                            <div style="text-align: center;">
+                                <strong>Min-Heap:</strong> [2(L3), 3(L2), 4(L1)]
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Step 4:</strong> Poll min = 2 from L3, add next from L3 (6)
+                        <div style="margin: 20px;">
+                            <div style="text-align: center; margin-bottom: 10px;">
+                                <strong style="color: #4caf50;">Result: [1, 1, 2]</strong>
+                            </div>
+                            <div style="text-align: center;">
+                                <strong>Min-Heap:</strong> [3(L2), 4(L1), 6(L3)]
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Continue...</strong> Poll 3, 4, 4, 5, 6
+                        <div style="margin: 20px; text-align: center;">
+                            <div style="padding: 20px; background: #c8e6c9; border-radius: 8px; border: 3px solid #4caf50;">
+                                <strong style="font-size: 1.2em;">Final Result: [1, 1, 2, 3, 4, 4, 5, 6] ✅</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block"><span class="code-comment">// Pattern 2: Merge K Sorted Lists</span>
+<span class="code-keyword">public</span> ListNode mergeKLists(ListNode[] lists) {
+    <span class="code-keyword">if</span> (lists == <span class="code-keyword">null</span> || lists.length == <span class="code-number">0</span>) <span class="code-keyword">return null</span>;
+    
+    <span class="code-comment">// Min-Heap comparing by node values</span>
+    PriorityQueue&lt;ListNode&gt; minHeap = <span class="code-keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; a.val - b.val);
+    
+    <span class="code-comment">// Add all list heads to heap</span>
+    <span class="code-keyword">for</span> (ListNode head : lists) {
+        <span class="code-keyword">if</span> (head != <span class="code-keyword">null</span>) {
+            minHeap.add(head);
+        }
+    }
+    
+    ListNode dummy = <span class="code-keyword">new</span> ListNode(<span class="code-number">0</span>);
+    ListNode curr = dummy;
+    
+    <span class="code-keyword">while</span> (!minHeap.isEmpty()) {
+        <span class="code-comment">// Poll smallest</span>
+        ListNode smallest = minHeap.poll();
+        curr.next = smallest;
+        curr = curr.next;
+        
+        <span class="code-comment">// Add next from same list</span>
+        <span class="code-keyword">if</span> (smallest.next != <span class="code-keyword">null</span>) {
+            minHeap.add(smallest.next);
+        }
+    }
+    
+    <span class="code-keyword">return</span> dummy.next;
+}
+
+<span class="code-comment">// Time: O(N log k) where N = total nodes, k = number of lists</span>
+<span class="code-comment">// Space: O(k) - Heap size</span></div>
+
+            <div class="success-box">
+                <strong>✅ Practice Problems - Merge K Sorted:</strong>
+                <ol class="step-list">
+                    <li><strong>Merge k Sorted Lists</strong> (LeetCode 23) - Classic problem</li>
+                    <li><strong>Kth Smallest Element in a Sorted Matrix</strong> (LeetCode 378) - Treat rows as k lists</li>
+                    <li><strong>Find K Pairs with Smallest Sums</strong> (LeetCode 373) - Merge approach</li>
+                    <li><strong>Smallest Range Covering Elements from K Lists</strong> (LeetCode 632) - Track min/max</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- PATTERN 3: Two Heaps (Median) -->
+        <div class="diagram-section">
+            <h2>🎯 PATTERN 3: Two Heaps (Find Median from Data Stream)</h2>
+            
+            <div class="recognition-box">
+                <h3 style="color: #9c27b0; margin-top: 0;">🔍 How to Recognize This Pattern?</h3>
+                <div style="line-height: 1.8;">
+                    <strong>You should think "Two Heaps" when you see:</strong><br><br>
+                    
+                    ✓ <strong>"Find median"</strong> from data stream<br>
+                    ✓ <strong>"Running median"</strong><br>
+                    ✓ Need to <strong>access middle element(s)</strong> efficiently<br>
+                    ✓ <strong>"Sliding window median"</strong><br>
+                    ✓ Problems needing <strong>both min and max</strong> of different parts<br><br>
+                    
+                    <strong>Keywords:</strong> "median", "middle", "stream", "running"
+                </div>
+            </div>
+
+            <div class="intuition-box">
+                <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition - The Two Heaps Trick</h3>
+                <div style="line-height: 1.8;">
+                    <strong>The Challenge:</strong><br>
+                    Find median of: 1, 2, 3, 4, 5<br>
+                    Median = 3 (middle element)<br><br>
+                    
+                    <strong>If we had sorted array:</strong> Just return middle → O(1)<br>
+                    <strong>But we're getting stream:</strong> Can't sort every time!<br><br>
+                    
+                    🎯 <strong>Brilliant Idea: Split in Half!</strong><br><br>
+                    
+                    Keep two heaps:<br>
+                    • <strong>Max-Heap (left):</strong> Smaller half of numbers<br>
+                    • <strong>Min-Heap (right):</strong> Larger half of numbers<br><br>
+                    
+                    <strong>Example:</strong> [1, 2, 3, 4, 5]<br>
+                    Max-Heap (left): [1, 2, 3] → top is 3<br>
+                    Min-Heap (right): [4, 5] → top is 4<br><br>
+                    
+                    <strong>Median:</strong><br>
+                    • If sizes equal → (maxHeap.peek() + minHeap.peek()) / 2<br>
+                    • If maxHeap larger → maxHeap.peek()<br><br>
+                    
+                    <strong>Balancing rule:</strong> |maxHeap.size() - minHeap.size()| ≤ 1<br><br>
+                    
+                    <strong>Where to add new element?</strong><br>
+                    1. If ≤ maxHeap.top → add to maxHeap<br>
+                    2. Else → add to minHeap<br>
+                    3. Rebalance if needed!
+                </div>
+            </div>
+
+            <div class="diagram">
+                <h3>Visual: Add 5, 10, 3, 7 and find median each time</h3>
+                
+                <div class="code-visual">
+                    <div class="code-step">
+                        <strong>Add 5:</strong>
+                        <div style="display: flex; justify-content: center; gap: 40px; margin: 20px;">
+                            <div style="text-align: center;">
+                                <strong>Max-Heap (Left)</strong><br>
+                                <div style="margin: 10px 0; padding: 20px; border: 2px solid #e91e63; border-radius: 8px; min-width: 100px;">
+                                    [5]
+                                </div>
+                                <div>Size: 1</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <strong>Min-Heap (Right)</strong><br>
+                                <div style="margin: 10px 0; padding: 20px; border: 2px solid #2196f3; border-radius: 8px; min-width: 100px;">
+                                    [ ]
+                                </div>
+                                <div>Size: 0</div>
+                            </div>
+                        </div>
+                        <p style="text-align: center;"><strong>Median = 5</strong> (left has more)</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Add 10:</strong> 10 > 5 → add to right
+                        <div style="display: flex; justify-content: center; gap: 40px; margin: 20px;">
+                            <div style="text-align: center;">
+                                <strong>Max-Heap (Left)</strong><br>
+                                <div style="margin: 10px 0; padding: 20px; border: 2px solid #e91e63; border-radius: 8px; background: #ffe0ec;">
+                                    [5]
+                                </div>
+                                <div>Size: 1</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <strong>Min-Heap (Right)</strong><br>
+                                <div style="margin: 10px 0; padding: 20px; border: 2px solid #2196f3; border-radius: 8px; background: #e3f2fd;">
+                                    [10]
+                                </div>
+                                <div>Size: 1</div>
+                            </div>
+                        </div>
+                        <p style="text-align: center;"><strong>Median = (5 + 10) / 2 = 7.5</strong> (equal sizes)</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Add 3:</strong> 3 &lt; 5 → add to left
+                        <div style="display: flex; justify-content: center; gap: 40px; margin: 20px;">
+                            <div style="text-align: center;">
+                                <strong>Max-Heap (Left)</strong><br>
+                                <div style="margin: 10px 0; padding: 20px; border: 2px solid #e91e63; border-radius: 8px; background: #ffe0ec;">
+                                    [5, 3]<br>
+                                    <small>top=5</small>
+                                </div>
+                                <div>Size: 2</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <strong>Min-Heap (Right)</strong><br>
+                                <div style="margin: 10px 0; padding: 20px; border: 2px solid #2196f3; border-radius: 8px;">
+                                    [10]
+                                </div>
+                                <div>Size: 1</div>
+                            </div>
+                        </div>
+                        <p style="text-align: center;"><strong>Median = 5</strong> (left has more, return its top)</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Add 7:</strong> 7 > 5 → add to right
+                        <div style="display: flex; justify-content: center; gap: 40px; margin: 20px;">
+                            <div style="text-align: center;">
+                                <strong>Max-Heap (Left)</strong><br>
+                                <div style="margin: 10px 0; padding: 20px; border: 2px solid #e91e63; border-radius: 8px; background: #c8e6c9;">
+                                    [5, 3]<br>
+                                    <small>top=5</small>
+                                </div>
+                                <div>Size: 2</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <strong>Min-Heap (Right)</strong><br>
+                                <div style="margin: 10px 0; padding: 20px; border: 2px solid #2196f3; border-radius: 8px; background: #c8e6c9;">
+                                    [7, 10]<br>
+                                    <small>top=7</small>
+                                </div>
+                                <div>Size: 2</div>
+                            </div>
+                        </div>
+                        <p style="text-align: center; color: #4caf50; font-weight: bold; font-size: 1.2em;">
+                        <strong>Median = (5 + 7) / 2 = 6</strong> ✅</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block"><span class="code-comment">// Pattern 3: Two Heaps - Find Median</span>
+<span class="code-keyword">class</span> MedianFinder {
+    PriorityQueue&lt;Integer&gt; maxHeap;  <span class="code-comment">// Left half (smaller numbers)</span>
+    PriorityQueue&lt;Integer&gt; minHeap;  <span class="code-comment">// Right half (larger numbers)</span>
+    
+    <span class="code-keyword">public</span> MedianFinder() {
+        maxHeap = <span class="code-keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; b - a);  <span class="code-comment">// Max heap</span>
+        minHeap = <span class="code-keyword">new</span> PriorityQueue&lt;&gt;();  <span class="code-comment">// Min heap (default)</span>
+    }
+    
+    <span class="code-keyword">public void</span> addNum(<span class="code-keyword">int</span> num) {
+        <span class="code-comment">// Add to appropriate heap</span>
+        <span class="code-keyword">if</span> (maxHeap.isEmpty() || num <= maxHeap.peek()) {
+            maxHeap.add(num);
+        } <span class="code-keyword">else</span> {
+            minHeap.add(num);
+        }
+        
+        <span class="code-comment">// Rebalance to maintain size property</span>
+        <span class="code-keyword">if</span> (maxHeap.size() > minHeap.size() + <span class="code-number">1</span>) {
+            minHeap.add(maxHeap.poll());
+        } <span class="code-keyword">else if</span> (minHeap.size() > maxHeap.size()) {
+            maxHeap.add(minHeap.poll());
+        }
+    }
+    
+    <span class="code-keyword">public double</span> findMedian() {
+        <span class="code-keyword">if</span> (maxHeap.size() == minHeap.size()) {
+            <span class="code-keyword">return</span> (maxHeap.peek() + minHeap.peek()) / <span class="code-number">2.0</span>;
+        }
+        <span class="code-keyword">return</span> maxHeap.peek();
+    }
+}
+
+<span class="code-comment">// Time: addNum O(log n), findMedian O(1)</span>
+<span class="code-comment">// Space: O(n)</span></div>
+
+            <div class="success-box">
+                <strong>✅ Practice Problems - Two Heaps:</strong>
+                <ol class="step-list">
+                    <li><strong>Find Median from Data Stream</strong> (LeetCode 295) - Classic two heaps</li>
+                    <li><strong>Sliding Window Median</strong> (LeetCode 480) - Two heaps with removal</li>
+                    <li><strong>IPO</strong> (LeetCode 502) - Maximize capital with two heaps</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Pattern continues in next part... -->
+
+        <!-- PATTERN 4: Scheduling/Meeting Rooms -->
+        <div class="diagram-section">
+            <h2>🎯 PATTERN 4: Scheduling & Meeting Rooms</h2>
+            
+            <div class="recognition-box">
+                <h3 style="color: #9c27b0; margin-top: 0;">🔍 How to Recognize This Pattern?</h3>
+                <div style="line-height: 1.8;">
+                    <strong>You should think "Scheduling with Heap" when you see:</strong><br><br>
+                    
+                    ✓ <strong>"Minimum meeting rooms"</strong> required<br>
+                    ✓ <strong>"Task scheduler"</strong><br>
+                    ✓ <strong>"CPU scheduling"</strong><br>
+                    ✓ <strong>"Course schedule"</strong> with prerequisites<br>
+                    ✓ Problems with <strong>overlapping intervals</strong><br>
+                    ✓ Need to <strong>track earliest ending</strong> task/meeting<br><br>
+                    
+                    <strong>Keywords:</strong> "meeting rooms", "schedule", "intervals", "overlapping", "minimum resources"
+                </div>
+            </div>
+
+            <div class="intuition-box">
+                <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition</h3>
+                <div style="line-height: 1.8;">
+                    <strong>Problem:</strong> Find minimum meeting rooms needed<br>
+                    Meetings: [[0,30], [5,10], [15,20]]<br><br>
+                    
+                    🎯 <strong>Think like a receptionist:</strong><br><br>
+                    
+                    <strong>Approach:</strong><br>
+                    1. Sort meetings by start time<br>
+                    2. Use min-heap to track <strong>end times</strong> of ongoing meetings<br>
+                    3. For each new meeting:<br>
+                       • If earliest ending meeting finishes before this starts → Reuse that room!<br>
+                       • Else → Need new room<br><br>
+                    
+                    <strong>Why min-heap?</strong><br>
+                    • Need to know which meeting ends earliest<br>
+                    • That room becomes available first!<br>
+                    • Heap size = rooms currently in use<br>
+                    • Max heap size = answer!<br><br>
+                    
+                    <strong>Example:</strong><br>
+                    Meeting [0,30] starts → Room 1, heap=[30]<br>
+                    Meeting [5,10] starts → 30>5, need Room 2, heap=[10,30]<br>
+                    Meeting [15,20] starts → 10&lt;15, Room 2 free! heap=[20,30]<br>
+                    Max rooms used = 2 ✅
+                </div>
+            </div>
+
+            <div class="diagram">
+                <h3>Visual: Meetings [[0,30], [5,10], [15,20]]</h3>
+                
+                <div class="code-visual">
+                    <div class="code-step">
+                        <strong>Sort by start time:</strong> Already sorted
+                        <div style="text-align: center; margin: 20px;">
+                            [0,30], [5,10], [15,20]
+                        </div>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Process [0,30]:</strong> First meeting, need 1 room
+                        <div style="text-align: center; margin: 20px;">
+                            <div style="display: inline-block; padding: 15px; border: 2px solid #e91e63; border-radius: 8px;">
+                                <strong>Min-Heap (end times)</strong><br>
+                                [30]
+                            </div>
+                        </div>
+                        <p style="text-align: center;">Rooms used: 1</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Process [5,10]:</strong> Start=5, earliest end=30
+                        <div style="margin: 20px;">
+                            <p style="text-align: center;">5 &lt; 30 → Meeting still ongoing, need NEW room!</p>
+                            <div style="text-align: center;">
+                                <div style="display: inline-block; padding: 15px; border: 2px solid #e91e63; border-radius: 8px;">
+                                    <strong>Min-Heap (end times)</strong><br>
+                                    [10, 30]<br>
+                                    <small>top=10 (earliest ending)</small>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="text-align: center;">Rooms used: <strong style="color: #e91e63;">2</strong></p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Process [15,20]:</strong> Start=15, earliest end=10
+                        <div style="margin: 20px;">
+                            <p style="text-align: center;">15 ≥ 10 → First meeting ended, REUSE that room!</p>
+                            <div style="text-align: center;">
+                                <div style="display: inline-block; padding: 15px; border: 2px solid #4caf50; border-radius: 8px; background: #e8f5e9;">
+                                    <strong>Min-Heap (end times)</strong><br>
+                                    [20, 30]<br>
+                                    <small>Removed 10, added 20</small>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="text-align: center;">Rooms used: 2 (reused one!)</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Result:</strong>
+                        <div style="text-align: center; margin: 20px;">
+                            <div style="padding: 20px; background: #c8e6c9; border-radius: 8px; border: 3px solid #4caf50;">
+                                <strong style="font-size: 1.3em;">Minimum Meeting Rooms = 2 ✅</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block"><span class="code-comment">// Pattern 4: Meeting Rooms II</span>
+<span class="code-keyword">public int</span> minMeetingRooms(<span class="code-keyword">int</span>[][] intervals) {
+    <span class="code-keyword">if</span> (intervals.length == <span class="code-number">0</span>) <span class="code-keyword">return</span> <span class="code-number">0</span>;
+    
+    <span class="code-comment">// Sort by start time</span>
+    Arrays.sort(intervals, (a, b) -&gt; a[<span class="code-number">0</span>] - b[<span class="code-number">0</span>]);
+    
+    <span class="code-comment">// Min-heap of end times</span>
+    PriorityQueue&lt;Integer&gt; minHeap = <span class="code-keyword">new</span> PriorityQueue&lt;&gt;();
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span>[] interval : intervals) {
+        <span class="code-comment">// If earliest ending meeting finishes before this starts</span>
+        <span class="code-keyword">if</span> (!minHeap.isEmpty() && minHeap.peek() <= interval[<span class="code-number">0</span>]) {
+            minHeap.poll();  <span class="code-comment">// Reuse that room</span>
+        }
+        
+        <span class="code-comment">// Add current meeting's end time</span>
+        minHeap.add(interval[<span class="code-number">1</span>]);
+    }
+    
+    <span class="code-comment">// Heap size = rooms needed</span>
+    <span class="code-keyword">return</span> minHeap.size();
+}
+
+<span class="code-comment">// Time: O(n log n) - Sorting + heap operations</span>
+<span class="code-comment">// Space: O(n) - Heap can have all meetings</span></div>
+
+            <div class="success-box">
+                <strong>✅ Practice Problems - Scheduling:</strong>
+                <ol class="step-list">
+                    <li><strong>Meeting Rooms II</strong> (LeetCode 253) - Minimum rooms needed</li>
+                    <li><strong>Task Scheduler</strong> (LeetCode 621) - CPU task scheduling with cooldown</li>
+                    <li><strong>Car Pooling</strong> (LeetCode 1094) - Passenger capacity scheduling</li>
+                    <li><strong>Course Schedule III</strong> (LeetCode 630) - Maximum courses</li>
+                    <li><strong>Minimum Number of Arrows to Burst Balloons</strong> (LeetCode 452) - Interval scheduling</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- PATTERN 5: Stream/Window Problems -->
+        <div class="diagram-section">
+            <h2>🎯 PATTERN 5: Sliding Window with Heap</h2>
+            
+            <div class="recognition-box">
+                <h3 style="color: #9c27b0; margin-top: 0;">🔍 How to Recognize This Pattern?</h3>
+                <div style="line-height: 1.8;">
+                    <strong>You should think "Sliding Window + Heap" when you see:</strong><br><br>
+                    
+                    ✓ <strong>"Sliding window maximum/minimum"</strong><br>
+                    ✓ <strong>"Moving average"</strong> of top k<br>
+                    ✓ <strong>"Continuous median"</strong> in window<br>
+                    ✓ Need <strong>max/min in current window</strong><br>
+                    ✓ Window slides and need to <strong>track extremes</strong><br><br>
+                    
+                    <strong>Keywords:</strong> "sliding window", "window maximum", "window median", "stream"
+                </div>
+            </div>
+
+            <div class="intuition-box">
+                <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition</h3>
+                <div style="line-height: 1.8;">
+                    <strong>Problem:</strong> Find max in each window of size k<br>
+                    Array: [1,3,-1,-3,5,3,6,7], k=3<br><br>
+                    
+                    <strong>Naive:</strong> For each window, scan k elements → O(n×k)<br><br>
+                    
+                    🎯 <strong>With Max-Heap:</strong><br>
+                    • Keep elements with their <strong>indices</strong> in heap<br>
+                    • Peek gives max, but check if it's in current window!<br>
+                    • Remove old elements (outside window)<br><br>
+                    
+                    <strong>Key insight:</strong> Lazy deletion!<br>
+                    Don't immediately remove elements leaving window<br>
+                    Just check at peek time: is top index still in window?<br>
+                    If not, poll it and check next<br><br>
+                    
+                    <strong>Time:</strong> O(n log n) - Better than O(n×k) when k is large!
+                </div>
+            </div>
+
+            <div class="diagram">
+                <h3>Visual Code Execution: Sliding Window Maximum [1,3,-1,-3,5,3,6,7], k=3</h3>
+                
+                <div style="margin: 20px 0; padding: 15px; background: #e3f2fd; border-radius: 8px; border: 2px solid #2196f3;">
+                    <strong>Setup:</strong><br>
+                    • Window size k=3<br>
+                    • Max-Heap stores: [value, index]<br>
+                    • Need to find max in each window
+                </div>
+
+                <div class="code-visual">
+                    <div class="code-step">
+                        <strong>i=0:</strong> Add [1, 0]
+                        <div style="margin: 15px 0;">
+                            <div style="display: inline-block; padding: 10px; background: #fff9c4; border: 2px solid #fbc02d; border-radius: 5px;">
+                                Array: [<strong style="color: #e91e63;">1</strong>, 3, -1, -3, 5, 3, 6, 7]
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin: 15px;">
+                            <div style="display: inline-block; padding: 15px; border: 2px solid #e91e63; border-radius: 8px;">
+                                <strong>Max-Heap</strong><br>
+                                [[1, 0]]
+                            </div>
+                        </div>
+                        <p>Window not full yet (i &lt; k-1), don't record</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>i=1:</strong> Add [3, 1]
+                        <div style="margin: 15px 0;">
+                            <div style="display: inline-block; padding: 10px; background: #fff9c4; border: 2px solid #fbc02d; border-radius: 5px;">
+                                Array: [<strong>1</strong>, <strong style="color: #e91e63;">3</strong>, -1, -3, 5, 3, 6, 7]
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin: 15px;">
+                            <div style="display: inline-block; padding: 15px; border: 2px solid #e91e63; border-radius: 8px;">
+                                <strong>Max-Heap</strong><br>
+                                [[3, 1], [1, 0]]<br>
+                                <small>top=[3, 1] (max=3)</small>
+                            </div>
+                        </div>
+                        <p>Window still not full (i &lt; k-1)</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>i=2:</strong> Add [-1, 2], First complete window!
+                        <div style="margin: 15px 0;">
+                            <div style="display: inline-block; padding: 10px; background: #c8e6c9; border: 2px solid #4caf50; border-radius: 5px;">
+                                Array: [<strong>1, 3, -1</strong>, -3, 5, 3, 6, 7]<br>
+                                <small>Window [0,2]</small>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin: 15px;">
+                            <div style="display: inline-block; padding: 15px; border: 2px solid #4caf50; border-radius: 8px; background: #e8f5e9;">
+                                <strong>Max-Heap</strong><br>
+                                [[3, 1], [1, 0], [-1, 2]]<br>
+                                <small>top=[3, 1] → index 1 in window [0,2] ✅</small>
+                            </div>
+                        </div>
+                        <p style="color: #4caf50; font-weight: bold;">Window [0-2]: Max = 3 ✅</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>i=3:</strong> Add [-3, 3], Check top validity
+                        <div style="margin: 15px 0;">
+                            <div style="display: inline-block; padding: 10px; background: #c8e6c9; border: 2px solid #4caf50; border-radius: 5px;">
+                                Array: [1, <strong>3, -1, -3</strong>, 5, 3, 6, 7]<br>
+                                <small>Window [1,3]</small>
+                            </div>
+                        </div>
+                        <div style="margin: 15px 0; padding: 15px; background: #fff3e0; border-radius: 5px; border-left: 4px solid #ff9800;">
+                            <strong>Lazy Deletion Check:</strong><br>
+                            • Top = [3, 1] with index 1<br>
+                            • Window starts at i-k+1 = 3-3+1 = 1<br>
+                            • Is index 1 in [1,3]? YES ✅<br>
+                            • Top is valid, no removal needed
+                        </div>
+                        <div style="text-align: center; margin: 15px;">
+                            <div style="display: inline-block; padding: 15px; border: 2px solid #4caf50; border-radius: 8px; background: #e8f5e9;">
+                                <strong>Max-Heap</strong><br>
+                                [[3, 1], [1, 0], [-1, 2], [-3, 3]]<br>
+                                <small>top=[3, 1] still valid!</small>
+                            </div>
+                        </div>
+                        <p style="color: #4caf50; font-weight: bold;">Window [1-3]: Max = 3 ✅</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>i=4:</strong> Add [5, 4], Remove stale elements
+                        <div style="margin: 15px 0;">
+                            <div style="display: inline-block; padding: 10px; background: #c8e6c9; border: 2px solid #4caf50; border-radius: 5px;">
+                                Array: [1, 3, <strong>-1, -3, 5</strong>, 3, 6, 7]<br>
+                                <small>Window [2,4]</small>
+                            </div>
+                        </div>
+                        <div style="margin: 15px 0; padding: 15px; background: #fff3e0; border-radius: 5px; border-left: 4px solid #ff9800;">
+                            <strong>Lazy Deletion Check:</strong><br>
+                            • Top = [3, 1] with index 1<br>
+                            • Window starts at 4-3+1 = 2<br>
+                            • Is index 1 in [2,4]? NO ❌<br>
+                            • Poll [3, 1]<br>
+                            • New top = [1, 0], index 0 &lt; 2? NO ❌<br>
+                            • Poll [1, 0]<br>
+                            • New top = [5, 4], index 4 in [2,4]? YES ✅
+                        </div>
+                        <div style="text-align: center; margin: 15px;">
+                            <div style="display: inline-block; padding: 15px; border: 2px solid #4caf50; border-radius: 8px; background: #e8f5e9;">
+                                <strong>Max-Heap (after cleanup)</strong><br>
+                                [[5, 4], [-1, 2], [-3, 3]]<br>
+                                <small>Removed stale [3,1] and [1,0]</small>
+                            </div>
+                        </div>
+                        <p style="color: #4caf50; font-weight: bold;">Window [2-4]: Max = 5 ✅</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>i=5:</strong> Add [3, 5]
+                        <div style="margin: 15px 0;">
+                            <div style="display: inline-block; padding: 10px; background: #c8e6c9; border: 2px solid #4caf50; border-radius: 5px;">
+                                Array: [1, 3, -1, <strong>-3, 5, 3</strong>, 6, 7]<br>
+                                <small>Window [3,5]</small>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin: 15px;">
+                            <div style="display: inline-block; padding: 15px; border: 2px solid #4caf50; border-radius: 8px; background: #e8f5e9;">
+                                <strong>Max-Heap</strong><br>
+                                [[5, 4], [3, 5], [-1, 2], [-3, 3]]<br>
+                                <small>top=[5, 4], index 4 in [3,5] ✅</small>
+                            </div>
+                        </div>
+                        <p style="color: #4caf50; font-weight: bold;">Window [3-5]: Max = 5 ✅</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Final Result:</strong>
+                        <div style="text-align: center; margin: 20px;">
+                            <div style="padding: 20px; background: #c8e6c9; border-radius: 8px; border: 3px solid #4caf50;">
+                                <strong style="font-size: 1.2em;">Output: [3, 3, 5, 5, 6, 7] ✅</strong><br><br>
+                                <table style="margin: 15px auto; border-collapse: collapse;">
+                                    <tr style="background: #4caf50; color: white;">
+                                        <th style="padding: 8px; border: 1px solid white;">Window</th>
+                                        <th style="padding: 8px; border: 1px solid white;">Elements</th>
+                                        <th style="padding: 8px; border: 1px solid white;">Max</th>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px; border: 1px solid #ddd;">[0,2]</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;">[1, 3, -1]</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">3</td>
+                                    </tr>
+                                    <tr style="background: #e8f5e9;">
+                                        <td style="padding: 8px; border: 1px solid #ddd;">[1,3]</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;">[3, -1, -3]</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">3</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px; border: 1px solid #ddd;">[2,4]</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;">[-1, -3, 5]</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">5</td>
+                                    </tr>
+                                    <tr style="background: #e8f5e9;">
+                                        <td style="padding: 8px; border: 1px solid #ddd;">[3,5]</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;">[-3, 5, 3]</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">5</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px; border: 1px solid #ddd;">[4,6]</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;">[5, 3, 6]</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">6</td>
+                                    </tr>
+                                    <tr style="background: #e8f5e9;">
+                                        <td style="padding: 8px; border: 1px solid #ddd;">[5,7]</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd;">[3, 6, 7]</td>
+                                        <td style="padding: 8px; border: 1px solid #ddd; font-weight: bold;">7</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top: 20px; background: #fff3e0; border-color: #ff9800;">
+                    <strong style="color: #ff9800;">🔑 Key Insight - Lazy Deletion:</strong><br><br>
+                    We don't remove elements immediately when they leave the window<br>
+                    Instead, we check at peek time: "Is top element's index still in current window?"<br>
+                    • If YES → Use it as max<br>
+                    • If NO → Poll it and check next<br><br>
+                    This is more efficient than trying to remove specific elements from heap!
+                </div>
+            </div>
+
+            <div class="code-block"><span class="code-comment">// Pattern 5: Sliding Window Maximum</span>
+<span class="code-keyword">public int</span>[] maxSlidingWindow(<span class="code-keyword">int</span>[] nums, <span class="code-keyword">int</span> k) {
+    <span class="code-keyword">int</span>[] result = <span class="code-keyword">new int</span>[nums.length - k + <span class="code-number">1</span>];
+    
+    <span class="code-comment">// Max-heap storing [value, index]</span>
+    PriorityQueue&lt;<span class="code-keyword">int</span>[]&gt; maxHeap = <span class="code-keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; b[<span class="code-number">0</span>] - a[<span class="code-number">0</span>]);
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i < nums.length; i++) {
+        maxHeap.add(<span class="code-keyword">new int</span>[]{nums[i], i});
+        
+        <span class="code-comment">// Remove elements outside current window</span>
+        <span class="code-keyword">while</span> (maxHeap.peek()[<span class="code-number">1</span>] <= i - k) {
+            maxHeap.poll();
+        }
+        
+        <span class="code-comment">// Record max for this window</span>
+        <span class="code-keyword">if</span> (i >= k - <span class="code-number">1</span>) {
+            result[i - k + <span class="code-number">1</span>] = maxHeap.peek()[<span class="code-number">0</span>];
+        }
+    }
+    
+    <span class="code-keyword">return</span> result;
+}
+
+<span class="code-comment">// Time: O(n log n), Space: O(n)</span>
+<span class="code-comment">// Note: Deque solution is O(n) but heap is more intuitive!</span></div>
+
+            <div class="success-box">
+                <strong>✅ Practice Problems - Sliding Window:</strong>
+                <ol class="step-list">
+                    <li><strong>Sliding Window Maximum</strong> (LeetCode 239) - Max in each window</li>
+                    <li><strong>Sliding Window Median</strong> (LeetCode 480) - Two heaps approach</li>
+                    <li><strong>Maximum Average Subarray II</strong> (LeetCode 644) - Binary search + sliding window</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Summary and Comparison -->
+        <div class="diagram-section">
+            <h2>📊 Complete Pattern Summary</h2>
+            
+            <table>
+                <tr>
+                    <th>Pattern</th>
+                    <th>When to Use</th>
+                    <th>Heap Type</th>
+                    <th>Complexity</th>
+                </tr>
+                <tr>
+                    <td><strong>1. Top K</strong></td>
+                    <td>K smallest/largest elements</td>
+                    <td>Max-heap for k smallest<br>Min-heap for k largest</td>
+                    <td>O(n log k)</td>
+                </tr>
+                <tr>
+                    <td><strong>2. Merge K</strong></td>
+                    <td>Combine k sorted lists/arrays</td>
+                    <td>Min-heap of heads</td>
+                    <td>O(N log k)</td>
+                </tr>
+                <tr>
+                    <td><strong>3. Two Heaps</strong></td>
+                    <td>Find median from stream</td>
+                    <td>Max-heap (left) + Min-heap (right)</td>
+                    <td>O(log n) add<br>O(1) median</td>
+                </tr>
+                <tr>
+                    <td><strong>4. Scheduling</strong></td>
+                    <td>Meeting rooms, task scheduling</td>
+                    <td>Min-heap of end times</td>
+                    <td>O(n log n)</td>
+                </tr>
+                <tr>
+                    <td><strong>5. Sliding Window</strong></td>
+                    <td>Window max/min, window median</td>
+                    <td>Heap with indices (lazy deletion)</td>
+                    <td>O(n log n)</td>
+                </tr>
+            </table>
+
+            <h3>Decision Tree - Which Pattern to Use?</h3>
+            <div class="diagram">
+                <div style="background: #fafafa; padding: 20px; border-radius: 8px; border: 2px solid #e91e63;">
+                    <div style="text-align: center; margin: 10px 0;">
+                        <strong style="font-size: 1.2em; color: #e91e63;">❓ What's the problem asking?</strong>
+                    </div>
+                    
+                    <div style="margin: 20px 0; padding: 15px; background: white; border-left: 4px solid #4caf50; border-radius: 5px;">
+                        <strong>→ "Find k smallest/largest/frequent"</strong><br>
+                        <span style="color: #4caf50;">✓ Pattern 1: Top K Elements</span><br>
+                        <small>Use opposite heap: k smallest → max-heap</small>
+                    </div>
+
+                    <div style="margin: 20px 0; padding: 15px; background: white; border-left: 4px solid #2196f3; border-radius: 5px;">
+                        <strong>→ "Merge k sorted lists/arrays"</strong><br>
+                        <span style="color: #2196f3;">✓ Pattern 2: Merge K Sorted</span><br>
+                        <small>Min-heap of current heads</small>
+                    </div>
+
+                    <div style="margin: 20px 0; padding: 15px; background: white; border-left: 4px solid #ff9800; border-radius: 5px;">
+                        <strong>→ "Find median from stream"</strong><br>
+                        <span style="color: #ff9800;">✓ Pattern 3: Two Heaps</span><br>
+                        <small>Max-heap for left half, min-heap for right half</small>
+                    </div>
+
+                    <div style="margin: 20px 0; padding: 15px; background: white; border-left: 4px solid #9c27b0; border-radius: 5px;">
+                        <strong>→ "Minimum meeting rooms/resources"</strong><br>
+                        <span style="color: #9c27b0;">✓ Pattern 4: Scheduling</span><br>
+                        <small>Min-heap of end times</small>
+                    </div>
+
+                    <div style="margin: 20px 0; padding: 15px; background: white; border-left: 4px solid #f44336; border-radius: 5px;">
+                        <strong>→ "Window maximum/minimum/median"</strong><br>
+                        <span style="color: #f44336;">✓ Pattern 5: Sliding Window</span><br>
+                        <small>Heap with lazy deletion or two heaps</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Common Pitfalls -->
+        <div class="diagram-section">
+            <h2>⚠️ Common Pitfalls & How to Avoid Them</h2>
+            
+            <div class="confusion-box">
+                <h3 style="color: #f44336; margin-top: 0;">❌ Mistake #1: Wrong Heap Type for Top K</h3>
+                <div style="line-height: 1.8;">
+                    <strong>Wrong:</strong> Use min-heap for k smallest<br>
+                    <strong>Why wrong:</strong> Min-heap will keep ALL small elements, can't limit to k!<br><br>
+                    
+                    <strong>✅ Correct:</strong> Use MAX-heap for k smallest<br>
+                    <strong>Why:</strong> Top is the "bouncer" - largest of our k smallest<br>
+                    If new element smaller, kick out the largest!
+                </div>
+            </div>
+
+            <div class="confusion-box">
+                <h3 style="color: #f44336; margin-top: 0;">❌ Mistake #2: Forgetting Custom Comparator</h3>
+                <div style="line-height: 1.8;">
+                    <strong>Problem:</strong> Sort by custom criteria (e.g., frequency, distance)<br><br>
+                    
+                    <strong>Wrong:</strong>
+                    <code>PriorityQueue&lt;int[]&gt; pq = new PriorityQueue&lt;&gt;();</code><br>
+                    <strong>Why wrong:</strong> Arrays don't have natural ordering!<br><br>
+                    
+                    <strong>✅ Correct:</strong><br>
+                    <code>PriorityQueue&lt;int[]&gt; pq = new PriorityQueue&lt;&gt;((a, b) -> a[0] - b[0]);</code>
+                </div>
+            </div>
+
+            <div class="confusion-box">
+                <h3 style="color: #f44336; margin-top: 0;">❌ Mistake #3: Not Maintaining Two Heaps Balance</h3>
+                <div style="line-height: 1.8;">
+                    <strong>For median problems:</strong><br><br>
+                    
+                    <strong>Must ensure:</strong> |maxHeap.size() - minHeap.size()| ≤ 1<br><br>
+                    
+                    <strong>✅ Always rebalance after adding:</strong><br>
+                    <code>if (maxHeap.size() > minHeap.size() + 1) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;minHeap.add(maxHeap.poll());<br>
+                    }</code>
+                </div>
+            </div>
+
+            <div class="confusion-box">
+                <h3 style="color: #f44336; margin-top: 0;">❌ Mistake #4: Integer Overflow in Comparator</h3>
+                <div style="line-height: 1.8;">
+                    <strong>Wrong:</strong> <code>(a, b) -> a - b</code> for large integers<br>
+                    <strong>Why wrong:</strong> a - b can overflow!<br><br>
+                    
+                    <strong>✅ Correct:</strong><br>
+                    <code>(a, b) -> Integer.compare(a, b)</code><br>
+                    OR<br>
+                    <code>(a, b) -> a > b ? 1 : (a < b ? -1 : 0)</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Checklist -->
+        <div class="diagram-section">
+            <h2>🎓 Master Checklist</h2>
+            
+            <div class="success-box">
+                <h3 style="color: #2e7d32;">✅ You've Mastered Priority Queues When You Can:</h3>
+                <div class="checklist">
+                    <div class="checklist-item">Explain how heaps are stored in arrays with index formulas</div>
+                    <div class="checklist-item">Recognize all 5 patterns from problem keywords</div>
+                    <div class="checklist-item">Choose correct heap type (min vs max) for top k problems</div>
+                    <div class="checklist-item">Implement two heaps pattern for median problems</div>
+                    <div class="checklist-item">Write custom comparators for complex objects</div>
+                    <div class="checklist-item">Handle scheduling problems with end-time tracking</div>
+                    <div class="checklist-item">Explain time complexity of heap operations</div>
+                    <div class="checklist-item">Solve 3+ problems from each pattern</div>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                🎯 <strong>Quick Reference Card:</strong><br><br>
+                <strong>Default (Min-Heap):</strong> <code>new PriorityQueue&lt;&gt;()</code><br>
+                <strong>Max-Heap:</strong> <code>new PriorityQueue&lt;&gt;((a,b) -> b-a)</code><br>
+                <strong>Custom Object:</strong> <code>new PriorityQueue&lt;&gt;((a,b) -> a.field - b.field)</code><br>
+                <strong>Add:</strong> <code>pq.add(x)</code> or <code>pq.offer(x)</code> - O(log n)<br>
+                <strong>Remove:</strong> <code>pq.poll()</code> - O(log n)<br>
+                <strong>Peek:</strong> <code>pq.peek()</code> - O(1)<br>
+                <strong>Size:</strong> <code>pq.size()</code> - O(1)
+            </div>
+
+            <div style="text-align: center; margin: 40px 0; padding: 30px; background: #ffe0ec; border-radius: 10px; border: 3px solid #e91e63;">
+                <h2 style="color: #e91e63; margin-bottom: 20px;">🎉 Congratulations!</h2>
+                <p style="font-size: 1.2em; line-height: 1.8;">
+                    You now have a <strong>complete visual guide</strong> to Priority Queue patterns!<br><br>
+                    
+                    <strong>✅ 5 Major Patterns Covered</strong><br>
+                    <strong>✅ 25+ Practice Problems</strong> organized by pattern<br>
+                    <strong>✅ Visual heap operations</strong> with step-by-step execution<br>
+                    <strong>✅ Complete Java implementations</strong><br>
+                    <strong>✅ Pattern recognition guide</strong><br>
+                    <strong>✅ Common pitfalls explained</strong><br><br>
+                    
+                    Remember: Priority Queue = Your shortcut to O(log n) min/max access!<br>
+                    Practice these patterns and you'll crush heap problems! 🚀
+                </p>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kadane's Algorithm - Complete Master Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 50px;
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.3em;
+            margin-bottom: 50px;
+        }
+        
+        h2 {
+            color: #764ba2;
+            margin-top: 50px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid #667eea;
+            font-size: 2.2em;
+        }
+        
+        h3 {
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+        }
+        
+        h4 {
+            color: #764ba2;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .toc {
+            background: #fff9c4;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .toc h2 {
+            margin-top: 0;
+            border: none;
+        }
+        
+        .toc ul {
+            list-style: none;
+        }
+        
+        .toc li {
+            margin: 10px 0;
+        }
+        
+        .toc a {
+            color: #333;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        .toc a:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .highlight-box h3 {
+            color: white;
+            margin-top: 0;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .success-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .danger-box {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .visual-diagram {
+            background: #f5f5f5;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+        
+        .code-block {
+            background: #263238;
+            color: #aed581;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.05em;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            color: inherit;
+        }
+        
+        .keyword {
+            color: #c792ea;
+            font-weight: bold;
+        }
+        
+        .comment {
+            color: #80cbc4;
+            font-style: italic;
+        }
+        
+        .string {
+            color: #c3e88d;
+        }
+        
+        .number {
+            color: #f78c6c;
+        }
+        
+        .method {
+            color: #82aaff;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        
+        .pattern-card {
+            background: #f9f9f9;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .step-box {
+            background: white;
+            border: 2px solid #2196f3;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #2196f3;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Kadane's Algorithm Master Guide</h1>
+        <p class="subtitle">Master Dynamic Programming for Subarray Problems with Visual Explanations</p>
+        
+        <!-- TABLE OF CONTENTS -->
+        <div class="toc">
+            <h2>📋 Table of Contents</h2>
+            <ul>
+                <li><a href="#what-is-kadane">1. What is Kadane's Algorithm?</a></li>
+                <li><a href="#core-technique">2. The Core Technique (Thought Process)</a></li>
+                <li><a href="#when-to-use">3. When to Use Kadane's Algorithm</a></li>
+                <li><a href="#vs-sliding-window">4. Kadane vs Sliding Window</a></li>
+                <li><a href="#max-sum">5. Problem 1: Maximum Subarray Sum</a></li>
+                <li><a href="#min-sum">6. Problem 2: Minimum Subarray Sum</a></li>
+                <li><a href="#max-product">7. Problem 3: Maximum Product Subarray</a></li>
+                <li><a href="#one-deletion">8. Problem 4: Max Sum with One Deletion</a></li>
+                <li><a href="#absolute-sum">9. Problem 5: Maximum Absolute Sum</a></li>
+                <li><a href="#circular">10. Problem 6: Circular Subarray Sum</a></li>
+                <li><a href="#summary">11. Quick Reference Summary</a></li>
+            </ul>
+        </div>
+
+        <!-- SECTION 1: WHAT IS KADANE -->
+        <section id="what-is-kadane">
+            <h2>1. What is Kadane's Algorithm? 🤔</h2>
+            
+            <div class="highlight-box">
+                <h3>Simple Definition:</h3>
+                <p style="font-size: 1.2em; line-height: 1.8;">
+                    Kadane's Algorithm is a <strong>Dynamic Programming pattern</strong> for finding the "best" 
+                    (maximum or minimum) value in a <strong>contiguous subarray</strong>. It works by calculating 
+                    the <strong>"Best Ending at Index i"</strong> and making a local decision at each step.
+                </p>
+            </div>
+
+            <h3>Key Characteristics:</h3>
+            <div class="info-box">
+                <ul style="line-height: 2; margin-left: 20px; font-size: 1.1em;">
+                    <li>✓ <strong>Works with negative numbers</strong> (unlike sliding window)</li>
+                    <li>✓ <strong>Contiguous subarrays only</strong></li>
+                    <li>✓ <strong>O(n) time, O(1) space</strong> - very efficient!</li>
+                    <li>✓ <strong>Decision-based approach</strong> at each index</li>
+                    <li>✓ <strong>Can be adapted</strong> for sum, product, frequency</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Important:</strong> Kadane's is NOT about memorizing code - it's about understanding 
+                the thought process and decision-making at each index!
+            </div>
+        </section>
+
+
+        <!-- SECTION 2: CORE TECHNIQUE -->
+        <section id="core-technique">
+            <h2>2. The Core Technique: "The Party Choice" 🎉</h2>
+            
+            <div class="highlight-box">
+                <h3>The Fundamental Question at Each Index:</h3>
+                <p style="font-size: 1.3em; line-height: 2;">
+                    At every index i, ask yourself:<br>
+                    <strong>"Should I join the previous party, or start my own party?"</strong>
+                </p>
+            </div>
+
+            <h3>Visual Representation:</h3>
+            <div class="visual-diagram">
+<pre>
+       [ Previous History ]      [ Current Element (You) ]
+              (i-1)                        (i)
+               |                            |
+               v                            v
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      |   THE DECISION FORK (Best Ending at i)         |
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+               /                                \
+              /                                  \
+             /                                    \
+    OPTION A: JOIN THE PARTY            OPTION B: START NEW PARTY
+    ═════════════════════════            ══════════════════════════
+    (Previous Best + Current)            (Current Element Alone)
+    
+    "The history is positive/           "The history is negative/
+     helpful. I will extend              burden. I will start a
+     the streak."                        fresh streak."
+     
+     bestEnding + arr[i]                 arr[i]
+</pre>
+            </div>
+
+            <h3>The Two Choices in Detail:</h3>
+            
+            <div class="step-box">
+                <h4><span class="step-number">Choice 1</span> Join the Previous Party</h4>
+                <p style="line-height: 1.8; font-size: 1.05em;">
+                    <strong>When:</strong> The previous "bestEnding" is helpful (positive for max, negative for min)<br>
+                    <strong>Action:</strong> <code>bestEnding = bestEnding + arr[i]</code><br>
+                    <strong>Meaning:</strong> Extend the existing subarray by including current element<br>
+                    <strong>Example:</strong> If bestEnding = 5 and arr[i] = 3, join to get 8
+                </p>
+            </div>
+
+            <div class="step-box">
+                <h4><span class="step-number">Choice 2</span> Start Your Own Party</h4>
+                <p style="line-height: 1.8; font-size: 1.05em;">
+                    <strong>When:</strong> The previous "bestEnding" is a burden<br>
+                    <strong>Action:</strong> <code>bestEnding = arr[i]</code><br>
+                    <strong>Meaning:</strong> Discard all history and start fresh from current element<br>
+                    <strong>Example:</strong> If bestEnding = -10 and arr[i] = 5, start new at 5
+                </p>
+            </div>
+
+            <h3>The Update Step:</h3>
+            <div class="success-box">
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    After making the local decision at index i, compare the new <code>bestEnding</code> 
+                    with the global <code>result</code> to see if you've found a new overall maximum/minimum.
+                </p>
+                <div class="code-block">
+<pre>
+<span class="comment">// After calculating bestEnding at index i</span>
+result = Math.<span class="method">max</span>(result, bestEnding);  <span class="comment">// For maximum problems</span>
+result = Math.<span class="method">min</span>(result, bestEnding);  <span class="comment">// For minimum problems</span>
+</pre>
+                </div>
+            </div>
+        
+            <h3>Visual State Machine:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>🎨 VISUAL STATE MACHINE: How Kadane's Thinks</strong>
+
+┌─────────────────────────────────────────────────────────┐
+│                    START OF ARRAY                        │
+│              Initialize: i = 0                           │
+└─────────────────────────────────────────────────────────┘
+                           ↓
+┌─────────────────────────────────────────────────────────┐
+│                  AT INDEX i                              │
+│   Current State:                                         │
+│   • arr[i] = current element                             │
+│   • bestEnding = best sum ending at (i-1)                │
+│   • result = global maximum so far                       │
+└─────────────────────────────────────────────────────────┘
+                           ↓
+              ╔═══════════════════════╗
+              ║   DECISION TIME! 🤔   ║
+              ╚═══════════════════════╝
+                           ↓
+         ┌─────────────────┴──────────────────┐
+         ↓                                     ↓
+┏━━━━━━━━━━━━━━━━┓               ┏━━━━━━━━━━━━━━━━┓
+┃  OPTION A       ┃               ┃  OPTION B       ┃
+┃  Join Party     ┃               ┃  Start New      ┃
+┗━━━━━━━━━━━━━━━━┛               ┗━━━━━━━━━━━━━━━━┛
+         ↓                                     ↓
+  bestEnding + arr[i]                      arr[i]
+         ↓                                     ↓
+    Is history                          Forget history
+    helpful? ✅                          Start fresh 🆕
+         ↓                                     ↓
+         └─────────────────┬──────────────────┘
+                           ↓
+              ╔═══════════════════════╗
+              ║  Math.max(A, B)       ║
+              ║  Choose WINNER!       ║
+              ╚═══════════════════════╝
+                           ↓
+┌─────────────────────────────────────────────────────────┐
+│                  UPDATE STATE                            │
+│   bestEnding = winner                                    │
+│   result = Math.max(result, bestEnding)                  │
+└─────────────────────────────────────────────────────────┘
+                           ↓
+                    i++ (move right)
+                           ↓
+              ╔═══════════════════════╗
+              ║  More elements?       ║
+              ╚═══════════════════════╝
+                  ↓YES        ↓NO
+            [Loop Back]    [RETURN result]
+</pre>
+            </div>
+        </section>
+
+        <!-- SECTION 3: WHEN TO USE -->
+        <section id="when-to-use">
+            <h2>3. When to Use Kadane's Algorithm 🎯</h2>
+            
+            <div class="highlight-box">
+                <h3>Recognition Checklist - ALL Must Be True:</h3>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Criterion</th>
+                        <th>What to Look For</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Data Structure</strong></td>
+                        <td>Input is an <strong>Array</strong></td>
+                        <td>int[] nums = {-2, 1, -3, 4}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Content Type</strong></td>
+                        <td>Contains <strong>positives, negatives, zeros</strong></td>
+                        <td>[-1, 5, -3, 0, 2]</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Target</strong></td>
+                        <td>Find a <strong>Contiguous Subarray</strong></td>
+                        <td>"Find the subarray..."</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. Objective</strong></td>
+                        <td>Find the <strong>"Best"</strong> value (Max/Min)</td>
+                        <td>"Maximum sum", "Minimum product"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5. Operation</strong></td>
+                        <td>Involves <strong>Sum, Product, or Frequency</strong></td>
+                        <td>Sum of elements, product of elements</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Common Keywords That Indicate Kadane's:</h3>
+            <div class="info-box">
+                <ul style="line-height: 2; font-size: 1.1em; margin-left: 20px;">
+                    <li>✓ "Maximum subarray sum"</li>
+                    <li>✓ "Minimum subarray sum"</li>
+                    <li>✓ "Maximum product subarray"</li>
+                    <li>✓ "Largest contiguous sum"</li>
+                    <li>✓ "Best subarray" (with sum/product)</li>
+                    <li>✓ "Contiguous elements" + "maximum/minimum"</li>
+                </ul>
+            </div>
+
+            <h3>Variations to Watch For:</h3>
+            <div class="warning-box">
+                <p><strong>Advanced Variations:</strong></p>
+                <ul style="line-height: 2; margin-left: 20px;">
+                    <li>🔸 One deletion allowed</li>
+                    <li>🔸 Circular array (last connects to first)</li>
+                    <li>🔸 Absolute sum (|sum|)</li>
+                    <li>🔸 K deletions allowed</li>
+                    <li>🔸 With constraints on length</li>
+                </ul>
+            </div>
+        </section>
+
+
+        <!-- SECTION 4: KADANE VS SLIDING WINDOW -->
+        <section id="vs-sliding-window">
+            <h2>4. Kadane vs Sliding Window 🆚</h2>
+            
+            <div class="danger-box">
+                <h3 style="color: #f44336; margin-top: 0;">⚠️ Why Sliding Window FAILS with Negatives</h3>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    Sliding Window loses its <strong>decision-making power</strong> when negative numbers are present!
+                </p>
+            </div>
+
+            <h3>The Problem with Sliding Window:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>With Positive Numbers ONLY:</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+Expand window (high++)  → Sum INCREASES  ✅ Predictable
+Shrink window (low++)   → Sum DECREASES  ✅ Predictable
+
+<strong>With Negative Numbers:</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+Expand window (high++) → Might add -5  → Sum DECREASES  ❌ Unpredictable!
+Shrink window (low++)  → Might remove -5 → Sum INCREASES  ❌ Unpredictable!
+
+<strong>Result:</strong> You don't know which pointer to move! 💥
+</pre>
+            </div>
+
+            <h3>Comparison Table:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Sliding Window</th>
+                        <th>Kadane's Algorithm</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Input Type</strong></td>
+                        <td>Works with positive numbers</td>
+                        <td>Handles positives, negatives, zeros</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Logic</strong></td>
+                        <td>Adjust start/end pointers (low/high)</td>
+                        <td>Calculate "Best Ending at i"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Decision</strong></td>
+                        <td>"Should I grow or shrink?"</td>
+                        <td>"Should I join or start new?"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Primary Use</strong></td>
+                        <td>Subarrays with specific constraints (sum=k)</td>
+                        <td>Best (Max/Min) sum or product</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Time Complexity</strong></td>
+                        <td>O(n)</td>
+                        <td>O(n)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Visual Demonstration of the Failure:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>❌ WHY SLIDING WINDOW FAILS WITH NEGATIVES:</strong>
+
+<strong>Scenario 1: All Positives (Sliding Window Works ✅)</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Array: [1, 2, 3, 4, 5]
+       ↑─────↑
+       low   high   Sum = 1+2+3 = 6
+
+Expand (high++):  Add 4 → Sum = 10 ⬆ INCREASES (Predictable!)
+Shrink (low++):   Remove 1 → Sum = 9 ⬇ DECREASES (Predictable!)
+
+<strong>Decision: CLEAR! Move pointers based on what you need.</strong>
+
+<strong>Scenario 2: With Negatives (Sliding Window Breaks ❌)</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Array: [5, -3, 2, -1, 4]
+       ↑────────↑
+       low      high   Sum = 5+(-3)+2 = 4
+
+Expand (high++):  Add -1 → Sum = 3 ⬇ DECREASED! (Unexpected!)
+                  What if next is +10? Should we expand?
+                  
+Shrink (low++):   Remove 5 → Sum = -1 ⬇ DECREASED! (Unexpected!)
+                  We removed positive but sum went down!
+
+<strong>Decision: CONFUSED! 🤯 Can't predict which pointer to move!</strong>
+
+<strong>The Problem:</strong>
+┌───────────────────────────────────────────────────┐
+│ Negatives make it IMPOSSIBLE to know if:          │
+│ • Expanding will increase or decrease sum         │
+│ • Shrinking will increase or decrease sum         │
+│ → Lost decision-making power! 💥                  │
+└───────────────────────────────────────────────────┘
+</pre>
+            </div>
+        </section>
+
+        <!-- SECTION 5: MAXIMUM SUBARRAY SUM -->
+        <section id="max-sum">
+            <h2>5. Problem 1: Maximum Subarray Sum 📈</h2>
+            
+            <div class="pattern-card">
+                <h3 style="color: #4caf50; margin-top: 0;">Problem Statement:</h3>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    <strong>LeetCode 53 - Maximum Subarray</strong><br>
+                    Given an integer array <code>nums</code>, find the contiguous subarray (containing at least one number) 
+                    which has the largest sum and return its sum.
+                </p>
+                <p style="margin-top: 15px;"><strong>Example:</strong></p>
+                <div class="code-block">
+<pre>
+Input: nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+Output: 6
+Explanation: [4, -1, 2, 1] has the largest sum = 6
+</pre>
+                </div>
+            </div>
+
+            <h3>Visual Walkthrough:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>🔍 DETAILED TRACE: Maximum Subarray Sum</strong>
+
+Array: [-2,  1, -3,  4, -1,  2,  1, -5,  4]
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 0: arr[0] = -2                                  ║
+╠═══════════════════════════════════════════════════════╣
+║  No history (first element)                           ║
+║  bestEnding = -2                                      ║
+║  result = -2                                          ║
+║  Subarray: [-2]                                       ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 1: arr[1] = 1                                   ║
+╠═══════════════════════════════════════════════════════╣
+║  History: -2 (BURDEN! ❌)                             ║
+║  Choice A: Join → -2 + 1 = -1                         ║
+║  Choice B: New  → 1         ✅ WINNER                 ║
+║  bestEnding = 1                                       ║
+║  result = max(-2, 1) = 1                              ║
+║  Subarray: [1]                                        ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 2: arr[2] = -3                                  ║
+╠═══════════════════════════════════════════════════════╣
+║  History: 1 (HELPFUL! ✅)                             ║
+║  Choice A: Join → 1 + (-3) = -2  ✅ WINNER            ║
+║  Choice B: New  → -3                                  ║
+║  bestEnding = -2                                      ║
+║  result = max(1, -2) = 1                              ║
+║  Subarray: [1, -3]                                    ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 3: arr[3] = 4                                   ║
+╠═══════════════════════════════════════════════════════╣
+║  History: -2 (BURDEN! ❌)                             ║
+║  Choice A: Join → -2 + 4 = 2                          ║
+║  Choice B: New  → 4          ✅ WINNER                ║
+║  bestEnding = 4                                       ║
+║  result = max(1, 4) = 4                               ║
+║  Subarray: [4]                                        ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 4: arr[4] = -1                                  ║
+╠═══════════════════════════════════════════════════════╣
+║  History: 4 (HELPFUL! ✅)                             ║
+║  Choice A: Join → 4 + (-1) = 3  ✅ WINNER             ║
+║  Choice B: New  → -1                                  ║
+║  bestEnding = 3                                       ║
+║  result = max(4, 3) = 4                               ║
+║  Subarray: [4, -1]                                    ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 5: arr[5] = 2                                   ║
+╠═══════════════════════════════════════════════════════╣
+║  History: 3 (HELPFUL! ✅)                             ║
+║  Choice A: Join → 3 + 2 = 5     ✅ WINNER             ║
+║  Choice B: New  → 2                                   ║
+║  bestEnding = 5                                       ║
+║  result = max(4, 5) = 5                               ║
+║  Subarray: [4, -1, 2]                                 ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 6: arr[6] = 1                                   ║
+╠═══════════════════════════════════════════════════════╣
+║  History: 5 (HELPFUL! ✅)                             ║
+║  Choice A: Join → 5 + 1 = 6     ✅ WINNER             ║
+║  Choice B: New  → 1                                   ║
+║  bestEnding = 6                                       ║
+║  result = max(5, 6) = 6         🎉 NEW BEST!          ║
+║  Subarray: [4, -1, 2, 1]                              ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 7: arr[7] = -5                                  ║
+╠═══════════════════════════════════════════════════════╣
+║  History: 6 (HELPFUL! ✅)                             ║
+║  Choice A: Join → 6 + (-5) = 1  ✅ WINNER             ║
+║  Choice B: New  → -5                                  ║
+║  bestEnding = 1                                       ║
+║  result = max(6, 1) = 6                               ║
+║  Subarray: [4, -1, 2, 1, -5]                          ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 8: arr[8] = 4                                   ║
+╠═══════════════════════════════════════════════════════╣
+║  History: 1 (HELPFUL! ✅)                             ║
+║  Choice A: Join → 1 + 4 = 5     ✅ WINNER             ║
+║  Choice B: New  → 4                                   ║
+║  bestEnding = 5                                       ║
+║  result = max(6, 5) = 6                               ║
+║  Subarray: [4, -1, 2, 1, -5, 4]                       ║
+╚═══════════════════════════════════════════════════════╝
+
+<strong>✅ FINAL ANSWER: 6</strong>
+<strong>📍 WINNING SUBARRAY: [4, -1, 2, 1]</strong>
+</pre>
+            </div>
+
+            <h3>Color-Coded Decision Summary:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>🎯 COLOR-CODED DECISION TRACE</strong>
+
+Array: [-2,  1, -3,  4, -1,  2,  1, -5,  4]
+
+Legend:
+🔴 Start New (bestEnding = arr[i])
+🟢 Join Previous (bestEnding = bestEnding + arr[i])
+⭐ New Global Maximum Found!
+
+┌──────┬────────┬──────────────────┬────────────┬──────────┬─────────┐
+│Index │ Value  │    Decision      │ bestEnding │  result  │ Subarray│
+├──────┼────────┼──────────────────┼────────────┼──────────┼─────────┤
+│  0   │  -2    │ 🔴 Start (init)  │     -2     │    -2    │  [-2]   │
+├──────┼────────┼──────────────────┼────────────┼──────────┼─────────┤
+│  1   │   1    │ 🔴 Start New     │      1     │ ⭐  1    │   [1]   │
+│      │        │  (-2+1=-1 vs 1)  │            │          │         │
+├──────┼────────┼──────────────────┼────────────┼──────────┼─────────┤
+│  2   │  -3    │ 🟢 Join Prev     │     -2     │     1    │  [1,-3] │
+│      │        │  (1-3=-2 vs -3)  │            │          │         │
+├──────┼────────┼──────────────────┼────────────┼──────────┼─────────┤
+│  3   │   4    │ 🔴 Start New     │      4     │ ⭐  4    │   [4]   │
+│      │        │  (-2+4=2 vs 4)   │            │          │         │
+├──────┼────────┼──────────────────┼────────────┼──────────┼─────────┤
+│  4   │  -1    │ 🟢 Join Prev     │      3     │     4    │  [4,-1] │
+│      │        │  (4-1=3 vs -1)   │            │          │         │
+├──────┼────────┼──────────────────┼────────────┼──────────┼─────────┤
+│  5   │   2    │ 🟢 Join Prev     │      5     │ ⭐  5    │ [4,-1,2]│
+│      │        │  (3+2=5 vs 2)    │            │          │         │
+├──────┼────────┼──────────────────┼────────────┼──────────┼─────────┤
+│  6   │   1    │ 🟢 Join Prev     │      6     │ ⭐  6    │[4,-1,2,1│
+│      │        │  (5+1=6 vs 1)    │            │          │         │
+├──────┼────────┼──────────────────┼────────────┼──────────┼─────────┤
+│  7   │  -5    │ 🟢 Join Prev     │      1     │     6    │[4,-1,2, │
+│      │        │  (6-5=1 vs -5)   │            │          │  1,-5]  │
+├──────┼────────┼──────────────────┼────────────┼──────────┼─────────┤
+│  8   │   4    │ 🟢 Join Prev     │      5     │     6    │[4,-1,2, │
+│      │        │  (1+4=5 vs 4)    │            │          │ 1,-5,4] │
+└──────┴────────┴──────────────────┴────────────┴──────────┴─────────┘
+
+<strong>PATTERN OBSERVED:</strong>
+🔴🟢🟢🔴🟢🟢🟢🟢🟢
+Start → Join → Join → Start → Join → Join → Join → Join → Join
+
+<strong>FINAL ANSWER:</strong> 6 from subarray [4, -1, 2, 1]
+</pre>
+            </div>
+
+            <h3>Visual Graph Timeline:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>📈 VISUAL GRAPH: bestEnding & result Over Time</strong>
+
+result (Global Max)
+  ↑
+ 6│                              ●━━━━━━━━━━●
+  │                            ●╱            
+ 5│                          ●╱              
+  │                        ●╱                
+ 4│              ●━━━━━━●╱                  
+  │            ●╱                            
+ 3│          ●╱                              
+  │        ●╱                                
+ 2│      ●╱                                  
+  │    ●╱                                    
+ 1│  ●●━━━●                                  
+  │●╱                                        
+ 0├─────────────────────────────────────────→ Index
+-1│                                          
+-2│●                                         
+  └─0───1───2───3───4───5───6───7───8
+
+bestEnding (Local at i)
+  ↑
+ 6│                              ●           
+  │                            ╱ ╲          
+ 5│                          ╱   ╲         ●
+  │                        ╱       ╲       ╱
+ 4│              ●       ╱           ╲   ╱  
+  │            ╱ ╲     ╱             ╲ ╱   
+ 3│          ╱   ╲   ╱               ╲     
+  │        ╱     ╲ ╱                 1     
+ 2│      ●       ●                         
+  │    ╱                                    
+ 1│  ●                                      
+  │╱                                        
+ 0├─────────────────────────────────────────→ Index
+-1│                                          
+-2│●     ●                                   
+  └─0───1───2───3───4───5───6───7───8
+
+Key Observations:
+• bestEnding goes UP and DOWN (local decisions)
+• result only goes UP (keeps global max)
+• Peaks in bestEnding = potential new maximums
+</pre>
+            </div>
+
+            <h3>Scenario Comparisons:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>⚖️ VISUAL COMPARISON: Impact of Elements</strong>
+
+<strong>Scenario A: All Positive Numbers</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Array: [1, 2, 3, 4, 5]
+
+  ●━━━●━━━●━━━●━━━●  (result always increasing)
+  1   3   6   10  15
+
+Decision at every step: 🟢 JOIN (always helpful!)
+Pattern: Linear growth ↗️
+
+<strong>Scenario B: Mixed Positive and Negative</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Array: [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+
+      ●           ●━━━●━━━●━━━━━━━  (result: -2→1→4→6)
+    ╱ ╲         ╱
+  ●     ●     ●  
+              
+Decisions: 🔴 🔴 🟢 🔴 🟢 🟢 🟢 🟢 🟢
+Pattern: Restart when burden, join when helpful
+
+<strong>Scenario C: All Negative Numbers</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Array: [-5, -2, -8, -1, -3]
+
+           ●  (result = -1, the least negative)
+         ╱
+       ╱
+     ●
+   ╱
+ ●
+
+Decision: Always 🔴 START NEW (pick least negative)
+Pattern: Find maximum (closest to zero)
+</pre>
+            </div>
+
+            <h3>Before vs After Understanding:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>🧠 BEFORE vs AFTER UNDERSTANDING KADANE'S</strong>
+
+<strong>BEFORE (Confused 😵):</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Problem: Find max subarray sum in [-2, 1, -3, 4, -1, 2, 1]
+
+Thinking: "I need to check ALL possible subarrays!"
+          "That's O(n²) or O(n³)... too slow!"
+          
+Attempts:
+  [-2] = -2
+  [-2, 1] = -1
+  [-2, 1, -3] = -4
+  [1] = 1
+  [1, -3] = -2
+  [1, -3, 4] = 2
+  ...
+  
+Total: 28 subarrays to check! 💀
+
+<strong>AFTER (Enlightened ✨):</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Problem: Find max subarray sum in [-2, 1, -3, 4, -1, 2, 1]
+
+Thinking: "At each step, I make ONE decision:"
+          "Join the party OR start new!"
+          
+Process:
+  i=0: -2 → start (no choice)
+  i=1:  1 → start new (-2 is burden)
+  i=2: -3 → join (1 is helpful)
+  i=3:  4 → start new (-2 is burden)
+  i=4: -1 → join (4 is helpful)
+  i=5:  2 → join (3 is helpful)
+  i=6:  1 → join (5 is helpful)
+  
+Result: 6 in O(n) time! ⚡
+
+<strong>THE INSIGHT:</strong>
+┌────────────────────────────────────────────────┐
+│ Don't check all subarrays!                     │
+│ Instead: Make smart LOCAL decisions            │
+│ that lead to GLOBAL optimum!                   │
+└────────────────────────────────────────────────┘
+</pre>
+            </div>>
+
+            <h3>Java Code:</h3>
+            <div class="code-block">
+<pre>
+<span class="keyword">public int</span> <span class="method">maxSubArray</span>(<span class="keyword">int</span>[] nums) {
+    <span class="comment">// Handle empty array</span>
+    <span class="keyword">if</span> (nums.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;
+    
+    <span class="comment">// Initialize with first element</span>
+    <span class="keyword">int</span> bestEnding = nums[<span class="number">0</span>];  <span class="comment">// Best sum ending at current index</span>
+    <span class="keyword">int</span> result = nums[<span class="number">0</span>];      <span class="comment">// Global maximum</span>
+    
+    <span class="comment">// Iterate through array starting from index 1</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < nums.length; i++) {
+        <span class="comment">// THE DECISION: Join previous party OR start new party</span>
+        <span class="comment">// Option A: Extend previous subarray (bestEnding + nums[i])</span>
+        <span class="comment">// Option B: Start fresh from current element (nums[i])</span>
+        bestEnding = Math.<span class="method">max</span>(bestEnding + nums[i], nums[i]);
+        
+        <span class="comment">// Update global result if we found a better sum</span>
+        result = Math.<span class="method">max</span>(result, bestEnding);
+    }
+    
+    <span class="keyword">return</span> result;
+}
+
+<span class="comment">// Time Complexity: O(n) - single pass through array</span>
+<span class="comment">// Space Complexity: O(1) - only use two variables</span>
+</pre>
+            </div>
+
+            <div class="success-box">
+                <h4>💡 Key Insights:</h4>
+                <ul style="line-height: 2; margin-left: 20px;">
+                    <li>✓ At each index, compare: (previous + current) vs (current alone)</li>
+                    <li>✓ If previous sum is negative, it's a burden - start fresh</li>
+                    <li>✓ If previous sum is positive, it's helpful - extend it</li>
+                    <li>✓ Always track global maximum separately</li>
+                </ul>
+            </div>
+        </section>
+
+
+<!-- DETAILED MINIMUM SUBARRAY SUM VISUALIZATION -->
+
+        <!-- SECTION 6: MINIMUM SUBARRAY SUM -->
+        <section id="min-sum">
+            <h2>6. Problem 2: Minimum Subarray Sum 📉</h2>
+            
+            <div class="pattern-card">
+                <h3 style="color: #2196f3; margin-top: 0;">Problem Statement:</h3>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    Given an integer array, find the contiguous subarray which has the <strong>smallest (minimum)</strong> sum.
+                </p>
+                <p style="margin-top: 15px;"><strong>Example:</strong></p>
+                <div class="code-block">
+<pre>
+Input: nums = [3, -4, 2, -3, -1, 7, -5]
+Output: -6
+Explanation: [-4, 2, -3, -1] has the smallest sum = -6
+</pre>
+                </div>
+            </div>
+
+            <h3>Key Insight:</h3>
+            <div class="info-box">
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    <strong>Exact same logic as Maximum Sum, but flip the comparison!</strong><br>
+                    • Instead of choosing <code>max(prev+curr, curr)</code>, we choose <strong>min(prev+curr, curr)</strong><br>
+                    • Instead of tracking maximum result, we track <strong>minimum result</strong><br>
+                    • We want the MOST NEGATIVE sum (or closest to negative infinity)
+                </p>
+            </div>
+
+            <h3>Detailed Step-by-Step Walkthrough:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>🔍 DETAILED TRACE: Minimum Subarray Sum</strong>
+
+Array: [3, -4, 2, -3, -1, 7, -5]
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 0: arr[0] = 3                                   ║
+╠═══════════════════════════════════════════════════════╣
+║  No history (first element)                           ║
+║  bestEnding = 3                                       ║
+║  result = 3                                           ║
+║  Subarray: [3]                                        ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 1: arr[1] = -4                                  ║
+╠═══════════════════════════════════════════════════════╣
+║  History: 3 (BURDEN for min! ❌)                      ║
+║  Choice A: Join → 3 + (-4) = -1                       ║
+║  Choice B: New  → -4        ✅ WINNER (more negative) ║
+║  bestEnding = -4                                      ║
+║  result = min(3, -4) = -4                             ║
+║  Subarray: [-4]                                       ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 2: arr[2] = 2                                   ║
+╠═══════════════════════════════════════════════════════╣
+║  History: -4 (HELPFUL for min! ✅)                    ║
+║  Choice A: Join → -4 + 2 = -2  ✅ WINNER              ║
+║  Choice B: New  → 2            (too positive)         ║
+║  bestEnding = -2                                      ║
+║  result = min(-4, -2) = -4                            ║
+║  Subarray: [-4, 2]                                    ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 3: arr[3] = -3                                  ║
+╠═══════════════════════════════════════════════════════╣
+║  History: -2 (HELPFUL for min! ✅)                    ║
+║  Choice A: Join → -2 + (-3) = -5  ✅ WINNER           ║
+║  Choice B: New  → -3              (less negative)     ║
+║  bestEnding = -5                                      ║
+║  result = min(-4, -5) = -5                            ║
+║  Subarray: [-4, 2, -3]                                ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 4: arr[4] = -1                                  ║
+╠═══════════════════════════════════════════════════════╣
+║  History: -5 (HELPFUL for min! ✅)                    ║
+║  Choice A: Join → -5 + (-1) = -6  ✅ WINNER           ║
+║  Choice B: New  → -1              (less negative)     ║
+║  bestEnding = -6                                      ║
+║  result = min(-5, -6) = -6        🎉 NEW MINIMUM!     ║
+║  Subarray: [-4, 2, -3, -1]                            ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 5: arr[5] = 7                                   ║
+╠═══════════════════════════════════════════════════════╣
+║  History: -6 (HELPFUL for min! ✅)                    ║
+║  Choice A: Join → -6 + 7 = 1   ✅ WINNER              ║
+║  Choice B: New  → 7            (too positive)         ║
+║  bestEnding = 1                                       ║
+║  result = min(-6, 1) = -6                             ║
+║  Subarray: [-4, 2, -3, -1, 7]                         ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ INDEX 6: arr[6] = -5                                  ║
+╠═══════════════════════════════════════════════════════╣
+║  History: 1 (BURDEN for min! ❌)                      ║
+║  Choice A: Join → 1 + (-5) = -4                       ║
+║  Choice B: New  → -5           ✅ WINNER              ║
+║  bestEnding = -5                                      ║
+║  result = min(-6, -5) = -6                            ║
+║  Subarray: [-5]                                       ║
+╚═══════════════════════════════════════════════════════╝
+
+<strong>✅ FINAL ANSWER: -6</strong>
+<strong>📍 WINNING SUBARRAY: [-4, 2, -3, -1]</strong>
+</pre>
+            </div>
+
+            <h3>Color-Coded Decision Summary:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>🎯 COLOR-CODED DECISION TRACE (MINIMUM)</strong>
+
+Array: [3, -4, 2, -3, -1, 7, -5]
+
+Legend:
+🔴 Start New (bestEnding = arr[i])
+🟢 Join Previous (bestEnding = bestEnding + arr[i])
+⭐ New Global Minimum Found!
+
+┌──────┬────────┬──────────────────┬────────────┬──────────┬──────────┐
+│Index │ Value  │    Decision      │ bestEnding │  result  │ Subarray │
+├──────┼────────┼──────────────────┼────────────┼──────────┼──────────┤
+│  0   │   3    │ 🔴 Start (init)  │      3     │     3    │   [3]    │
+├──────┼────────┼──────────────────┼────────────┼──────────┼──────────┤
+│  1   │  -4    │ 🔴 Start New     │     -4     │ ⭐  -4   │  [-4]    │
+│      │        │  (3-4=-1 vs -4)  │            │          │          │
+├──────┼────────┼──────────────────┼────────────┼──────────┼──────────┤
+│  2   │   2    │ 🟢 Join Prev     │     -2     │    -4    │ [-4, 2]  │
+│      │        │  (-4+2=-2 vs 2)  │            │          │          │
+├──────┼────────┼──────────────────┼────────────┼──────────┼──────────┤
+│  3   │  -3    │ 🟢 Join Prev     │     -5     │ ⭐  -5   │[-4,2,-3] │
+│      │        │  (-2-3=-5 vs -3) │            │          │          │
+├──────┼────────┼──────────────────┼────────────┼──────────┼──────────┤
+│  4   │  -1    │ 🟢 Join Prev     │     -6     │ ⭐  -6   │[-4,2,-3, │
+│      │        │  (-5-1=-6 vs -1) │            │          │    -1]   │
+├──────┼────────┼──────────────────┼────────────┼──────────┼──────────┤
+│  5   │   7    │ 🟢 Join Prev     │      1     │    -6    │[-4,2,-3, │
+│      │        │  (-6+7=1 vs 7)   │            │          │  -1, 7]  │
+├──────┼────────┼──────────────────┼────────────┼──────────┼──────────┤
+│  6   │  -5    │ 🔴 Start New     │     -5     │    -6    │  [-5]    │
+│      │        │  (1-5=-4 vs -5)  │            │          │          │
+└──────┴────────┴──────────────────┴────────────┴──────────┴──────────┘
+
+<strong>PATTERN OBSERVED:</strong>
+🔴🔴🟢🟢🟢🟢🔴
+Start → Start → Join → Join → Join → Join → Start
+
+<strong>FINAL ANSWER:</strong> -6 from subarray [-4, 2, -3, -1]
+
+<strong>KEY DIFFERENCE FROM MAX SUM:</strong>
+• For MAX: Negative history is BURDEN, positive history is HELPFUL
+• For MIN: POSITIVE history is BURDEN, negative history is HELPFUL
+</pre>
+            </div>
+
+            <h3>Visual Graph Timeline:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>📉 VISUAL GRAPH: bestEnding & result Over Time (MINIMUM)</strong>
+
+bestEnding (Local at i)
+  ↑
+  7│                              ●
+  3│●                             
+  2│                              
+  1│                          ╱   ╲
+  0├─────────────────────────────────────────→ Index
+ -1│    ╲                   ╱                 
+ -2│      ●               ╱                   
+ -3│        ╲           ╱                     
+ -4│          ●       ╱                    ●  
+ -5│            ╲   ╱                         
+ -6│              ●                           
+  └─0───1───2───3───4───5───6
+
+result (Global Min)
+  ↑
+  3│●                             
+  0├─────────────────────────────────────────→ Index
+ -1│                              
+ -2│                              
+ -3│                              
+ -4│  ●━━━●                       
+ -5│        ●━━━●                 
+ -6│              ●━━━━━━━━━━━━━━━
+  └─0───1───2───3───4───5───6
+
+Key Observations:
+• bestEnding fluctuates (goes positive and negative)
+• result only goes DOWN (keeps getting more negative)
+• Valleys in bestEnding = potential new minimums
+</pre>
+            </div>
+
+            <h3>Max vs Min Comparison:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>⚖️ MAX SUM vs MIN SUM: Decision Flip</strong>
+
+<strong>SAME ARRAY: [3, -4, 2, -3, -1, 7, -5]</strong>
+
+┌─────────────────────────────────────────────────────────┐
+│           MAXIMUM SUBARRAY SUM                          │
+├─────────────────────────────────────────────────────────┤
+│  Decision: Choose MAX(prev+curr, curr)                  │
+│                                                          │
+│  Index 5: arr[5] = 7                                    │
+│  • History: Something negative/small                    │
+│  • Choice: Start NEW at 7 ✅                            │
+│  • Why: 7 alone is better than negative + 7             │
+│                                                          │
+│  RESULT: Finds MAXIMUM sum = 7 (just [7])              │
+└─────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────┐
+│           MINIMUM SUBARRAY SUM                          │
+├─────────────────────────────────────────────────────────┤
+│  Decision: Choose MIN(prev+curr, curr)                  │
+│                                                          │
+│  Index 5: arr[5] = 7                                    │
+│  • History: -6 (very negative! helpful!)                │
+│  • Choice: JOIN previous -6+7=1 ✅                      │
+│  • Why: Even though result is positive, it's less       │
+│         positive than 7 alone                           │
+│                                                          │
+│  RESULT: Finds MINIMUM sum = -6 ([-4,2,-3,-1])         │
+└─────────────────────────────────────────────────────────┘
+
+<strong>THE FLIP:</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+MAX: Negative history = BURDEN → Start new
+MIN: POSITIVE history = BURDEN → Start new
+
+MAX: Positive history = HELPFUL → Join
+MIN: NEGATIVE history = HELPFUL → Join
+</pre>
+            </div>
+
+            <h3>Java Code:</h3>
+            <div class="code-block">
+<pre>
+<span class="keyword">public int</span> <span class="method">minSubArray</span>(<span class="keyword">int</span>[] nums) {
+    <span class="comment">// Handle empty array</span>
+    <span class="keyword">if</span> (nums.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;
+    
+    <span class="comment">// Initialize with first element</span>
+    <span class="keyword">int</span> bestEnding = nums[<span class="number">0</span>];  <span class="comment">// Min sum ending at current index</span>
+    <span class="keyword">int</span> result = nums[<span class="number">0</span>];      <span class="comment">// Global minimum</span>
+    
+    <span class="comment">// Iterate through array starting from index 1</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < nums.length; i++) {
+        <span class="comment">// THE DECISION: Join previous party OR start new party</span>
+        <span class="comment">// KEY DIFFERENCE: Use Math.MIN instead of Math.MAX!</span>
+        <span class="comment">// Option A: Extend previous subarray (bestEnding + nums[i])</span>
+        <span class="comment">// Option B: Start fresh from current element (nums[i])</span>
+        bestEnding = Math.<span class="method">min</span>(bestEnding + nums[i], nums[i]);
+        
+        <span class="comment">// Update global result if we found a smaller sum</span>
+        result = Math.<span class="method">min</span>(result, bestEnding);
+    }
+    
+    <span class="keyword">return</span> result;
+}
+
+<span class="comment">// Time Complexity: O(n) - single pass through array</span>
+<span class="comment">// Space Complexity: O(1) - only use two variables</span>
+</pre>
+            </div>
+
+            <div class="success-box">
+                <h4>💡 Key Insights for Minimum:</h4>
+                <ul style="line-height: 2; margin-left: 20px;">
+                    <li>✓ Everything FLIPS compared to maximum sum</li>
+                    <li>✓ NEGATIVE history is now HELPFUL (makes sum more negative)</li>
+                    <li>✓ POSITIVE history is now BURDEN (makes sum less negative)</li>
+                    <li>✓ Use <code>min()</code> instead of <code>max()</code> everywhere</li>
+                    <li>✓ Looking for most negative (or closest to negative infinity)</li>
+                    <li>✓ Same O(n) time, O(1) space efficiency</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4>🔄 Comparison Summary:</h4>
+                <table style="width: 100%;">
+                    <thead>
+                        <tr style="background: #2196f3; color: white;">
+                            <th style="padding: 10px;">Aspect</th>
+                            <th style="padding: 10px;">Maximum Sum</th>
+                            <th style="padding: 10px;">Minimum Sum</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 10px;"><strong>Decision</strong></td>
+                            <td style="padding: 10px;"><code>max(prev+curr, curr)</code></td>
+                            <td style="padding: 10px;"><code>min(prev+curr, curr)</code></td>
+                        </tr>
+                        <tr style="background: #f5f5f5;">
+                            <td style="padding: 10px;"><strong>Update Result</strong></td>
+                            <td style="padding: 10px;"><code>max(result, bestEnding)</code></td>
+                            <td style="padding: 10px;"><code>min(result, bestEnding)</code></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;"><strong>Helpful History</strong></td>
+                            <td style="padding: 10px;">Positive values</td>
+                            <td style="padding: 10px;">Negative values</td>
+                        </tr>
+                        <tr style="background: #f5f5f5;">
+                            <td style="padding: 10px;"><strong>Burden History</strong></td>
+                            <td style="padding: 10px;">Negative values</td>
+                            <td style="padding: 10px;">Positive values</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;"><strong>Goal</strong></td>
+                            <td style="padding: 10px;">Largest sum (positive infinity)</td>
+                            <td style="padding: 10px;">Smallest sum (negative infinity)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+
+
+        </section>
+
+        <!-- SECTION 7: MAXIMUM PRODUCT SUBARRAY -->
+        <section id="max-product">
+            <h2>7. Problem 3: Maximum Product Subarray 🔢</h2>
+            
+            <div class="pattern-card">
+                <h3 style="color: #9c27b0; margin-top: 0;">Problem Statement:</h3>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    <strong>LeetCode 152 - Maximum Product Subarray</strong><br>
+                    Given an integer array, find the contiguous subarray with the largest <strong>product</strong>.
+                </p>
+                <div class="code-block">
+<pre>
+Input: nums = [2, 3, -2, 4]
+Output: 6
+Explanation: [2, 3] has the largest product = 6
+</pre>
+                </div>
+            </div>
+
+            <h3>The Twist: Why We Need TWO Variables 🎭</h3>
+            <div class="warning-box">
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    <strong>Negative × Negative = Positive!</strong><br>
+                    A negative number wants to be multiplied by the <strong>minimum</strong> (most negative) 
+                    product to become a <strong>huge positive</strong>!
+                </p>
+            </div>
+
+            <h3>Detailed Visual Example:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>🔢 MAXIMUM PRODUCT: Why Track Both Max & Min</strong>
+
+<strong>The Magic of Negatives:</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Array: [2, 3, -2, 4]
+Index:  0  1   2  3
+
+State at Index 1:
+┌──────────────────────────┐
+│ maxEnding = 6  (2 × 3)   │
+│ minEnding = 2            │
+│ result = 6               │
+└──────────────────────────┘
+
+Now at Index 2: arr[2] = -2 (NEGATIVE!)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Three Choices:
+┌─────────────────────────────────────┐
+│ Choice 1: Start New                 │
+│   → -2                              │
+│   Value: -2                         │
+└─────────────────────────────────────┘
+
+┌─────────────────────────────────────┐
+│ Choice 2: Join Max (Positive × Neg) │
+│   → 6 × (-2)                        │
+│   Value: -12  😞 BAD                │
+└─────────────────────────────────────┘
+
+┌─────────────────────────────────────┐
+│ Choice 3: Join Min (Positive × Neg) │
+│   → 2 × (-2)                        │
+│   Value: -4   😞 Also bad           │
+└─────────────────────────────────────┘
+
+Wait! What if minEnding was NEGATIVE?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Example: arr = [2, -5, -2]
+At Index 1: minEnding = -10 (2 × -5)
+
+Now at Index 2: arr[2] = -2
+┌─────────────────────────────────────┐
+│ Choice 3: Join Min (Neg × Neg)      │
+│   → (-10) × (-2)                    │
+│   Value: +20  🎉 HUGE POSITIVE!     │
+└─────────────────────────────────────┘
+
+<strong>Key Insight:</strong>
+┌───────────────────────────────────────────────────┐
+│ Negative current number wants:                    │
+│ • minEnding (most negative) to flip into BIG +    │
+│                                                    │
+│ Positive current number wants:                    │
+│ • maxEnding (biggest positive) for bigger product │
+└───────────────────────────────────────────────────┘
+</pre>
+            </div>
+
+            <h3>Simple Visual Example:</h3>
+            <div class="visual-diagram">
+<pre>
+Current Element: -4
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Choice 1: Start New        → -4
+Choice 2: Join Max (3)      → -4 × 3 = -12
+Choice 3: Join Min (-6)     → -4 × (-6) = +24  ← WINNER!
+
+<strong>Strategy:</strong> Track BOTH maxEnding and minEnding
+</pre>
+            </div>
+
+            <h3>Java Code:</h3>
+            <div class="code-block">
+<pre>
+<span class="keyword">public int</span> <span class="method">maxProduct</span>(<span class="keyword">int</span>[] nums) {
+    <span class="keyword">if</span> (nums.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;
+    
+    <span class="comment">// Must track BOTH max and min (negatives flip signs!)</span>
+    <span class="keyword">int</span> maxEnding = nums[<span class="number">0</span>];
+    <span class="keyword">int</span> minEnding = nums[<span class="number">0</span>];
+    <span class="keyword">int</span> result = nums[<span class="number">0</span>];
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < nums.length; i++) {
+        <span class="comment">// Calculate three choices:</span>
+        <span class="comment">// 1. Current element alone</span>
+        <span class="comment">// 2. Current × Previous Max</span>
+        <span class="comment">// 3. Current × Previous Min (important for negatives!)</span>
+        
+        <span class="keyword">int</span> choice1 = nums[i];
+        <span class="keyword">int</span> choice2 = maxEnding * nums[i];
+        <span class="keyword">int</span> choice3 = minEnding * nums[i];
+        
+        <span class="comment">// Update current max and min</span>
+        maxEnding = Math.<span class="method">max</span>(choice1, Math.<span class="method">max</span>(choice2, choice3));
+        minEnding = Math.<span class="method">min</span>(choice1, Math.<span class="method">min</span>(choice2, choice3));
+        
+        result = Math.<span class="method">max</span>(result, maxEnding);
+    }
+    
+    <span class="keyword">return</span> result;
+}
+</pre>
+            </div>
+
+            <div class="success-box">
+                <h4>💡 Why Track Both Max and Min?</h4>
+                <p style="line-height: 1.8;">
+                    • <strong>Positive current</strong> → wants maxEnding (big positive × positive = bigger positive)<br>
+                    • <strong>Negative current</strong> → wants minEnding (big negative × negative = big positive)<br>
+                    • <strong>Example:</strong> -2 × (-10) = 20 (good!), but -2 × 5 = -10 (bad!)
+                </p>
+            </div>
+        </section>
+
+
+        <!-- Add closing sections and summary -->
+        <section id="summary">
+            <h2>11. Quick Reference Summary 📚</h2>
+            
+            <div class="highlight-box">
+                <h3>Kadane's Algorithm Decision Tree:</h3>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Problem Type</th>
+                        <th>Key Decision</th>
+                        <th>Variables Needed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Max Sum</strong></td>
+                        <td>max(prev + curr, curr)</td>
+                        <td>bestEnding, result</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Min Sum</strong></td>
+                        <td>min(prev + curr, curr)</td>
+                        <td>bestEnding, result</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Max Product</strong></td>
+                        <td>Track both max and min</td>
+                        <td>maxEnding, minEnding, result</td>
+                    </tr>
+                    <tr>
+                        <td><strong>One Deletion</strong></td>
+                        <td>Track with/without deletion</td>
+                        <td>noDelete, oneDelete, result</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Absolute Sum</strong></td>
+                        <td>Run both max and min</td>
+                        <td>maxSum, minSum</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Circular</strong></td>
+                        <td>max(normal, total-min)</td>
+                        <td>maxSum, minSum, totalSum</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="success-box" style="margin-top: 40px;">
+                <h3 style="margin-top: 0;">✅ Master Checklist</h3>
+                <ul style="line-height: 2; font-size: 1.1em; margin-left: 20px;">
+                    <li>□ Understand the "join vs start new" decision</li>
+                    <li>□ Can identify when to use Kadane's vs Sliding Window</li>
+                    <li>□ Know how to handle negative numbers</li>
+                    <li>□ Understand why tracking min/max both is needed for products</li>
+                    <li>□ Can handle one deletion variation</li>
+                    <li>□ Understand circular array logic (total - min)</li>
+                    <li>□ Can write code without memorization</li>
+                </ul>
+            </div>
+        </section>
+
+        <div style="margin-top: 50px; padding: 40px; background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); color: white; border-radius: 15px; text-align: center;">
+            <h2 style="margin-top: 0;">🎓 You've Mastered Kadane's Algorithm!</h2>
+            <p style="font-size: 1.2em; line-height: 2;">
+                You now understand:<br>
+                ✓ The core "join vs start new" decision pattern<br>
+                ✓ Why it works when sliding window fails<br>
+                ✓ How to adapt it for different problems<br>
+                ✓ The thought process behind each decision<br>
+                <br>
+                <strong style="font-size: 1.3em;">Ready to solve any subarray problem! 🚀</strong>
+            </p>
+        </div>
+
+    </div>
+</body>
+</html>
+
+<!-- Add this enhanced sliding window visual after the comparison table in section 4 -->
+EOF_MARKER_TO_ADD_AFTER_SLIDING_WINDOW_TABLE

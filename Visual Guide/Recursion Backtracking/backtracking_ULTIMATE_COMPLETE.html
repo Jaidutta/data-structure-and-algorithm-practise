@@ -1,0 +1,3105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backtracking - Complete Guide with Everything</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #e74c3c;
+            --secondary: #c0392b;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --info: #3498db;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --code-bg: #1e1e1e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .toc {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .toc h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .toc ul {
+            list-style: none;
+        }
+
+        .toc li {
+            margin: 10px 0;
+        }
+
+        .toc a {
+            color: var(--dark);
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .toc a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateX(10px);
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            border: 2px solid #e0e0e0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .section h2 {
+            color: var(--primary);
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .section h3 {
+            color: var(--secondary);
+            font-size: 1.6em;
+            margin: 25px 0 15px 0;
+        }
+
+        .section h4 {
+            color: var(--info);
+            font-size: 1.3em;
+            margin: 20px 0 10px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fff9c4, #ffeb3b);
+            border: 3px solid #fbc02d;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            font-size: 1.15em;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid var(--info);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 5px solid var(--success);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 5px solid var(--warning);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .danger-box {
+            background: #ffebee;
+            border-left: 5px solid var(--primary);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .pattern-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            transition: all 0.3s;
+        }
+
+        .pattern-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            border: 1px solid #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre;
+            overflow-x: auto;
+            color: inherit;
+        }
+
+        .keyword { color: #569cd6; font-weight: bold; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; font-style: italic; }
+        .number { color: #b5cea8; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: var(--light);
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 12px 12px 12px 40px;
+            margin: 10px 0;
+            background: white;
+            border-left: 4px solid var(--success);
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .checklist li:before {
+            content: '✓';
+            position: absolute;
+            left: 12px;
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .badge.easy {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge.medium {
+            background: #fed7aa;
+            color: #92400e;
+        }
+
+        .badge.hard {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .tree-visual {
+            background: #fafafa;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 25px 0;
+        }
+
+        .array-visual {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .array-cell {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #333;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.3em;
+            background: white;
+            position: relative;
+        }
+
+        .array-cell.chosen {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            border-color: #2e7d32;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(76, 175, 80, 0.4);
+        }
+
+        .array-cell.current {
+            background: linear-gradient(135deg, #fff9c4, #ffeb3b);
+            border-color: #fbc02d;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔄 Backtracking - ULTIMATE Complete Guide</h1>
+            <p style="font-size: 1.3em;">Definition • All 6 Patterns • Detailed Visuals • 68 Problems</p>
+            <p style="font-size: 1em; margin-top: 10px;">Everything You Need: Theory + Step-by-Step Examples + Practice!</p>
+        </header>
+
+        <div class="content">
+            <div class="toc">
+                <h2>📋 Complete Table of Contents</h2>
+                <ul>
+                    <li><a href="#definition">1️⃣ What is Backtracking? (Definition)</a></li>
+                    <li><a href="#recognition">2️⃣ How to Recognize Backtracking Problems</a></li>
+                    <li><a href="#core-concept">3️⃣ Core Concept: Choose-Explore-Unchoose</a></li>
+                    <li><a href="#patterns">4️⃣ All 6 Backtracking Patterns</a></li>
+                    <li><a href="#templates">5️⃣ Universal Templates with Code</a></li>
+                    <li><a href="#visuals">6️⃣ Detailed Visual Examples (Step-by-Step)</a></li>
+                    <li><a href="#practice">7️⃣ 68 Practice Problems by Pattern</a></li>
+                    <li><a href="#tips">8️⃣ Optimization Tips & Common Mistakes</a></li>
+                    <li><a href="#summary">9️⃣ Quick Summary & Next Steps</a></li>
+                </ul>
+            </div>
+
+
+            <!-- SECTION 1: DEFINITION -->
+            <section id="definition" class="section">
+                <h2>1️⃣ What is Backtracking? - Complete Definition</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">📖 Simple Definition</h3>
+                    <p style="font-size: 1.3em; line-height: 2;">
+                        <strong>Backtracking</strong> is a problem-solving algorithm that builds solutions <strong>incrementally</strong>, 
+                        one piece at a time. If a piece doesn't fit, it <strong>removes it (backtracks)</strong> and tries a different piece.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h4>🎯 Technical Definition</h4>
+                    <p style="font-size: 1.1em; line-height: 1.8;">
+                        <strong>Backtracking</strong> is a general algorithm for finding all (or some) solutions to computational problems 
+                        by incrementally building candidates and abandoning a candidate ("backtracking") as soon as it determines 
+                        that the candidate cannot lead to a valid solution.
+                    </p>
+                </div>
+
+                <h3>🎮 Real-World Analogy: Solving a Maze</h3>
+                <div class="pattern-card">
+                    <p style="font-size: 1.2em; line-height: 2;">
+                        Imagine you're in a maze looking for the exit:<br><br>
+                        
+                        1️⃣ <strong>Choose a path</strong> (left, right, straight)<br>
+                        2️⃣ <strong>Walk down that path</strong><br>
+                        3️⃣ If you hit a <strong>dead end</strong> → Go back to last intersection<br>
+                        4️⃣ <strong>Try a different path</strong><br>
+                        5️⃣ Keep going until you find the exit<br><br>
+                        
+                        <strong>That's backtracking!</strong> Try → Fail → Backtrack → Try Again
+                    </p>
+                </div>
+
+                <h3>🔑 Key Characteristics of Backtracking</h3>
+                <ul class="checklist">
+                    <li><strong>Recursive</strong> - Uses recursion to explore possibilities</li>
+                    <li><strong>Exhaustive</strong> - Explores ALL possible paths (with pruning)</li>
+                    <li><strong>Incremental</strong> - Builds solution piece by piece</li>
+                    <li><strong>Validates</strong> - Checks constraints at each step</li>
+                    <li><strong>Backtracks</strong> - Undoes invalid choices</li>
+                    <li><strong>State Restoration</strong> - Returns to previous valid state</li>
+                </ul>
+
+                <h3>⚙️ How It Works (3 Steps)</h3>
+                <div class="info-box">
+                    <ol style="font-size: 1.2em; line-height: 2; padding-left: 25px;">
+                        <li><strong>CHOOSE:</strong> Make a choice (add element, place piece, etc.)</li>
+                        <li><strong>EXPLORE:</strong> Recursively explore with that choice</li>
+                        <li><strong>UNCHOOSE:</strong> Remove the choice (backtrack) and try next option</li>
+                    </ol>
+                    <p style="margin-top: 20px; font-size: 1.1em;">
+                        This pattern repeats until all possibilities are explored or a solution is found.
+                    </p>
+                </div>
+
+                <h3>🆚 Backtracking vs Other Approaches</h3>
+                <table>
+                    <tr>
+                        <th>Technique</th>
+                        <th>When to Use</th>
+                        <th>Example</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Backtracking</strong></td>
+                        <td>Find ALL solutions</td>
+                        <td>All subsets, permutations</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dynamic Programming</strong></td>
+                        <td>Optimization (one best solution)</td>
+                        <td>Longest subsequence, min path</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Greedy</strong></td>
+                        <td>Local optimum leads to global</td>
+                        <td>Activity selection, Huffman</td>
+                    </tr>
+                    <tr>
+                        <td><strong>BFS/DFS</strong></td>
+                        <td>Graph traversal, shortest path</td>
+                        <td>Level order, shortest path</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- SECTION 2: RECOGNITION -->
+            <section id="recognition" class="section">
+                <h2>2️⃣ How to Recognize Backtracking Problems</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">🎯 Golden Rule</h3>
+                    <p style="font-size: 1.3em; text-align: center; line-height: 2;">
+                        If problem asks for <strong>"ALL"</strong> solutions/combinations/arrangements<br>
+                        AND you need to <strong>EXPLORE</strong> multiple choices<br>
+                        → It's <strong>BACKTRACKING!</strong>
+                    </p>
+                </div>
+
+                <h3>🔍 Recognition Keywords Table</h3>
+                <table>
+                    <tr>
+                        <th>Keyword/Phrase</th>
+                        <th>What It Means</th>
+                        <th>Pattern Type</th>
+                    </tr>
+                    <tr>
+                        <td>"Find <strong>ALL</strong>"</td>
+                        <td>Need every possibility</td>
+                        <td>Backtracking</td>
+                    </tr>
+                    <tr>
+                        <td>"Generate <strong>ALL</strong>"</td>
+                        <td>Create all combinations</td>
+                        <td>Backtracking</td>
+                    </tr>
+                    <tr>
+                        <td>"<strong>Combinations</strong>"</td>
+                        <td>Select k from n (order doesn't matter)</td>
+                        <td>Subset pattern</td>
+                    </tr>
+                    <tr>
+                        <td>"<strong>Permutations</strong>"</td>
+                        <td>All arrangements (order matters)</td>
+                        <td>Permutation pattern</td>
+                    </tr>
+                    <tr>
+                        <td>"<strong>Subsets</strong>" / "Power set"</td>
+                        <td>All possible selections</td>
+                        <td>Subset pattern</td>
+                    </tr>
+                    <tr>
+                        <td>"<strong>Valid arrangements</strong>"</td>
+                        <td>Arrangements meeting constraints</td>
+                        <td>Constraint satisfaction</td>
+                    </tr>
+                    <tr>
+                        <td>"<strong>N-Queens</strong>" / "Place N items"</td>
+                        <td>Placement with constraints</td>
+                        <td>Board/Grid pattern</td>
+                    </tr>
+                    <tr>
+                        <td>"<strong>Word search</strong>"</td>
+                        <td>Find word in grid</td>
+                        <td>Grid traversal</td>
+                    </tr>
+                    <tr>
+                        <td>"<strong>Partition into</strong>"</td>
+                        <td>Split into groups</td>
+                        <td>Partition pattern</td>
+                    </tr>
+                    <tr>
+                        <td>"<strong>Letter combinations</strong>"</td>
+                        <td>Phone pad, string generation</td>
+                        <td>String generation</td>
+                    </tr>
+                    <tr>
+                        <td>"<strong>Parentheses</strong>" generation</td>
+                        <td>Valid parentheses pairs</td>
+                        <td>String with constraints</td>
+                    </tr>
+                    <tr>
+                        <td>"<strong>Sudoku</strong>" solver</td>
+                        <td>Fill board with constraints</td>
+                        <td>Constraint satisfaction</td>
+                    </tr>
+                </table>
+
+                <h3>✅ Quick Recognition Checklist</h3>
+                <div class="success-box">
+                    <p style="font-size: 1.1em;"><strong>Ask yourself these 6 questions:</strong></p>
+                    <ol style="font-size: 1.1em; line-height: 2; padding-left: 25px; margin: 15px 0;">
+                        <li>Does it ask for <strong>ALL</strong> solutions? (not just one or count)</li>
+                        <li>Do I need to try <strong>different choices</strong> at each step?</li>
+                        <li>Can I <strong>undo a choice</strong> and try another?</li>
+                        <li>Is there a <strong>constraint</strong> to check for each choice?</li>
+                        <li>Am I <strong>building a solution incrementally</strong>?</li>
+                        <li>Does it involve <strong>combinations, permutations, or arrangements</strong>?</li>
+                    </ol>
+                    <p style="font-size: 1.2em; margin-top: 15px;">
+                        <strong>If YES to 3+ questions → Use BACKTRACKING!</strong>
+                    </p>
+                </div>
+
+                <h3>❌ When It's NOT Backtracking</h3>
+                <div class="danger-box">
+                    <p style="font-size: 1.1em;"><strong>DON'T use backtracking when:</strong></p>
+                    <ul style="margin: 15px 0; padding-left: 25px; line-height: 2;">
+                        <li>Problem asks for <strong>ONE</strong> optimal solution → Use DP or Greedy</li>
+                        <li>Problem asks for <strong>COUNT</strong> only → Use DP or Math</li>
+                        <li>Problem asks for <strong>shortest/longest</strong> path → Use BFS/DFS or DP</li>
+                        <li>Need to <strong>optimize</strong> something (min/max) → Use DP, Greedy, Dijkstra</li>
+                        <li>Elements are <strong>non-rearrangeable</strong> → Different approach</li>
+                    </ul>
+                </div>
+            </section>
+
+
+            <!-- SECTION 4: ALL PATTERNS -->
+            <section id="patterns" class="section">
+                <h2>4️⃣ All Backtracking Patterns - Complete Guide</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em; text-align: center;">
+                        <strong>Master these 6 core patterns and you can solve ANY backtracking problem!</strong>
+                    </p>
+                </div>
+
+                <!-- Pattern 1: Subsets -->
+                <div class="pattern-card" style="border: 3px solid #4caf50;">
+                    <h3 style="color: #4caf50;">Pattern 1: Subsets / Combinations</h3>
+                    
+                    <div class="info-box">
+                        <h4>When to Use:</h4>
+                        <ul style="padding-left: 25px; line-height: 2;">
+                            <li>Problem asks for <strong>all subsets</strong> or <strong>power set</strong></li>
+                            <li>Need to select <strong>k items from n</strong> (combinations)</li>
+                            <li>Problem says "all possible selections"</li>
+                            <li>Order doesn't matter: [1,2] same as [2,1]</li>
+                        </ul>
+                    </div>
+
+                    <h4>Key Characteristics:</h4>
+                    <ul class="checklist">
+                        <li>Use <code>start</code> index to move forward only</li>
+                        <li>NO <code>used[]</code> array needed</li>
+                        <li>Save solution at EVERY level (not just at leaves)</li>
+                        <li>Recurse with <code>i+1</code> (can't reuse same element)</li>
+                    </ul>
+
+                    <h4>Template:</h4>
+                    <div class="code-block"><pre><span class="keyword">void</span> backtrack(<span class="keyword">int</span> start, List path) {
+    result.add(<span class="keyword">new</span> ArrayList(path));  <span class="comment">// Save at every level</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt; nums.length; i++) {
+        path.add(nums[i]);
+        backtrack(i + <span class="number">1</span>, path);  <span class="comment">// Move forward</span>
+        path.remove(path.size() - <span class="number">1</span>);
+    }
+}</pre></div>
+
+                    <h4>LeetCode Problems:</h4>
+                    <ul style="padding-left: 25px; line-height: 2;">
+                        <li><strong>LC 78</strong> - Subsets ⭐</li>
+                        <li><strong>LC 90</strong> - Subsets II (with duplicates)</li>
+                        <li><strong>LC 77</strong> - Combinations</li>
+                        <li><strong>LC 39</strong> - Combination Sum (can reuse)</li>
+                        <li><strong>LC 40</strong> - Combination Sum II</li>
+                        <li><strong>LC 216</strong> - Combination Sum III</li>
+                    </ul>
+                </div>
+
+                <!-- Pattern 2: Permutations -->
+                <div class="pattern-card" style="border: 3px solid #2196f3; margin-top: 30px;">
+                    <h3 style="color: #2196f3;">Pattern 2: Permutations</h3>
+                    
+                    <div class="info-box">
+                        <h4>When to Use:</h4>
+                        <ul style="padding-left: 25px; line-height: 2;">
+                            <li>Problem asks for <strong>all permutations</strong></li>
+                            <li>Need <strong>all arrangements</strong> of elements</li>
+                            <li>Order matters: [1,2] ≠ [2,1]</li>
+                            <li>Usually uses ALL elements</li>
+                        </ul>
+                    </div>
+
+                    <h4>Key Characteristics:</h4>
+                    <ul class="checklist">
+                        <li>Use <code>used[]</code> boolean array</li>
+                        <li>NO start index (can pick any unused element)</li>
+                        <li>Save only when <code>path.size() == n</code></li>
+                        <li>Loop from <code>i=0</code> every time</li>
+                    </ul>
+
+                    <h4>Template:</h4>
+                    <div class="code-block"><pre><span class="keyword">void</span> backtrack(List path, <span class="keyword">boolean</span>[] used) {
+    <span class="keyword">if</span> (path.size() == nums.length) {
+        result.add(<span class="keyword">new</span> ArrayList(path));
+        <span class="keyword">return</span>;
+    }
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) {
+        <span class="keyword">if</span> (used[i]) <span class="keyword">continue</span>;
+        path.add(nums[i]);
+        used[i] = <span class="keyword">true</span>;
+        backtrack(path, used);
+        used[i] = <span class="keyword">false</span>;
+        path.remove(path.size() - <span class="number">1</span>);
+    }
+}</pre></div>
+
+                    <h4>LeetCode Problems:</h4>
+                    <ul style="padding-left: 25px; line-height: 2;">
+                        <li><strong>LC 46</strong> - Permutations ⭐</li>
+                        <li><strong>LC 47</strong> - Permutations II (with duplicates)</li>
+                        <li><strong>LC 60</strong> - Permutation Sequence</li>
+                        <li><strong>LC 996</strong> - Number of Squareful Arrays</li>
+                        <li><strong>LC 784</strong> - Letter Case Permutation</li>
+                    </ul>
+                </div>
+
+                
+<!-- ENHANCED PATTERN 3: STRING GENERATION -->
+<div class="pattern-card" style="border: 3px solid #9c27b0; margin-top: 30px;">
+    <h3 style="color: #9c27b0;">Pattern 3: String Generation / Character Combinations</h3>
+    
+    <div class="info-box">
+        <h4>🎯 When to Use:</h4>
+        <ul style="padding-left: 25px; line-height: 2;">
+            <li>Generate strings with <strong>specific constraints</strong></li>
+            <li><strong>Phone number</strong> letter combinations (digit to letters mapping)</li>
+            <li><strong>Parentheses</strong> generation (balanced pairs)</li>
+            <li><strong>String partitioning</strong> problems (split into valid parts)</li>
+            <li>Generate <strong>valid expressions</strong> from strings</li>
+            <li><strong>IP address</strong> restoration</li>
+        </ul>
+    </div>
+
+    <div class="highlight-box">
+        <h4 style="margin-top: 0;">💡 Key Insight</h4>
+        <p style="font-size: 1.2em; line-height: 1.8;">
+            Unlike subsets/permutations where you choose from array elements,<br>
+            here you <strong>BUILD strings character by character</strong> based on rules/mappings.
+        </p>
+    </div>
+
+    <h4>🔑 Key Characteristics:</h4>
+    <ul class="checklist">
+        <li>Build string <strong>incrementally</strong> (char by char or segment by segment)</li>
+        <li>Use <strong>StringBuilder</strong> for efficiency (avoid string concatenation)</li>
+        <li>Often has <strong>validation rules</strong> (balanced parens, valid IP, etc.)</li>
+        <li>Save when string reaches <strong>target length or end of input</strong></li>
+        <li><strong>Mapping-based</strong> (phone pad: 2→'abc', 3→'def') or <strong>rule-based</strong> (open < close)</li>
+        <li>Backtrack by <strong>removing last character(s)</strong></li>
+    </ul>
+
+    <h4>📝 Template 1: Phone Number Style (Mapping)</h4>
+    <div class="code-block"><pre><span class="comment">/**
+ * Pattern: String Generation with Mapping
+ * Example: Letter Combinations of Phone Number (LC 17)
+ * 
+ * Each digit maps to multiple characters
+ * Build all possible combinations
+ * 
+ * Time: O(4^n) where n = number of digits (worst case digit 7/9 has 4 letters)
+ * Space: O(n) for recursion depth
+ */</span>
+
+<span class="keyword">class</span> Solution {
+    <span class="comment">// Mapping from digit to letters (same as phone pad)</span>
+    String[] mapping = {
+        <span class="string">""</span>, <span class="string">""</span>, <span class="string">"abc"</span>, <span class="string">"def"</span>,      <span class="comment">// 0,1,2,3</span>
+        <span class="string">"ghi"</span>, <span class="string">"jkl"</span>, <span class="string">"mno"</span>,        <span class="comment">// 4,5,6</span>
+        <span class="string">"pqrs"</span>, <span class="string">"tuv"</span>, <span class="string">"wxyz"</span>      <span class="comment">// 7,8,9</span>
+    };
+    
+    List&lt;String&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    
+    <span class="keyword">public</span> List&lt;String&gt; letterCombinations(String digits) {
+        <span class="keyword">if</span> (digits.isEmpty()) <span class="keyword">return</span> result;
+        
+        <span class="comment">// Start backtracking from index 0 with empty StringBuilder</span>
+        backtrack(digits, <span class="number">0</span>, <span class="keyword">new</span> StringBuilder());
+        <span class="keyword">return</span> result;
+    }
+    
+    <span class="comment">/**
+     * @param digits - Input digit string (e.g., "23")
+     * @param index  - Current position in digits
+     * @param path   - Current string being built
+     * 
+     * VISUALIZATION for digits="23":
+     * 
+     * backtrack("23", 0, "")
+     *   digit='2' → letters="abc"
+     *   ├─ choose 'a' → backtrack("23", 1, "a")
+     *   │   digit='3' → letters="def"
+     *   │   ├─ choose 'd' → path="ad" ✓ SAVE
+     *   │   ├─ choose 'e' → path="ae" ✓ SAVE
+     *   │   └─ choose 'f' → path="af" ✓ SAVE
+     *   ├─ choose 'b' → backtrack("23", 1, "b")
+     *   │   ├─ "bd" ✓
+     *   │   ├─ "be" ✓
+     *   │   └─ "bf" ✓
+     *   └─ choose 'c' → backtrack("23", 1, "c")
+     *       ├─ "cd" ✓
+     *       ├─ "ce" ✓
+     *       └─ "cf" ✓
+     * 
+     * Result: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+     */</span>
+    <span class="keyword">private void</span> backtrack(String digits, <span class="keyword">int</span> index, StringBuilder path) {
+        <span class="comment">// ===== BASE CASE: Processed all digits =====</span>
+        <span class="keyword">if</span> (index == digits.length()) {
+            result.add(path.toString());  <span class="comment">// Save the combination</span>
+            <span class="keyword">return</span>;
+        }
+        
+        <span class="comment">// ===== GET CURRENT DIGIT AND ITS LETTERS =====</span>
+        <span class="keyword">char</span> digit = digits.charAt(index);
+        String letters = mapping[digit - <span class="string">'0'</span>];  <span class="comment">// Convert char to int</span>
+        
+        <span class="comment">// Example: digit='2' → letters="abc"</span>
+        
+        <span class="comment">// ===== TRY EACH LETTER FOR THIS DIGIT =====</span>
+        <span class="keyword">for</span> (<span class="keyword">char</span> letter : letters.toCharArray()) {
+            <span class="comment">// ===== CHOOSE: Add letter to current string =====</span>
+            path.append(letter);
+            <span class="comment">// Example: path was "a", after append('d') → "ad"</span>
+            
+            <span class="comment">// ===== EXPLORE: Process next digit =====</span>
+            backtrack(digits, index + <span class="number">1</span>, path);
+            
+            <span class="comment">// ===== UNCHOOSE: Remove last character =====</span>
+            path.deleteCharAt(path.length() - <span class="number">1</span>);
+            <span class="comment">// Example: path was "ad", after delete → "a"</span>
+            
+            <span class="comment">// Now loop tries next letter</span>
+        }
+    }
+}
+
+<span class="comment">// Why StringBuilder instead of String?
+// String concatenation creates NEW objects: O(n) per operation
+// StringBuilder modifies in place: O(1) per operation
+// With backtracking doing many append/delete, StringBuilder is MUCH faster</span></pre></div>
+
+    <h4>📝 Template 2: Constraint-Based (Generate Parentheses)</h4>
+    <div class="code-block"><pre><span class="comment">/**
+ * Pattern: String Generation with Constraints
+ * Example: Generate Parentheses (LC 22)
+ * 
+ * Generate all valid parentheses combinations
+ * Constraint: open parens must be >= close parens at all times
+ * 
+ * Time: O(4^n / sqrt(n)) - Catalan number
+ * Space: O(n) for recursion
+ */</span>
+
+<span class="keyword">class</span> Solution {
+    List&lt;String&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    
+    <span class="keyword">public</span> List&lt;String&gt; generateParenthesis(<span class="keyword">int</span> n) {
+        <span class="comment">// Start with empty string, 0 open, 0 close</span>
+        backtrack(<span class="keyword">new</span> StringBuilder(), <span class="number">0</span>, <span class="number">0</span>, n);
+        <span class="keyword">return</span> result;
+    }
+    
+    <span class="comment">/**
+     * @param path  - Current string being built
+     * @param open  - Count of '(' added so far
+     * @param close - Count of ')' added so far
+     * @param n     - Total pairs needed
+     * 
+     * RULES:
+     * 1. Can add '(' if open < n
+     * 2. Can add ')' if close < open (ensures valid pairing)
+     * 3. Done when open == close == n
+     * 
+     * VISUALIZATION for n=3:
+     * 
+     * backtrack("", 0, 0, 3)
+     *   ├─ add '(' → backtrack("(", 1, 0, 3)
+     *   │   ├─ add '(' → backtrack("((", 2, 0, 3)
+     *   │   │   ├─ add '(' → backtrack("(((", 3, 0, 3)
+     *   │   │   │   └─ add ')' three times → "((()))" ✓
+     *   │   │   └─ add ')' → backtrack("(()", 2, 1, 3)
+     *   │   │       └─ ... eventually → "(()())" ✓
+     *   │   └─ add ')' → backtrack("()", 1, 1, 3)
+     *   │       └─ ... eventually → "()(())" ✓
+     *   └─ CANNOT add ')' at start (close would be > open)
+     * 
+     * Result: ["((()))","(()())","(())()","()(())","()()()"]
+     */</span>
+    <span class="keyword">private void</span> backtrack(StringBuilder path, <span class="keyword">int</span> open, <span class="keyword">int</span> close, <span class="keyword">int</span> n) {
+        <span class="comment">// ===== BASE CASE: Complete valid string =====</span>
+        <span class="keyword">if</span> (path.length() == <span class="number">2</span> * n) {
+            result.add(path.toString());
+            <span class="keyword">return</span>;
+        }
+        
+        <span class="comment">// ===== CHOICE 1: Add opening parenthesis '(' =====</span>
+        <span class="comment">// Can add '(' if we haven't used all n opening parens</span>
+        <span class="keyword">if</span> (open < n) {
+            path.append(<span class="string">'('</span>);           <span class="comment">// CHOOSE</span>
+            backtrack(path, open + <span class="number">1</span>, close, n);  <span class="comment">// EXPLORE</span>
+            path.deleteCharAt(path.length() - <span class="number">1</span>);  <span class="comment">// UNCHOOSE</span>
+        }
+        
+        <span class="comment">// ===== CHOICE 2: Add closing parenthesis ')' =====</span>
+        <span class="comment">// Can add ')' ONLY if close < open (ensures valid pairing)</span>
+        <span class="comment">// This is the KEY CONSTRAINT that ensures validity!</span>
+        <span class="keyword">if</span> (close < open) {
+            path.append(<span class="string">')'</span>);           <span class="comment">// CHOOSE</span>
+            backtrack(path, open, close + <span class="number">1</span>, n);  <span class="comment">// EXPLORE</span>
+            path.deleteCharAt(path.length() - <span class="number">1</span>);  <span class="comment">// UNCHOOSE</span>
+        }
+        
+        <span class="comment">// Why does close < open ensure validity?
+        // - Every ')' must have a matching '(' before it
+        // - If close >= open, we'd have ')' without matching '('
+        // - Example: "())" is invalid because close=2, open=1
+        //            "(())" is valid because at each step close <= open</span>
+    }
+}</pre></div>
+
+    <h4>🎓 LeetCode Problems (10 Total):</h4>
+    <table>
+        <tr><th>LC #</th><th>Problem</th><th>Approach</th></tr>
+        <tr><td><strong>17</strong></td><td>Letter Combinations of Phone Number</td><td>🔥 Mapping-based template</td></tr>
+        <tr><td><strong>22</strong></td><td>Generate Parentheses</td><td>🔥 Constraint-based (open/close count)</td></tr>
+        <tr><td><strong>93</strong></td><td>Restore IP Addresses</td><td>Partition + validation (0-255, no leading 0)</td></tr>
+        <tr><td><strong>131</strong></td><td>Palindrome Partitioning</td><td>Partition + palindrome check</td></tr>
+        <tr><td><strong>291</strong></td><td>Word Pattern II</td><td>String matching with map</td></tr>
+        <tr><td><strong>320</strong></td><td>Generalized Abbreviation</td><td>Binary choice: abbreviate or not</td></tr>
+        <tr><td><strong>842</strong></td><td>Split Array into Fibonacci Sequence</td><td>Partition with Fibonacci rule</td></tr>
+        <tr><td><strong>1087</strong></td><td>Brace Expansion</td><td>Generate from pattern</td></tr>
+        <tr><td><strong>1096</strong></td><td>Brace Expansion II</td><td>Advanced expansion with sorting</td></tr>
+        <tr><td><strong>282</strong></td><td>Expression Add Operators</td><td>Insert +,-,* operators (HARD)</td></tr>
+    </table>
+
+    <div class="success-box">
+        <h4>💡 Pattern 3 Key Takeaways:</h4>
+        <ul style="line-height: 2;">
+            <li><strong>Use StringBuilder</strong> for efficiency</li>
+            <li><strong>Two main approaches:</strong> Mapping-based (phone) or Constraint-based (parentheses)</li>
+            <li><strong>Validation is key:</strong> Check rules before adding characters</li>
+            <li><strong>Common constraints:</strong> Balance (parens), range (IP), matching (palindrome)</li>
+        </ul>
+    </div>
+</div>
+
+
+
+<!-- ENHANCED PATTERN 4: GRID/BOARD -->
+<div class="pattern-card" style="border: 3px solid #ff9800; margin-top: 30px;">
+    <h3 style="color: #ff9800;">Pattern 4: Grid / Board Problems</h3>
+    
+    <div class="info-box">
+        <h4>🎯 When to Use:</h4>
+        <ul style="padding-left: 25px; line-height: 2;">
+            <li><strong>Placement problems:</strong> N-Queens, Sudoku</li>
+            <li><strong>Word search:</strong> Find word in 2D grid</li>
+            <li><strong>Path finding:</strong> All paths in maze/grid</li>
+            <li><strong>Board games:</strong> Chess, checkers solutions</li>
+            <li><strong>Island/region problems:</strong> When combined with DFS</li>
+        </ul>
+    </div>
+
+    <div class="highlight-box">
+        <h4 style="margin-top: 0;">💡 Key Insight</h4>
+        <p style="font-size: 1.2em; line-height: 1.8;">
+            Grid problems involve <strong>2D traversal</strong> with <strong>state tracking</strong>.<br>
+            Core pattern: Try position → Mark visited → Explore neighbors → Unmark (backtrack)
+        </p>
+    </div>
+
+    <h4>🔑 Key Characteristics:</h4>
+    <ul class="checklist">
+        <li><strong>2D iteration:</strong> Usually nested loops over rows and columns</li>
+        <li><strong>4 directions:</strong> Up, Down, Left, Right (sometimes 8 with diagonals)</li>
+        <li><strong>Mark visited:</strong> Temporarily change cell to prevent revisiting</li>
+        <li><strong>Validation crucial:</strong> Check bounds, constraints, conflicts</li>
+        <li><strong>Restore state:</strong> Unmark cell after exploring</li>
+        <li><strong>Process row by row</strong> (N-Queens) or <strong>DFS from each cell</strong> (Word Search)</li>
+    </ul>
+
+    <h4>📝 Template: Word Search Style (DFS in Grid)</h4>
+    <div class="code-block"><pre><span class="comment">/**
+ * Pattern: Grid Traversal with Backtracking
+ * Example: Word Search (LC 79)
+ * 
+ * Find if word exists in grid
+ * Can move up/down/left/right
+ * Cannot reuse same cell
+ * 
+ * Time: O(m*n*4^L) where L=word length, m*n=grid size
+ * Space: O(L) for recursion depth
+ */</span>
+
+<span class="keyword">class</span> Solution {
+    <span class="keyword">public boolean</span> exist(<span class="keyword">char</span>[][] board, String word) {
+        <span class="comment">// Try starting from each cell</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < board.length; i++) {
+            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j < board[<span class="number">0</span>].length; j++) {
+                <span class="comment">// If first character matches, start DFS</span>
+                <span class="keyword">if</span> (board[i][j] == word.charAt(<span class="number">0</span>)) {
+                    <span class="keyword">if</span> (dfs(board, word, <span class="number">0</span>, i, j)) {
+                        <span class="keyword">return true</span>;
+                    }
+                }
+            }
+        }
+        <span class="keyword">return false</span>;
+    }
+    
+    <span class="keyword">private boolean</span> dfs(<span class="keyword">char</span>[][] board, String word, 
+                        <span class="keyword">int</span> index, <span class="keyword">int</span> row, <span class="keyword">int</span> col) {
+        <span class="comment">// ===== BASE CASE 1: Found complete word =====</span>
+        <span class="keyword">if</span> (index == word.length()) {
+            <span class="keyword">return true</span>;  <span class="comment">// All characters matched!</span>
+        }
+        
+        <span class="comment">// ===== BOUNDARY + VALIDATION CHECKS =====</span>
+        <span class="keyword">if</span> (row < <span class="number">0</span> || row >= board.length ||      <span class="comment">// Out of bounds vertically</span>
+            col < <span class="number">0</span> || col >= board[<span class="number">0</span>].length ||  <span class="comment">// Out of bounds horizontally</span>
+            board[row][col] != word.charAt(index)) {  <span class="comment">// Character doesn't match</span>
+            <span class="keyword">return false</span>;
+        }
+        
+        <span class="comment">// ===== CHOOSE: Mark cell as visited =====</span>
+        <span class="keyword">char</span> temp = board[row][col];  <span class="comment">// Save original character</span>
+        board[row][col] = <span class="string">'#'</span>;          <span class="comment">// Mark as visited</span>
+        
+        <span class="comment">// ===== EXPLORE: Try all 4 directions =====</span>
+        <span class="keyword">boolean</span> found = 
+            dfs(board, word, index+<span class="number">1</span>, row-<span class="number">1</span>, col) ||  <span class="comment">// UP</span>
+            dfs(board, word, index+<span class="number">1</span>, row+<span class="number">1</span>, col) ||  <span class="comment">// DOWN</span>
+            dfs(board, word, index+<span class="number">1</span>, row, col-<span class="number">1</span>) ||  <span class="comment">// LEFT</span>
+            dfs(board, word, index+<span class="number">1</span>, row, col+<span class="number">1</span>);    <span class="comment">// RIGHT</span>
+        
+        <span class="comment">// ===== UNCHOOSE: Restore cell =====</span>
+        board[row][col] = temp;  <span class="comment">// Restore original character</span>
+        
+        <span class="keyword">return</span> found;
+    }
+}</pre></div>
+
+    <h4>🎓 LeetCode Problems (12 Total):</h4>
+    <table>
+        <tr><th>Difficulty</th><th>LC #</th><th>Problem</th><th>Key Concept</th></tr>
+        <tr style="background: #e8f5e9;"><td><span class="badge medium">MED</span></td><td><strong>79</strong></td><td>Word Search</td><td>🔥 Master this grid template!</td></tr>
+        <tr style="background: #e8f5e9;"><td><span class="badge medium">MED</span></td><td><strong>200</strong></td><td>Number of Islands</td><td>Mark visited, count components</td></tr>
+        <tr style="background: #e8f5e9;"><td><span class="badge medium">MED</span></td><td><strong>980</strong></td><td>Unique Paths III</td><td>Visit all empty cells</td></tr>
+        <tr style="background: #e8f5e9;"><td><span class="badge medium">MED</span></td><td><strong>1219</strong></td><td>Path with Maximum Gold</td><td>Max path value</td></tr>
+        <tr style="background: #ffebee;"><td><span class="badge hard">HARD</span></td><td><strong>37</strong></td><td>Sudoku Solver</td><td>🔥 Row/col/box validation</td></tr>
+        <tr style="background: #ffebee;"><td><span class="badge hard">HARD</span></td><td><strong>51</strong></td><td>N-Queens</td><td>🔥🔥 Classic! Diagonal checks</td></tr>
+        <tr style="background: #ffebee;"><td><span class="badge hard">HARD</span></td><td><strong>52</strong></td><td>N-Queens II</td><td>Count solutions</td></tr>
+        <tr style="background: #ffebee;"><td><span class="badge hard">HARD</span></td><td><strong>212</strong></td><td>Word Search II</td><td>Trie + Backtracking</td></tr>
+    </table>
+</div>
+
+<!-- ENHANCED PATTERN 5: PARTITION -->
+<div class="pattern-card" style="border: 3px solid #f44336; margin-top: 30px;">
+    <h3 style="color: #f44336;">Pattern 5: Partition / Grouping Problems</h3>
+    
+    <div class="info-box">
+        <h4>🎯 When to Use:</h4>
+        <ul style="padding-left: 25px; line-height: 2;">
+            <li><strong>Split into K groups</strong> with equal sums</li>
+            <li><strong>Partition</strong> array/string into valid parts</li>
+            <li><strong>Assign items</strong> to buckets/bins</li>
+            <li><strong>Distribution problems:</strong> Matchsticks, job scheduling</li>
+        </ul>
+    </div>
+
+    <div class="highlight-box">
+        <h4 style="margin-top: 0;">💡 Key Insight</h4>
+        <p style="font-size: 1.2em; line-height: 1.8;">
+            Instead of choosing elements for ONE path,<br>
+            we <strong>assign each element to one of K groups</strong>.<br>
+            Try all possible group assignments using backtracking.
+        </p>
+    </div>
+
+    <h4>🔑 Key Characteristics:</h4>
+    <ul class="checklist">
+        <li><strong>Multiple groups/buckets:</strong> Track state for each group</li>
+        <li><strong>Assign each element</strong> to one group at a time</li>
+        <li><strong>Track group sums/counts:</strong> Check if valid after each assignment</li>
+        <li><strong>Early termination:</strong> If group exceeds target, prune</li>
+        <li><strong>Optimization:</strong> Sort descending, largest items first</li>
+        <li><strong>Backtrack:</strong> Remove item from group, try next group</li>
+    </ul>
+
+    <h4>📝 Template: K Equal Sum Subsets</h4>
+    <div class="code-block"><pre><span class="comment">/**
+ * Pattern: Partition into K Equal Groups
+ * Example: Partition to K Equal Sum Subsets (LC 698)
+ * 
+ * Assign each number to one of K groups
+ * Each group must have sum = total/K
+ * 
+ * Time: O(K^n) where n=array size
+ * Space: O(n) for recursion
+ */</span>
+
+<span class="keyword">class</span> Solution {
+    <span class="keyword">public boolean</span> canPartitionKSubsets(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k) {
+        <span class="keyword">int</span> total = <span class="number">0</span>;
+        <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) total += num;
+        
+        <span class="comment">// If total not divisible by k, impossible</span>
+        <span class="keyword">if</span> (total % k != <span class="number">0</span>) <span class="keyword">return false</span>;
+        
+        <span class="keyword">int</span> target = total / k;  <span class="comment">// Each group must sum to this</span>
+        
+        <span class="comment">// Optimization: Sort descending (larger nums first)</span>
+        Arrays.sort(nums);
+        <span class="keyword">int</span>[] groups = <span class="keyword">new int</span>[k];  <span class="comment">// Track sum of each group</span>
+        
+        <span class="comment">// Start from largest number (nums.length-1)</span>
+        <span class="keyword">return</span> backtrack(nums, nums.length - <span class="number">1</span>, groups, target);
+    }
+    
+    <span class="keyword">private boolean</span> backtrack(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> index, 
+                                <span class="keyword">int</span>[] groups, <span class="keyword">int</span> target) {
+        <span class="comment">// ===== BASE CASE: All numbers assigned =====</span>
+        <span class="keyword">if</span> (index < <span class="number">0</span>) {
+            <span class="comment">// Check if all groups reached target (should be true)</span>
+            <span class="keyword">for</span> (<span class="keyword">int</span> sum : groups) {
+                <span class="keyword">if</span> (sum != target) <span class="keyword">return false</span>;
+            }
+            <span class="keyword">return true</span>;
+        }
+        
+        <span class="keyword">int</span> num = nums[index];  <span class="comment">// Current number to assign</span>
+        
+        <span class="comment">// ===== TRY ASSIGNING TO EACH GROUP =====</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < groups.length; i++) {
+            <span class="comment">// ===== VALIDATION: Can we add to this group? =====</span>
+            <span class="keyword">if</span> (groups[i] + num > target) {
+                <span class="keyword">continue</span>;  <span class="comment">// Would exceed target, skip</span>
+            }
+            
+            <span class="comment">// Optimization: Skip equivalent groups
+            // If groups[i] == groups[i-1], they're identical
+            // No point trying same configuration twice</span>
+            <span class="keyword">if</span> (i > <span class="number">0</span> && groups[i] == groups[i-<span class="number">1</span>]) {
+                <span class="keyword">continue</span>;
+            }
+            
+            <span class="comment">// ===== CHOOSE: Add to group i =====</span>
+            groups[i] += num;
+            
+            <span class="comment">// ===== EXPLORE: Try next number =====</span>
+            <span class="keyword">if</span> (backtrack(nums, index - <span class="number">1</span>, groups, target)) {
+                <span class="keyword">return true</span>;  <span class="comment">// Found valid partition!</span>
+            }
+            
+            <span class="comment">// ===== UNCHOOSE: Remove from group =====</span>
+            groups[i] -= num;
+            
+            <span class="comment">// Important: If adding to empty group failed,
+            // adding to any other empty group will also fail
+            // So break early</span>
+            <span class="keyword">if</span> (groups[i] == <span class="number">0</span>) <span class="keyword">break</span>;
+        }
+        
+        <span class="keyword">return false</span>;  <span class="comment">// Couldn't assign this number</span>
+    }
+}</pre></div>
+
+    <h4>🎓 LeetCode Problems (8 Total):</h4>
+    <table>
+        <tr><th>LC #</th><th>Problem</th><th>Variation</th></tr>
+        <tr><td><strong>698</strong></td><td>Partition to K Equal Sum Subsets</td><td>🔥 Core template</td></tr>
+        <tr><td><strong>473</strong></td><td>Matchsticks to Square</td><td>K=4 groups (sides of square)</td></tr>
+        <tr><td><strong>131</strong></td><td>Palindrome Partitioning</td><td>Partition into valid palindromes</td></tr>
+        <tr><td><strong>1593</strong></td><td>Split String Into Max Unique Substrings</td><td>Maximize unique parts</td></tr>
+        <tr><td><strong>140</strong></td><td>Word Break II</td><td>Partition into dictionary words</td></tr>
+        <tr><td><strong>1255</strong></td><td>Maximum Score Words</td><td>Assign words to groups</td></tr>
+        <tr><td><strong>1723</strong></td><td>Find Min Time to Finish All Jobs</td><td>Distribute jobs optimally</td></tr>
+        <tr><td><strong>1849</strong></td><td>Splitting String Into Descending Values</td><td>Partition with ordering</td></tr>
+    </table>
+</div>
+
+<!-- ENHANCED PATTERN 6: PATH FINDING -->
+<div class="pattern-card" style="border: 3px solid #00bcd4; margin-top: 30px;">
+    <h3 style="color: #00bcd4;">Pattern 6: Path Finding (All Paths)</h3>
+    
+    <div class="info-box">
+        <h4>🎯 When to Use:</h4>
+        <ul style="padding-left: 25px; line-height: 2;">
+            <li>Find <strong>ALL paths</strong> from source to destination</li>
+            <li><strong>Binary tree paths</strong> (root to leaf)</li>
+            <li><strong>Graph path enumeration</strong></li>
+            <li>Calculate <strong>path values/sums</strong></li>
+        </ul>
+    </div>
+
+    <div class="highlight-box">
+        <h4 style="margin-top: 0;">💡 Key Insight</h4>
+        <p style="font-size: 1.2em; line-height: 1.8;">
+            Path finding with backtracking = <strong>DFS that tracks the path</strong>.<br>
+            Save path when reaching destination, backtrack to explore other routes.
+        </p>
+    </div>
+
+    <h4>🔑 Key Characteristics:</h4>
+    <ul class="checklist">
+        <li><strong>DFS-based:</strong> Depth-first exploration</li>
+        <li><strong>Track current path:</strong> Add node as you visit</li>
+        <li><strong>Save at destination:</strong> When reaching leaf/target</li>
+        <li><strong>Backtrack:</strong> Remove node after exploring</li>
+        <li><strong>Tree vs Graph:</strong> Graph needs visited set</li>
+    </ul>
+
+    <h4>📝 Template: Binary Tree Paths</h4>
+    <div class="code-block"><pre><span class="comment">/**
+ * Pattern: All Paths in Tree
+ * Example: Binary Tree Paths (LC 257)
+ * 
+ * Find all root-to-leaf paths
+ * 
+ * Time: O(n) to visit all nodes
+ * Space: O(h) for recursion where h=height
+ */</span>
+
+<span class="keyword">class</span> Solution {
+    List&lt;String&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    
+    <span class="keyword">public</span> List&lt;String&gt; binaryTreePaths(TreeNode root) {
+        <span class="keyword">if</span> (root != <span class="keyword">null</span>) {
+            dfs(root, <span class="keyword">new</span> ArrayList&lt;&gt;());
+        }
+        <span class="keyword">return</span> result;
+    }
+    
+    <span class="keyword">private void</span> dfs(TreeNode node, List&lt;Integer&gt; path) {
+        <span class="comment">// ===== CHOOSE: Add current node =====</span>
+        path.add(node.val);
+        
+        <span class="comment">// ===== BASE CASE: Reached leaf =====</span>
+        <span class="keyword">if</span> (node.left == <span class="keyword">null</span> && node.right == <span class="keyword">null</span>) {
+            <span class="comment">// Build path string: "1->2->5"</span>
+            StringBuilder sb = <span class="keyword">new</span> StringBuilder();
+            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < path.size(); i++) {
+                sb.append(path.get(i));
+                <span class="keyword">if</span> (i < path.size() - <span class="number">1</span>) sb.append(<span class="string">"->"</span>);
+            }
+            result.add(sb.toString());
+        }
+        
+        <span class="comment">// ===== EXPLORE: Visit children =====</span>
+        <span class="keyword">if</span> (node.left != <span class="keyword">null</span>) {
+            dfs(node.left, path);
+        }
+        <span class="keyword">if</span> (node.right != <span class="keyword">null</span>) {
+            dfs(node.right, path);
+        }
+        
+        <span class="comment">// ===== UNCHOOSE: Remove current node =====</span>
+        path.remove(path.size() - <span class="number">1</span>);
+    }
+}</pre></div>
+
+    <h4>🎓 LeetCode Problems (6 Total):</h4>
+    <table>
+        <tr><th>Difficulty</th><th>LC #</th><th>Problem</th><th>Variation</th></tr>
+        <tr style="background: #e8f5e9;"><td><span class="badge easy">EASY</span></td><td><strong>257</strong></td><td>Binary Tree Paths</td><td>🔥 Basic template</td></tr>
+        <tr style="background: #fff3e0;"><td><span class="badge medium">MED</span></td><td><strong>113</strong></td><td>Path Sum II</td><td>Paths with target sum</td></tr>
+        <tr style="background: #fff3e0;"><td><span class="badge medium">MED</span></td><td><strong>129</strong></td><td>Sum Root to Leaf Numbers</td><td>Calculate path values</td></tr>
+        <tr style="background: #fff3e0;"><td><span class="badge medium">MED</span></td><td><strong>437</strong></td><td>Path Sum III</td><td>Any start/end nodes</td></tr>
+        <tr style="background: #fff3e0;"><td><span class="badge medium">MED</span></td><td><strong>988</strong></td><td>Smallest String Starting From Leaf</td><td>Lexicographical comparison</td></tr>
+        <tr style="background: #fff3e0;"><td><span class="badge medium">MED</span></td><td><strong>1430</strong></td><td>Check Valid Sequence in Binary Tree</td><td>Path matches array</td></tr>
+    </table>
+
+    <div class="success-box">
+        <h4>💡 Pattern 6 Key Takeaways:</h4>
+        <ul style="line-height: 2;">
+            <li><strong>Tree paths:</strong> No visited set needed (no cycles)</li>
+            <li><strong>Graph paths:</strong> Need visited set to prevent infinite loops</li>
+            <li><strong>Save at leaf/destination:</strong> Not at every node</li>
+            <li><strong>Path tracking:</strong> Add before recursion, remove after</li>
+        </ul>
+    </div>
+</div>
+
+
+            <!-- SECTION 6: DETAILED VISUAL EXAMPLES -->
+            <section id="visuals" class="section">
+                <h2>6️⃣ Complete Visual Examples - Step-by-Step Walkthroughs</h2>
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em; text-align: center;">
+                        Watch backtracking in action with color-coded visualizations!<br>
+                        Every step explained with arrays, grids, and decision trees.
+                    </p>
+                </div>
+                
+<!-- VISUAL EXAMPLE 1: SUBSETS -->
+            <section class="section">
+                <h2>📦 Complete Visual Example: Subsets of [1, 2, 3]</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em; text-align: center;">
+                        <strong>Watch how backtracking explores EVERY possibility systematically!</strong><br>
+                        We'll generate all subsets (power set) of [1, 2, 3]
+                    </p>
+                </div>
+
+                <h3>🎬 Step-by-Step Visual Execution</h3>
+
+                <!-- Step 0 -->
+                <div class="step-visual">
+                    <h4>📍 Step 0: Start - Empty Path</h4>
+                    <p><strong>Current path:</strong> []</p>
+                    <p><strong>Action:</strong> Save empty subset, then explore choices</p>
+                    
+                    <div class="array-visual">
+                        <div class="array-cell current">
+                            1
+                            <div class="label">Choice 1</div>
+                        </div>
+                        <div class="array-cell">
+                            2
+                            <div class="label">Choice 2</div>
+                        </div>
+                        <div class="array-cell">
+                            3
+                            <div class="label">Choice 3</div>
+                        </div>
+                    </div>
+                    
+                    <div class="path-display">
+                        Result so far: [[]]
+                    </div>
+                    
+                    <div class="recursion-stack">
+                        <strong>Call Stack:</strong><br>
+                        <div class="recursion-level">helper(start=0, path=[])</div>
+                    </div>
+                </div>
+
+                <!-- Step 1 -->
+                <div class="step-visual">
+                    <h4>📍 Step 1: Choose 1</h4>
+                    <p><strong>Current path:</strong> [1]</p>
+                    <p><strong>Action:</strong> Added 1 to path, save [1], explore further</p>
+                    
+                    <div class="array-visual">
+                        <div class="array-cell chosen">
+                            1
+                            <div class="label">✓ CHOSEN</div>
+                        </div>
+                        <div class="array-cell current">
+                            2
+                            <div class="label">Next choice</div>
+                        </div>
+                        <div class="array-cell">
+                            3
+                            <div class="label">Available</div>
+                        </div>
+                    </div>
+                    
+                    <div class="path-display">
+                        Result so far: [[], [1]]
+                    </div>
+                    
+                    <div class="recursion-stack">
+                        <strong>Call Stack:</strong><br>
+                        <div class="recursion-level">helper(start=0, path=[]) ← Original</div>
+                        <div class="recursion-level">helper(start=1, path=[1]) ← Recursed after choosing 1</div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-visual">
+                    <h4>📍 Step 2: Choose 2 (now path is [1, 2])</h4>
+                    <p><strong>Current path:</strong> [1, 2]</p>
+                    <p><strong>Action:</strong> Added 2, save [1,2], explore further</p>
+                    
+                    <div class="array-visual">
+                        <div class="array-cell chosen">
+                            1
+                            <div class="label">In path</div>
+                        </div>
+                        <div class="array-cell chosen">
+                            2
+                            <div class="label">✓ CHOSEN</div>
+                        </div>
+                        <div class="array-cell current">
+                            3
+                            <div class="label">Next choice</div>
+                        </div>
+                    </div>
+                    
+                    <div class="path-display">
+                        Result so far: [[], [1], [1,2]]
+                    </div>
+                    
+                    <div class="recursion-stack">
+                        <strong>Call Stack:</strong><br>
+                        <div class="recursion-level">helper(start=0, path=[])</div>
+                        <div class="recursion-level">helper(start=1, path=[1])</div>
+                        <div class="recursion-level">helper(start=2, path=[1,2]) ← Recursed after choosing 2</div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-visual">
+                    <h4>📍 Step 3: Choose 3 (now path is [1, 2, 3])</h4>
+                    <p><strong>Current path:</strong> [1, 2, 3]</p>
+                    <p><strong>Action:</strong> Added 3, save [1,2,3], no more choices → backtrack!</p>
+                    
+                    <div class="array-visual">
+                        <div class="array-cell chosen">
+                            1
+                            <div class="label">In path</div>
+                        </div>
+                        <div class="array-cell chosen">
+                            2
+                            <div class="label">In path</div>
+                        </div>
+                        <div class="array-cell chosen">
+                            3
+                            <div class="label">✓ CHOSEN</div>
+                        </div>
+                    </div>
+                    
+                    <div class="path-display">
+                        Result so far: [[], [1], [1,2], [1,2,3]]
+                    </div>
+                    
+                    <div class="info-box">
+                        <strong>💡 Why backtrack?</strong> No more elements to choose from (reached end of array).
+                        Time to UNCHOOSE 3 and go back!
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step-visual">
+                    <h4>📍 Step 4: Backtrack from [1, 2, 3] → [1, 2]</h4>
+                    <p><strong>Action:</strong> Remove 3 from path, no more choices after 3 → backtrack again!</p>
+                    
+                    <div class="array-visual">
+                        <div class="array-cell chosen">
+                            1
+                            <div class="label">In path</div>
+                        </div>
+                        <div class="array-cell chosen">
+                            2
+                            <div class="label">In path</div>
+                        </div>
+                        <div class="array-cell backtracked">
+                            3
+                            <div class="label">REMOVED</div>
+                        </div>
+                    </div>
+                    
+                    <div class="path-display">
+                        Current path after backtrack: [1, 2]
+                    </div>
+                    
+                    <div class="warning-box">
+                        <strong>⬅️ Backtracking:</strong> We tried 3, now remove it and check if there are more choices.
+                        There aren't any after 3, so we backtrack again!
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="step-visual">
+                    <h4>📍 Step 5: Backtrack from [1, 2] → [1], try 3</h4>
+                    <p><strong>Action:</strong> Remove 2, try next choice which is 3</p>
+                    
+                    <div class="array-visual">
+                        <div class="array-cell chosen">
+                            1
+                            <div class="label">In path</div>
+                        </div>
+                        <div class="array-cell backtracked">
+                            2
+                            <div class="label">REMOVED</div>
+                        </div>
+                        <div class="array-cell current">
+                            3
+                            <div class="label">Trying now</div>
+                        </div>
+                    </div>
+                    
+                    <div class="path-display">
+                        Current path: [1] → About to choose 3
+                    </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="step-visual">
+                    <h4>📍 Step 6: Choose 3 (path is [1, 3])</h4>
+                    <p><strong>Current path:</strong> [1, 3]</p>
+                    <p><strong>Action:</strong> Save [1,3], no more choices → backtrack!</p>
+                    
+                    <div class="array-visual">
+                        <div class="array-cell chosen">
+                            1
+                            <div class="label">In path</div>
+                        </div>
+                        <div class="array-cell">
+                            2
+                            <div class="label">Skipped</div>
+                        </div>
+                        <div class="array-cell chosen">
+                            3
+                            <div class="label">✓ CHOSEN</div>
+                        </div>
+                    </div>
+                    
+                    <div class="path-display">
+                        Result so far: [[], [1], [1,2], [1,2,3], [1,3]]
+                    </div>
+                </div>
+
+                <!-- Step 7 -->
+                <div class="step-visual">
+                    <h4>📍 Step 7: Backtrack to [], try 2</h4>
+                    <p><strong>Action:</strong> Finished all paths with 1, backtrack to start, try 2</p>
+                    
+                    <div class="array-visual">
+                        <div class="array-cell backtracked">
+                            1
+                            <div class="label">Done</div>
+                        </div>
+                        <div class="array-cell current">
+                            2
+                            <div class="label">Trying now</div>
+                        </div>
+                        <div class="array-cell">
+                            3
+                            <div class="label">Available</div>
+                        </div>
+                    </div>
+                    
+                    <div class="path-display">
+                        Current path: [] → About to choose 2
+                    </div>
+                </div>
+
+                <!-- Step 8 -->
+                <div class="step-visual">
+                    <h4>📍 Step 8: Choose 2 (path is [2])</h4>
+                    <p><strong>Current path:</strong> [2]</p>
+                    <p><strong>Action:</strong> Save [2], explore with 3</p>
+                    
+                    <div class="array-visual">
+                        <div class="array-cell">
+                            1
+                            <div class="label">Done</div>
+                        </div>
+                        <div class="array-cell chosen">
+                            2
+                            <div class="label">✓ CHOSEN</div>
+                        </div>
+                        <div class="array-cell current">
+                            3
+                            <div class="label">Next</div>
+                        </div>
+                    </div>
+                    
+                    <div class="path-display">
+                        Result so far: [[], [1], [1,2], [1,2,3], [1,3], [2]]
+                    </div>
+                </div>
+
+                <!-- Step 9 -->
+                <div class="step-visual">
+                    <h4>📍 Step 9: Choose 3 (path is [2, 3])</h4>
+                    <p><strong>Current path:</strong> [2, 3]</p>
+                    <p><strong>Action:</strong> Save [2,3], backtrack</p>
+                    
+                    <div class="array-visual">
+                        <div class="array-cell">
+                            1
+                            <div class="label">Done</div>
+                        </div>
+                        <div class="array-cell chosen">
+                            2
+                            <div class="label">In path</div>
+                        </div>
+                        <div class="array-cell chosen">
+                            3
+                            <div class="label">✓ CHOSEN</div>
+                        </div>
+                    </div>
+                    
+                    <div class="path-display">
+                        Result so far: [[], [1], [1,2], [1,2,3], [1,3], [2], [2,3]]
+                    </div>
+                </div>
+
+                <!-- Step 10 -->
+                <div class="step-visual">
+                    <h4>📍 Step 10: Final - Choose 3 alone</h4>
+                    <p><strong>Current path:</strong> [3]</p>
+                    <p><strong>Action:</strong> Save [3], done!</p>
+                    
+                    <div class="array-visual">
+                        <div class="array-cell">
+                            1
+                            <div class="label">Done</div>
+                        </div>
+                        <div class="array-cell">
+                            2
+                            <div class="label">Done</div>
+                        </div>
+                        <div class="array-cell chosen">
+                            3
+                            <div class="label">✓ CHOSEN</div>
+                        </div>
+                    </div>
+                    
+                    <div class="success-box" style="font-size: 1.2em;">
+                        <strong>✅ COMPLETE! Final Result:</strong><br><br>
+                        [[], [1], [1,2], [1,2,3], [1,3], [2], [2,3], [3]]<br><br>
+                        <strong>Total: 2³ = 8 subsets</strong> (including empty set)
+                    </div>
+                </div>
+
+                <h3>🌳 Complete Decision Tree View</h3>
+                <div class="tree-visual">
+                    <pre style="font-family: monospace; font-size: 1.1em; line-height: 1.8;">
+                                    []  ← Start (save [])
+                                   /|\
+                                  / | \
+                            +1   /  |  \  +2 (skip 1)
+                                /   |   \
+                              [1]  ...  [2]  ← Save [1], [2]
+                             / \         |
+                         +2 /   \ +3     | +3
+                           /     \       |
+                        [1,2]   [1,3]  [2,3]  ← Save these
+                          |
+                       +3 |
+                          |
+                       [1,2,3]  ← Save this
+
+    Execution Order (DFS - Depth First):
+    1. Save []
+    2. Choose 1 → Save [1]
+    3. Choose 2 → Save [1,2]
+    4. Choose 3 → Save [1,2,3]
+    5. Backtrack, remove 3
+    6. Backtrack, remove 2
+    7. Choose 3 → Save [1,3]
+    8. Backtrack to []
+    9. Choose 2 → Save [2]
+    10. Choose 3 → Save [2,3]
+    11. Backtrack, choose 3 alone → Save [3]
+                    </pre>
+                </div>
+            </section>
+
+
+            <!-- SUPER COMMENTED CODE EXAMPLES -->
+            <section class="section">
+                <h2>💻 Super-Commented Code Examples</h2>
+                
+                <h3>Example 1: Subsets (LC 78) - Line by Line Explanation</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * LeetCode 78: Subsets
+ * 
+ * Problem: Given an array of UNIQUE integers, return ALL possible subsets (power set)
+ * Example: nums = [1,2,3]
+ * Output: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+ * 
+ * KEY INSIGHT: At each element, we have 2 choices - INCLUDE it or EXCLUDE it
+ * This naturally forms a binary decision tree
+ * 
+ * Time Complexity: O(2^n * n) 
+ *   - 2^n subsets to generate
+ *   - Each subset takes O(n) to copy into result
+ * Space Complexity: O(n) for recursion depth
+ */</span>
+
+<span class="keyword">class</span> Solution {
+    <span class="comment">// Global result list to store all subsets</span>
+    List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    
+    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; subsets(<span class="keyword">int</span>[] nums) {
+        <span class="comment">// Start backtracking from index 0 with an empty path</span>
+        <span class="comment">// 'path' will build up each subset as we explore</span>
+        backtrack(<span class="number">0</span>, nums, <span class="keyword">new</span> ArrayList&lt;&gt;());
+        <span class="keyword">return</span> result;
+    }
+    
+    <span class="comment">/**
+     * Main backtracking function
+     * 
+     * @param start - Current index in nums array (we only consider elements from 'start' onwards)
+     *                This prevents duplicates like [1,2] and [2,1] being counted as different
+     * @param nums  - Original input array
+     * @param path  - Current subset being built (gets modified during recursion)
+     */</span>
+    <span class="keyword">private void</span> backtrack(<span class="keyword">int</span> start, <span class="keyword">int</span>[] nums, List&lt;Integer&gt; path) {
+        <span class="comment">// ===== STEP 1: SAVE CURRENT STATE =====</span>
+        <span class="comment">// For subsets, EVERY state is valid, so we save at every level</span>
+        <span class="comment">// CRITICAL: Must create a NEW list (copy), not just add reference!</span>
+        <span class="comment">// Why? Because 'path' gets modified during backtracking</span>
+        result.add(<span class="keyword">new</span> ArrayList&lt;&gt;(path));
+        
+        <span class="comment">// Example progression for [1,2,3]:</span>
+        <span class="comment">// Call 1: path=[] → saves []</span>
+        <span class="comment">// Call 2: path=[1] → saves [1]</span>
+        <span class="comment">// Call 3: path=[1,2] → saves [1,2]</span>
+        <span class="comment">// etc...</span>
+        
+        <span class="comment">// ===== STEP 2: EXPLORE ALL CHOICES =====</span>
+        <span class="comment">// For each remaining element (from start to end)</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt; nums.length; i++) {
+            <span class="comment">// Why start at 'start' instead of 0?</span>
+            <span class="comment">// - Prevents generating duplicates</span>
+            <span class="comment">// - If we're at [1], we don't want to generate [1,1] by choosing 1 again</span>
+            <span class="comment">// - We only move FORWARD in the array</span>
+            
+            <span class="comment">// ===== STEP 3: CHOOSE =====</span>
+            <span class="comment">// Add current element to our subset</span>
+            path.add(nums[i]);
+            <span class="comment">// Example: If nums[i]=2 and path was [1], now path becomes [1,2]</span>
+            
+            <span class="comment">// ===== STEP 4: EXPLORE (RECURSE) =====</span>
+            <span class="comment">// Recursively explore with this choice</span>
+            <span class="comment">// CRITICAL: Pass i+1 (not i) to prevent reusing same element</span>
+            backtrack(i + <span class="number">1</span>, nums, path);
+            <span class="comment">// This call will explore all subsets that INCLUDE nums[i]</span>
+            
+            <span class="comment">// When this returns, it means we've explored ALL possibilities</span>
+            <span class="comment">// with nums[i] in the path. Now we need to try WITHOUT nums[i]</span>
+            
+            <span class="comment">// ===== STEP 5: UNCHOOSE (BACKTRACK) =====</span>
+            <span class="comment">// Remove the element we just added</span>
+            path.remove(path.size() - <span class="number">1</span>);
+            <span class="comment">// Example: path was [1,2], after removal it's [1] again</span>
+            
+            <span class="comment">// Why remove? So the next iteration can try a different element</span>
+            <span class="comment">// Without this, path would keep growing: [1], [1,2], [1,2,3], [1,2,3,...]</span>
+            
+            <span class="comment">// ===== STEP 6: LOOP CONTINUES =====</span>
+            <span class="comment">// The for loop will try the next element</span>
+            <span class="comment">// This explores all possibilities at this level</span>
+        }
+        
+        <span class="comment">// When loop ends, we've tried all choices from this position</span>
+        <span class="comment">// Function returns, going back up the recursion tree</span>
+    }
+}
+
+<span class="comment">/*
+ * EXECUTION TRACE for nums=[1,2,3]:
+ * 
+ * backtrack(0, [1,2,3], [])
+ *   ├─ save [] → result: [[]]
+ *   ├─ i=0: choose 1
+ *   │   ├─ path becomes [1]
+ *   │   ├─ backtrack(1, [1,2,3], [1])
+ *   │   │   ├─ save [1] → result: [[], [1]]
+ *   │   │   ├─ i=1: choose 2
+ *   │   │   │   ├─ path becomes [1,2]
+ *   │   │   │   ├─ backtrack(2, [1,2,3], [1,2])
+ *   │   │   │   │   ├─ save [1,2] → result: [[], [1], [1,2]]
+ *   │   │   │   │   ├─ i=2: choose 3
+ *   │   │   │   │   │   ├─ path becomes [1,2,3]
+ *   │   │   │   │   │   ├─ backtrack(3, [1,2,3], [1,2,3])
+ *   │   │   │   │   │   │   ├─ save [1,2,3] → result: [[], [1], [1,2], [1,2,3]]
+ *   │   │   │   │   │   │   └─ no more elements, return
+ *   │   │   │   │   │   └─ remove 3, path becomes [1,2]
+ *   │   │   │   │   └─ return
+ *   │   │   │   └─ remove 2, path becomes [1]
+ *   │   │   ├─ i=2: choose 3
+ *   │   │   │   ├─ path becomes [1,3]
+ *   │   │   │   ├─ backtrack(3, [1,2,3], [1,3])
+ *   │   │   │   │   ├─ save [1,3] → result: [[], [1], [1,2], [1,2,3], [1,3]]
+ *   │   │   │   │   └─ return
+ *   │   │   │   └─ remove 3, path becomes [1]
+ *   │   │   └─ return
+ *   │   └─ remove 1, path becomes []
+ *   ├─ i=1: choose 2
+ *   │   ... (similar pattern, generates [2], [2,3])
+ *   ├─ i=2: choose 3
+ *   │   ... (generates [3])
+ *   └─ return
+ */</span></pre></div>
+
+                <h3>Example 2: Permutations (LC 46) - With Detailed Comments</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * LeetCode 46: Permutations
+ * 
+ * Problem: Given array of UNIQUE integers, return ALL possible permutations
+ * Example: nums = [1,2,3]
+ * Output: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+ * 
+ * KEY DIFFERENCE from Subsets:
+ * - In subsets: We use 'start' index and only go FORWARD
+ * - In permutations: We can use ANY unused element, so we need a 'used' array
+ * - Every permutation uses ALL elements (length = n)
+ * 
+ * Time: O(n! * n) - n! permutations, each takes O(n) to copy
+ * Space: O(n) - recursion depth + used array
+ */</span>
+
+<span class="keyword">class</span> Solution {
+    List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    
+    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; permute(<span class="keyword">int</span>[] nums) {
+        <span class="comment">// 'used' array tracks which elements are already in current permutation</span>
+        <span class="comment">// used[i] = true means nums[i] is currently in 'path'</span>
+        backtrack(nums, <span class="keyword">new</span> ArrayList&lt;&gt;(), <span class="keyword">new boolean</span>[nums.length]);
+        <span class="keyword">return</span> result;
+    }
+    
+    <span class="comment">/**
+     * Backtracking for permutations
+     * 
+     * @param nums - Original array
+     * @param path - Current permutation being built
+     * @param used - Tracks which elements are already used
+     * 
+     * VISUALIZATION for nums=[1,2,3]:
+     * 
+     *                           []
+     *                    /       |       \
+     *              add 1        add 2        add 3
+     *                /            |            \
+     *              [1]           [2]           [3]
+     *             /   \         /   \         /   \
+     *        add 2   add 3  add 1  add 3  add 1  add 2
+     *           /       \      /      \      /      \
+     *        [1,2]    [1,3]  [2,1]  [2,3]  [3,1]  [3,2]
+     *          |        |      |      |      |      |
+     *       add 3    add 2  add 3  add 1  add 2  add 1
+     *          |        |      |      |      |      |
+     *      [1,2,3] [1,3,2] [2,1,3][2,3,1][3,1,2][3,2,1]
+     *        ✓        ✓      ✓      ✓      ✓      ✓
+     */</span>
+    <span class="keyword">private void</span> backtrack(<span class="keyword">int</span>[] nums, List&lt;Integer&gt; path, <span class="keyword">boolean</span>[] used) {
+        <span class="comment">// ===== BASE CASE: Found complete permutation =====</span>
+        <span class="comment">// When path has all n elements, we have a complete permutation</span>
+        <span class="keyword">if</span> (path.size() == nums.length) {
+            result.add(<span class="keyword">new</span> ArrayList&lt;&gt;(path));  <span class="comment">// Save a copy</span>
+            <span class="keyword">return</span>;  <span class="comment">// Stop exploring this branch</span>
+        }
+        
+        <span class="comment">// ===== EXPLORE ALL UNUSED ELEMENTS =====</span>
+        <span class="comment">// Unlike subsets, we DON'T use a 'start' index</span>
+        <span class="comment">// We can choose ANY unused element at each position</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) {
+            <span class="comment">// ===== VALIDATION: Skip if already used =====</span>
+            <span class="comment">// If nums[i] is already in 'path', we can't use it again</span>
+            <span class="keyword">if</span> (used[i]) {
+                <span class="keyword">continue</span>;  <span class="comment">// Skip this choice, try next</span>
+            }
+            
+            <span class="comment">// Example at path=[1]:</span>
+            <span class="comment">// - i=0 (nums[0]=1): used[0]=true → skip</span>
+            <span class="comment">// - i=1 (nums[1]=2): used[1]=false → can use!</span>
+            <span class="comment">// - i=2 (nums[2]=3): used[2]=false → can use!</span>
+            
+            <span class="comment">// ===== CHOOSE =====</span>
+            path.add(nums[i]);     <span class="comment">// Add to current permutation</span>
+            used[i] = <span class="keyword">true</span>;           <span class="comment">// Mark as used</span>
+            
+            <span class="comment">// State change example:</span>
+            <span class="comment">// Before: path=[1], used=[T,F,F]</span>
+            <span class="comment">// After:  path=[1,2], used=[T,T,F]</span>
+            
+            <span class="comment">// ===== EXPLORE =====</span>
+            <span class="comment">// Recursively build the rest of permutation</span>
+            backtrack(nums, path, used);
+            
+            <span class="comment">// When this returns, we've explored all permutations</span>
+            <span class="comment">// that have path=[..., nums[i]]</span>
+            
+            <span class="comment">// ===== UNCHOOSE (BACKTRACK) =====</span>
+            path.remove(path.size() - <span class="number">1</span>);  <span class="comment">// Remove last element</span>
+            used[i] = <span class="keyword">false</span>;                 <span class="comment">// Mark as available again</span>
+            
+            <span class="comment">// State change example:</span>
+            <span class="comment">// Before: path=[1,2], used=[T,T,F]</span>
+            <span class="comment">// After:  path=[1], used=[T,F,F]</span>
+            
+            <span class="comment">// Now we can try the next element in the loop</span>
+        }
+    }
+}
+
+<span class="comment">/*
+ * DETAILED EXECUTION TRACE for nums=[1,2]:
+ * 
+ * Call 1: backtrack([1,2], [], [F,F])
+ *   path.size() = 0 != 2, so continue
+ *   
+ *   i=0: Choose 1
+ *     path = [1], used = [T,F]
+ *     
+ *     Call 2: backtrack([1,2], [1], [T,F])
+ *       path.size() = 1 != 2, so continue
+ *       
+ *       i=0: used[0]=true → SKIP
+ *       i=1: used[1]=false → Choose 2
+ *         path = [1,2], used = [T,T]
+ *         
+ *         Call 3: backtrack([1,2], [1,2], [T,T])
+ *           path.size() = 2 == 2 → BASE CASE!
+ *           Save [1,2] to result
+ *           Return
+ *         
+ *         Unchoose: path = [1], used = [T,F]
+ *       
+ *       No more choices, return
+ *     
+ *     Unchoose: path = [], used = [F,F]
+ *   
+ *   i=1: Choose 2
+ *     path = [2], used = [F,T]
+ *     
+ *     Call 4: backtrack([1,2], [2], [F,T])
+ *       path.size() = 1 != 2, so continue
+ *       
+ *       i=0: used[0]=false → Choose 1
+ *         path = [2,1], used = [T,T]
+ *         
+ *         Call 5: backtrack([1,2], [2,1], [T,T])
+ *           path.size() = 2 == 2 → BASE CASE!
+ *           Save [2,1] to result
+ *           Return
+ *         
+ *         Unchoose: path = [2], used = [F,T]
+ *       
+ *       i=1: used[1]=true → SKIP
+ *       
+ *       Return
+ *     
+ *     Unchoose: path = [], used = [F,F]
+ *   
+ *   Return
+ * 
+ * FINAL RESULT: [[1,2], [2,1]]
+ */</span></pre></div>
+
+                <div class="success-box" style="margin-top: 30px;">
+                    <h3 style="margin-top: 0;">🎯 Key Differences Summary</h3>
+                    <table>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Subsets</th>
+                            <th>Permutations</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Use 'start' index?</strong></td>
+                            <td>✓ Yes (prevents duplicates like [1,2] and [2,1])</td>
+                            <td>✗ No (order matters, so [1,2] ≠ [2,1])</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Need 'used' array?</strong></td>
+                            <td>✗ No (start index prevents reuse)</td>
+                            <td>✓ Yes (can choose any position)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>When to save?</strong></td>
+                            <td>Every level (all sizes valid)</td>
+                            <td>Only when path.size() == n</td>
+                        </tr>
+                        <tr>
+                            <td><strong>For loop starts at?</strong></td>
+                            <td>i = start (only future elements)</td>
+                            <td>i = 0 (any unused element)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Recursion call?</strong></td>
+                            <td>backtrack(i+1, ...)</td>
+                            <td>backtrack(... same params)</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+
+
+            <!-- N-QUEENS VISUAL EXAMPLE -->
+            <section class="section">
+                <h2>👑 N-Queens Problem - Complete Visual Walkthrough</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em; text-align: center;">
+                        <strong>Problem:</strong> Place 4 queens on a 4×4 board so no two queens attack each other<br>
+                        <strong>Constraints:</strong> No two queens in same row, column, or diagonal
+                    </p>
+                </div>
+
+                <h3>🎬 Visual Step-by-Step Execution</h3>
+
+                <!-- N-Queens Step 0 -->
+                <div class="step-visual">
+                    <h4>📍 Step 0: Empty Board - Start Row 0</h4>
+                    <p><strong>Action:</strong> Try placing queen in each column of row 0</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 60px); gap: 2px; justify-content: center; margin: 20px 0;">
+                        <div class="array-cell current" style="background: #fff9c4;">?</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <strong>Decision:</strong> Try column 0 first<br>
+                        <strong>Board state:</strong> Row 0, trying each column
+                    </div>
+                </div>
+
+                <!-- N-Queens Step 1 -->
+                <div class="step-visual">
+                    <h4>📍 Step 1: Place Queen at (0, 0)</h4>
+                    <p><strong>Action:</strong> Queen at row 0, column 0. Mark attacked cells.</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 60px); gap: 2px; justify-content: center; margin: 20px 0;">
+                        <div class="array-cell chosen" style="font-size: 1.5em;">♛</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <strong>Attacked cells (×):</strong><br>
+                        • Row 0: All cells to the right<br>
+                        • Column 0: All cells below<br>
+                        • Diagonals: (1,1), (2,2), (3,3) - main diagonal<br>
+                        <strong>Next:</strong> Try placing queen in row 1
+                    </div>
+                </div>
+
+                <!-- N-Queens Step 2 -->
+                <div class="step-visual">
+                    <h4>📍 Step 2: Try Row 1, Column 0 - INVALID!</h4>
+                    <p><strong>Action:</strong> (1,0) is attacked by queen at (0,0). Skip!</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 60px); gap: 2px; justify-content: center; margin: 20px 0;">
+                        <div class="array-cell chosen" style="font-size: 1.5em;">♛</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        
+                        <div class="array-cell" style="background: #f44336; color: white;">✗</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell current" style="background: #fff9c4;">?</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                    </div>
+                    
+                    <div class="danger-box">
+                        <strong>❌ INVALID:</strong> (1,0) is in same column as (0,0)<br>
+                        <strong>Action:</strong> Try next column (1,1)
+                    </div>
+                </div>
+
+                <!-- N-Queens Step 3 -->
+                <div class="step-visual">
+                    <h4>📍 Step 3: Try Row 1, Column 1 - INVALID!</h4>
+                    <p><strong>Action:</strong> (1,1) is attacked by diagonal. Skip!</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 60px); gap: 2px; justify-content: center; margin: 20px 0;">
+                        <div class="array-cell chosen" style="font-size: 1.5em;">♛</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell" style="background: #f44336; color: white;">✗</div>
+                        <div class="array-cell current" style="background: #fff9c4;">?</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                    </div>
+                    
+                    <div class="danger-box">
+                        <strong>❌ INVALID:</strong> (1,1) is on diagonal from (0,0)<br>
+                        <strong>Action:</strong> Try column 2
+                    </div>
+                </div>
+
+                <!-- N-Queens Step 4 -->
+                <div class="step-visual">
+                    <h4>📍 Step 4: Place Queen at (1, 2) - Valid!</h4>
+                    <p><strong>Action:</strong> (1,2) is safe! Place queen and continue.</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 60px); gap: 2px; justify-content: center; margin: 20px 0;">
+                        <div class="array-cell chosen" style="font-size: 1.5em;">♛</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell chosen" style="font-size: 1.5em;">♛</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                        <div class="array-cell backtracked" style="background: #ffcdd2; opacity: 0.5;">×</div>
+                    </div>
+                    
+                    <div class="warning-box">
+                        <strong>⚠️ PROBLEM:</strong> All cells in rows 2 and 3 are now attacked!<br>
+                        No valid position for remaining queens.<br>
+                        <strong>Solution:</strong> BACKTRACK! Remove queen from (1,2), try (1,3)
+                    </div>
+                </div>
+
+                <!-- N-Queens Backtrack -->
+                <div class="step-visual">
+                    <h4>📍 Step 5: BACKTRACK - Remove (1,2), try different path</h4>
+                    <p><strong>Action:</strong> Dead end reached. Go back and try (0,1) instead of (0,0)</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 60px); gap: 2px; justify-content: center; margin: 20px 0;">
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell current" style="background: #4caf50; color: white; font-size: 1.5em;">♛</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        <div class="array-cell current" style="background: #4caf50; color: white; font-size: 1.5em;">♛</div>
+                        
+                        <div class="array-cell current" style="background: #4caf50; color: white; font-size: 1.5em;">♛</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                        <div class="array-cell" style="background: #fff;">.</div>
+                        <div class="array-cell current" style="background: #4caf50; color: white; font-size: 1.5em;">♛</div>
+                        <div class="array-cell" style="background: #f5f5f5;">.</div>
+                    </div>
+                    
+                    <div class="success-box">
+                        <strong>✅ SOLUTION FOUND!</strong><br>
+                        Queens at: (0,1), (1,3), (2,0), (3,2)<br>
+                        This is ONE valid solution for 4-Queens problem!
+                    </div>
+                </div>
+
+                <h3>💻 N-Queens Code with Super Detailed Comments</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * LeetCode 51: N-Queens
+ * 
+ * Problem: Place N queens on N×N board so no two queens attack each other
+ * 
+ * KEY INSIGHTS:
+ * 1. One queen per row (we process row by row)
+ * 2. Try each column in current row
+ * 3. Validate: Check column and both diagonals
+ * 4. If valid → place queen, recurse to next row
+ * 5. If invalid or dead end → backtrack
+ * 
+ * ATTACK PATTERNS:
+ * - Same row: Prevented by processing one row at a time
+ * - Same column: Check column
+ * - Same diagonal (\): Check (row - col) is same
+ * - Same anti-diagonal (/): Check (row + col) is same
+ */</span>
+
+<span class="keyword">class</span> Solution {
+    List&lt;List&lt;String&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    
+    <span class="keyword">public</span> List&lt;List&lt;String&gt;&gt; solveNQueens(<span class="keyword">int</span> n) {
+        <span class="comment">// Initialize board with '.' (empty cells)</span>
+        <span class="keyword">char</span>[][] board = <span class="keyword">new char</span>[n][n];
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {
+            Arrays.fill(board[i], <span class="string">'.'</span>);
+        }
+        
+        <span class="comment">// Start backtracking from row 0</span>
+        backtrack(board, <span class="number">0</span>);
+        <span class="keyword">return</span> result;
+    }
+    
+    <span class="comment">/**
+     * Backtrack function for N-Queens
+     * 
+     * @param board - Current board state
+     * @param row   - Current row we're trying to place a queen in
+     * 
+     * VISUALIZATION for n=4:
+     * 
+     * backtrack(board, 0)
+     *   ├─ Try col=0: Place Q at (0,0)
+     *   │   └─ backtrack(board, 1)
+     *   │       ├─ Try col=0: INVALID (same column)
+     *   │       ├─ Try col=1: INVALID (diagonal)
+     *   │       ├─ Try col=2: Place Q at (1,2)
+     *   │       │   └─ backtrack(board, 2)
+     *   │       │       └─ Try all cols: ALL INVALID (no safe spot!)
+     *   │       │       └─ BACKTRACK (remove (1,2))
+     *   │       └─ Try col=3: Similar dead end
+     *   │       └─ BACKTRACK (remove (0,0))
+     *   │
+     *   ├─ Try col=1: Place Q at (0,1)
+     *   │   └─ backtrack(board, 1)
+     *   │       └─ Eventually finds solution!
+     *   ...
+     */</span>
+    <span class="keyword">private void</span> backtrack(<span class="keyword">char</span>[][] board, <span class="keyword">int</span> row) {
+        <span class="comment">// ===== BASE CASE: All queens placed successfully! =====</span>
+        <span class="keyword">if</span> (row == board.length) {
+            <span class="comment">// Convert board to List&lt;String&gt; format</span>
+            result.add(construct(board));
+            <span class="keyword">return</span>;
+        }
+        
+        <span class="comment">// ===== TRY EACH COLUMN IN CURRENT ROW =====</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> col = <span class="number">0</span>; col &lt; board.length; col++) {
+            <span class="comment">// ===== VALIDATE: Can we place queen here? =====</span>
+            <span class="keyword">if</span> (!isValid(board, row, col)) {
+                <span class="comment">// This position is attacked by another queen</span>
+                <span class="comment">// Skip to next column (pruning!)</span>
+                <span class="keyword">continue</span>;
+            }
+            
+            <span class="comment">// ===== CHOOSE: Place queen =====</span>
+            board[row][col] = <span class="string">'Q'</span>;
+            
+            <span class="comment">// Example state change for n=4:</span>
+            <span class="comment">// Before: board[0][1] = '.'</span>
+            <span class="comment">// After:  board[0][1] = 'Q'</span>
+            <span class="comment">// Board now has queen at (0,1)</span>
+            
+            <span class="comment">// ===== EXPLORE: Recurse to next row =====</span>
+            backtrack(board, row + <span class="number">1</span>);
+            <span class="comment">// This call will try to place queen in row+1</span>
+            <span class="comment">// considering the queen we just placed</span>
+            
+            <span class="comment">// When this returns, either:</span>
+            <span class="comment">// 1. Found complete solution (saved in result)</span>
+            <span class="comment">// 2. Hit dead end (need to try different position)</span>
+            
+            <span class="comment">// ===== UNCHOOSE: Remove queen (backtrack) =====</span>
+            board[row][col] = <span class="string">'.'</span>;
+            
+            <span class="comment">// Example state change:</span>
+            <span class="comment">// Before: board[0][1] = 'Q'</span>
+            <span class="comment">// After:  board[0][1] = '.'</span>
+            <span class="comment">// Removed queen, ready to try next column</span>
+        }
+        
+        <span class="comment">// If we've tried all columns and none worked,</span>
+        <span class="comment">// function returns, backtracking to previous row</span>
+    }
+    
+    <span class="comment">/**
+     * Check if placing queen at (row, col) is valid
+     * 
+     * We only need to check UPWARD because:
+     * - We haven't placed any queens in rows below current row yet
+     * - We process top to bottom, one queen per row
+     * 
+     * CHECKS:
+     * 1. Same column (going up)
+     * 2. Upper-left diagonal (going up-left)
+     * 3. Upper-right diagonal (going up-right)
+     */</span>
+    <span class="keyword">private boolean</span> isValid(<span class="keyword">char</span>[][] board, <span class="keyword">int</span> row, <span class="keyword">int</span> col) {
+        <span class="keyword">int</span> n = board.length;
+        
+        <span class="comment">// CHECK 1: Column check (going upward)</span>
+        <span class="comment">// Look at all rows above current row, same column</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> r = <span class="number">0</span>; r &lt; row; r++) {
+            <span class="keyword">if</span> (board[r][col] == <span class="string">'Q'</span>) {
+                <span class="keyword">return false</span>;  <span class="comment">// Found queen in same column!</span>
+            }
+        }
+        
+        <span class="comment">// CHECK 2: Upper-left diagonal check</span>
+        <span class="comment">// Move up-left: row--, col--</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> r = row - <span class="number">1</span>, c = col - <span class="number">1</span>; r >= <span class="number">0</span> && c >= <span class="number">0</span>; r--, c--) {
+            <span class="keyword">if</span> (board[r][c] == <span class="string">'Q'</span>) {
+                <span class="keyword">return false</span>;  <span class="comment">// Found queen on diagonal!</span>
+            }
+        }
+        
+        <span class="comment">// CHECK 3: Upper-right diagonal check</span>
+        <span class="comment">// Move up-right: row--, col++</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> r = row - <span class="number">1</span>, c = col + <span class="number">1</span>; r >= <span class="number">0</span> && c &lt; n; r--, c++) {
+            <span class="keyword">if</span> (board[r][c] == <span class="string">'Q'</span>) {
+                <span class="keyword">return false</span>;  <span class="comment">// Found queen on diagonal!</span>
+            }
+        }
+        
+        <span class="comment">// All checks passed! Position is safe</span>
+        <span class="keyword">return true</span>;
+    }
+    
+    <span class="comment">// Helper: Convert char[][] board to List&lt;String&gt;</span>
+    <span class="keyword">private</span> List&lt;String&gt; construct(<span class="keyword">char</span>[][] board) {
+        List&lt;String&gt; res = <span class="keyword">new</span> ArrayList&lt;&gt;();
+        <span class="keyword">for</span> (<span class="keyword">char</span>[] row : board) {
+            res.add(<span class="keyword">new</span> String(row));
+        }
+        <span class="keyword">return</span> res;
+    }
+}
+
+<span class="comment">/*
+ * TIME COMPLEXITY: O(n!)
+ * - In worst case, we try all permutations
+ * - But pruning (isValid) eliminates many branches early
+ * - Actual runtime much better than O(n!)
+ * 
+ * SPACE COMPLEXITY: O(n)
+ * - Recursion depth = n (one call per row)
+ * - Board storage = O(n²) but doesn't count toward space complexity
+ */</span></pre></div>
+            </section>
+
+
+            <!-- WORD SEARCH VISUAL -->
+            <section class="section">
+                <h2>🔍 Word Search in Grid - Visual Walkthrough</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em; text-align: center;">
+                        <strong>Problem:</strong> Find word "CAT" in grid<br>
+                        <strong>Constraints:</strong> Move up/down/left/right, can't reuse same cell
+                    </p>
+                </div>
+
+                <h3>Grid Setup</h3>
+                <div class="step-visual">
+                    <h4>Initial Grid</h4>
+                    <div style="display: grid; grid-template-columns: repeat(3, 70px); gap: 3px; justify-content: center; margin: 20px 0;">
+                        <div class="array-cell" style="font-size: 1.4em; background: #fff;">C</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #f5f5f5;">A</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #fff;">R</div>
+                        
+                        <div class="array-cell" style="font-size: 1.4em; background: #f5f5f5;">O</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #fff;">A</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #f5f5f5;">T</div>
+                        
+                        <div class="array-cell" style="font-size: 1.4em; background: #fff;">B</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #f5f5f5;">E</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #fff;">D</div>
+                    </div>
+                    <div class="info-box">
+                        <strong>Target word:</strong> "CAT"<br>
+                        <strong>Strategy:</strong> Find 'C', then explore neighbors for 'A', then 'T'
+                    </div>
+                </div>
+
+                <h3>🎬 Step-by-Step Search</h3>
+
+                <!-- Word Search Step 1 -->
+                <div class="step-visual">
+                    <h4>📍 Step 1: Found 'C' at (0,0)</h4>
+                    <p><strong>Matching:</strong> word[0] = 'C' ✓</p>
+                    <p><strong>Action:</strong> Mark as visited, explore neighbors for 'A'</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 70px); gap: 3px; justify-content: center; margin: 20px 0;">
+                        <div class="array-cell chosen" style="font-size: 1.4em;">C</div>
+                        <div class="array-cell current" style="font-size: 1.4em;">A</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #fff;">R</div>
+                        
+                        <div class="array-cell current" style="font-size: 1.4em;">O</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #fff;">A</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #f5f5f5;">T</div>
+                        
+                        <div class="array-cell" style="font-size: 1.4em; background: #fff;">B</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #f5f5f5;">E</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #fff;">D</div>
+                    </div>
+                    
+                    <div class="path-display">
+                        Current path: "C"<br>
+                        Looking for: 'A' (word[1])<br>
+                        Neighbors to check: Right(0,1)='A' ✓, Down(1,0)='O' ✗
+                    </div>
+                </div>
+
+                <!-- Word Search Step 2 -->
+                <div class="step-visual">
+                    <h4>📍 Step 2: Found 'A' at (0,1)</h4>
+                    <p><strong>Matching:</strong> word[1] = 'A' ✓</p>
+                    <p><strong>Action:</strong> Mark as visited, explore for 'T'</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 70px); gap: 3px; justify-content: center; margin: 20px 0;">
+                        <div class="array-cell chosen" style="font-size: 1.4em;">C</div>
+                        <div class="array-cell chosen" style="font-size: 1.4em;">A</div>
+                        <div class="array-cell current" style="font-size: 1.4em;">R</div>
+                        
+                        <div class="array-cell" style="font-size: 1.4em; background: #f5f5f5;">O</div>
+                        <div class="array-cell current" style="font-size: 1.4em;">A</div>
+                        <div class="array-cell current" style="font-size: 1.4em;">T</div>
+                        
+                        <div class="array-cell" style="font-size: 1.4em; background: #fff;">B</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #f5f5f5;">E</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #fff;">D</div>
+                    </div>
+                    
+                    <div class="path-display">
+                        Current path: "CA"<br>
+                        Looking for: 'T' (word[2])<br>
+                        Neighbors: Up=out, Left='C'(visited), Right(0,2)='R' ✗, Down(1,1)='A' ✗
+                    </div>
+                    
+                    <div class="warning-box">
+                        <strong>⚠️ Dead End!</strong> No 'T' found from (0,1)<br>
+                        <strong>Action:</strong> BACKTRACK to (0,0), try different path
+                    </div>
+                </div>
+
+                <!-- Word Search Backtrack & Success -->
+                <div class="step-visual">
+                    <h4>📍 Step 3: Backtrack, try different starting 'C'</h4>
+                    <p><strong>Action:</strong> No 'C' at other positions, try 'A' at (1,1)</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(3, 70px); gap: 3px; justify-content: center; margin: 20px 0;">
+                        <div class="array-cell" style="font-size: 1.4em; background: #fff;">C</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #f5f5f5;">A</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #fff;">R</div>
+                        
+                        <div class="array-cell" style="font-size: 1.4em; background: #f5f5f5;">O</div>
+                        <div class="array-cell chosen" style="font-size: 1.4em;">A</div>
+                        <div class="array-cell chosen" style="font-size: 1.4em;">T</div>
+                        
+                        <div class="array-cell" style="font-size: 1.4em; background: #fff;">B</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #f5f5f5;">E</div>
+                        <div class="array-cell" style="font-size: 1.4em; background: #fff;">D</div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <strong>New approach:</strong> Notice we need C-A-T consecutively<br>
+                        But "CAT" doesn't exist as consecutive path. Word search would return FALSE.
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <strong>Better example - Let's find "OAT":</strong><br>
+                    O(1,0) → A(1,1) → T(1,2) ✓ Found!
+                </div>
+
+                <h3>💻 Word Search Code - Super Detailed</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * LeetCode 79: Word Search
+ * 
+ * Problem: Find if word exists in grid
+ * Rules:
+ * - Can move up/down/left/right
+ * - Can't reuse same cell in one word
+ * - All letters must be consecutive
+ * 
+ * KEY INSIGHTS:
+ * 1. Try starting from each cell
+ * 2. DFS/Backtrack from each starting point
+ * 3. Mark cell as visited during DFS
+ * 4. Unmark when backtracking
+ * 
+ * Time: O(m * n * 4^L) where L = word length
+ * - m*n to try each starting cell
+ * - 4^L for 4 directions, L depth
+ * Space: O(L) for recursion stack
+ */</span>
+
+<span class="keyword">class</span> Solution {
+    <span class="keyword">public boolean</span> exist(<span class="keyword">char</span>[][] board, String word) {
+        <span class="keyword">int</span> m = board.length;
+        <span class="keyword">int</span> n = board[<span class="number">0</span>].length;
+        
+        <span class="comment">// Try starting from each cell in grid</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m; i++) {
+            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n; j++) {
+                <span class="comment">// If first character matches, start DFS from here</span>
+                <span class="keyword">if</span> (board[i][j] == word.charAt(<span class="number">0</span>)) {
+                    <span class="keyword">if</span> (backtrack(board, word, <span class="number">0</span>, i, j)) {
+                        <span class="keyword">return true</span>;  <span class="comment">// Found the word!</span>
+                    }
+                }
+            }
+        }
+        
+        <span class="keyword">return false</span>;  <span class="comment">// Word not found in grid</span>
+    }
+    
+    <span class="comment">/**
+     * Backtrack to find word starting from (row, col)
+     * 
+     * @param board - The grid
+     * @param word  - Target word
+     * @param index - Current position in word (which character we're looking for)
+     * @param row   - Current row in grid
+     * @param col   - Current column in grid
+     * 
+     * VISUALIZATION for word="CAT", starting at (0,0):
+     * 
+     * backtrack(board, "CAT", 0, 0, 0)  // Looking for 'C' at (0,0)
+     *   ├─ board[0][0] = 'C' ✓ matches word[0]
+     *   ├─ Mark (0,0) as visited (change to '#')
+     *   ├─ Try 4 directions to find 'A' (word[1]):
+     *   │
+     *   ├─ UP: out of bounds
+     *   ├─ DOWN: backtrack(..., 1, 1, 0)  // Check (1,0) for 'A'
+     *   │   └─ board[1][0] = 'O' ✗ doesn't match 'A'
+     *   │   └─ return false
+     *   │
+     *   ├─ LEFT: out of bounds
+     *   ├─ RIGHT: backtrack(..., 1, 0, 1)  // Check (0,1) for 'A'
+     *   │   ├─ board[0][1] = 'A' ✓ matches word[1]
+     *   │   ├─ Mark (0,1) as visited
+     *   │   ├─ Try 4 directions to find 'T' (word[2]):
+     *   │   │   ... (explores all directions)
+     *   │   │   ... (eventually finds no 'T')
+     *   │   ├─ Unmark (0,1) (restore to 'A')
+     *   │   └─ return false
+     *   │
+     *   ├─ Unmark (0,0) (restore to 'C')
+     *   └─ return false
+     */</span>
+    <span class="keyword">private boolean</span> backtrack(<span class="keyword">char</span>[][] board, String word, 
+                                <span class="keyword">int</span> index, <span class="keyword">int</span> row, <span class="keyword">int</span> col) {
+        <span class="comment">// ===== BASE CASE: Found entire word! =====</span>
+        <span class="keyword">if</span> (index == word.length()) {
+            <span class="keyword">return true</span>;  <span class="comment">// All characters matched!</span>
+        }
+        
+        <span class="comment">// ===== BOUNDARY CHECK =====</span>
+        <span class="keyword">if</span> (row &lt; <span class="number">0</span> || row >= board.length || 
+            col &lt; <span class="number">0</span> || col >= board[<span class="number">0</span>].length) {
+            <span class="keyword">return false</span>;  <span class="comment">// Out of bounds</span>
+        }
+        
+        <span class="comment">// ===== VALIDATION: Does current cell match? =====</span>
+        <span class="keyword">if</span> (board[row][col] != word.charAt(index)) {
+            <span class="keyword">return false</span>;  <span class="comment">// Character doesn't match</span>
+        }
+        
+        <span class="comment">// ===== CHOOSE: Mark cell as visited =====</span>
+        <span class="comment">// We temporarily change the cell to '#' to mark it as used</span>
+        <span class="comment">// This prevents revisiting in the same path</span>
+        <span class="keyword">char</span> temp = board[row][col];  <span class="comment">// Save original character</span>
+        board[row][col] = <span class="string">'#'</span>;              <span class="comment">// Mark as visited</span>
+        
+        <span class="comment">// Example state change:</span>
+        <span class="comment">// Before: board[0][0] = 'C'</span>
+        <span class="comment">// After:  board[0][0] = '#'  (visited!)</span>
+        
+        <span class="comment">// ===== EXPLORE: Try all 4 directions =====</span>
+        <span class="comment">// Look for next character (word[index+1]) in neighbors</span>
+        <span class="keyword">boolean</span> found = 
+            backtrack(board, word, index + <span class="number">1</span>, row - <span class="number">1</span>, col) ||  <span class="comment">// UP</span>
+            backtrack(board, word, index + <span class="number">1</span>, row + <span class="number">1</span>, col) ||  <span class="comment">// DOWN</span>
+            backtrack(board, word, index + <span class="number">1</span>, row, col - <span class="number">1</span>) ||  <span class="comment">// LEFT</span>
+            backtrack(board, word, index + <span class="number">1</span>, row, col + <span class="number">1</span>);    <span class="comment">// RIGHT</span>
+        
+        <span class="comment">// Why OR (||)?</span>
+        <span class="comment">// - We only need ONE path to work</span>
+        <span class="comment">// - If any direction finds the word, we're done</span>
+        <span class="comment">// - Short-circuit: Stops checking once one returns true</span>
+        
+        <span class="comment">// ===== UNCHOOSE: Restore cell (backtrack) =====</span>
+        board[row][col] = temp;  <span class="comment">// Restore original character</span>
+        
+        <span class="comment">// Example state change:</span>
+        <span class="comment">// Before: board[0][0] = '#'</span>
+        <span class="comment">// After:  board[0][0] = 'C'  (restored!)</span>
+        
+        <span class="comment">// Why restore?</span>
+        <span class="comment">// - This cell might be part of a DIFFERENT valid path</span>
+        <span class="comment">// - We backtracked from one path, but cell should be</span>
+        <span class="comment">//   available for other starting points</span>
+        
+        <span class="keyword">return</span> found;
+    }
+}
+
+<span class="comment">/*
+ * DETAILED EXAMPLE: Find "ABCB" in grid:
+ * 
+ * Grid:    A  B  C  E
+ *          S  F  C  S
+ *          A  D  E  E
+ * 
+ * Execution:
+ * 1. Start at (0,0) = 'A' ✓
+ * 2. Try down: (1,0) = 'S' ✗
+ * 3. Try right: (0,1) = 'B' ✓
+ * 4. Mark (0,0)='#', (0,1)='#'
+ * 5. From (0,1), try right: (0,2) = 'C' ✓
+ * 6. Mark (0,2)='#'
+ * 7. From (0,2), try down: (1,2) = 'C' ✗ (need 'B')
+ * 8. Try left: (0,1) = '#' (visited, skip)
+ * 9. Try up: out of bounds
+ * 10. Try right: (0,3) = 'E' ✗
+ * 11. BACKTRACK: Restore (0,2)='C'
+ * 12. Continue trying other paths...
+ * 
+ * This systematic exploration continues until word is found or
+ * all possibilities exhausted.
+ */</span></pre></div>
+            </section>
+
+
+            <!-- COMBINATION SUM VISUAL TREE -->
+            <section class="section">
+                <h2>🎯 Combination Sum - Complete Decision Tree</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em; text-align: center;">
+                        <strong>Problem:</strong> Find all combinations that sum to target = 7<br>
+                        <strong>Array:</strong> [2, 3, 6, 7]  (can reuse numbers)
+                    </p>
+                </div>
+
+                <h3>🌳 Complete Decision Tree Visualization</h3>
+                <div class="tree-visual">
+                    <pre style="font-family: monospace; font-size: 0.95em; line-height: 2; background: white; padding: 20px; border-radius: 10px;">
+                                Start: sum=0, target=7
+                                      []
+                    ┌─────────────┼─────────────┬─────────────┐
+                   +2            +3            +6            +7
+                    │             │             │             │
+                  [2]           [3]           [6]           [7] ← ✅ SOLUTION!
+                sum=2         sum=3         sum=6         sum=7
+                    │             │             │
+         ┌──────┬──┼──┬         │             │
+        +2     +3  +6 +7        │             │
+         │      │   │  │        │             │
+       [2,2]  [2,3] × [2,7]     │             │
+       sum=4  sum=5  (>7) sum=9(>7)          │
+         │      │                              │
+      ┌──┼──┐  │                              │
+     +2  +3 +6 │                              │
+      │   │  │ │                              │
+    [2,2,2] │ [2,3,6]                         │
+     sum=6  │  (>7)×                          │
+        │   │                                  │
+     ┌──┼  [2,3,3]                            │
+    +2  +3  sum=8                             │
+     │   │   (>7)×                            │
+  [2,2,2,2] [2,2,3]                           │
+   sum=8×   sum=7 ← ✅ SOLUTION!             │
+                                               │
+                        Continue with 3...     │
+                        [3,3]                  │
+                        sum=6                  │
+                         │                     │
+                      ┌──┼──┐                 │
+                     +3  +6 +7                │
+                      │   │  │                │
+                   [3,3,3] × [3,7]            │
+                    (>7)×   (>7)×             │
+                    
+<span style="color: #4caf50; font-weight: bold;">
+✅ VALID SOLUTIONS FOUND:
+1. [7]           → 7 = 7 ✓
+2. [2,2,3]       → 2+2+3 = 7 ✓
+3. More paths lead to [2,3,2] but we avoid duplicates by starting index!
+</span>
+
+<span style="color: #f44336; font-weight: bold;">
+❌ PRUNED BRANCHES (×):
+- Any path where sum > target (no point continuing)
+- Prevented by: if (sum > target) return;
+</span>
+                    </pre>
+                </div>
+
+                <div class="code-block"><pre><span class="comment">/**
+ * LeetCode 39: Combination Sum
+ * 
+ * Problem: Find all unique combinations that sum to target
+ * Rules:
+ * - Can use same number multiple times
+ * - All numbers are positive
+ * - Combinations must be unique
+ * 
+ * KEY INSIGHT: Use 'start' index to avoid duplicates
+ * - [2,3] and [3,2] are same combination
+ * - By always moving forward (start index), we prevent duplicates
+ * 
+ * Time: O(2^target) - worst case when candidates=[1]
+ * Space: O(target) - recursion depth
+ */</span>
+
+<span class="keyword">class</span> Solution {
+    List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    
+    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; combinationSum(<span class="keyword">int</span>[] candidates, <span class="keyword">int</span> target) {
+        <span class="comment">// Optional: Sort for better pruning (smaller numbers first)</span>
+        Arrays.sort(candidates);
+        backtrack(candidates, target, <span class="number">0</span>, <span class="keyword">new</span> ArrayList&lt;&gt;(), <span class="number">0</span>);
+        <span class="keyword">return</span> result;
+    }
+    
+    <span class="comment">/**
+     * @param candidates - Available numbers
+     * @param target     - Target sum
+     * @param start      - Start index (prevents duplicates)
+     * @param path       - Current combination being built
+     * @param sum        - Current sum of path
+     * 
+     * DETAILED TRACE for candidates=[2,3], target=5:
+     * 
+     * backtrack([2,3], 5, 0, [], 0)
+     *   sum=0 &lt; 5, continue
+     *   
+     *   i=0 (num=2): sum+2=2 ≤ 5 ✓
+     *     path=[2], sum=2
+     *     backtrack([2,3], 5, 0, [2], 2)  // Can reuse 2!
+     *       sum=2 &lt; 5, continue
+     *       
+     *       i=0 (num=2): sum+2=4 ≤ 5 ✓
+     *         path=[2,2], sum=4
+     *         backtrack([2,3], 5, 0, [2,2], 4)
+     *           sum=4 &lt; 5, continue
+     *           
+     *           i=0 (num=2): sum+2=6 > 5 ❌ PRUNE!
+     *           i=1 (num=3): sum+3=7 > 5 ❌ PRUNE!
+     *           
+     *           return
+     *         
+     *         remove 2: path=[2], sum=2
+     *       
+     *       i=1 (num=3): sum+3=5 = 5 ✓
+     *         path=[2,3], sum=5
+     *         backtrack([2,3], 5, 1, [2,3], 5)
+     *           sum=5 == 5 ✅ FOUND SOLUTION!
+     *           Save [2,3]
+     *           return
+     *         
+     *         remove 3: path=[2], sum=2
+     *       
+     *       return
+     *     
+     *     remove 2: path=[], sum=0
+     *   
+     *   i=1 (num=3): sum+3=3 ≤ 5 ✓
+     *     path=[3], sum=3
+     *     backtrack([2,3], 5, 1, [3], 3)
+     *       sum=3 &lt; 5, continue
+     *       
+     *       i=1 (num=3): sum+3=6 > 5 ❌ PRUNE!
+     *       
+     *       return
+     *     
+     *     remove 3: path=[], sum=0
+     *   
+     *   return
+     * 
+     * RESULT: [[2,3]]
+     */</span>
+    <span class="keyword">private void</span> backtrack(<span class="keyword">int</span>[] candidates, <span class="keyword">int</span> target,
+                            <span class="keyword">int</span> start, List&lt;Integer&gt; path, <span class="keyword">int</span> sum) {
+        <span class="comment">// ===== BASE CASE 1: Found target sum! =====</span>
+        <span class="keyword">if</span> (sum == target) {
+            result.add(<span class="keyword">new</span> ArrayList&lt;&gt;(path));  <span class="comment">// Save solution</span>
+            <span class="keyword">return</span>;  <span class="comment">// Don't explore further from here</span>
+        }
+        
+        <span class="comment">// ===== BASE CASE 2: Exceeded target (PRUNING!) =====</span>
+        <span class="keyword">if</span> (sum > target) {
+            <span class="keyword">return</span>;  <span class="comment">// This path is invalid, stop exploring</span>
+        }
+        
+        <span class="comment">// Why is this optimization important?</span>
+        <span class="comment">// - Without it, we'd keep exploring even when sum > target</span>
+        <span class="comment">// - Cuts off entire branches early</span>
+        <span class="comment">// - Example: If sum=8 and target=7, no point adding more numbers</span>
+        
+        <span class="comment">// ===== EXPLORE ALL CHOICES FROM START INDEX =====</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt; candidates.length; i++) {
+            <span class="keyword">int</span> num = candidates[i];
+            
+            <span class="comment">// ===== EARLY PRUNING (if sorted) =====</span>
+            <span class="keyword">if</span> (sum + num > target) {
+                <span class="keyword">break</span>;  <span class="comment">// All remaining numbers will also exceed</span>
+            }
+            <span class="comment">// Why break instead of continue?</span>
+            <span class="comment">// - Array is sorted, so candidates[i+1] >= candidates[i]</span>
+            <span class="comment">// - If num is too big, all future numbers are too big</span>
+            <span class="comment">// - This is more efficient than checking each one</span>
+            
+            <span class="comment">// ===== CHOOSE =====</span>
+            path.add(num);        <span class="comment">// Add number to current combination</span>
+            sum += num;           <span class="comment">// Update running sum</span>
+            
+            <span class="comment">// Example: path=[2], num=3</span>
+            <span class="comment">// After:   path=[2,3], sum=5</span>
+            
+            <span class="comment">// ===== EXPLORE =====</span>
+            <span class="comment">// CRITICAL: Pass 'i' not 'i+1' because we can reuse numbers!</span>
+            backtrack(candidates, target, i, path, sum);
+            
+            <span class="comment">// Difference from regular combinations:</span>
+            <span class="comment">// - Combinations: backtrack(..., i+1, ...) → can't reuse</span>
+            <span class="comment">// - This problem: backtrack(..., i, ...) → CAN reuse</span>
+            <span class="comment">// - Example: [2,2,3] is valid (reused 2 twice)</span>
+            
+            <span class="comment">// ===== UNCHOOSE (BACKTRACK) =====</span>
+            path.remove(path.size() - <span class="number">1</span>);  <span class="comment">// Remove last number</span>
+            sum -= num;                       <span class="comment">// Restore sum</span>
+            
+            <span class="comment">// Example: path=[2,3], num=3</span>
+            <span class="comment">// After:   path=[2], sum=2</span>
+        }
+    }
+}
+
+<span class="comment">/*
+ * VISUALIZATION of why start index prevents duplicates:
+ * 
+ * WITHOUT start index (WRONG):
+ * - Can generate: [2,3] from index 0→1
+ * - Can generate: [3,2] from index 1→0
+ * - These are DUPLICATE combinations!
+ * 
+ * WITH start index (CORRECT):
+ * - At index 0: Can use 2, then 3 → [2,3]
+ * - At index 1: Can only use 3,6,7 (not 2) → [3,...]
+ * - IMPOSSIBLE to generate [3,2]
+ * - Guarantees unique combinations!
+ * 
+ * STATE SPACE COMPARISON:
+ * 
+ * Without optimization:     With pruning:
+ * Try all paths            Stop when sum > target
+ * Time: Exponential        Time: Still exponential but
+ * Many wasted branches     Fewer branches explored
+ */</span></pre></div>
+            </section>
+
+            
+            </section>
+
+<!-- SECTION 7: MASSIVE PRACTICE PROBLEMS -->
+            <section id="practice" class="section">
+                <h2>7️⃣ 50+ Practice Problems - Organized by Pattern</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">🎯 How to Use This Section</h3>
+                    <p style="font-size: 1.2em; line-height: 2;">
+                        Start with EASY problems in each pattern → Master MEDIUM → Challenge yourself with HARD<br>
+                        <strong>Goal:</strong> Complete 2-3 problems from each pattern to master backtracking!
+                    </p>
+                </div>
+
+                <!-- Pattern 1 Problems -->
+                <div class="pattern-card" style="border: 3px solid #4caf50;">
+                    <h3 style="color: #4caf50;">📦 Pattern 1: Subsets / Combinations (15 Problems)</h3>
+                    
+                    <h4><span class="badge easy">EASY</span> Start Here:</h4>
+                    <table>
+                        <tr><th>LC #</th><th>Problem</th><th>Key Point</th></tr>
+                        <tr><td><strong>78</strong></td><td>Subsets</td><td>🔥 Master this first! Foundation problem</td></tr>
+                        <tr><td><strong>401</strong></td><td>Binary Watch</td><td>Choose k LEDs, combinations</td></tr>
+                    </table>
+
+                    <h4><span class="badge medium">MEDIUM</span> Core Practice:</h4>
+                    <table>
+                        <tr><th>LC #</th><th>Problem</th><th>Key Point</th></tr>
+                        <tr><td><strong>90</strong></td><td>Subsets II</td><td>Handle duplicates with sorting</td></tr>
+                        <tr><td><strong>77</strong></td><td>Combinations</td><td>Choose k from n</td></tr>
+                        <tr><td><strong>39</strong></td><td>Combination Sum</td><td>Can reuse elements (i not i+1)</td></tr>
+                        <tr><td><strong>40</strong></td><td>Combination Sum II</td><td>Each element used once</td></tr>
+                        <tr><td><strong>216</strong></td><td>Combination Sum III</td><td>Fixed k numbers summing to n</td></tr>
+                        <tr><td><strong>254</strong></td><td>Factor Combinations</td><td>Find all factorizations</td></tr>
+                        <tr><td><strong>320</strong></td><td>Generalized Abbreviation</td><td>All abbreviations of word</td></tr>
+                        <tr><td><strong>1863</strong></td><td>Sum of All Subset XOR Totals</td><td>XOR of all subsets</td></tr>
+                        <tr><td><strong>1980</strong></td><td>Find Unique Binary String</td><td>Generate missing binary string</td></tr>
+                        <tr><td><strong>2044</strong></td><td>Count Max Bitwise-OR Subsets</td><td>Subsets with max OR</td></tr>
+                        <tr><td><strong>2397</strong></td><td>Max Rows Covered by Columns</td><td>Combination of columns</td></tr>
+                    </table>
+                </div>
+
+                <!-- Pattern 2 Problems -->
+                <div class="pattern-card" style="border: 3px solid #2196f3; margin-top: 30px;">
+                    <h3 style="color: #2196f3;">🔄 Pattern 2: Permutations (12 Problems)</h3>
+                    
+                    <h4><span class="badge easy">EASY</span> Start Here:</h4>
+                    <table>
+                        <tr><th>LC #</th><th>Problem</th><th>Key Point</th></tr>
+                        <tr><td><strong>784</strong></td><td>Letter Case Permutation</td><td>Binary choice per char</td></tr>
+                    </table>
+
+                    <h4><span class="badge medium">MEDIUM</span> Core Practice:</h4>
+                    <table>
+                        <tr><th>LC #</th><th>Problem</th><th>Key Point</th></tr>
+                        <tr><td><strong>46</strong></td><td>Permutations</td><td>🔥 Master used[] array pattern!</td></tr>
+                        <tr><td><strong>47</strong></td><td>Permutations II</td><td>Handle duplicates</td></tr>
+                        <tr><td><strong>526</strong></td><td>Beautiful Arrangement</td><td>Permutation with constraints</td></tr>
+                        <tr><td><strong>996</strong></td><td>Number of Squareful Arrays</td><td>Adjacent elements constraint</td></tr>
+                        <tr><td><strong>1415</strong></td><td>The k-th Lexicographical String</td><td>Generate kth permutation</td></tr>
+                        <tr><td><strong>1830</strong></td><td>Min Operations to Make Subsequence</td><td>Permutation variant</td></tr>
+                        <tr><td><strong>2850</strong></td><td>Minimum Moves to Spread Stones</td><td>Arrangement with cost</td></tr>
+                    </table>
+
+                    <h4><span class="badge hard">HARD</span> Challenge:</h4>
+                    <table>
+                        <tr><th>LC #</th><th>Problem</th><th>Key Point</th></tr>
+                        <tr><td><strong>60</strong></td><td>Permutation Sequence</td><td>Find kth permutation (math + backtrack)</td></tr>
+                        <tr><td><strong>465</strong></td><td>Optimal Account Balancing</td><td>Min transactions</td></tr>
+                        <tr><td><strong>1467</strong></td><td>Probability of a Two Boxes Having Same Balls</td><td>Complex permutation</td></tr>
+                    </table>
+                </div>
+
+                <!-- Pattern 3 Problems -->
+                <div class="pattern-card" style="border: 3px solid #9c27b0; margin-top: 30px;">
+                    <h3 style="color: #9c27b0;">📝 Pattern 3: String Generation (10 Problems)</h3>
+                    
+                    <h4><span class="badge medium">MEDIUM</span> Core Practice:</h4>
+                    <table>
+                        <tr><th>LC #</th><th>Problem</th><th>Key Point</th></tr>
+                        <tr><td><strong>17</strong></td><td>Letter Combinations of Phone Number</td><td>🔥 Classic! Phone pad mapping</td></tr>
+                        <tr><td><strong>22</strong></td><td>Generate Parentheses</td><td>🔥 Valid parens, track open/close</td></tr>
+                        <tr><td><strong>93</strong></td><td>Restore IP Addresses</td><td>Partition with validation</td></tr>
+                        <tr><td><strong>131</strong></td><td>Palindrome Partitioning</td><td>Partition into palindromes</td></tr>
+                        <tr><td><strong>291</strong></td><td>Word Pattern II</td><td>String matching backtrack</td></tr>
+                        <tr><td><strong>320</strong></td><td>Generalized Abbreviation</td><td>String abbreviations</td></tr>
+                        <tr><td><strong>842</strong></td><td>Split Array into Fibonacci Sequence</td><td>Partition into Fibonacci</td></tr>
+                        <tr><td><strong>1087</strong></td><td>Brace Expansion</td><td>Generate from pattern</td></tr>
+                        <tr><td><strong>1096</strong></td><td>Brace Expansion II</td><td>Advanced expansion</td></tr>
+                    </table>
+
+                    <h4><span class="badge hard">HARD</span> Challenge:</h4>
+                    <table>
+                        <tr><th>LC #</th><th>Problem</th><th>Key Point</th></tr>
+                        <tr><td><strong>282</strong></td><td>Expression Add Operators</td><td>Insert operators in string</td></tr>
+                    </table>
+                </div>
+
+                <!-- Pattern 4 Problems -->
+                <div class="pattern-card" style="border: 3px solid #ff9800; margin-top: 30px;">
+                    <h3 style="color: #ff9800;">🎮 Pattern 4: Grid / Board Problems (12 Problems)</h3>
+                    
+                    <h4><span class="badge medium">MEDIUM</span> Core Practice:</h4>
+                    <table>
+                        <tr><th>LC #</th><th>Problem</th><th>Key Point</th></tr>
+                        <tr><td><strong>79</strong></td><td>Word Search</td><td>🔥 Master this! Grid DFS template</td></tr>
+                        <tr><td><strong>130</strong></td><td>Surrounded Regions</td><td>Grid traversal with marking</td></tr>
+                        <tr><td><strong>200</strong></td><td>Number of Islands</td><td>Connected components (DFS)</td></tr>
+                        <tr><td><strong>329</strong></td><td>Longest Increasing Path in Matrix</td><td>DFS + memoization</td></tr>
+                        <tr><td><strong>417</strong></td><td>Pacific Atlantic Water Flow</td><td>Multi-source DFS</td></tr>
+                        <tr><td><strong>489</strong></td><td>Robot Room Cleaner</td><td>Grid exploration</td></tr>
+                        <tr><td><strong>980</strong></td><td>Unique Paths III</td><td>Visit all empty cells</td></tr>
+                        <tr><td><strong>1219</strong></td><td>Path with Maximum Gold</td><td>Max path value in grid</td></tr>
+                        <tr><td><strong>1778</strong></td><td>Shortest Path in Hidden Grid</td><td>Explore unknown grid</td></tr>
+                    </table>
+
+                    <h4><span class="badge hard">HARD</span> Challenge:</h4>
+                    <table>
+                        <tr><th>LC #</th><th>Problem</th><th>Key Point</th></tr>
+                        <tr><td><strong>37</strong></td><td>Sudoku Solver</td><td>🔥 Classic! Constraint satisfaction</td></tr>
+                        <tr><td><strong>51</strong></td><td>N-Queens</td><td>🔥🔥 THE backtracking problem!</td></tr>
+                        <tr><td><strong>52</strong></td><td>N-Queens II</td><td>Count N-Queens solutions</td></tr>
+                        <tr><td><strong>212</strong></td><td>Word Search II</td><td>Trie + backtracking</td></tr>
+                    </table>
+                </div>
+
+                <!-- Pattern 5 Problems -->
+                <div class="pattern-card" style="border: 3px solid #f44336; margin-top: 30px;">
+                    <h3 style="color: #f44336;">🔀 Pattern 5: Partition / Grouping (8 Problems)</h3>
+                    
+                    <h4><span class="badge medium">MEDIUM</span> Core Practice:</h4>
+                    <table>
+                        <tr><th>LC #</th><th>Problem</th><th>Key Point</th></tr>
+                        <tr><td><strong>131</strong></td><td>Palindrome Partitioning</td><td>Partition into valid palindromes</td></tr>
+                        <tr><td><strong>698</strong></td><td>Partition to K Equal Sum Subsets</td><td>Assign to k groups</td></tr>
+                        <tr><td><strong>473</strong></td><td>Matchsticks to Square</td><td>Partition into 4 equal groups</td></tr>
+                        <tr><td><strong>1593</strong></td><td>Split String Into Max Unique Substrings</td><td>Max unique parts</td></tr>
+                        <tr><td><strong>1849</strong></td><td>Splitting String Into Descending Values</td><td>Descending partition</td></tr>
+                    </table>
+
+                    <h4><span class="badge hard">HARD</span> Challenge:</h4>
+                    <table>
+                        <tr><th>LC #</th><th>Problem</th><th>Key Point</th></tr>
+                        <tr><td><strong>140</strong></td><td>Word Break II</td><td>All possible sentences</td></tr>
+                        <tr><td><strong>1255</strong></td><td>Maximum Score Words Formed by Letters</td><td>Assign words to buckets</td></tr>
+                        <tr><td><strong>1723</strong></td><td>Find Min Time to Finish All Jobs</td><td>Distribute jobs optimally</td></tr>
+                    </table>
+                </div>
+
+                <!-- Pattern 6 Problems -->
+                <div class="pattern-card" style="border: 3px solid #00bcd4; margin-top: 30px;">
+                    <h3 style="color: #00bcd4;">🛤️ Pattern 6: Path Finding (6 Problems)</h3>
+                    
+                    <h4><span class="badge easy">EASY</span> Start Here:</h4>
+                    <table>
+                        <tr><th>LC #</th><th>Problem</th><th>Key Point</th></tr>
+                        <tr><td><strong>257</strong></td><td>Binary Tree Paths</td><td>All root-to-leaf paths</td></tr>
+                    </table>
+
+                    <h4><span class="badge medium">MEDIUM</span> Core Practice:</h4>
+                    <table>
+                        <tr><th>LC #</th><th>Problem</th><th>Key Point</th></tr>
+                        <tr><td><strong>113</strong></td><td>Path Sum II</td><td>Paths with target sum</td></tr>
+                        <tr><td><strong>129</strong></td><td>Sum Root to Leaf Numbers</td><td>Calculate path values</td></tr>
+                        <tr><td><strong>437</strong></td><td>Path Sum III</td><td>Paths not necessarily root-leaf</td></tr>
+                        <tr><td><strong>988</strong></td><td>Smallest String Starting From Leaf</td><td>Lexicographically smallest path</td></tr>
+                        <tr><td><strong>1430</strong></td><td>Check Valid Sequence in Binary Tree</td><td>Path matches array</td></tr>
+                    </table>
+                </div>
+
+                <!-- Additional Mixed Problems -->
+                <div class="pattern-card" style="border: 3px solid #607d8b; margin-top: 30px;">
+                    <h3 style="color: #607d8b;">🎲 Mixed / Advanced Problems (5 Problems)</h3>
+                    
+                    <table>
+                        <tr><th>LC #</th><th>Problem</th><th>Pattern Mix</th></tr>
+                        <tr><td><strong>301</strong></td><td>Remove Invalid Parentheses</td><td>BFS + Backtracking</td></tr>
+                        <tr><td><strong>351</strong></td><td>Android Unlock Patterns</td><td>Grid + Permutation</td></tr>
+                        <tr><td><strong>357</strong></td><td>Count Numbers with Unique Digits</td><td>Permutation with constraints</td></tr>
+                        <tr><td><strong>1863</strong></td><td>Sum of All Subset XOR Totals</td><td>Subsets + Math</td></tr>
+                        <tr><td><strong>2305</strong></td><td>Fair Distribution of Cookies</td><td>Partition + Optimization</td></tr>
+                    </table>
+                </div>
+
+                <!-- Learning Roadmap -->
+                <div class="success-box" style="margin-top: 40px;">
+                    <h3 style="margin-top: 0;">📚 4-Week Mastery Roadmap</h3>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <h4 style="color: #4caf50;">Week 1: Foundation (Subsets & Combinations)</h4>
+                        <ol style="line-height: 2; padding-left: 25px;">
+                            <li><strong>LC 78</strong> - Subsets (DO THIS FIRST!)</li>
+                            <li><strong>LC 90</strong> - Subsets II</li>
+                            <li><strong>LC 77</strong> - Combinations</li>
+                            <li><strong>LC 39</strong> - Combination Sum</li>
+                            <li><strong>LC 40</strong> - Combination Sum II</li>
+                        </ol>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <h4 style="color: #2196f3;">Week 2: Permutations & Strings</h4>
+                        <ol style="line-height: 2; padding-left: 25px;">
+                            <li><strong>LC 46</strong> - Permutations (Master used[] pattern)</li>
+                            <li><strong>LC 47</strong> - Permutations II</li>
+                            <li><strong>LC 17</strong> - Letter Combinations of Phone Number</li>
+                            <li><strong>LC 22</strong> - Generate Parentheses</li>
+                            <li><strong>LC 131</strong> - Palindrome Partitioning</li>
+                        </ol>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <h4 style="color: #ff9800;">Week 3: Grid & Path Problems</h4>
+                        <ol style="line-height: 2; padding-left: 25px;">
+                            <li><strong>LC 79</strong> - Word Search (CRITICAL for grid problems)</li>
+                            <li><strong>LC 257</strong> - Binary Tree Paths</li>
+                            <li><strong>LC 113</strong> - Path Sum II</li>
+                            <li><strong>LC 980</strong> - Unique Paths III</li>
+                            <li><strong>LC 698</strong> - Partition to K Equal Sum Subsets</li>
+                        </ol>
+                    </div>
+
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <h4 style="color: #f44336;">Week 4: Advanced (N-Queens, Sudoku, Hard)</h4>
+                        <ol style="line-height: 2; padding-left: 25px;">
+                            <li><strong>LC 51</strong> - N-Queens (THE classic backtracking problem)</li>
+                            <li><strong>LC 52</strong> - N-Queens II</li>
+                            <li><strong>LC 37</strong> - Sudoku Solver</li>
+                            <li><strong>LC 212</strong> - Word Search II</li>
+                            <li><strong>LC 301</strong> - Remove Invalid Parentheses</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Problem Count Summary -->
+                <div style="text-align: center; margin: 40px 0; padding: 40px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 15px;">
+                    <h2 style="color: white; margin: 0 0 20px 0;">📊 Complete Problem Statistics</h2>
+                    <div style="font-size: 1.3em; line-height: 2.5;">
+                        <strong>Pattern 1 (Subsets):</strong> 15 problems<br>
+                        <strong>Pattern 2 (Permutations):</strong> 12 problems<br>
+                        <strong>Pattern 3 (String Generation):</strong> 10 problems<br>
+                        <strong>Pattern 4 (Grid/Board):</strong> 12 problems<br>
+                        <strong>Pattern 5 (Partition):</strong> 8 problems<br>
+                        <strong>Pattern 6 (Path Finding):</strong> 6 problems<br>
+                        <strong>Mixed/Advanced:</strong> 5 problems<br>
+                        <hr style="margin: 20px 0; border-color: rgba(255,255,255,0.3);">
+                        <strong style="font-size: 1.4em;">TOTAL: 68 PROBLEMS!</strong><br>
+                        <p style="font-size: 0.9em; margin-top: 15px;">
+                            Organized by difficulty: Easy → Medium → Hard<br>
+                            Master 2-3 from each pattern = Backtracking Expert! 🚀
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FINAL SUMMARY -->
+            <section id="summary" class="section" style="background: linear-gradient(135deg, #e74c3c, #c0392b); color: white;">
+                <h2 style="color: white; border-color: white;">🎉 You're Ready to Master Backtracking!</h2>
+                
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; margin: 30px 0;">
+                    <h3 style="color: white; margin-top: 0;">✅ What You Have Now:</h3>
+                    <ul style="font-size: 1.2em; line-height: 2.5;">
+                        <li>✅ Complete definition and when to use backtracking</li>
+                        <li>✅ 6 core patterns covering ALL backtracking problems</li>
+                        <li>✅ Recognition keywords and decision tree</li>
+                        <li>✅ Templates for each pattern</li>
+                        <li>✅ Step-by-step visual examples</li>
+                        <li>✅ <strong>68 practice problems</strong> organized by pattern!</li>
+                        <li>✅ 4-week roadmap from beginner to expert</li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center; padding: 30px; background: rgba(255,255,255,0.2); border-radius: 15px;">
+                    <h2 style="color: white; margin-bottom: 20px;">🚀 Your Next Steps</h2>
+                    <p style="font-size: 1.4em; line-height: 2.5;">
+                        <strong>1.</strong> Start with <strong>LC 78 (Subsets)</strong><br>
+                        <strong>2.</strong> Master the CHOOSE-EXPLORE-UNCHOOSE pattern<br>
+                        <strong>3.</strong> Do 2-3 problems from each pattern<br>
+                        <strong>4.</strong> Challenge yourself with N-Queens and Sudoku<br>
+                        <strong>5.</strong> You'll be a backtracking master! 💪
+                    </p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</body>
+</html>

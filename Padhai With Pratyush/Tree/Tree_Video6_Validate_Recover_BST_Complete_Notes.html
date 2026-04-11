@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video 6: Validate & Recover BST - Complete Visual Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.7;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 60px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 45px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            color: #1e293b;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h3 {
+            color: #334155;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        h4 {
+            color: #475569;
+            font-size: 1.4em;
+            margin: 25px 0 15px 0;
+        }
+
+        .problem-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 15px;
+            padding: 35px;
+            margin: 25px 0;
+            border-left: 8px solid #f59e0b;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+        }
+
+        .tree-visual {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .tree-box {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            line-height: 2.5;
+            display: inline-block;
+            text-align: left;
+        }
+
+        .visual-tree-step {
+            background: white;
+            border: 3px solid #3b82f6;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .inorder-sequence {
+            background: #f1f5f9;
+            border: 3px solid #64748b;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        }
+
+        .sequence-box {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .sequence-item {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .sequence-item.valid {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .sequence-item.invalid {
+            background: #fee2e2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+
+        .code-box {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            line-height: 1.9;
+            font-size: 1em;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-keyword {
+            color: #c084fc;
+        }
+
+        .code-function {
+            color: #60a5fa;
+        }
+
+        .code-string {
+            color: #34d399;
+        }
+
+        .code-comment {
+            color: #94a3b8;
+        }
+
+        .output-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 3px solid #10b981;
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #065f46;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 6px solid #3b82f6;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 6px solid #f59e0b;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 6px solid #10b981;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+            border-left: 6px solid #ef4444;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 15px;
+        }
+
+        li {
+            margin: 12px 0;
+            line-height: 1.8;
+        }
+
+        strong {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .emoji {
+            font-size: 1.3em;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .comparison-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid;
+        }
+
+        .swap-highlight {
+            background: #fecaca;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 2px solid #ef4444;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✅ Validate & Recover BST</h1>
+            <p style="font-size: 1.3em; margin-top: 15px;">Using Inorder Traversal Property</p>
+            <p style="font-size: 1.1em; margin-top: 10px; opacity: 0.9;">Two problems, one solution: The power of inorder traversal</p>
+        </header>
+
+        <div class="content">
+
+            <!-- PROBLEM STATEMENT -->
+            <div class="section">
+                <h2><span class="emoji">📋</span> Two Related Problems</h2>
+                
+                <div class="problem-box">
+                    <h3 style="margin-top: 0;">Problem 1: Validate BST</h3>
+                    <p style="font-size: 1.2em; margin: 20px 0;">
+                        Given a Binary Tree, determine if it is a valid <strong>Binary Search Tree (BST)</strong>.
+                    </p>
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
+                        <p style="font-size: 1.15em;"><strong>Example:</strong></p>
+                        <p style="margin-top: 10px;">Input: [2, 1, 3]</p>
+                        <p>Output: <span style="color: #10b981; font-weight: 600;">true</span> (valid BST)</p>
+                    </div>
+                </div>
+
+                <div class="problem-box">
+                    <h3 style="margin-top: 0;">Problem 2: Recover BST</h3>
+                    <p style="font-size: 1.2em; margin: 20px 0;">
+                        A BST has exactly <strong>two nodes swapped by mistake</strong>. Recover the tree by swapping them back.
+                    </p>
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
+                        <p style="font-size: 1.15em;"><strong>Example:</strong></p>
+                        <p style="margin-top: 10px;">Input: [3, 1, 4, null, null, 2] (1 and 2 swapped)</p>
+                        <p>Output: [2, 1, 4, null, null, 3] (corrected BST)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THE KEY INSIGHT -->
+            <div class="section">
+                <h2><span class="emoji">💡</span> The Key Insight: Inorder Property</h2>
+
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">🔑 The Golden Rule of BST:</h3>
+                    <p style="font-size: 1.3em; margin: 20px 0; line-height: 1.9; font-weight: 600; color: #667eea;">
+                        Inorder traversal of a BST MUST produce a SORTED sequence!
+                    </p>
+                    <p style="font-size: 1.15em; margin-top: 20px;">
+                        This is the MOST IMPORTANT property of BST. If you remember nothing else, remember this!
+                    </p>
+                </div>
+
+                <div class="tree-visual">
+                    <h3>Valid BST Example:</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.2em;">
+       4
+      / \
+     2   6
+    / \ / \
+   1  3 5  7
+
+<span style="color: #667eea; font-weight: 600;">Inorder Traversal:</span> 1 → 2 → 3 → 4 → 5 → 6 → 7
+</pre>
+                    </div>
+                    <div class="inorder-sequence">
+                        <p style="font-weight: 600; margin-bottom: 15px;">Inorder Sequence:</p>
+                        <div class="sequence-box">
+                            <div class="sequence-item valid">1</div>
+                            <div class="sequence-item valid">2</div>
+                            <div class="sequence-item valid">3</div>
+                            <div class="sequence-item valid">4</div>
+                            <div class="sequence-item valid">5</div>
+                            <div class="sequence-item valid">6</div>
+                            <div class="sequence-item valid">7</div>
+                        </div>
+                        <p style="margin-top: 15px; color: #10b981; font-weight: 600; font-size: 1.2em;">
+                            ✅ SORTED → Valid BST!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="tree-visual">
+                    <h3>Invalid BST Example:</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.2em;">
+       4
+      / \
+     2   6
+    / \ / \
+   1  5 3  7  ← 5 and 3 are in wrong positions!
+
+<span style="color: #ef4444; font-weight: 600;">Inorder Traversal:</span> 1 → 2 → 5 → 4 → 3 → 6 → 7
+</pre>
+                    </div>
+                    <div class="inorder-sequence">
+                        <p style="font-weight: 600; margin-bottom: 15px;">Inorder Sequence:</p>
+                        <div class="sequence-box">
+                            <div class="sequence-item">1</div>
+                            <div class="sequence-item">2</div>
+                            <div class="sequence-item invalid">5</div>
+                            <div class="sequence-item">4</div>
+                            <div class="sequence-item invalid">3</div>
+                            <div class="sequence-item">6</div>
+                            <div class="sequence-item">7</div>
+                        </div>
+                        <p style="margin-top: 15px; color: #ef4444; font-weight: 600; font-size: 1.2em;">
+                            ❌ NOT SORTED → Invalid BST!
+                        </p>
+                        <p style="margin-top: 10px;">Violations: 5 > 4 and 3 < 4</p>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>🎯 Why This Works:</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px; line-height: 1.9;">
+                        Inorder traversal visits nodes in this order: <strong>Left → Node → Right</strong><br><br>
+                        For a BST:<br>
+                        • All LEFT nodes are smaller<br>
+                        • Current node is in the middle<br>
+                        • All RIGHT nodes are larger<br><br>
+                        So naturally, inorder gives us: <strong>small → medium → large</strong> (sorted!)
+                    </p>
+                </div>
+            </div>
+
+            <!-- VALIDATE BST -->
+            <div class="section">
+                <h2><span class="emoji">✅</span> Problem 1: Validate BST</h2>
+
+                <div class="info-box">
+                    <h3>🎯 Strategy:</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px;">
+                        Do an inorder traversal and check if each node is <strong>greater than</strong> the previous node.
+                    </p>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>💡 The "Previous Pointer" Trick:</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px; line-height: 1.9;">
+                        Instead of creating an array to store all values, we use a <strong>prev pointer</strong>:<br><br>
+                        • Keep track of the <strong>last visited node</strong><br>
+                        • Compare current node with prev<br>
+                        • If current ≤ prev → <strong>Invalid BST!</strong><br>
+                        • If current > prev → Continue checking<br>
+                    </p>
+                </div>
+
+                <div class="visual-tree-step">
+                    <div class="step-number">Example Execution</div>
+                    <div class="tree-box">
+<pre style="font-size: 1.15em;">
+Tree:    4
+        / \
+       2   6
+      / \ / \
+     1  3 5  7
+
+Inorder walk:
+Step 1: Visit 1, prev = null → OK, set prev = 1
+Step 2: Visit 2, prev = 1 → 2 > 1? YES → OK, set prev = 2
+Step 3: Visit 3, prev = 2 → 3 > 2? YES → OK, set prev = 3
+Step 4: Visit 4, prev = 3 → 4 > 3? YES → OK, set prev = 4
+Step 5: Visit 5, prev = 4 → 5 > 4? YES → OK, set prev = 5
+Step 6: Visit 6, prev = 5 → 6 > 5? YES → OK, set prev = 6
+Step 7: Visit 7, prev = 6 → 7 > 6? YES → OK, set prev = 7
+
+Result: All comparisons passed → Valid BST! ✅
+</pre>
+                    </div>
+                </div>
+
+                <h3>Java Implementation:</h3>
+                <div class="code-box">
+<pre><span class="code-keyword">class</span> <span class="code-function">Solution</span> {
+    Node prev = <span class="code-keyword">null</span>;  <span class="code-comment">// Track the previous node in inorder</span>
+    
+    <span class="code-keyword">public boolean</span> <span class="code-function">isValidBST</span>(Node root) {
+        <span class="code-keyword">if</span> (root == <span class="code-keyword">null</span>) <span class="code-keyword">return true</span>;
+        
+        <span class="code-comment">// Check LEFT subtree first (inorder: Left → Node → Right)</span>
+        <span class="code-keyword">if</span> (!isValidBST(root.left)) <span class="code-keyword">return false</span>;
+        
+        <span class="code-comment">// Check CURRENT node: Must be greater than previous</span>
+        <span class="code-keyword">if</span> (prev != <span class="code-keyword">null</span> && root.data <= prev.data) {
+            <span class="code-keyword">return false</span>;  <span class="code-comment">// Violation found!</span>
+        }
+        
+        <span class="code-comment">// Update prev to current node</span>
+        prev = root;
+        
+        <span class="code-comment">// Check RIGHT subtree</span>
+        <span class="code-keyword">return</span> isValidBST(root.right);
+    }
+}
+
+<span class="code-comment">// Alternative: Using an Integer wrapper to track prev value</span>
+<span class="code-keyword">class</span> <span class="code-function">Solution2</span> {
+    Integer prev = <span class="code-keyword">null</span>;  <span class="code-comment">// Use Integer to allow null</span>
+    
+    <span class="code-keyword">public boolean</span> <span class="code-function">isValidBST</span>(Node root) {
+        <span class="code-keyword">if</span> (root == <span class="code-keyword">null</span>) <span class="code-keyword">return true</span>;
+        
+        <span class="code-keyword">if</span> (!isValidBST(root.left)) <span class="code-keyword">return false</span>;
+        
+        <span class="code-keyword">if</span> (prev != <span class="code-keyword">null</span> && root.data <= prev) {
+            <span class="code-keyword">return false</span>;
+        }
+        prev = root.data;  <span class="code-comment">// Store value, not reference</span>
+        
+        <span class="code-keyword">return</span> isValidBST(root.right);
+    }
+}</pre>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Code Explanation:</h3>
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li><strong>Line 2:</strong> Global prev pointer to track last visited node</li>
+                        <li><strong>Line 7:</strong> Check left subtree first (inorder starts left)</li>
+                        <li><strong>Line 10-12:</strong> Current must be > prev, else invalid</li>
+                        <li><strong>Line 15:</strong> Update prev before moving right</li>
+                        <li><strong>Line 18:</strong> Check right subtree</li>
+                        <li><strong>Key:</strong> This is essentially inorder with a comparison at each step</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- RECOVER BST -->
+            <div class="section">
+                <h2><span class="emoji">🔧</span> Problem 2: Recover BST</h2>
+
+                <div class="info-box">
+                    <h3>🎯 The Problem:</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px;">
+                        Two nodes in a BST were swapped by mistake. We need to find them and swap them back.
+                    </p>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>💡 Strategy:</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px; line-height: 1.9;">
+                        Do an inorder traversal and find where the sorted order is <strong>broken</strong>.<br><br>
+                        There will be <strong>exactly 2 violations</strong>:<br>
+                        • <strong>First violation (G1):</strong> The larger wrongly placed node<br>
+                        • <strong>Second violation (G2):</strong> The smaller wrongly placed node<br><br>
+                        Swap G1 and G2 to fix the tree!
+                    </p>
+                </div>
+
+                <div class="tree-visual">
+                    <h3>Example: Nodes 3 and 5 are Swapped</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.15em;">
+Original (Correct) BST:
+       4
+      / \
+     2   6
+    / \ / \
+   1  3 5  7
+
+Inorder: 1 2 <span style="color: #10b981;">3</span> 4 <span style="color: #10b981;">5</span> 6 7  ✅ Sorted
+
+After Swapping 3 and 5 (Broken BST):
+       4
+      / \
+     2   6
+    / \ / \
+   1  <span class="swap-highlight">5</span> <span class="swap-highlight">3</span>  7
+
+Inorder: 1 2 <span style="color: #ef4444;">5</span> 4 <span style="color: #ef4444;">3</span> 6 7  ❌ Not sorted!
+
+Finding violations:
+Comparison: 2 vs 5 → OK (2 < 5)
+Comparison: 5 vs 4 → ❌ VIOLATION 1! (5 > 4) → G1 = 5
+Comparison: 4 vs 3 → ❌ VIOLATION 2! (4 > 3) → G2 = 3
+Comparison: 3 vs 6 → OK (3 < 6)
+Comparison: 6 vs 7 → OK (6 < 7)
+
+Solution: Swap G1 (5) and G2 (3) back!
+</pre>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h3>⚠️ Two Possible Cases:</h3>
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        <h4 style="margin-top: 0;">Case 1: Adjacent Nodes Swapped</h4>
+                        <p style="margin: 10px 0;">Example: [1, 3, 2, 4, 5] (2 and 3 swapped)</p>
+                        <p style="margin: 10px 0;">Only <strong>ONE violation</strong> in sequence: 3 > 2</p>
+                        <p style="margin: 10px 0; font-weight: 600;">In this case: G1 = first element, G2 = second element</p>
+
+                        <h4 style="margin-top: 25px;">Case 2: Non-Adjacent Nodes Swapped</h4>
+                        <p style="margin: 10px 0;">Example: [1, 2, 5, 4, 3, 6, 7] (3 and 5 swapped)</p>
+                        <p style="margin: 10px 0;"><strong>TWO violations</strong>: 5 > 4 and 4 > 3</p>
+                        <p style="margin: 10px 0; font-weight: 600;">In this case: G1 = first violation's first element (5), G2 = second violation's second element (3)</p>
+                    </div>
+                </div>
+
+                <h3>Java Implementation:</h3>
+                <div class="code-box">
+<pre><span class="code-keyword">class</span> <span class="code-function">Solution</span> {
+    Node first = <span class="code-keyword">null</span>;   <span class="code-comment">// G1 - first wrongly placed node</span>
+    Node second = <span class="code-keyword">null</span>;  <span class="code-comment">// G2 - second wrongly placed node</span>
+    Node prev = <span class="code-keyword">null</span>;    <span class="code-comment">// Track previous node in inorder</span>
+    
+    <span class="code-keyword">public void</span> <span class="code-function">recoverTree</span>(Node root) {
+        <span class="code-comment">// Find the two swapped nodes using inorder</span>
+        findSwapped(root);
+        
+        <span class="code-comment">// Swap their values back</span>
+        <span class="code-keyword">if</span> (first != <span class="code-keyword">null</span> && second != <span class="code-keyword">null</span>) {
+            <span class="code-keyword">int</span> temp = first.data;
+            first.data = second.data;
+            second.data = temp;
+        }
+    }
+    
+    <span class="code-keyword">private void</span> <span class="code-function">findSwapped</span>(Node root) {
+        <span class="code-keyword">if</span> (root == <span class="code-keyword">null</span>) <span class="code-keyword">return</span>;
+        
+        <span class="code-comment">// Inorder: Left → Node → Right</span>
+        findSwapped(root.left);
+        
+        <span class="code-comment">// Check if current node violates BST property</span>
+        <span class="code-keyword">if</span> (prev != <span class="code-keyword">null</span> && root.data < prev.data) {
+            <span class="code-comment">// Violation found!</span>
+            <span class="code-keyword">if</span> (first == <span class="code-keyword">null</span>) {
+                <span class="code-comment">// First violation: Mark both nodes</span>
+                first = prev;   <span class="code-comment">// The larger one (wrongly on left)</span>
+                second = root;  <span class="code-comment">// The smaller one (wrongly on right)</span>
+            } <span class="code-keyword">else</span> {
+                <span class="code-comment">// Second violation: Update second only</span>
+                second = root;  <span class="code-comment">// The actual smaller swapped node</span>
+            }
+        }
+        
+        prev = root;  <span class="code-comment">// Update prev for next iteration</span>
+        
+        findSwapped(root.right);
+    }
+}
+
+<span class="code-comment">// Example usage:</span>
+<span class="code-keyword">public static void</span> <span class="code-function">main</span>(String[] args) {
+    Solution sol = <span class="code-keyword">new</span> Solution();
+    
+    <span class="code-comment">// Broken BST: 1 2 5 4 3 6 7 (3 and 5 swapped)</span>
+    Node root = <span class="code-keyword">new</span> Node(<span class="code-string">4</span>);
+    root.left = <span class="code-keyword">new</span> Node(<span class="code-string">2</span>);
+    root.right = <span class="code-keyword">new</span> Node(<span class="code-string">6</span>);
+    root.left.left = <span class="code-keyword">new</span> Node(<span class="code-string">1</span>);
+    root.left.right = <span class="code-keyword">new</span> Node(<span class="code-string">5</span>);   <span class="code-comment">// Should be 3</span>
+    root.right.left = <span class="code-keyword">new</span> Node(<span class="code-string">3</span>);  <span class="code-comment">// Should be 5</span>
+    root.right.right = <span class="code-keyword">new</span> Node(<span class="code-string">7</span>);
+    
+    sol.recoverTree(root);
+    <span class="code-comment">// Tree is now fixed!</span>
+}</pre>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Code Explanation:</h3>
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li><strong>Lines 2-4:</strong> Track the two swapped nodes and previous node</li>
+                        <li><strong>Lines 11-15:</strong> After finding them, swap their values</li>
+                        <li><strong>Line 24:</strong> Detect violation: current < prev (should be current > prev)</li>
+                        <li><strong>Lines 26-29:</strong> First violation: tentatively mark both nodes</li>
+                        <li><strong>Lines 30-33:</strong> Second violation: update second node (the real culprit)</li>
+                        <li><strong>Why update second twice?</strong> For adjacent swaps, second is set correctly in first violation. For non-adjacent, second gets updated in second violation.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- STEP BY STEP RECOVERY -->
+            <div class="section">
+                <h2><span class="emoji">🔍</span> Step-by-Step Recovery Example</h2>
+
+                <div class="tree-visual">
+                    <h3>Broken Tree: Nodes 15 and 5 Swapped</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.1em;">
+Correct BST should have been:
+       10
+      /  \
+     5    15
+    / \   / \
+   3  7  13 17
+
+But 5 and 15 are swapped:
+       10
+      /  \
+    <span class="swap-highlight">15</span>    <span class="swap-highlight">5</span>
+    / \   / \
+   3  7  13 17
+
+Inorder of broken tree: 3, <span style="color: #ef4444;">15</span>, 7, 10, <span style="color: #ef4444;">5</span>, 13, 17
+</pre>
+                    </div>
+                </div>
+
+                <div class="visual-tree-step">
+                    <div class="step-number">Trace Execution</div>
+                    <div style="background: white; padding: 25px; border-radius: 10px;">
+                        <div class="code-box" style="font-size: 0.95em;">
+<pre>
+Inorder walk with comparisons:
+
+Visit 3:  prev = null → No comparison, set prev = 3
+Visit 15: prev = 3 → 15 > 3? YES ✅ OK, set prev = 15
+Visit 7:  prev = 15 → 7 > 15? NO ❌ VIOLATION 1!
+          first = 15 (prev), second = 7 (current)
+          Set prev = 7
+Visit 10: prev = 7 → 10 > 7? YES ✅ OK, set prev = 10
+Visit 5:  prev = 10 → 5 > 10? NO ❌ VIOLATION 2!
+          first stays 15, second = 5 (updated!)
+          Set prev = 5
+Visit 13: prev = 5 → 13 > 5? YES ✅ OK, set prev = 13
+Visit 17: prev = 13 → 17 > 13? YES ✅ OK, set prev = 17
+
+Result: first = 15, second = 5
+Action: Swap 15 and 5 → Tree recovered! ✅
+</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPLEXITY ANALYSIS -->
+            <div class="section">
+                <h2><span class="emoji">⚡</span> Complexity Analysis</h2>
+
+                <table>
+                    <tr>
+                        <th>Problem</th>
+                        <th>Time Complexity</th>
+                        <th>Space Complexity</th>
+                        <th>Explanation</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Validate BST</strong></td>
+                        <td>O(N)</td>
+                        <td>O(H)</td>
+                        <td>Visit each node once; recursion stack depth = height</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Recover BST</strong></td>
+                        <td>O(N)</td>
+                        <td>O(H)</td>
+                        <td>One inorder traversal; recursion stack depth = height</td>
+                    </tr>
+                </table>
+
+                <div class="info-box" style="margin-top: 25px;">
+                    <h3>📊 Why O(N) Time?</h3>
+                    <p style="font-size: 1.1em; margin-top: 15px; line-height: 1.9;">
+                        We visit each node exactly once during inorder traversal.<br>
+                        Even though we might find violations early, worst case still requires visiting all N nodes.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>📊 Space Complexity Breakdown:</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li><strong>Best case (balanced tree):</strong> H = log(N) → O(log N) space</li>
+                        <li><strong>Worst case (skewed tree):</strong> H = N → O(N) space</li>
+                        <li><strong>Space used by:</strong> Recursion call stack (implicit)</li>
+                        <li><strong>Optimization:</strong> Morris Traversal can achieve O(1) space (advanced)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- COMMON MISTAKES -->
+            <div class="section">
+                <h2><span class="emoji">⚠️</span> Common Mistakes to Avoid</h2>
+
+                <div class="warning-box">
+                    <h3>❌ Mistake 1: Checking Only Immediate Children</h3>
+                    <div class="code-box" style="background: white; color: #1e293b; border: 2px solid #ef4444;">
+<pre>
+// WRONG APPROACH:
+boolean isValidBST(Node root) {
+    if (root.left != null && root.left.data >= root.data) return false;
+    if (root.right != null && root.right.data <= root.data) return false;
+    return isValidBST(root.left) && isValidBST(root.right);
+}
+
+Problem: This only checks immediate parent-child relationship!
+
+Counter-example:
+       5
+      / \
+     1   7
+        / \
+       3   9
+
+This passes the test but 3 < 5, so it's INVALID!
+The left child of 7 (which is 3) is not greater than root (5).
+</pre>
+                    </div>
+                    <p style="margin-top: 20px; font-size: 1.1em; font-weight: 600; color: #ef4444;">
+                        ✅ Correct: Use inorder traversal with prev pointer!
+                    </p>
+                </div>
+
+                <div class="warning-box">
+                    <h3>❌ Mistake 2: Forgetting to Update Prev</h3>
+                    <div class="code-box" style="background: white; color: #1e293b; border: 2px solid #ef4444;">
+<pre>
+// WRONG:
+if (prev != null && root.data <= prev.data) return false;
+// Missing: prev = root;
+return isValidBST(root.right);
+</pre>
+                    </div>
+                    <p style="margin-top: 20px; font-size: 1.1em;">
+                        Without updating prev, comparisons are meaningless!
+                    </p>
+                </div>
+
+                <div class="warning-box">
+                    <h3>❌ Mistake 3: Using >= Instead of ></h3>
+                    <div class="code-box" style="background: white; color: #1e293b; border: 2px solid #ef4444;">
+<pre>
+// WRONG:
+if (prev != null && root.data >= prev.data) return false;
+
+This rejects valid BSTs with duplicate values!
+
+If duplicates are allowed (depends on problem),
+you might want to allow equality.
+</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KEY TAKEAWAYS -->
+            <div class="section">
+                <h2><span class="emoji">✨</span> Key Takeaways</h2>
+
+                <div class="success-box">
+                    <h3>Remember These Forever:</h3>
+                    <ol style="font-size: 1.15em; line-height: 2; margin-top: 15px;">
+                        <li><strong>Golden Rule:</strong> Inorder of BST MUST be sorted!</li>
+                        <li><strong>Validate BST:</strong> Use prev pointer during inorder, check current > prev</li>
+                        <li><strong>Recover BST:</strong> Find 2 violations in inorder sequence</li>
+                        <li><strong>First violation:</strong> G1 = prev (larger element)</li>
+                        <li><strong>Second violation:</strong> G2 = current (smaller element)</li>
+                        <li><strong>Adjacent swap:</strong> Only one violation, G2 from first violation</li>
+                        <li><strong>Non-adjacent swap:</strong> Two violations, G2 from second violation</li>
+                        <li><strong>Time: O(N)</strong> - visit every node once</li>
+                        <li><strong>Space: O(H)</strong> - recursion stack</li>
+                    </ol>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🧠 Memory Trick:</h3>
+                    <p style="font-size: 1.2em; line-height: 2; margin-top: 15px;">
+                        <strong>"Inorder = In Order"</strong><br><br>
+                        If you do an <strong>IN-ORDER</strong> traversal of a BST,<br>
+                        the values come out <strong>IN ORDER</strong> (sorted)!<br><br>
+                        If they're NOT in order → Invalid or broken BST!
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>🎯 Quick Decision Guide:</h3>
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        <p style="font-weight: 600; margin-bottom: 15px;">Need to validate BST?</p>
+                        <p style="margin-left: 20px;">→ Do inorder, check if strictly increasing</p>
+
+                        <p style="font-weight: 600; margin: 20px 0 15px 0;">Need to recover BST?</p>
+                        <p style="margin-left: 20px;">→ Do inorder, find where it breaks, swap the culprits</p>
+
+                        <p style="font-weight: 600; margin: 20px 0 15px 0;">Key insight for both?</p>
+                        <p style="margin-left: 20px; font-weight: 600; color: #667eea;">→ Inorder traversal of BST is sorted!</p>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h3>🎓 Interview Tips:</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li>Always mention the inorder = sorted property first</li>
+                        <li>Explain why checking only immediate children doesn't work</li>
+                        <li>Walk through a small example to show your understanding</li>
+                        <li>Mention the O(1) space Morris Traversal optimization if asked</li>
+                        <li>Be clear about handling duplicates (problem-dependent)</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HashMap - Complete Visual Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2196f3;
+            --secondary: #1976d2;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --info: #00bcd4;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            border: 2px solid #e0e0e0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .section h2 {
+            color: var(--primary);
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .section h3 {
+            color: var(--secondary);
+            font-size: 1.6em;
+            margin: 25px 0 15px 0;
+        }
+
+        .section h4 {
+            color: var(--info);
+            font-size: 1.3em;
+            margin: 20px 0 10px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fff9c4, #ffeb3b);
+            border: 3px solid #fbc02d;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            font-size: 1.15em;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid var(--info);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 5px solid var(--success);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 5px solid var(--warning);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .danger-box {
+            background: #ffebee;
+            border-left: 5px solid var(--danger);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .keyword { color: #569cd6; font-weight: bold; }
+        .comment { color: #6a9955; font-style: italic; }
+        .string { color: #ce9178; }
+        .number { color: #b5cea8; }
+
+        .toc {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .toc li {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        .toc a {
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .toc a:hover {
+            color: var(--primary);
+            padding-left: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: var(--light);
+        }
+
+        .step-box {
+            background: white;
+            border: 3px solid var(--info);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-box {
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📖 HashMap Mastery</h1>
+            <p style="font-size: 1.3em;">Complete Visual Guide - From Diary to Code</p>
+            <p style="font-size: 1em; margin-top: 10px;">Master Key-Value Pairs & String Problems</p>
+        </header>
+
+        <div class="content">
+
+            <!-- TABLE OF CONTENTS -->
+            <div class="toc">
+                <h2>📚 Table of Contents</h2>
+                <ul>
+                    <li><a href="#intro">1. Introduction - The Diary Analogy</a></li>
+                    <li><a href="#syntax">2. Java Syntax & Operations</a></li>
+                    <li><a href="#problem1">3. First Unique Character (LC 387)</a></li>
+                    <li><a href="#problem2">4. Ransom Note (LC 383)</a></li>
+                    <li><a href="#problem3">5. Maximum Balloons (LC 1189)</a></li>
+                    <li><a href="#problem4">6. Longest Palindrome (LC 409)</a></li>
+                    <li><a href="#summary">7. Summary & Patterns</a></li>
+                </ul>
+            </div>
+
+            <!-- SECTION 1: INTRODUCTION -->
+            <section id="intro" class="section">
+                <h2>1️⃣ Introduction - The Diary Analogy</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">📖 HashMap as a Diary</h3>
+                    <p style="font-size: 1.2em; line-height: 2;">
+                        Imagine writing a diary where you record events on specific dates.<br>
+                        Later, you want to quickly remember: <strong>"What happened on Dec 7?"</strong>
+                    </p>
+                </div>
+
+                <h3>📊 The Diary Example</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 1em; line-height: 1.6;">
+Your Diary:
+┌──────────┬─────────────────────┐
+│   Date   │       Event         │  ← KEY : VALUE
+├──────────┼─────────────────────┤
+│  Dec 5   │  Bought a bike      │
+│  Dec 6   │  Broke leg          │
+│  Dec 7   │  Sold the bike      │
+│  Dec 10  │  Went to hospital   │
+└──────────┴─────────────────────┘
+
+Question: "What happened on Dec 7?"
+Answer: Look up key "Dec 7" → value is "Sold the bike"
+                    </pre>
+                </div>
+
+                <h3>🔑 Key-Value Pairs</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Key (The Identifier):</strong><br>
+                        • How you look up data (e.g., Date, Name, Character)<br>
+                        • Keys must be <strong>UNIQUE</strong><br>
+                        • You decide what the key is<br><br>
+                        
+                        <strong>Value (The Data):</strong><br>
+                        • The actual information stored<br>
+                        • Values can be <strong>DUPLICATED</strong><br>
+                        • Can be any data type
+                    </p>
+                </div>
+
+                <h3>✅ What HashMap CAN Do</h3>
+                <div class="success-box">
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li>✓ Tell you the <strong>value</strong> for a specific key</li>
+                        <li>✓ Tell you if a <strong>key exists</strong> (True/False)</li>
+                        <li>✓ Tell you the <strong>size</strong> (number of pairs)</li>
+                        <li>✓ <strong>Remember old data</strong> for quick lookup</li>
+                        <li>✓ <strong>Track frequency</strong> (character counts)</li>
+                    </ul>
+                </div>
+
+                <h3>❌ What HashMap CANNOT Do</h3>
+                <div class="danger-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>"Nonsense Questions":</strong><br>
+                        ✗ "What happened <strong>before</strong> Dec 10?" (range)<br>
+                        ✗ "What was the <strong>last</strong> entry?" (order)<br>
+                        ✗ "What's the <strong>3rd</strong> event?" (index)<br><br>
+                        
+                        <strong>Why?</strong> Standard HashMaps are <strong>UNORDERED</strong><br>
+                        They don't maintain insertion order or sorting
+                    </p>
+                </div>
+
+                <h3>🎯 Primary Use Case</h3>
+                <div class="warning-box">
+                    <p style="font-size: 1.2em; font-weight: bold;">
+                        HashMaps are used to <strong>REMEMBER OLD DATA</strong><br>
+                        to answer: "What is the value for this Key?"
+                    </p>
+                </div>
+            </section>
+
+
+            <!-- SECTION 2: SYNTAX -->
+            <section id="syntax" class="section">
+                <h2>2️⃣ Java Syntax & Operations</h2>
+                
+                <h3>📝 Declaration</h3>
+                <div class="code-block"><pre><span class="comment">// HashMap requires Object types (Integer, not int)</span>
+HashMap&lt;Integer, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();
+HashMap&lt;Character, Integer&gt; freq = <span class="keyword">new</span> HashMap&lt;&gt;();
+HashMap&lt;String, String&gt; diary = <span class="keyword">new</span> HashMap&lt;&gt;();</pre></div>
+
+                <h3>🔧 Common Operations</h3>
+                <table>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Code</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Insert/Update</strong></td>
+                        <td><code>map.put(key, value)</code></td>
+                        <td>If key exists, updates value; else inserts</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Get Value</strong></td>
+                        <td><code>map.get(key)</code></td>
+                        <td>Returns value for key (or null if not found)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Get with Default</strong></td>
+                        <td><code>map.getOrDefault(key, 0)</code></td>
+                        <td>Returns value or default if key missing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Check Exists</strong></td>
+                        <td><code>map.containsKey(key)</code></td>
+                        <td>Returns true/false</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Remove</strong></td>
+                        <td><code>map.remove(key)</code></td>
+                        <td>Deletes the key-value pair</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Size</strong></td>
+                        <td><code>map.size()</code></td>
+                        <td>Returns number of pairs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Iterate Keys</strong></td>
+                        <td><code>for (K key : map.keySet())</code></td>
+                        <td>Loop through all keys</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Iterate Values</strong></td>
+                        <td><code>for (V val : map.values())</code></td>
+                        <td>Loop through all values</td>
+                    </tr>
+                </table>
+
+                <h3>🎯 Common Pattern: Frequency Counter</h3>
+                <div class="code-block"><pre><span class="comment">// Building a frequency map (MOST COMMON!)</span>
+HashMap&lt;Character, Integer&gt; freq = <span class="keyword">new</span> HashMap&lt;&gt;();
+
+<span class="keyword">for</span> (<span class="keyword">char</span> c : string.toCharArray()) {
+    <span class="comment">// If c exists, get its count and add 1</span>
+    <span class="comment">// If c doesn't exist, use 0 as default and add 1</span>
+    freq.put(c, freq.getOrDefault(c, <span class="number">0</span>) + <span class="number">1</span>);
+}</pre></div>
+            </section>
+
+            <!-- SECTION 3: PROBLEM 1 -->
+            <section id="problem1" class="section">
+                <h2>3️⃣ Problem 1: First Unique Character</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>LeetCode 387:</strong> Find the first non-repeating character<br>
+                        <strong>Input:</strong> "leetcode"<br>
+                        <strong>Output:</strong> 0 (index of 'l')
+                    </p>
+                </div>
+
+                <h3>🎯 Logic</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        1. <strong>Build frequency map</strong> - count all characters<br>
+                        2. <strong>Check from start</strong> - find first with count = 1<br>
+                        3. <strong>Return index</strong> or -1 if none found
+                    </p>
+                </div>
+
+                <h3>📊 Visual Walkthrough</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 0.95em; line-height: 1.6;">
+String:  L  E  E  T  C  O  D  E
+Index:   0  1  2  3  4  5  6  7
+
+<span style="font-weight: bold;">Step 1: Build Frequency Map</span>
+┌─────┬───┬───┬───┬───┬───┬───┐
+│ Key │ L │ E │ T │ C │ O │ D │
+├─────┼───┼───┼───┼───┼───┼───┤
+│ Val │ 1 │ 3 │ 1 │ 1 │ 1 │ 1 │
+└─────┴───┴───┴───┴───┴───┴───┘
+
+<span style="font-weight: bold;">Step 2: Check from Index 0</span>
+i=0, char='L': map.get('L') = 1? <span style="color: #2e7d32;">YES! Return 0</span>
+
+(No need to check 'E' since we found unique character)
+                    </pre>
+                </div>
+
+                <h3>💻 Java Code (Fully Commented)</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * First Unique Character in a String
+ * LeetCode 387
+ * 
+ * Time: O(N) - two passes through string
+ * Space: O(1) - at most 26 characters (English alphabet)
+ */</span>
+<span class="keyword">public int</span> firstUniqChar(String s) {
+    <span class="comment">// Step 1: Create HashMap for character frequency</span>
+    HashMap&lt;Character, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();
+    
+    <span class="comment">// Step 2: Build the frequency map</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) {
+        <span class="keyword">char</span> c = s.charAt(i);
+        <span class="comment">// If key exists, increment count; else insert 1</span>
+        map.put(c, map.getOrDefault(c, <span class="number">0</span>) + <span class="number">1</span>);
+    }
+    
+    <span class="comment">// Step 3: Find the first unique character</span>
+    <span class="comment">// Must check from index 0 to maintain "first" order</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) {
+        <span class="keyword">if</span> (map.get(s.charAt(i)) == <span class="number">1</span>) {
+            <span class="keyword">return</span> i;  <span class="comment">// Return the index</span>
+        }
+    }
+    
+    <span class="comment">// Step 4: No unique character found</span>
+    <span class="keyword">return</span> -<span class="number">1</span>;
+}</pre></div>
+            </section>
+
+            <!-- SECTION 4: PROBLEM 2 -->
+            <section id="problem2" class="section">
+                <h2>4️⃣ Problem 2: Ransom Note</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>LeetCode 383:</strong> Can construct ransom note from magazine?<br>
+                        <strong>Input:</strong> ransomNote = "aab", magazine = "baa"<br>
+                        <strong>Output:</strong> false (need 2 'a's but only have 2)
+                    </p>
+                </div>
+
+                <h3>🎯 The Job Interview Analogy</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Ransom = Requirement (NEED)</strong><br>
+                        <strong>Magazine = Resume (HAVE)</strong><br><br>
+                        
+                        For each requirement:<br>
+                        • If Have >= Need → ✓ Pass<br>
+                        • If Have < Need → ✗ Fail immediately<br>
+                        • Extra stuff in Magazine is ignored
+                    </p>
+                </div>
+
+                <h3>📊 Visual Example</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 0.95em; line-height: 1.6;">
+Ransom (NEED): "AAB"       Magazine (HAVE): "BAAXX"
+
+<span style="font-weight: bold;">Step 1: Build Maps</span>
+NEED Map:  { A: 2, B: 1 }
+HAVE Map:  { B: 1, A: 2, X: 2 }
+
+<span style="font-weight: bold;">Step 2: Verification (Check NEED map only)</span>
+Check 'A':
+  Need: 2
+  Have: 2
+  Is Have >= Need? <span style="color: #2e7d32;">YES ✓</span>
+
+Check 'B':
+  Need: 1
+  Have: 1
+  Is Have >= Need? <span style="color: #2e7d32;">YES ✓</span>
+
+<span style="color: #2e7d32; font-weight: bold;">Result: TRUE (can construct)</span>
+
+Note: Extra 'X' in magazine is ignored!
+                    </pre>
+                </div>
+
+                <h3>💻 Java Code</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Ransom Note
+ * LeetCode 383
+ * 
+ * Time: O(N + M)
+ * Space: O(1) - at most 26 characters
+ */</span>
+<span class="keyword">public boolean</span> canConstruct(String ransomNote, String magazine) {
+    HashMap&lt;Character, Integer&gt; have = <span class="keyword">new</span> HashMap&lt;&gt;();
+    HashMap&lt;Character, Integer&gt; need = <span class="keyword">new</span> HashMap&lt;&gt;();
+    
+    <span class="comment">// Step 1: Build NEED Map (Ransom)</span>
+    <span class="keyword">for</span> (<span class="keyword">char</span> c : ransomNote.toCharArray()) {
+        need.put(c, need.getOrDefault(c, <span class="number">0</span>) + <span class="number">1</span>);
+    }
+    
+    <span class="comment">// Step 2: Build HAVE Map (Magazine)</span>
+    <span class="keyword">for</span> (<span class="keyword">char</span> c : magazine.toCharArray()) {
+        have.put(c, have.getOrDefault(c, <span class="number">0</span>) + <span class="number">1</span>);
+    }
+    
+    <span class="comment">// Step 3: Check requirements</span>
+    <span class="comment">// Only iterate over NEED because we only care about requirements</span>
+    <span class="keyword">for</span> (<span class="keyword">char</span> key : need.keySet()) {
+        <span class="keyword">int</span> neededCount = need.get(key);
+        <span class="comment">// Use 0 as default if character not in magazine</span>
+        <span class="keyword">int</span> haveCount = have.getOrDefault(key, <span class="number">0</span>);
+        
+        <span class="keyword">if</span> (haveCount &lt; neededCount) {
+            <span class="keyword">return false</span>;  <span class="comment">// Not enough characters!</span>
+        }
+    }
+    
+    <span class="keyword">return true</span>;  <span class="comment">// All requirements satisfied</span>
+}</pre></div>
+            </section>
+
+            <!-- SECTION 5: PROBLEM 3 -->
+            <section id="problem3" class="section">
+                <h2>5️⃣ Problem 3: Maximum Number of Balloons</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>LeetCode 1189:</strong> How many "balloon" can you form?<br>
+                        <strong>Input:</strong> "loonbalxballpoon"<br>
+                        <strong>Output:</strong> 2
+                    </p>
+                </div>
+
+                <h3>🎯 The Slowest Worker Analogy</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Factory Principle:</strong> Only as fast as slowest worker!<br><br>
+                        
+                        If you have:<br>
+                        • 100 wheels but only 8 engines → Make 8 cars<br>
+                        • 6 'L's but need 2 'L's per word → Make 3 words<br><br>
+                        
+                        <strong>Answer = Minimum ratio of (Have / Need)</strong>
+                    </p>
+                </div>
+
+                <h3>📊 Visual Analysis</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 0.9em; line-height: 1.6;">
+Input: "BBAALLOOOOONN"
+Target Word: "BALLOON"
+
+<span style="font-weight: bold;">Step 1: Count Requirements for "balloon"</span>
+NEED: { b:1, a:1, l:2, o:2, n:1 }
+
+<span style="font-weight: bold;">Step 2: Count What We Have</span>
+HAVE: { B:2, A:2, L:2, O:5, N:2 }
+
+<span style="font-weight: bold;">Step 3: Calculate Ratio for Each Letter</span>
+┌────────┬──────┬──────┬─────────────┬──────────────┐
+│ Letter │ Have │ Need │ Have / Need │ Max Possible │
+├────────┼──────┼──────┼─────────────┼──────────────┤
+│   B    │  2   │  1   │   2 / 1     │      2       │
+│   A    │  2   │  1   │   2 / 1     │      2       │
+│   L    │  2   │  2   │   2 / 2     │      1  ← 🔴 │
+│   O    │  5   │  2   │   5 / 2     │      2       │
+│   N    │  2   │  1   │   2 / 1     │      2       │
+└────────┴──────┴──────┴─────────────┴──────────────┘
+
+<span style="color: #d32f2f; font-weight: bold;">Bottleneck: 'L' (can only make 1 word)</span>
+<span style="color: #2e7d32; font-weight: bold;">Answer: Minimum = 1</span>
+                    </pre>
+                </div>
+
+                <h3>💻 Java Code</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Maximum Number of Balloons
+ * LeetCode 1189
+ * 
+ * Time: O(N)
+ * Space: O(1)
+ */</span>
+<span class="keyword">public int</span> maxNumberOfBalloons(String text) {
+    HashMap&lt;Character, Integer&gt; have = <span class="keyword">new</span> HashMap&lt;&gt;();
+    HashMap&lt;Character, Integer&gt; need = <span class="keyword">new</span> HashMap&lt;&gt;();
+    
+    <span class="comment">// Step 1: Build NEED Map for "balloon"</span>
+    String target = <span class="string">"balloon"</span>;
+    <span class="keyword">for</span> (<span class="keyword">char</span> c : target.toCharArray()) {
+        need.put(c, need.getOrDefault(c, <span class="number">0</span>) + <span class="number">1</span>);
+    }
+    
+    <span class="comment">// Step 2: Build HAVE Map from input text</span>
+    <span class="keyword">for</span> (<span class="keyword">char</span> c : text.toCharArray()) {
+        have.put(c, have.getOrDefault(c, <span class="number">0</span>) + <span class="number">1</span>);
+    }
+    
+    <span class="keyword">int</span> ans = Integer.MAX_VALUE;
+    
+    <span class="comment">// Step 3: Calculate minimum ratio (bottleneck)</span>
+    <span class="keyword">for</span> (<span class="keyword">char</span> key : need.keySet()) {
+        <span class="keyword">int</span> neededCount = need.get(key);
+        <span class="keyword">int</span> haveCount = have.getOrDefault(key, <span class="number">0</span>);
+        
+        <span class="comment">// How many times can THIS letter support the word?</span>
+        <span class="keyword">int</span> times = haveCount / neededCount;
+        
+        <span class="comment">// The answer is limited by the smallest ratio</span>
+        ans = Math.min(ans, times);
+    }
+    
+    <span class="keyword">return</span> ans;
+}</pre></div>
+            </section>
+
+            <!-- SECTION 6: PROBLEM 4 -->
+            <section id="problem4" class="section">
+                <h2>6️⃣ Problem 4: Longest Palindrome</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>LeetCode 409:</strong> Length of longest palindrome from letters<br>
+                        <strong>Input:</strong> "abccccdd"<br>
+                        <strong>Output:</strong> 7 (e.g., "dccaccd")
+                    </p>
+                </div>
+
+                <h3>🎯 Palindrome Rules</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Even Counts:</strong> Use all (e.g., 4 'c's → "cc...cc")<br>
+                        <strong>Odd Counts:</strong> Use count-1 to make even (e.g., 5 'a's → use 4)<br>
+                        <strong>The Center:</strong> Can place ONE leftover in middle (+1)<br><br>
+                        
+                        Key: Palindromes need matching pairs!
+                    </p>
+                </div>
+
+                <h3>📊 Visual Walkthrough</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 0.95em; line-height: 1.6;">
+Input: "AAABBBCCCCD"
+Frequency Map: { A:3, B:3, C:4, D:1 }
+
+<span style="font-weight: bold;">Processing Each Character:</span>
+
+'C' (count=4): <span style="color: #2e7d32;">EVEN</span>
+  Use all 4 → Total = 4
+  
+'A' (count=3): <span style="color: #ff6b35;">ODD</span>
+  Use 3-1 = 2 → Total = 4 + 2 = 6
+  (1 'A' left over)
+  
+'B' (count=3): <span style="color: #ff6b35;">ODD</span>
+  Use 3-1 = 2 → Total = 6 + 2 = 8
+  (1 'B' left over)
+  
+'D' (count=1): <span style="color: #ff6b35;">ODD</span>
+  Use 1-1 = 0 → Total = 8
+  (1 'D' left over)
+
+<span style="font-weight: bold;">Final Step:</span>
+Had odd counts? <span style="color: #2e7d32;">YES</span> (A, B, D leftovers)
+Can put ONE in center → Total = 8 + 1 = <span style="color: #2e7d32; font-weight: bold;">9</span>
+
+Example palindrome: "CCAABBDACC" (or similar)
+                    </pre>
+                </div>
+
+                <h3>💻 Java Code</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Longest Palindrome
+ * LeetCode 409
+ * 
+ * Time: O(N)
+ * Space: O(1)
+ */</span>
+<span class="keyword">public int</span> longestPalindrome(String s) {
+    HashMap&lt;Character, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();
+    
+    <span class="comment">// Step 1: Build Frequency Map</span>
+    <span class="keyword">for</span> (<span class="keyword">char</span> c : s.toCharArray()) {
+        map.put(c, map.getOrDefault(c, <span class="number">0</span>) + <span class="number">1</span>);
+    }
+    
+    <span class="keyword">int</span> result = <span class="number">0</span>;
+    <span class="keyword">boolean</span> hasOdd = <span class="keyword">false</span>;
+    
+    <span class="comment">// Step 2: Process each character frequency</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> val : map.values()) {
+        <span class="keyword">if</span> (val % <span class="number">2</span> == <span class="number">0</span>) {
+            <span class="comment">// Even: Use all characters</span>
+            result += val;
+        } <span class="keyword">else</span> {
+            <span class="comment">// Odd: Use (val - 1) to make it even</span>
+            result += (val - <span class="number">1</span>);
+            <span class="comment">// Mark that we have at least one odd count</span>
+            hasOdd = <span class="keyword">true</span>;
+        }
+    }
+    
+    <span class="comment">// Step 3: If we had any odd counts, add 1 for center</span>
+    <span class="keyword">if</span> (hasOdd) {
+        <span class="keyword">return</span> result + <span class="number">1</span>;
+    } <span class="keyword">else</span> {
+        <span class="keyword">return</span> result;
+    }
+}</pre></div>
+            </section>
+
+            <!-- SECTION 7: SUMMARY -->
+            <section id="summary" class="section" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+                <h2 style="color: white; border-color: white;">7️⃣ Summary & Patterns</h2>
+                
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: white; margin-top: 0;">📊 Problem Patterns Summary</h3>
+                    <table style="background: white; color: #333;">
+                        <tr>
+                            <th>Problem</th>
+                            <th>Pattern</th>
+                            <th>Key Concept</th>
+                        </tr>
+                        <tr>
+                            <td>First Unique Character</td>
+                            <td>Frequency + Linear Scan</td>
+                            <td>Find first with count=1</td>
+                        </tr>
+                        <tr>
+                            <td>Ransom Note</td>
+                            <td>Two Maps: Need vs Have</td>
+                            <td>Check Have >= Need</td>
+                        </tr>
+                        <tr>
+                            <td>Maximum Balloons</td>
+                            <td>Ratio Calculation</td>
+                            <td>Min(Have/Need) = bottleneck</td>
+                        </tr>
+                        <tr>
+                            <td>Longest Palindrome</td>
+                            <td>Even/Odd Processing</td>
+                            <td>Pairs + optional center</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.2); padding: 30px; border-radius: 15px;">
+                    <h3 style="color: white; margin-top: 0;">🎯 Common Template</h3>
+                    <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; font-family: monospace;">
+<pre style="color: white;">// Step 1: Build frequency map
+HashMap&lt;Character, Integer&gt; map = new HashMap&lt;&gt;();
+for (char c : string.toCharArray()) {
+    map.put(c, map.getOrDefault(c, 0) + 1);
+}
+
+// Step 2: Process based on problem type
+for (char key : map.keySet()) {
+    int count = map.get(key);
+    // Apply logic here
+}</pre>
+                    </div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: white; margin-top: 0;">💡 Key Insights</h3>
+                    <p style="font-size: 1.2em; line-height: 2;">
+                        <strong>1. Frequency Counting:</strong> Most common use in strings<br>
+                        <strong>2. Need vs Have:</strong> Compare requirements to availability<br>
+                        <strong>3. Bottleneck:</strong> Minimum ratio determines answer<br>
+                        <strong>4. Even/Odd:</strong> Important for palindrome/pairing problems<br>
+                        <strong>5. O(1) Space:</strong> Fixed alphabet size (26 chars)
+                    </p>
+                </div>
+
+                <div style="text-align: center; margin-top: 40px; padding: 30px; background: rgba(255,255,255,0.2); border-radius: 15px;">
+                    <h2 style="color: white;">🎉 You've Mastered HashMap!</h2>
+                    <p style="font-size: 1.3em; line-height: 2;">
+                        You now understand:<br>
+                        • Key-Value pair concept<br>
+                        • Frequency counting pattern<br>
+                        • Need vs Have comparison<br>
+                        • Ratio calculations<br>
+                        • All 4 classic string problems!<br><br>
+                        <strong>Practice these to solidify your skills!</strong>
+                    </p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</body>
+</html>

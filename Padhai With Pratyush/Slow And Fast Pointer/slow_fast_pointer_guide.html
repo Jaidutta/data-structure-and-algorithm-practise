@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slow & Fast Pointer - Complete Visual Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2196f3;
+            --secondary: #1976d2;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --info: #00bcd4;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --slow: #4caf50;
+            --fast: #ff5722;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            border: 2px solid #e0e0e0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .section h2 {
+            color: var(--primary);
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .section h3 {
+            color: var(--secondary);
+            font-size: 1.6em;
+            margin: 25px 0 15px 0;
+        }
+
+        .section h4 {
+            color: var(--info);
+            font-size: 1.3em;
+            margin: 20px 0 10px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fff9c4, #ffeb3b);
+            border: 3px solid #fbc02d;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            font-size: 1.15em;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid var(--info);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 5px solid var(--success);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 5px solid var(--warning);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .danger-box {
+            background: #ffebee;
+            border-left: 5px solid var(--danger);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .keyword { color: #569cd6; font-weight: bold; }
+        .comment { color: #6a9955; font-style: italic; }
+        .string { color: #ce9178; }
+        .number { color: #b5cea8; }
+
+        /* Compact Node Visualization */
+        .node-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            font-size: 0.85em;
+        }
+
+        .node {
+            display: flex;
+            border: 2px solid var(--primary);
+            border-radius: 3px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .node-data {
+            padding: 5px 10px;
+            background: #90caf9;
+            border-right: 2px solid var(--primary);
+            font-weight: bold;
+            font-size: 1em;
+            color: #1565c0;
+            min-width: 25px;
+            text-align: center;
+        }
+
+        .node-next {
+            padding: 5px 10px;
+            background: #fff59d;
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #f57f17;
+            min-width: 35px;
+            text-align: center;
+        }
+
+        .node-label {
+            text-align: center;
+            margin-top: 3px;
+            font-size: 0.7em;
+            color: #666;
+        }
+
+        .arrow {
+            font-size: 1.2em;
+            color: var(--danger);
+            font-weight: bold;
+            padding: 0 3px;
+        }
+
+        .pointer {
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 0.85em;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            text-align: center;
+            display: inline-block;
+        }
+
+        .slow-pointer {
+            background: var(--slow);
+            color: white;
+        }
+
+        .fast-pointer {
+            background: var(--fast);
+            color: white;
+        }
+
+        .toc {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .toc li {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        .toc a {
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .toc a:hover {
+            color: var(--primary);
+            padding-left: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: var(--light);
+        }
+
+        .step-box {
+            background: white;
+            border: 3px solid var(--info);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐢🐰 Slow & Fast Pointer</h1>
+            <p style="font-size: 1.3em;">Complete Visual Guide - Master the Tortoise & Hare!</p>
+            <p style="font-size: 1em; margin-top: 10px;">Detect Cycles, Find Middle, Solve Array Problems</p>
+        </header>
+
+        <div class="content">
+
+            <!-- TABLE OF CONTENTS -->
+            <div class="toc">
+                <h2>📚 Table of Contents</h2>
+                <ul>
+                    <li><a href="#intro">1. Introduction - The Pattern</a></li>
+                    <li><a href="#detect">2. Detect Cycle in Linked List</a></li>
+                    <li><a href="#start">3. Find Cycle Start</a></li>
+                    <li><a href="#middle">4. Find Middle of List</a></li>
+                    <li><a href="#duplicate">5. Find Duplicate in Array</a></li>
+                    <li><a href="#happy">6. Happy Number</a></li>
+                    <li><a href="#summary">7. Summary & Patterns</a></li>
+                </ul>
+            </div>
+
+            <!-- SECTION 1: INTRODUCTION -->
+            <section id="intro" class="section">
+                <h2>1️⃣ The Slow & Fast Pointer Pattern</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">🐢 Tortoise & 🐰 Hare Algorithm</h3>
+                    <p style="font-size: 1.2em; line-height: 2;">
+                        Also known as <strong>Floyd's Cycle Detection Algorithm</strong><br>
+                        Uses <strong>two pointers</strong> moving at <strong>different speeds</strong>
+                    </p>
+                </div>
+
+                <h3>🎯 Core Concept</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Slow Pointer:</strong> Moves 1 step at a time (🐢 tortoise)<br>
+                        <strong>Fast Pointer:</strong> Moves 2 steps at a time (🐰 hare)<br><br>
+                        <strong>Key Insight:</strong> If there's a cycle, fast will eventually catch up to slow!
+                    </p>
+                </div>
+
+                <h3>📊 ENHANCED Visual Example - Clear Initial Positions</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; border: 3px solid #4caf50;">
+                    <pre style="font-family: monospace; font-size: 1em; line-height: 1.8;">
+<strong style="color: #1976d2;">🔍 STEP-BY-STEP: No Cycle Example</strong>
+
+Linked List: 1 → 2 → 3 → 4 → 5 → null
+
+<strong style="color: #4caf50;">╔═══════════════════════════════════════════════╗
+║ STEP 0: INITIALIZATION                        ║
+╚═══════════════════════════════════════════════╝</strong>
+<strong>BOTH pointers start at the FIRST NODE (head = 1)</strong>
+
+  🐢 slow
+  🐰 fast  
+   ↓  ↓
+  [1] → [2] → [3] → [4] → [5] → null
+   ↑
+  HEAD (both start HERE!)
+
+
+<strong style="color: #4caf50;">╔═══════════════════════════════════════════════╗
+║ STEP 1: First Movement                       ║
+╚═══════════════════════════════════════════════╝</strong>
+• slow moves 1 step: 1 → 2
+• fast moves 2 steps: 1 → 2 → 3
+
+        🐢          🐰
+        ↓           ↓
+  [1] → [2] → [3] → [4] → [5] → null
+
+
+<strong style="color: #4caf50;">╔═══════════════════════════════════════════════╗
+║ STEP 2: Second Movement                      ║
+╚═══════════════════════════════════════════════╝</strong>
+• slow moves 1 step: 2 → 3
+• fast moves 2 steps: 3 → 4 → 5
+
+                🐢                🐰
+                ↓                 ↓
+  [1] → [2] → [3] → [4] → [5] → null
+
+
+<strong style="color: #4caf50;">╔═══════════════════════════════════════════════╗
+║ STEP 3: Fast Reaches End                     ║
+╚═══════════════════════════════════════════════╝</strong>
+• slow moves 1 step: 3 → 4
+• fast moves 2 steps: 5 → null → (stops!)
+
+                        🐢
+                        ↓
+  [1] → [2] → [3] → [4] → [5] → null
+                                   ↑
+                                   🐰 fast = null
+
+<strong style="color: #d32f2f;">✅ RESULT: NO CYCLE DETECTED!</strong>
+Fast pointer reached null → List has an end → No cycle
+                    </pre>
+                </div>
+
+                <h3>📊 WITH CYCLE - Clear Visualization</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; border: 3px solid #ff5722; margin-top: 20px;">
+                    <pre style="font-family: monospace; font-size: 1em; line-height: 1.8;">
+<strong style="color: #1976d2;">🔍 STEP-BY-STEP: With Cycle Example</strong>
+
+<strong style="color: #d32f2f;">⚠️ CYCLE INFORMATION:</strong>
+• Cycle exists: YES
+• Cycle entry point: Node 2 (@200)
+• Node 5's next pointer: Points back to @200 (creates the loop)
+• Cycle path: 2 → 3 → 4 → 5 → 2 → 3 → 4 → 5 → ...
+
+Linked List with Cycle:
+      ┌──────────────┐
+      │              ↓
+  [1] → [2] → [3] → [4] → [5]
+  @100  @200  @300  @400  @500
+        ↑ ENTRY          │
+        │                │
+        └────────────────┘
+         (Node 5 points back here!)
+
+<strong style="color: #ff5722;">╔═══════════════════════════════════════════════╗
+║ STEP 0: INITIALIZATION                        ║
+╚═══════════════════════════════════════════════╝</strong>
+<strong>BOTH start at node 1</strong>
+
+  🐢 slow = @100 (node 1)
+  🐰 fast = @100 (node 1)
+   ↓  ↓
+  [1] → [2] → [3] → [4] → [5] ┐
+  @100  @200  @300  @400  @500 │
+            ↑___________________|
+
+<strong style="color: #2196f3;">Movement this step:</strong>
+  • slow: START → @100
+  • fast: START → @100
+
+
+<strong style="color: #ff5722;">╔═══════════════════════════════════════════════╗
+║ STEP 1: First Move                           ║
+╚═══════════════════════════════════════════════╝</strong>
+        🐢          🐰
+        ↓           ↓
+  [1] → [2] → [3] → [4] → [5] ┐
+  @100  @200  @300  @400  @500 │
+            ↑___________________|
+
+<strong style="color: #2196f3;">Movement this step:</strong>
+  • slow: @100 → @200 (moved 1 step)
+  • fast: @100 → @200 → @300 (moved 2 steps)
+
+<strong style="color: #ff6f00;">Current positions:</strong>
+  🐢 slow = @200 (node 2)
+  🐰 fast = @300 (node 3)
+
+
+<strong style="color: #ff5722;">╔═══════════════════════════════════════════════╗
+║ STEP 2: Second Move                          ║
+╚═══════════════════════════════════════════════╝</strong>
+                🐢                🐰
+                ↓                 ↓
+  [1] → [2] → [3] → [4] → [5] ┐
+  @100  @200  @300  @400  @500 │
+            ↑___________________|
+
+<strong style="color: #2196f3;">Movement this step:</strong>
+  • slow: @200 → @300 (moved 1 step)
+  • fast: @300 → @400 → @500 (moved 2 steps)
+
+<strong style="color: #ff6f00;">Current positions:</strong>
+  🐢 slow = @300 (node 3)
+  🐰 fast = @500 (node 5)
+
+
+<strong style="color: #ff5722;">╔═══════════════════════════════════════════════╗
+║ STEP 3: Loop Back! (fast enters cycle)       ║
+╚═══════════════════════════════════════════════╝</strong>
+                        🐢      🐰
+                        ↓       ↓
+  [1] → [2] → [3] → [4] → [5] ┐
+  @100  @200  @300  @400  @500 │
+            ↑___________________|
+
+<strong style="color: #2196f3;">Movement this step:</strong>
+  • slow: @300 → @400 (moved 1 step)
+  • fast: @500 → @200 → @300 (moved 2 steps, LOOPED BACK!)
+         ↑ node 5's next points to @200
+         ↑ then followed next to @300
+
+<strong style="color: #ff6f00;">Current positions:</strong>
+  🐢 slow = @400 (node 4)
+  🐰 fast = @300 (node 3) ← FAST WRAPPED AROUND!
+
+
+<strong style="color: #ff5722;">╔═══════════════════════════════════════════════╗
+║ STEP 4: COLLISION!                           ║
+╚═══════════════════════════════════════════════╝</strong>
+                                🐢🐰
+                                 ↓
+  [1] → [2] → [3] → [4] → [5] ┐
+  @100  @200  @300  @400  @500 │
+            ↑___________________|
+
+<strong style="color: #2196f3;">Movement this step:</strong>
+  • slow: @400 → @500 (moved 1 step)
+  • fast: @300 → @400 → @500 (moved 2 steps)
+
+<strong style="color: #ff6f00;">Final positions:</strong>
+  🐢 slow = @500 (node 5)
+  🐰 fast = @500 (node 5)
+
+<strong style="color: #4caf50;">🎉 COLLISION! slow == fast → CYCLE DETECTED!</strong>
+Both pointers met at @500 (node 5)!
+
+<strong style="color: #9c27b0;">📊 Summary of all movements:</strong>
+Step 0: slow=@100, fast=@100
+Step 1: slow=@200, fast=@300
+Step 2: slow=@300, fast=@500
+Step 3: slow=@400, fast=@300 (fast looped!)
+Step 4: slow=@500, fast=@500 ✓ MATCH!
+                    </pre>
+                </div>
+
+                <h3>✅ When to Use This Pattern</h3>
+                <div class="success-box">
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li>✓ <strong>Detect cycles</strong> in linked lists</li>
+                        <li>✓ <strong>Find middle</strong> of linked list</li>
+                        <li>✓ <strong>Find cycle start</strong> point</li>
+                        <li>✓ <strong>Detect duplicates</strong> in arrays (Floyd's)</li>
+                        <li>✓ <strong>Happy number</strong> problem</li>
+                        <li>✓ Any problem involving <strong>repeated sequences</strong></li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Space Complexity Advantage</h4>
+                    <p style="font-size: 1.1em;">
+                        <strong>Without slow/fast:</strong> Need HashSet → O(N) space<br>
+                        <strong>With slow/fast:</strong> Only two pointers → O(1) space!
+                    </p>
+                </div>
+            </section>
+
+
+            <!-- SECTION 2: DETECT CYCLE -->
+            <section id="detect" class="section">
+                <h2>2️⃣ Problem 1: Detect Cycle in Linked List</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Problem:</strong> Determine if a linked list has a cycle<br>
+                        <strong>LeetCode:</strong> #141 - Linked List Cycle
+                    </p>
+                </div>
+
+                <h3>🔍 How the Algorithm Works</h3>
+                <div class="info-box" style="background: #e3f2fd; padding: 25px; margin: 20px 0;">
+                    <h4 style="color: #1976d2; margin-bottom: 15px;">Step-by-Step Breakdown:</h4>
+                    
+                    <p style="font-size: 1.05em; line-height: 1.8; color: #333;">
+                        <strong style="color: #d32f2f;">1. INITIALIZATION:</strong><br>
+                        • Both pointers start at the HEAD<br>
+                        • <code>slow = head</code> and <code>fast = head</code><br><br>
+                        
+                        <strong style="color: #d32f2f;">2. MOVEMENT RULES:</strong><br>
+                        • <strong>SLOW:</strong> Moves 1 step per iteration → <code>slow = slow.next</code><br>
+                        • <strong>FAST:</strong> Moves 2 steps per iteration → <code>fast = fast.next.next</code><br><br>
+                        
+                        <strong style="color: #d32f2f;">3. TERMINATION CONDITIONS:</strong><br>
+                        
+                        <strong style="color: #2e7d32;">✓ Scenario A: CYCLE EXISTS</strong><br>
+                        • Fast will eventually catch up to slow<br>
+                        • When <code>slow == fast</code> → CYCLE DETECTED!<br>
+                        • Why? In a circular track, the faster runner MUST lap the slower runner<br><br>
+                        
+                        <strong style="color: #d32f2f;">✗ Scenario B: NO CYCLE</strong><br>
+                        • Fast will reach the end of the list<br>
+                        • When <code>fast == null</code> or <code>fast.next == null</code> → NO CYCLE<br>
+                        • Why? If there's an end, there's no loop!<br><br>
+                        
+                        <strong style="color: #d32f2f;">4. WHY IT WORKS:</strong><br>
+                        • <strong>Gap closes by 1 each step:</strong><br>
+                        &nbsp;&nbsp;→ If slow is N nodes behind fast in the cycle<br>
+                        &nbsp;&nbsp;→ After 1 iteration: slow moves +1, fast moves +2<br>
+                        &nbsp;&nbsp;→ Gap decreases from N to N-1<br>
+                        &nbsp;&nbsp;→ Eventually gap = 0 → they meet!<br><br>
+                        
+                        • <strong>Mathematical guarantee:</strong><br>
+                        &nbsp;&nbsp;→ In a cycle of length C<br>
+                        &nbsp;&nbsp;→ Gap closes by 1 per step<br>
+                        &nbsp;&nbsp;→ Maximum C steps to collision<br>
+                        &nbsp;&nbsp;→ Time complexity: O(N)
+                    </p>
+                </div>
+
+                <h3>🎯 The Logic</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        Think of a race track:<br>
+                        • If track is straight (no cycle), fast finishes first<br>
+                        • If track is circular (has cycle), fast laps slow eventually<br><br>
+                        
+                        <strong>Key Insight:</strong> In a cycle, faster runner MUST catch slower runner!
+                    </p>
+                </div>
+
+                <h3>📊 Cycle Example</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <pre style="font-family: monospace; font-size: 0.95em; line-height: 1.6;">
+<span style="color: #d32f2f; font-weight: bold;">⚠️ CYCLE INFO: Node 5's next pointer goes back to Node 2</span>
+
+List with Cycle:
+      ┌────────────────┐
+      │                ↓
+[1] → [2] → [3] → [4] → [5]
+      ↑ ENTRY          │
+      │                │
+      └────────────────┘
+       (Node 5 loops back to Node 2)
+
+Step 0: slow=[1], fast=[1]
+Step 1: slow=[2], fast=[3]
+Step 2: slow=[3], fast=[5]
+Step 3: slow=[4], fast=[3]  (fast wrapped around!)
+Step 4: slow=[5], fast=[5]  ✓ THEY MEET! → Cycle detected!
+
+<span style="color: #2e7d32; font-weight: bold;">If slow == fast → Cycle exists!</span>
+<span style="color: #d32f2f; font-weight: bold;">If fast reaches null → No cycle!</span>
+                    </pre>
+                </div>
+
+                <h3>💻 Java Code (Fully Commented)</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Detect Cycle in Linked List
+ * 
+ * LeetCode 141 - Linked List Cycle
+ * 
+ * Approach: Slow & Fast Pointer (Floyd's Algorithm)
+ * - Slow moves 1 step
+ * - Fast moves 2 steps
+ * - If they meet → cycle exists
+ * - If fast reaches null → no cycle
+ * 
+ * Time: O(N) - worst case visit all nodes
+ * Space: O(1) - only two pointers
+ */</span>
+<span class="keyword">public boolean</span> hasCycle(ListNode head) {
+    <span class="comment">// Edge case: empty list or single node</span>
+    <span class="keyword">if</span> (head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) {
+        <span class="keyword">return false</span>;
+    }
+    
+    <span class="comment">// Initialize both pointers at head</span>
+    ListNode slow = head;
+    ListNode fast = head;
+    
+    <span class="comment">// Move pointers until fast reaches end</span>
+    <span class="keyword">while</span> (fast != <span class="keyword">null</span> && fast.next != <span class="keyword">null</span>) {
+        <span class="comment">// Slow moves 1 step (tortoise)</span>
+        slow = slow.next;
+        
+        <span class="comment">// Fast moves 2 steps (hare)</span>
+        fast = fast.next.next;
+        
+        <span class="comment">// If they meet → cycle detected!</span>
+        <span class="keyword">if</span> (slow == fast) {
+            <span class="keyword">return true</span>;
+        }
+    }
+    
+    <span class="comment">// Fast reached null → no cycle</span>
+    <span class="keyword">return false</span>;
+}
+
+<span class="comment">/*
+ * Why this works mathematically:
+ * 
+ * If cycle exists:
+ * - Slow enters cycle at some point
+ * - Fast is already in cycle (or enters after)
+ * - Fast gains 1 step per iteration
+ * - Eventually fast.position == slow.position
+ * 
+ * Distance covered when they meet:
+ * - Slow: x + y (x = distance to cycle, y = distance in cycle)
+ * - Fast: x + y + nC (C = cycle length, n = laps)
+ * - Since fast = 2×slow: x + y + nC = 2(x + y)
+ * - Simplifies to: nC = x + y
+ * - This proves they MUST meet in cycle!
+ */</span></pre></div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Common Mistakes</h4>
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li>❌ Not checking <code>fast.next != null</code> → NullPointerException</li>
+                        <li>❌ Starting pointers at different positions</li>
+                        <li>❌ Moving fast only 1 step (becomes slow pointer!)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- SECTION 3: FIND CYCLE START -->
+            <section id="start" class="section">
+                <h2>3️⃣ Problem 2: Find Cycle Start</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Problem:</strong> Find WHERE the cycle begins<br>
+                        <strong>LeetCode:</strong> #142 - Linked List Cycle II
+                    </p>
+                </div>
+
+                <h3>🔍 How the Algorithm Works</h3>
+                <div class="info-box" style="background: #fff3e0; padding: 25px; margin: 20px 0;">
+                    <h4 style="color: #e65100; margin-bottom: 15px;">The Two-Phase Approach:</h4>
+                    
+                    <p style="font-size: 1.05em; line-height: 1.8; color: #333;">
+                        <strong style="color: #d32f2f;">PHASE 1: DETECT THE CYCLE</strong><br>
+                        • Use slow & fast pointers (same as Problem 1)<br>
+                        • When they meet → cycle exists, remember meeting point<br>
+                        • If fast reaches null → no cycle, return null<br><br>
+                        
+                        <strong style="color: #d32f2f;">PHASE 2: FIND THE ENTRY POINT</strong><br>
+                        • <strong>Reset SLOW to HEAD</strong><br>
+                        • <strong>Keep FAST at meeting point</strong><br>
+                        • Move <strong>BOTH at same speed (1 step each)</strong><br>
+                        • Where they meet next = <strong>CYCLE START!</strong><br><br>
+                        
+                        <strong style="color: #d32f2f;">🤔 WHY DOES THIS WORK?</strong><br><br>
+                        
+                        Let's use variables:<br>
+                        • <code>L1</code> = distance from HEAD to cycle ENTRY<br>
+                        • <code>L2</code> = distance from ENTRY to first MEETING point<br>
+                        • <code>C</code> = cycle length<br><br>
+                        
+                        <strong>When they first meet (Phase 1):</strong><br>
+                        • SLOW traveled: <code>L1 + L2</code><br>
+                        • FAST traveled: <code>L1 + L2 + nC</code> (n = number of full laps fast made)<br>
+                        • Since FAST moves 2× faster: <code>2(L1 + L2) = L1 + L2 + nC</code><br><br>
+                        
+                        <strong>Simplify the equation:</strong><br>
+                        <div style="background: #ffebee; padding: 15px; border-radius: 5px; margin: 10px 0; font-family: monospace;">
+                        2(L1 + L2) = L1 + L2 + nC<br>
+                        2L1 + 2L2 = L1 + L2 + nC<br>
+                        L1 + L2 = nC<br>
+                        <strong style="color: #d32f2f;">L1 = nC - L2</strong>
+                        </div><br>
+                        
+                        <strong style="color: #2e7d32;">🎯 KEY INSIGHT:</strong><br>
+                        <code>L1 = nC - L2</code> means:<br>
+                        • Distance from <strong>HEAD to ENTRY</strong> = L1<br>
+                        • Distance from <strong>MEETING to ENTRY</strong> (going around cycle) = nC - L2<br>
+                        • <strong>THESE ARE EQUAL!</strong><br><br>
+                        
+                        So if we:<br>
+                        1. Start SLOW at HEAD<br>
+                        2. Start FAST at MEETING point<br>
+                        3. Move both 1 step at a time<br><br>
+                        
+                        <strong style="color: #2e7d32;">They will both reach the ENTRY point at the same time!</strong>
+                    </p>
+                </div>
+
+                <h3>🎯 The Algorithm (Two Phases)</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Phase 1:</strong> Detect cycle (same as before)<br>
+                        <strong>Phase 2:</strong> Find start point<br><br>
+                        
+                        <strong>Magic Step:</strong> Move one pointer to head, keep other at meeting point.<br>
+                        Move both 1 step at a time → they meet at cycle start!
+                    </p>
+                </div>
+
+                <h3>📊 Visual Proof</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 0.95em; line-height: 1.6;">
+<span style="color: #d32f2f; font-weight: bold;">⚠️ CYCLE INFO: Node 5's next pointer goes back to Node 2 (cycle entry)</span>
+
+Phase 1: Detect cycle
+      ┌────────────────┐
+      │                ↓
+[1] → [2] → [3] → [4] → [5]
+      ↑ ENTRY          │
+      │                │
+      └────────────────┘
+       (Cycle: 2→3→4→5→2→3→...)
+      
+slow & fast meet at node 5
+
+Phase 2: Find start
+slow = head = [1]
+fast = [5] (meeting point)
+
+Move both 1 step at a time:
+slow=[1]→[2], fast=[5]→[2]  ✓ MEET AT [2]!
+
+[2] is the cycle start!
+
+<span style="color: #2e7d32; font-weight: bold;">Mathematical Proof:</span>
+Let x = distance from head to cycle start
+Let y = distance from cycle start to meeting point
+Let C = cycle length
+
+When they meet:
+- slow traveled: x + y
+- fast traveled: x + y + nC (n laps)
+- fast = 2×slow: x + y + nC = 2(x + y)
+- Simplify: nC = x + y
+- Therefore: x = nC - y
+
+So distance from head to start = distance from meeting to start!
+                    </pre>
+                </div>
+
+                <h3>💻 Java Code (Fully Commented)</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Find Cycle Start in Linked List
+ * 
+ * LeetCode 142 - Linked List Cycle II
+ * 
+ * Time: O(N)
+ * Space: O(1)
+ */</span>
+<span class="keyword">public</span> ListNode detectCycle(ListNode head) {
+    <span class="keyword">if</span> (head == <span class="keyword">null</span> || head.next == <span class="keyword">null</span>) {
+        <span class="keyword">return null</span>;
+    }
+    
+    <span class="comment">// PHASE 1: Detect if cycle exists</span>
+    ListNode slow = head;
+    ListNode fast = head;
+    <span class="keyword">boolean</span> hasCycle = <span class="keyword">false</span>;
+    
+    <span class="keyword">while</span> (fast != <span class="keyword">null</span> && fast.next != <span class="keyword">null</span>) {
+        slow = slow.next;
+        fast = fast.next.next;
+        
+        <span class="keyword">if</span> (slow == fast) {
+            hasCycle = <span class="keyword">true</span>;
+            <span class="keyword">break</span>;  <span class="comment">// Found cycle, stop Phase 1</span>
+        }
+    }
+    
+    <span class="comment">// No cycle found</span>
+    <span class="keyword">if</span> (!hasCycle) {
+        <span class="keyword">return null</span>;
+    }
+    
+    <span class="comment">// PHASE 2: Find cycle start</span>
+    <span class="comment">// Move slow to head, keep fast at meeting point</span>
+    slow = head;
+    
+    <span class="comment">// Move both 1 step at a time until they meet</span>
+    <span class="keyword">while</span> (slow != fast) {
+        slow = slow.next;    <span class="comment">// 1 step</span>
+        fast = fast.next;    <span class="comment">// 1 step (not 2!)</span>
+    }
+    
+    <span class="comment">// Meeting point is cycle start</span>
+    <span class="keyword">return</span> slow;  <span class="comment">// or fast, both point to same node</span>
+}</pre></div>
+            </section>
+
+
+            <!-- SECTION 4: FIND MIDDLE -->
+            <section id="middle" class="section">
+                <h2>4️⃣ Problem 3: Find Middle of Linked List</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Problem:</strong> Find the middle node of a linked list<br>
+                        <strong>LeetCode:</strong> #876 - Middle of the Linked List
+                    </p>
+                </div>
+
+                <h3>🔍 How the Algorithm Works</h3>
+                <div class="info-box" style="background: #e8f5e9; padding: 25px; margin: 20px 0;">
+                    <h4 style="color: #2e7d32; margin-bottom: 15px;">The Marathon Runner Analogy:</h4>
+                    
+                    <p style="font-size: 1.05em; line-height: 1.8; color: #333;">
+                        <strong style="color: #d32f2f;">CONCEPT:</strong><br>
+                        Imagine two runners in a marathon:<br>
+                        • Runner A (SLOW) runs at normal speed<br>
+                        • Runner B (FAST) runs at 2× speed<br>
+                        • When Runner B finishes, Runner A is at the halfway point!<br><br>
+                        
+                        <strong style="color: #d32f2f;">ALGORITHM STEPS:</strong><br><br>
+                        
+                        <strong>1. INITIALIZATION:</strong><br>
+                        • Both start at HEAD: <code>slow = head</code>, <code>fast = head</code><br><br>
+                        
+                        <strong>2. MOVEMENT:</strong><br>
+                        • SLOW moves 1 step: <code>slow = slow.next</code><br>
+                        • FAST moves 2 steps: <code>fast = fast.next.next</code><br><br>
+                        
+                        <strong>3. TERMINATION:</strong><br>
+                        • Stop when FAST reaches the end<br>
+                        • Conditions: <code>fast == null</code> OR <code>fast.next == null</code><br><br>
+                        
+                        <strong style="color: #d32f2f;">📐 WHY IT WORKS:</strong><br><br>
+                        
+                        <strong>For ODD length list (e.g., 5 nodes):</strong><br>
+                        <div style="background: #f1f8e9; padding: 15px; border-radius: 5px; margin: 10px 0; font-family: monospace;">
+                        List: [1] → [2] → [3] → [4] → [5]<br>
+                        <br>
+                        Step 0: slow@1, fast@1<br>
+                        Step 1: slow@2, fast@3 (fast moved 2 steps)<br>
+                        Step 2: slow@3, fast@5 (fast at end!)<br>
+                        <br>
+                        STOP! slow is at position 3 (middle of 5)
+                        </div><br>
+                        
+                        <strong>For EVEN length list (e.g., 4 nodes):</strong><br>
+                        <div style="background: #f1f8e9; padding: 15px; border-radius: 5px; margin: 10px 0; font-family: monospace;">
+                        List: [1] → [2] → [3] → [4] → NULL<br>
+                        <br>
+                        Step 0: slow@1, fast@1<br>
+                        Step 1: slow@2, fast@3<br>
+                        Step 2: slow@3, fast@NULL (fast.next would be null)<br>
+                        <br>
+                        STOP! slow is at position 3 (second middle of 4)
+                        </div><br>
+                        
+                        <strong style="color: #2e7d32;">🎯 MATHEMATICAL PROOF:</strong><br>
+                        • Total nodes = N<br>
+                        • When FAST travels N steps (or N-1), SLOW travels N/2 steps<br>
+                        • N/2 is the middle position!<br><br>
+                        
+                        <strong style="color: #d32f2f;">📝 NOTE ON EVEN LENGTH:</strong><br>
+                        • For even-length lists, there are 2 middle nodes<br>
+                        • This algorithm returns the <strong>second middle</strong><br>
+                        • Example: [1,2,3,4] → returns node 3 (not node 2)
+                    </p>
+                </div>
+
+                <h3>🎯 The Logic</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        When fast reaches end, slow is at middle!<br><br>
+                        
+                        <strong>Why?</strong> Fast moves 2× faster than slow<br>
+                        When fast travels N steps, slow travels N/2 steps<br>
+                        N/2 is the middle!
+                    </p>
+                </div>
+
+                <h3>📊 Visual Example</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 0.95em; line-height: 1.6;">
+List: [1] → [2] → [3] → [4] → [5]
+
+Step 0: slow=[1], fast=[1]
+Step 1: slow=[2], fast=[3]
+Step 2: slow=[3], fast=[5]
+Step 3: fast.next=null, STOP
+
+slow is at [3] → Middle node! ✓
+
+For even length [1,2,3,4]:
+Step 0: slow=[1], fast=[1]
+Step 1: slow=[2], fast=[3]
+Step 2: slow=[3], fast=null, STOP
+
+slow is at [3] → Second middle! ✓
+                    </pre>
+                </div>
+
+                <h3>💻 Java Code</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Find Middle of Linked List
+ * LeetCode 876
+ * Time: O(N), Space: O(1)
+ */</span>
+<span class="keyword">public</span> ListNode middleNode(ListNode head) {
+    ListNode slow = head;
+    ListNode fast = head;
+    
+    <span class="comment">// When fast reaches end, slow is at middle</span>
+    <span class="keyword">while</span> (fast != <span class="keyword">null</span> && fast.next != <span class="keyword">null</span>) {
+        slow = slow.next;      <span class="comment">// 1 step</span>
+        fast = fast.next.next; <span class="comment">// 2 steps</span>
+    }
+    
+    <span class="keyword">return</span> slow;  <span class="comment">// Middle node</span>
+}</pre></div>
+            </section>
+
+            <!-- SECTION 5: FIND DUPLICATE -->
+            <section id="duplicate" class="section">
+                <h2>5️⃣ Problem 4: Find Duplicate in Array</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Problem:</strong> Find duplicate in array [1..n] with values 1 to n<br>
+                        <strong>LeetCode:</strong> #287 - Find the Duplicate Number<br>
+                        <strong>Constraint:</strong> Can't modify array, O(1) space
+                    </p>
+                </div>
+
+                <h3>🎯 Key Insight: Array IS a Linked List!</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        Treat array indices as nodes<br>
+                        Treat array values as "next" pointers<br><br>
+                        
+                        Example: arr = [1,3,4,2,2]<br>
+                        Index 0 → value 1 → "points to" index 1<br>
+                        Index 1 → value 3 → "points to" index 3<br>
+                        Duplicate creates a CYCLE!
+                    </p>
+                </div>
+
+                <h3>📊 How Array Forms a Cycle</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 0.95em; line-height: 1.6;">
+Array: [1, 3, 4, 2, 2]
+Index:  0  1  2  3  4
+
+Think of it as:
+Index 0: value=1 → "next" is index 1
+Index 1: value=3 → "next" is index 3
+Index 2: value=4 → "next" is index 4
+Index 3: value=2 → "next" is index 2
+Index 4: value=2 → "next" is index 2
+
+Path: 0 → 1 → 3 → 2 → 4 → 2 → 4 → 2...
+                    ┌─────┘
+                    └─ Cycle! Entry point = 2
+
+The duplicate number is 2!
+                    </pre>
+                </div>
+
+                <h3>💻 Java Code</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Find Duplicate in Array using Floyd's Algorithm
+ * LeetCode 287
+ * Time: O(N), Space: O(1)
+ */</span>
+<span class="keyword">public int</span> findDuplicate(<span class="keyword">int</span>[] nums) {
+    <span class="comment">// Phase 1: Detect cycle</span>
+    <span class="keyword">int</span> slow = nums[<span class="number">0</span>];
+    <span class="keyword">int</span> fast = nums[<span class="number">0</span>];
+    
+    <span class="keyword">do</span> {
+        slow = nums[slow];           <span class="comment">// 1 step</span>
+        fast = nums[nums[fast]];     <span class="comment">// 2 steps</span>
+    } <span class="keyword">while</span> (slow != fast);
+    
+    <span class="comment">// Phase 2: Find cycle start (the duplicate)</span>
+    slow = nums[<span class="number">0</span>];
+    
+    <span class="keyword">while</span> (slow != fast) {
+        slow = nums[slow];
+        fast = nums[fast];
+    }
+    
+    <span class="keyword">return</span> slow;  <span class="comment">// The duplicate number</span>
+}</pre></div>
+            </section>
+
+            <!-- SECTION 6: HAPPY NUMBER -->
+            <section id="happy" class="section">
+                <h2>6️⃣ Problem 5: Happy Number</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Problem:</strong> Determine if a number is "happy"<br>
+                        <strong>LeetCode:</strong> #202 - Happy Number
+                    </p>
+                </div>
+
+                <h3>📖 Definition</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        A happy number is defined by:<br>
+                        1. Replace number with sum of squares of its digits<br>
+                        2. Repeat until number = 1 (happy!) or loops forever (sad)<br><br>
+                        
+                        Example: 19<br>
+                        1² + 9² = 82<br>
+                        8² + 2² = 68<br>
+                        6² + 8² = 100<br>
+                        1² + 0² + 0² = 1 ✓ Happy!
+                    </p>
+                </div>
+
+                <h3>🎯 Why Slow & Fast?</h3>
+                <div class="warning-box">
+                    <p style="font-size: 1.1em;">
+                        If not happy → sequence enters a CYCLE<br>
+                        Use slow/fast to detect the cycle!<br>
+                        If slow == fast before reaching 1 → Not happy
+                    </p>
+                </div>
+
+                <h3>💻 Java Code</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Happy Number using Floyd's Algorithm
+ * LeetCode 202
+ * Time: O(log N), Space: O(1)
+ */</span>
+<span class="keyword">public boolean</span> isHappy(<span class="keyword">int</span> n) {
+    <span class="keyword">int</span> slow = n;
+    <span class="keyword">int</span> fast = n;
+    
+    <span class="keyword">do</span> {
+        slow = sumSquares(slow);                <span class="comment">// 1 step</span>
+        fast = sumSquares(sumSquares(fast));    <span class="comment">// 2 steps</span>
+        
+        <span class="keyword">if</span> (slow == <span class="number">1</span> || fast == <span class="number">1</span>) {
+            <span class="keyword">return true</span>;  <span class="comment">// Happy!</span>
+        }
+    } <span class="keyword">while</span> (slow != fast);
+    
+    <span class="keyword">return false</span>;  <span class="comment">// Cycle detected, not happy</span>
+}
+
+<span class="keyword">private int</span> sumSquares(<span class="keyword">int</span> n) {
+    <span class="keyword">int</span> sum = <span class="number">0</span>;
+    <span class="keyword">while</span> (n > <span class="number">0</span>) {
+        <span class="keyword">int</span> digit = n % <span class="number">10</span>;
+        sum += digit * digit;
+        n /= <span class="number">10</span>;
+    }
+    <span class="keyword">return</span> sum;
+}</pre></div>
+            </section>
+
+            <!-- SECTION 7: SUMMARY -->
+            <section id="summary" class="section" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+                <h2 style="color: white; border-color: white;">7️⃣ Summary & Patterns</h2>
+                
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: white; margin-top: 0;">📊 Problem Patterns</h3>
+                    <table style="background: white; color: #333;">
+                        <tr>
+                            <th>Problem Type</th>
+                            <th>Pattern</th>
+                            <th>Key Points</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Detect Cycle</strong></td>
+                            <td>slow=1, fast=2</td>
+                            <td>If meet → cycle</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Find Cycle Start</strong></td>
+                            <td>Two phases</td>
+                            <td>Phase 2: both move 1 step</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Find Middle</strong></td>
+                            <td>slow=1, fast=2</td>
+                            <td>When fast ends, slow=middle</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Array Duplicate</strong></td>
+                            <td>Treat as linked list</td>
+                            <td>Index→value is "next"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Happy Number</strong></td>
+                            <td>Detect cycle in sequence</td>
+                            <td>If cycle before 1 → not happy</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.2); padding: 30px; border-radius: 15px;">
+                    <h3 style="color: white; margin-top: 0;">✅ Common Template</h3>
+                    <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; font-family: monospace;">
+<pre style="color: white;">// Initialize
+slow = head
+fast = head
+
+// Phase 1: Detect
+while (fast != null && fast.next != null) {
+    slow = slow.next       // 1 step
+    fast = fast.next.next  // 2 steps
+    
+    if (slow == fast) {
+        // Cycle detected!
+        break
+    }
+}
+
+// Phase 2: Find start (if needed)
+slow = head
+while (slow != fast) {
+    slow = slow.next  // Both 1 step
+    fast = fast.next
+}</pre>
+                    </div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: white; margin-top: 0;">⚡ Time & Space Complexity</h3>
+                    <p style="font-size: 1.2em; line-height: 2;">
+                        <strong>Time:</strong> O(N) for all problems<br>
+                        <strong>Space:</strong> O(1) - only two pointers!<br><br>
+                        
+                        <strong>Alternative (HashSet):</strong><br>
+                        Time: O(N), Space: O(N) ❌<br><br>
+                        
+                        <strong>Slow & Fast wins:</strong> Same time, better space! ✓
+                    </p>
+                </div>
+
+                <div style="text-align: center; margin-top: 40px; padding: 30px; background: rgba(255,255,255,0.2); border-radius: 15px;">
+                    <h2 style="color: white;">🎉 You've Mastered Slow & Fast Pointer!</h2>
+                    <p style="font-size: 1.3em; line-height: 2;">
+                        You now understand:<br>
+                        • Floyd's Cycle Detection<br>
+                        • Finding cycle start<br>
+                        • Finding middle node<br>
+                        • Array as linked list trick<br>
+                        • O(1) space optimization<br><br>
+                        <strong>Practice these 5 problems to solidify!</strong>
+                    </p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</body>
+</html>

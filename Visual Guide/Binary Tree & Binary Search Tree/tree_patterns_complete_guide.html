@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Tree & BST Patterns - Complete Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.4);
+        }
+        
+        .header h1 { font-size: 3.5em; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .header p { font-size: 1.3em; }
+        
+        .section {
+            background: white;
+            padding: 50px;
+            margin-bottom: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        h1 { color: #667eea; font-size: 2.8em; margin-bottom: 30px; border-bottom: 4px solid #667eea; padding-bottom: 15px; }
+        h2 { color: #764ba2; font-size: 2.2em; margin: 40px 0 25px 0; }
+        h3 { color: #667eea; font-size: 1.6em; margin: 30px 0 20px 0; }
+        h4 { color: #555; font-size: 1.3em; margin: 25px 0 15px 0; }
+        
+        p { margin-bottom: 20px; font-size: 1.1em; line-height: 1.8; }
+        
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .tree-visual {
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            border: 3px solid #667eea;
+            border-radius: 12px;
+            padding: 35px;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .tree-visual pre { margin: 0; color: #1a1a1a; line-height: 1.8; }
+        
+        .keyword { color: #569cd6; font-weight: bold; }
+        .type { color: #4ec9b0; }
+        .function { color: #dcdcaa; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; font-style: italic; }
+        .number { color: #b5cea8; }
+        
+        .pattern-card {
+            background: white;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 35px 0;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+        
+        .pattern-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        
+        .pattern-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 35px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .pattern-header h3 { color: white; margin: 0; font-size: 1.9em; }
+        
+        .info-box {
+            padding: 25px 30px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border-left: 6px solid;
+        }
+        
+        .info-box.tip { background: #e8f5e9; border-color: #4caf50; }
+        .info-box.tip h4 { color: #2e7d32; }
+        
+        .info-box.important { background: #fff3e0; border-color: #ff9800; }
+        .info-box.important h4 { color: #e65100; }
+        
+        .info-box.note { background: #e3f2fd; border-color: #2196f3; }
+        .info-box.note h4 { color: #1565c0; }
+        
+        ul, ol { margin: 20px 0 25px 35px; }
+        li { margin-bottom: 12px; padding-left: 10px; line-height: 1.7; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        thead { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        th { padding: 18px; text-align: left; font-weight: 600; }
+        td { padding: 16px 18px; border-bottom: 1px solid #e0e0e0; }
+        tbody tr:hover { background: #f5f9fc; }
+        tbody tr:nth-child(even) { background: #fafafa; }
+        
+        .difficulty {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+        
+        .difficulty.easy { background: #d4edda; color: #155724; }
+        .difficulty.medium { background: #fff3cd; color: #856404; }
+        .difficulty.hard { background: #f8d7da; color: #721c24; }
+        
+        .complexity {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.95em;
+            margin: 8px 8px 8px 0;
+        }
+        
+        .complexity.time { background: #e3f2fd; color: #1976d2; border: 2px solid #1976d2; }
+        .complexity.space { background: #f3e5f5; color: #7b1fa2; border: 2px solid #7b1fa2; }
+        
+        .highlight { background: linear-gradient(180deg, transparent 60%, #ffeb3b 60%); padding: 2px 6px; font-weight: 600; }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.2em; }
+            .section { padding: 30px 20px; }
+        }
+        
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌳 Binary Tree & BST Patterns</h1>
+            <p>Master All Tree Patterns with Visual Explanations & Practice Problems</p>
+        </div>
+
+        <!-- Introduction -->
+        <div class="section">
+            <h1>Understanding Binary Trees & BST</h1>
+            
+            <h2>What is a Binary Tree?</h2>
+            <p>
+                A <span class="highlight">Binary Tree</span> is a hierarchical structure where each node has at most two children. 
+                It's fundamental to many algorithms and real-world applications.
+            </p>
+            
+            <div class="tree-visual">
+                <pre>        1
+       / \
+      2   3
+     / \   \
+    4   5   6
+
+<strong>Components:</strong>
+- Root: 1
+- Internal Nodes: 2, 3
+- Leaf Nodes: 4, 5, 6
+- Height: 2
+                </pre>
+            </div>
+            
+            <h2>What is a Binary Search Tree (BST)?</h2>
+            <p>
+                A <span class="highlight">BST</span> maintains ordering: <strong>Left &lt; Root &lt; Right</strong> for all nodes.
+            </p>
+            
+            <div class="tree-visual">
+                <pre>        8
+       / \
+      3   10
+     / \    \
+    1   6    14
+
+<strong>BST Property:</strong>
+✓ Left subtree (1,3,6) < 8
+✓ Right subtree (10,14) > 8
+✓ Property holds recursively
+                </pre>
+            </div>
+            
+            <h2>Binary Tree vs BST</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Binary Tree</th>
+                        <th>BST</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Ordering</strong></td>
+                        <td>No specific order</td>
+                        <td>Left &lt; Node &lt; Right</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Search</strong></td>
+                        <td>O(n)</td>
+                        <td>O(log n) average</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Insert</strong></td>
+                        <td>O(1) if position known</td>
+                        <td>O(log n) average</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Use Case</strong></td>
+                        <td>Hierarchical data</td>
+                        <td>Fast search/insert</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pattern 1: DFS -->
+        <div class="section">
+            <h1>Pattern 1: Depth-First Search (DFS)</h1>
+            
+            <div class="pattern-card">
+                <div class="pattern-header">
+                    <h3>DFS Traversal Patterns</h3>
+                </div>
+                
+                <h4>🔍 What is it?</h4>
+                <p>
+                    DFS explores depth-first by going deep along branches before backtracking. Three types:
+                </p>
+                <ul>
+                    <li><strong>Preorder:</strong> Root → Left → Right</li>
+                    <li><strong>Inorder:</strong> Left → Root → Right</li>
+                    <li><strong>Postorder:</strong> Left → Right → Root</li>
+                </ul>
+                
+                <h4>📊 Visual Example</h4>
+                <div class="tree-visual">
+                    <pre>       1
+      / \
+     2   3
+    / \
+   4   5
+
+<strong>Preorder:</strong>  1 → 2 → 4 → 5 → 3
+<strong>Inorder:</strong>   4 → 2 → 5 → 1 → 3
+<strong>Postorder:</strong> 4 → 5 → 2 → 3 → 1
+                    </pre>
+                </div>
+                
+                <h4>🎯 When to Use?</h4>
+                <ul>
+                    <li>Explore all root-to-leaf paths</li>
+                    <li>Tree serialization/copying</li>
+                    <li><strong>Inorder for BST:</strong> Get sorted order</li>
+                    <li><strong>Postorder:</strong> Delete tree, calculate sizes</li>
+                </ul>
+                
+                <div class="info-box tip">
+                    <h4>💡 Pattern Intuition</h4>
+                    <p>
+                        DFS matches tree's recursive structure. <strong>Preorder</strong> processes parent first (copying). 
+                        <strong>Inorder</strong> on BST gives sorted values. <strong>Postorder</strong> processes children first (deletion).
+                    </p>
+                </div>
+                
+                <h4>💻 Java Code</h4>
+                <div class="code-block">
+                    <pre><span class="comment">// Preorder: Root → Left → Right</span>
+<span class="keyword">public void</span> <span class="function">preorder</span>(<span class="type">TreeNode</span> root) {
+    <span class="keyword">if</span> (root == <span class="keyword">null</span>) <span class="keyword">return</span>;
+    System.out.print(root.val + <span class="string">" "</span>);  <span class="comment">// Process root</span>
+    preorder(root.left);
+    preorder(root.right);
+}
+
+<span class="comment">// Inorder: Left → Root → Right</span>
+<span class="keyword">public void</span> <span class="function">inorder</span>(<span class="type">TreeNode</span> root) {
+    <span class="keyword">if</span> (root == <span class="keyword">null</span>) <span class="keyword">return</span>;
+    inorder(root.left);
+    System.out.print(root.val + <span class="string">" "</span>);  <span class="comment">// Process root</span>
+    inorder(root.right);
+}
+
+<span class="comment">// Postorder: Left → Right → Root</span>
+<span class="keyword">public void</span> <span class="function">postorder</span>(<span class="type">TreeNode</span> root) {
+    <span class="keyword">if</span> (root == <span class="keyword">null</span>) <span class="keyword">return</span>;
+    postorder(root.left);
+    postorder(root.right);
+    System.out.print(root.val + <span class="string">" "</span>);  <span class="comment">// Process root</span>
+}</pre>
+                </div>
+                
+                <h4>🔍 How to Identify This Pattern?</h4>
+                <ul>
+                    <li>Need to visit ALL nodes</li>
+                    <li>Order matters (preorder/inorder/postorder)</li>
+                    <li>Problem mentions "traverse" or "visit all nodes"</li>
+                    <li>BST problems often use inorder</li>
+                </ul>
+                
+                <div>
+                    <span class="complexity time">⏱️ Time: O(n)</span>
+                    <span class="complexity space">💾 Space: O(h)</span>
+                </div>
+                
+                <h4>📝 Practice Problems</h4>
+                <table>
+                    <thead>
+                        <tr><th>Problem</th><th>Difficulty</th><th>Why This Pattern?</th><th>LC#</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Binary Tree Inorder Traversal</td>
+                            <td><span class="difficulty easy">Easy</span></td>
+                            <td>Direct inorder DFS</td>
+                            <td>94</td>
+                        </tr>
+                        <tr>
+                            <td>Binary Tree Preorder Traversal</td>
+                            <td><span class="difficulty easy">Easy</span></td>
+                            <td>Direct preorder DFS</td>
+                            <td>144</td>
+                        </tr>
+                        <tr>
+                            <td>Maximum Depth</td>
+                            <td><span class="difficulty easy">Easy</span></td>
+                            <td>DFS to calculate tree property</td>
+                            <td>104</td>
+                        </tr>
+                        <tr>
+                            <td>Sum of Left Leaves</td>
+                            <td><span class="difficulty easy">Easy</span></td>
+                            <td>DFS to identify specific nodes</td>
+                            <td>404</td>
+                        </tr>
+                        <tr>
+                            <td>Binary Tree Paths</td>
+                            <td><span class="difficulty medium">Medium</span></td>
+                            <td>DFS with path tracking</td>
+                            <td>257</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pattern 2: BFS -->
+        <div class="section">
+            <h1>Pattern 2: Breadth-First Search (BFS)</h1>
+            
+            <div class="pattern-card">
+                <div class="pattern-header">
+                    <h3>Level Order Traversal</h3>
+                </div>
+                
+                <h4>🔍 What is it?</h4>
+                <p>
+                    BFS visits nodes level by level using a queue. All nodes at depth d before depth d+1.
+                </p>
+                
+                <h4>📊 Visual Example</h4>
+                <div class="tree-visual">
+                    <pre>       1           Level 0: [1]
+      / \
+     2   3         Level 1: [2, 3]
+    / \   \
+   4   5   6       Level 2: [4, 5, 6]
+
+<strong>BFS Order:</strong> [[1], [2, 3], [4, 5, 6]]
+                    </pre>
+                </div>
+                
+                <h4>🎯 When to Use?</h4>
+                <ul>
+                    <li>Level-by-level processing</li>
+                    <li>Finding shortest path/minimum depth</li>
+                    <li>Right/left side view of tree</li>
+                    <li>Zigzag level order</li>
+                </ul>
+                
+                <div class="info-box tip">
+                    <h4>💡 Pattern Intuition</h4>
+                    <p>
+                        Queue ensures FIFO order, processing all level N nodes before level N+1. Perfect for 
+                        level-wise information or finding shortest distances.
+                    </p>
+                </div>
+                
+                <h4>💻 Java Code</h4>
+                <div class="code-block">
+                    <pre><span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="function">levelOrder</span>(<span class="type">TreeNode</span> root) {
+    List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    <span class="keyword">if</span> (root == <span class="keyword">null</span>) <span class="keyword">return</span> result;
+    
+    Queue&lt;<span class="type">TreeNode</span>&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();
+    queue.offer(root);
+    
+    <span class="keyword">while</span> (!queue.isEmpty()) {
+        <span class="keyword">int</span> levelSize = queue.size();  <span class="comment">// KEY: Capture level size</span>
+        List&lt;Integer&gt; level = <span class="keyword">new</span> ArrayList&lt;&gt;();
+        
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; levelSize; i++) {
+            <span class="type">TreeNode</span> node = queue.poll();
+            level.add(node.val);
+            
+            <span class="keyword">if</span> (node.left != <span class="keyword">null</span>) queue.offer(node.left);
+            <span class="keyword">if</span> (node.right != <span class="keyword">null</span>) queue.offer(node.right);
+        }
+        result.add(level);
+    }
+    <span class="keyword">return</span> result;
+}</pre>
+                </div>
+                
+                <h4>🔍 How to Identify This Pattern?</h4>
+                <ul>
+                    <li>Problem mentions "level" or "layer"</li>
+                    <li>Need to process nodes level by level</li>
+                    <li>Finding shortest path in tree</li>
+                    <li>Right/left view of tree</li>
+                </ul>
+                
+                <div>
+                    <span class="complexity time">⏱️ Time: O(n)</span>
+                    <span class="complexity space">💾 Space: O(w) - max width</span>
+                </div>
+                
+                <h4>📝 Practice Problems</h4>
+                <table>
+                    <thead>
+                        <tr><th>Problem</th><th>Difficulty</th><th>Why This Pattern?</th><th>LC#</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Binary Tree Level Order Traversal</td>
+                            <td><span class="difficulty medium">Medium</span></td>
+                            <td>Classic BFS level-by-level</td>
+                            <td>102</td>
+                        </tr>
+                        <tr>
+                            <td>Minimum Depth</td>
+                            <td><span class="difficulty easy">Easy</span></td>
+                            <td>BFS stops at first leaf</td>
+                            <td>111</td>
+                        </tr>
+                        <tr>
+                            <td>Binary Tree Right Side View</td>
+                            <td><span class="difficulty medium">Medium</span></td>
+                            <td>BFS, take last node each level</td>
+                            <td>199</td>
+                        </tr>
+                        <tr>
+                            <td>Zigzag Level Order</td>
+                            <td><span class="difficulty medium">Medium</span></td>
+                            <td>BFS with alternating direction</td>
+                            <td>103</td>
+                        </tr>
+                        <tr>
+                            <td>Average of Levels</td>
+                            <td><span class="difficulty easy">Easy</span></td>
+                            <td>BFS to compute level averages</td>
+                            <td>637</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pattern 3: BST Search -->
+        <div class="section">
+            <h1>Pattern 3: BST Search & Validation</h1>
+            
+            <div class="pattern-card">
+                <div class="pattern-header">
+                    <h3>Binary Search Tree Operations</h3>
+                </div>
+                
+                <h4>🔍 What is it?</h4>
+                <p>
+                    Leverage BST property (Left &lt; Root &lt; Right) to eliminate half the tree at each step.
+                </p>
+                
+                <h4>📊 Visual Example</h4>
+                <div class="tree-visual">
+                    <pre>        8
+       / \
+      3   10      Search 6:
+     / \    \     6 < 8 → Go LEFT
+    1   6    14   6 > 3 → Go RIGHT
+       / \   /    Found 6! ✓
+      4   7 13
+
+Only 3 comparisons!
+                    </pre>
+                </div>
+                
+                <h4>🎯 When to Use?</h4>
+                <ul>
+                    <li>Search/Insert/Delete in BST</li>
+                    <li>Validate if tree is valid BST</li>
+                    <li>Find kth smallest/largest element</li>
+                    <li>Range sum queries</li>
+                </ul>
+                
+                <div class="info-box tip">
+                    <h4>💡 Pattern Intuition</h4>
+                    <p>
+                        BST creates binary search opportunity - compare value to eliminate half the search space. 
+                        Inorder traversal gives sorted order, useful for kth element problems.
+                    </p>
+                </div>
+                
+                <h4>💻 Java Code</h4>
+                <div class="code-block">
+                    <pre><span class="comment">// BST Search</span>
+<span class="keyword">public</span> <span class="type">TreeNode</span> <span class="function">searchBST</span>(<span class="type">TreeNode</span> root, <span class="keyword">int</span> val) {
+    <span class="keyword">if</span> (root == <span class="keyword">null</span> || root.val == val) <span class="keyword">return</span> root;
+    
+    <span class="keyword">if</span> (val &lt; root.val) {
+        <span class="keyword">return</span> searchBST(root.left, val);
+    }
+    <span class="keyword">return</span> searchBST(root.right, val);
+}
+
+<span class="comment">// Validate BST - CRITICAL: Check entire subtree!</span>
+<span class="keyword">public boolean</span> <span class="function">isValidBST</span>(<span class="type">TreeNode</span> root) {
+    <span class="keyword">return</span> validate(root, Long.MIN_VALUE, Long.MAX_VALUE);
+}
+
+<span class="keyword">private boolean</span> <span class="function">validate</span>(<span class="type">TreeNode</span> node, <span class="keyword">long</span> min, <span class="keyword">long</span> max) {
+    <span class="keyword">if</span> (node == <span class="keyword">null</span>) <span class="keyword">return true</span>;
+    <span class="keyword">if</span> (node.val &lt;= min || node.val &gt;= max) <span class="keyword">return false</span>;
+    
+    <span class="keyword">return</span> validate(node.left, min, node.val) &&
+           validate(node.right, node.val, max);
+}</pre>
+                </div>
+                
+                <h4>🔍 How to Identify This Pattern?</h4>
+                <ul>
+                    <li>Problem explicitly mentions BST</li>
+                    <li>Need to find/insert/delete specific value</li>
+                    <li>Question about kth smallest/largest</li>
+                    <li>Validate BST property</li>
+                </ul>
+                
+                <div>
+                    <span class="complexity time">⏱️ Time: O(log n) avg, O(n) worst</span>
+                    <span class="complexity space">💾 Space: O(h)</span>
+                </div>
+                
+                <h4>📝 Practice Problems</h4>
+                <table>
+                    <thead>
+                        <tr><th>Problem</th><th>Difficulty</th><th>Why This Pattern?</th><th>LC#</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Search in BST</td>
+                            <td><span class="difficulty easy">Easy</span></td>
+                            <td>Use BST property for search</td>
+                            <td>700</td>
+                        </tr>
+                        <tr>
+                            <td>Validate BST</td>
+                            <td><span class="difficulty medium">Medium</span></td>
+                            <td>Check BST with min/max bounds</td>
+                            <td>98</td>
+                        </tr>
+                        <tr>
+                            <td>Kth Smallest in BST</td>
+                            <td><span class="difficulty medium">Medium</span></td>
+                            <td>Inorder gives sorted order</td>
+                            <td>230</td>
+                        </tr>
+                        <tr>
+                            <td>Convert Sorted Array to BST</td>
+                            <td><span class="difficulty easy">Easy</span></td>
+                            <td>Build balanced BST</td>
+                            <td>108</td>
+                        </tr>
+                        <tr>
+                            <td>Range Sum of BST</td>
+                            <td><span class="difficulty medium">Medium</span></td>
+                            <td>Prune search using BST property</td>
+                            <td>938</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pattern 4: Path Sum -->
+        <div class="section">
+            <h1>Pattern 4: Path Sum / Root-to-Leaf</h1>
+            
+            <div class="pattern-card">
+                <div class="pattern-header">
+                    <h3>Path Tracking Pattern</h3>
+                </div>
+                
+                <h4>🔍 What is it?</h4>
+                <p>
+                    Traverse from root to leaves, tracking cumulative values. Uses backtracking for all paths.
+                </p>
+                
+                <h4>📊 Visual Example</h4>
+                <div class="tree-visual">
+                    <pre>        5
+       / \
+      4   8
+     /   / \
+    11  13  4
+   /  \      \
+  7    2      1
+
+Target: 22
+Path: 5 → 4 → 11 → 2 = 22 ✓
+                    </pre>
+                </div>
+                
+                <h4>💻 Java Code</h4>
+                <div class="code-block">
+                    <pre><span class="keyword">public boolean</span> <span class="function">hasPathSum</span>(<span class="type">TreeNode</span> root, <span class="keyword">int</span> sum) {
+    <span class="keyword">if</span> (root == <span class="keyword">null</span>) <span class="keyword">return false</span>;
+    
+    <span class="comment">// Leaf node - check if sum matches</span>
+    <span class="keyword">if</span> (root.left == <span class="keyword">null</span> && root.right == <span class="keyword">null</span>) {
+        <span class="keyword">return</span> root.val == sum;
+    }
+    
+    <span class="keyword">int</span> remaining = sum - root.val;
+    <span class="keyword">return</span> hasPathSum(root.left, remaining) || 
+           hasPathSum(root.right, remaining);
+}</pre>
+                </div>
+                
+                <h4>🔍 How to Identify This Pattern?</h4>
+                <ul>
+                    <li>Problem mentions "path" from root to leaf</li>
+                    <li>Need to track sum/product along path</li>
+                    <li>Finding all paths with property</li>
+                </ul>
+                
+                <h4>📝 Practice Problems</h4>
+                <table>
+                    <thead>
+                        <tr><th>Problem</th><th>Difficulty</th><th>LC#</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Path Sum</td><td><span class="difficulty easy">Easy</span></td><td>112</td></tr>
+                        <tr><td>Path Sum II</td><td><span class="difficulty medium">Medium</span></td><td>113</td></tr>
+                        <tr><td>Sum Root to Leaf Numbers</td><td><span class="difficulty medium">Medium</span></td><td>129</td></tr>
+                        <tr><td>Binary Tree Maximum Path Sum</td><td><span class="difficulty hard">Hard</span></td><td>124</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pattern 5: Two Trees -->
+        <div class="section">
+            <h1>Pattern 5: Two Trees Comparison</h1>
+            
+            <div class="pattern-card">
+                <div class="pattern-header">
+                    <h3>Parallel Traversal Pattern</h3>
+                </div>
+                
+                <h4>🔍 What is it?</h4>
+                <p>
+                    Simultaneously traverse two trees to compare structures or values.
+                </p>
+                
+                <h4>💻 Java Code</h4>
+                <div class="code-block">
+                    <pre><span class="keyword">public boolean</span> <span class="function">isSameTree</span>(<span class="type">TreeNode</span> p, <span class="type">TreeNode</span> q) {
+    <span class="keyword">if</span> (p == <span class="keyword">null</span> && q == <span class="keyword">null</span>) <span class="keyword">return true</span>;
+    <span class="keyword">if</span> (p == <span class="keyword">null</span> || q == <span class="keyword">null</span>) <span class="keyword">return false</span>;
+    <span class="keyword">if</span> (p.val != q.val) <span class="keyword">return false</span>;
+    
+    <span class="keyword">return</span> isSameTree(p.left, q.left) && 
+           isSameTree(p.right, q.right);
+}</pre>
+                </div>
+                
+                <h4>📝 Practice Problems</h4>
+                <table>
+                    <thead>
+                        <tr><th>Problem</th><th>Difficulty</th><th>LC#</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Same Tree</td><td><span class="difficulty easy">Easy</span></td><td>100</td></tr>
+                        <tr><td>Symmetric Tree</td><td><span class="difficulty easy">Easy</span></td><td>101</td></tr>
+                        <tr><td>Merge Two Binary Trees</td><td><span class="difficulty easy">Easy</span></td><td>617</td></tr>
+                        <tr><td>Subtree of Another Tree</td><td><span class="difficulty medium">Medium</span></td><td>572</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pattern 6: LCA -->
+        <div class="section">
+            <h1>Pattern 6: Lowest Common Ancestor</h1>
+            
+            <div class="pattern-card">
+                <div class="pattern-header">
+                    <h3>Finding Split Point Pattern</h3>
+                </div>
+                
+                <h4>💻 Java Code</h4>
+                <div class="code-block">
+                    <pre><span class="keyword">public</span> <span class="type">TreeNode</span> <span class="function">lowestCommonAncestor</span>(<span class="type">TreeNode</span> root, 
+                                        <span class="type">TreeNode</span> p, <span class="type">TreeNode</span> q) {
+    <span class="keyword">if</span> (root == <span class="keyword">null</span> || root == p || root == q) <span class="keyword">return</span> root;
+    
+    <span class="type">TreeNode</span> left = lowestCommonAncestor(root.left, p, q);
+    <span class="type">TreeNode</span> right = lowestCommonAncestor(root.right, p, q);
+    
+    <span class="keyword">if</span> (left != <span class="keyword">null</span> && right != <span class="keyword">null</span>) <span class="keyword">return</span> root;
+    <span class="keyword">return</span> (left != <span class="keyword">null</span>) ? left : right;
+}</pre>
+                </div>
+                
+                <h4>📝 Practice Problems</h4>
+                <table>
+                    <thead>
+                        <tr><th>Problem</th><th>Difficulty</th><th>LC#</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>LCA of Binary Tree</td><td><span class="difficulty medium">Medium</span></td><td>236</td></tr>
+                        <tr><td>LCA of BST</td><td><span class="difficulty medium">Medium</span></td><td>235</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pattern 7: Tree Construction -->
+        <div class="section">
+            <h1>Pattern 7: Tree Construction</h1>
+            
+            <div class="pattern-card">
+                <div class="pattern-header">
+                    <h3>Build from Traversals Pattern</h3>
+                </div>
+                
+                <h4>💻 Java Code</h4>
+                <div class="code-block">
+                    <pre><span class="keyword">private int</span> preIndex = <span class="number">0</span>;
+<span class="keyword">private</span> Map&lt;Integer, Integer&gt; inorderMap;
+
+<span class="keyword">public</span> <span class="type">TreeNode</span> <span class="function">buildTree</span>(<span class="keyword">int</span>[] preorder, <span class="keyword">int</span>[] inorder) {
+    inorderMap = <span class="keyword">new</span> HashMap&lt;&gt;();
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; inorder.length; i++) {
+        inorderMap.put(inorder[i], i);
+    }
+    <span class="keyword">return</span> build(preorder, <span class="number">0</span>, inorder.length - <span class="number">1</span>);
+}
+
+<span class="keyword">private</span> <span class="type">TreeNode</span> <span class="function">build</span>(<span class="keyword">int</span>[] preorder, <span class="keyword">int</span> left, <span class="keyword">int</span> right) {
+    <span class="keyword">if</span> (left &gt; right) <span class="keyword">return null</span>;
+    
+    <span class="keyword">int</span> rootVal = preorder[preIndex++];
+    <span class="type">TreeNode</span> root = <span class="keyword">new</span> <span class="type">TreeNode</span>(rootVal);
+    
+    <span class="keyword">int</span> index = inorderMap.get(rootVal);
+    root.left = build(preorder, left, index - <span class="number">1</span>);
+    root.right = build(preorder, index + <span class="number">1</span>, right);
+    
+    <span class="keyword">return</span> root;
+}</pre>
+                </div>
+                
+                <h4>📝 Practice Problems</h4>
+                <table>
+                    <thead>
+                        <tr><th>Problem</th><th>Difficulty</th><th>LC#</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Build from Preorder & Inorder</td><td><span class="difficulty medium">Medium</span></td><td>105</td></tr>
+                        <tr><td>Build from Inorder & Postorder</td><td><span class="difficulty medium">Medium</span></td><td>106</td></tr>
+                        <tr><td>Serialize & Deserialize</td><td><span class="difficulty hard">Hard</span></td><td>297</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pattern 8: Return Values -->
+        <div class="section">
+            <h1>Pattern 8: Recursion with Return Values</h1>
+            
+            <div class="pattern-card">
+                <div class="pattern-header">
+                    <h3>Bottom-Up Computation Pattern</h3>
+                </div>
+                
+                <h4>💻 Java Code</h4>
+                <div class="code-block">
+                    <pre><span class="comment">// Max Depth</span>
+<span class="keyword">public int</span> <span class="function">maxDepth</span>(<span class="type">TreeNode</span> root) {
+    <span class="keyword">if</span> (root == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="number">0</span>;
+    <span class="keyword">return</span> <span class="number">1</span> + Math.max(maxDepth(root.left), maxDepth(root.right));
+}
+
+<span class="comment">// Diameter</span>
+<span class="keyword">private int</span> diameter = <span class="number">0</span>;
+<span class="keyword">public int</span> <span class="function">diameterOfBinaryTree</span>(<span class="type">TreeNode</span> root) {
+    height(root);
+    <span class="keyword">return</span> diameter;
+}
+
+<span class="keyword">private int</span> <span class="function">height</span>(<span class="type">TreeNode</span> node) {
+    <span class="keyword">if</span> (node == <span class="keyword">null</span>) <span class="keyword">return</span> <span class="number">0</span>;
+    <span class="keyword">int</span> left = height(node.left);
+    <span class="keyword">int</span> right = height(node.right);
+    diameter = Math.max(diameter, left + right);
+    <span class="keyword">return</span> <span class="number">1</span> + Math.max(left, right);
+}</pre>
+                </div>
+                
+                <h4>📝 Practice Problems</h4>
+                <table>
+                    <thead>
+                        <tr><th>Problem</th><th>Difficulty</th><th>LC#</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Maximum Depth</td><td><span class="difficulty easy">Easy</span></td><td>104</td></tr>
+                        <tr><td>Balanced Binary Tree</td><td><span class="difficulty easy">Easy</span></td><td>110</td></tr>
+                        <tr><td>Diameter of Binary Tree</td><td><span class="difficulty easy">Easy</span></td><td>543</td></tr>
+                        <tr><td>House Robber III</td><td><span class="difficulty medium">Medium</span></td><td>337</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="section">
+            <h1>Pattern Recognition Guide</h1>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>If You See...</th>
+                        <th>Use Pattern</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>"traverse" or "visit all"</td>
+                        <td>DFS</td>
+                        <td>Preorder/Inorder/Postorder</td>
+                    </tr>
+                    <tr>
+                        <td>"level" or "layer"</td>
+                        <td>BFS</td>
+                        <td>Level order traversal</td>
+                    </tr>
+                    <tr>
+                        <td>"BST" + search/insert</td>
+                        <td>BST Search</td>
+                        <td>Binary search in tree</td>
+                    </tr>
+                    <tr>
+                        <td>"path" from root to leaf</td>
+                        <td>Path Sum</td>
+                        <td>Track cumulative sum</td>
+                    </tr>
+                    <tr>
+                        <td>Compare two trees</td>
+                        <td>Two Trees</td>
+                        <td>Parallel traversal</td>
+                    </tr>
+                    <tr>
+                        <td>"common ancestor"</td>
+                        <td>LCA</td>
+                        <td>Find split point</td>
+                    </tr>
+                    <tr>
+                        <td>Build from traversals</td>
+                        <td>Construction</td>
+                        <td>Preorder + Inorder</td>
+                    </tr>
+                    <tr>
+                        <td>Calculate property</td>
+                        <td>Return Values</td>
+                        <td>Height, diameter, balanced</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="info-box note">
+                <h4>🎯 Problem-Solving Strategy</h4>
+                <ol>
+                    <li>Identify if it's a tree problem (structure, traversal, property)</li>
+                    <li>Check for keywords (level, path, BST, ancestor, etc.)</li>
+                    <li>Choose pattern based on keywords</li>
+                    <li>Implement using pattern template</li>
+                    <li>Test with edge cases (null, single node, skewed tree)</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

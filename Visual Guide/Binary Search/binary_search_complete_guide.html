@@ -1,0 +1,2885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Search - Complete Visual Guide</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: white;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            page-break-after: avoid;
+        }
+
+        .diagram-section {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            page-break-inside: avoid;
+        }
+
+        .diagram-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+            page-break-after: avoid;
+        }
+
+        h3 {
+            color: #667eea;
+            margin: 15px 0 10px 0;
+            font-size: 1.2em;
+            page-break-after: avoid;
+        }
+
+        .explanation {
+            background: #f8f9ff;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .diagram {
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            page-break-inside: avoid;
+        }
+
+        .highlight-box {
+            background: #fff9c4;
+            border: 2px solid #fbc02d;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            line-height: 1.8;
+            font-size: 11px;
+            page-break-inside: avoid;
+            white-space: pre;
+        }
+
+        .code-keyword {
+            color: #0000ff;
+            font-weight: bold;
+        }
+
+        .code-comment {
+            color: #008000;
+            font-style: italic;
+        }
+
+        .code-number {
+            color: #098658;
+        }
+        
+        .code-string {
+            color: #a31515;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            page-break-inside: avoid;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+
+        /* Array visualization */
+        .array-visual {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            gap: 2px;
+            flex-wrap: nowrap;
+        }
+
+        .array-cell {
+            width: 60px;
+            height: 60px;
+            min-width: 60px;
+            border: 3px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            background: white;
+            position: relative;
+            font-size: 1.2em;
+        }
+
+        .array-cell.eliminated {
+            background: #ffcdd2;
+            opacity: 0.4;
+            border-color: #999;
+        }
+
+        .array-cell.searching {
+            background: #fff9c4;
+            border-color: #fbc02d;
+            border-width: 4px;
+        }
+
+        .array-cell.found {
+            background: #c8e6c9;
+            border-color: #4caf50;
+            border-width: 4px;
+        }
+
+        .pointer {
+            position: absolute;
+            font-size: 0.9em;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .pointer.left {
+            bottom: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2196f3;
+            color: white;
+        }
+
+        .pointer.right {
+            bottom: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f44336;
+            color: white;
+        }
+
+        .pointer.mid {
+            top: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #9c27b0;
+            color: white;
+        }
+
+        .array-index {
+            position: absolute;
+            top: -22px;
+            font-size: 0.75em;
+            color: #666;
+        }
+
+        .step-list {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        .step-list li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        strong {
+            color: #667eea;
+        }
+
+        .pattern-box {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .warning-box {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .checklist {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .checklist-item {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .checklist-item:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .template-box {
+            background: #e8f5e9;
+            border: 3px solid #4caf50;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .variation-box {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .diagram-section {
+                page-break-inside: avoid;
+            }
+            h1, h2, h3 {
+                page-break-after: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Binary Search - Complete Master Guide</h1>
+
+        <!-- 1. What is Binary Search? -->
+        <div class="diagram-section">
+            <h2>1️⃣ What is Binary Search?</h2>
+            <div class="explanation">
+                <strong>Binary Search</strong> is a search algorithm that finds the position of a target value within a <strong>sorted array</strong>. It works by repeatedly dividing the search interval in half. If the target is less than the middle element, search the left half; otherwise search the right half.
+            </div>
+            
+            <div class="highlight-box">
+                💡 Key Requirements: Array MUST be sorted!<br>
+                Time Complexity: O(log n) - Much faster than linear search O(n)<br>
+                Why? We eliminate HALF the array at each step!
+            </div>
+
+            <div class="diagram">
+                <h3>How It Works: Finding 7 in sorted array</h3>
+                <p style="margin-bottom: 15px;"><strong>Array:</strong> [1, 3, 5, 7, 9, 11, 13]  <strong>Target:</strong> 7</p>
+                
+                <div style="margin: 20px 0;">
+                    <strong>Step 1:</strong> Check middle (index 3)
+                    <div class="array-visual">
+                        <div class="array-cell">
+                            <div class="array-index">0</div>
+                            1
+                            <div class="pointer left">L</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="array-index">1</div>
+                            3
+                        </div>
+                        <div class="array-cell">
+                            <div class="array-index">2</div>
+                            5
+                        </div>
+                        <div class="array-cell searching">
+                            <div class="array-index">3</div>
+                            7
+                            <div class="pointer mid">M</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="array-index">4</div>
+                            9
+                        </div>
+                        <div class="array-cell">
+                            <div class="array-index">5</div>
+                            11
+                        </div>
+                        <div class="array-cell">
+                            <div class="array-index">6</div>
+                            13
+                            <div class="pointer right">R</div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 40px;">arr[3] = 7 = target ✅ Found!</p>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <strong>Why Binary Search is Powerful:</strong>
+                <ul class="step-list">
+                    <li>Array of 1,000,000 elements? Only ~20 comparisons needed!</li>
+                    <li>Linear search: Up to 1,000,000 comparisons</li>
+                    <li>Binary search: log₂(1,000,000) ≈ 20 comparisons</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 2. How to Recognize Binary Search Problems -->
+        <div class="diagram-section">
+            <h2>2️⃣ How to Recognize Binary Search Problems</h2>
+            
+            <div class="pattern-box">
+                <h3 style="color: #2196f3; margin-top: 0;">🎯 Recognition Patterns</h3>
+                
+                <div class="checklist">
+                    <div class="checklist-item">
+                        Array/list is <strong>sorted</strong> or can be sorted
+                    </div>
+                    <div class="checklist-item">
+                        Searching for a <strong>specific value</strong> or position
+                    </div>
+                    <div class="checklist-item">
+                        Finding <strong>first/last occurrence</strong>
+                    </div>
+                    <div class="checklist-item">
+                        Problem involves <strong>"minimum/maximum value that satisfies condition"</strong>
+                    </div>
+                    <div class="checklist-item">
+                        Search space can be <strong>divided in half</strong> repeatedly
+                    </div>
+                    <div class="checklist-item">
+                        Keywords: <strong>"sorted", "find", "search", "minimum satisfying", "peak"</strong>
+                    </div>
+                    <div class="checklist-item">
+                        Need <strong>O(log n)</strong> time complexity
+                    </div>
+                    <div class="checklist-item">
+                        Problem about <strong>rotated sorted array</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Binary Search Won't Work When:</strong>
+                <ul class="step-list">
+                    <li>Array is unsorted AND cannot be sorted</li>
+                    <li>Need to find ALL occurrences (but can find first/last)</li>
+                    <li>Search space cannot be divided logically</li>
+                    <li>Problem requires checking every element anyway</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 3. The Three Main Templates -->
+        <div class="diagram-section">
+            <h2>3️⃣ Three Binary Search Templates</h2>
+            <div class="explanation">
+                There are three main templates for binary search, each suited for different scenarios. Understanding when to use each is crucial!
+            </div>
+
+            <div class="template-box">
+                <h3 style="color: #4caf50; margin-top: 0;">Template 1: Basic Binary Search</h3>
+                <div class="explanation">
+                    <strong>When to use:</strong> Finding exact value, search space reduced to 1 element<br>
+                    <strong>Termination:</strong> left > right<br>
+                    <strong>No need to check:</strong> After loop (found during loop or doesn't exist)
+                </div>
+                <div class="code-block"><span class="code-comment">// Template 1: Basic Binary Search</span>
+<span class="code-keyword">public static int</span> binarySearch(<span class="code-keyword">int</span>[] arr, <span class="code-keyword">int</span> target) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>;
+    <span class="code-keyword">int</span> right = arr.length - <span class="code-number">1</span>;
+    
+    <span class="code-keyword">while</span> (left <= right) {  <span class="code-comment">// Note: <=</span>
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;  <span class="code-comment">// Avoid overflow</span>
+        
+        <span class="code-keyword">if</span> (arr[mid] == target) {
+            <span class="code-keyword">return</span> mid;  <span class="code-comment">// Found!</span>
+        } <span class="code-keyword">else if</span> (arr[mid] < target) {
+            left = mid + <span class="code-number">1</span>;  <span class="code-comment">// Search right half</span>
+        } <span class="code-keyword">else</span> {
+            right = mid - <span class="code-number">1</span>;  <span class="code-comment">// Search left half</span>
+        }
+    }
+    
+    <span class="code-keyword">return</span> -<span class="code-number">1</span>;  <span class="code-comment">// Not found</span>
+}</div>
+            </div>
+
+            <div class="template-box">
+                <h3 style="color: #4caf50; margin-top: 0;">Template 2: Finding Boundaries</h3>
+                <div class="explanation">
+                    <strong>When to use:</strong> Find first/last occurrence, leftmost/rightmost position<br>
+                    <strong>Termination:</strong> left >= right (1 element left)<br>
+                    <strong>Post-processing:</strong> Check left or right after loop
+                </div>
+                <div class="code-block"><span class="code-comment">// Template 2: Find First/Last Occurrence</span>
+<span class="code-keyword">public static int</span> findFirst(<span class="code-keyword">int</span>[] arr, <span class="code-keyword">int</span> target) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>;
+    <span class="code-keyword">int</span> right = arr.length - <span class="code-number">1</span>;
+    
+    <span class="code-keyword">while</span> (left < right) {  <span class="code-comment">// Note: < (not <=)</span>
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        
+        <span class="code-keyword">if</span> (arr[mid] < target) {
+            left = mid + <span class="code-number">1</span>;  <span class="code-comment">// Target is on right</span>
+        } <span class="code-keyword">else</span> {
+            right = mid;  <span class="code-comment">// Target could be at mid or left</span>
+        }
+    }
+    
+    <span class="code-comment">// Post-processing: check if we found target</span>
+    <span class="code-keyword">return</span> (arr[left] == target) ? left : -<span class="code-number">1</span>;
+}
+
+<span class="code-keyword">public static int</span> findLast(<span class="code-keyword">int</span>[] arr, <span class="code-keyword">int</span> target) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>;
+    <span class="code-keyword">int</span> right = arr.length - <span class="code-number">1</span>;
+    
+    <span class="code-keyword">while</span> (left < right) {
+        <span class="code-keyword">int</span> mid = left + (right - left + <span class="code-number">1</span>) / <span class="code-number">2</span>;  <span class="code-comment">// Round up!</span>
+        
+        <span class="code-keyword">if</span> (arr[mid] > target) {
+            right = mid - <span class="code-number">1</span>;  <span class="code-comment">// Target is on left</span>
+        } <span class="code-keyword">else</span> {
+            left = mid;  <span class="code-comment">// Target could be at mid or right</span>
+        }
+    }
+    
+    <span class="code-keyword">return</span> (arr[left] == target) ? left : -<span class="code-number">1</span>;
+}</div>
+            </div>
+
+            <div class="template-box">
+                <h3 style="color: #4caf50; margin-top: 0;">Template 3: Finding with Neighbors</h3>
+                <div class="explanation">
+                    <strong>When to use:</strong> Need to check element AND its neighbors (peak, valley)<br>
+                    <strong>Termination:</strong> left + 1 >= right (2 elements left)<br>
+                    <strong>Post-processing:</strong> Check both left and right
+                </div>
+                <div class="code-block"><span class="code-comment">// Template 3: Search with Neighbor Checking</span>
+<span class="code-keyword">public static int</span> findPeak(<span class="code-keyword">int</span>[] arr) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>;
+    <span class="code-keyword">int</span> right = arr.length - <span class="code-number">1</span>;
+    
+    <span class="code-keyword">while</span> (left + <span class="code-number">1</span> < right) {  <span class="code-comment">// Stop when 2 elements left</span>
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        
+        <span class="code-comment">// Compare with neighbors</span>
+        <span class="code-keyword">if</span> (arr[mid] < arr[mid + <span class="code-number">1</span>]) {
+            left = mid;  <span class="code-comment">// Peak is on right</span>
+        } <span class="code-keyword">else</span> {
+            right = mid;  <span class="code-comment">// Peak is on left or at mid</span>
+        }
+    }
+    
+    <span class="code-comment">// Post-processing: check remaining 2 elements</span>
+    <span class="code-keyword">return</span> arr[left] > arr[right] ? left : right;
+}</div>
+            </div>
+
+            <div class="highlight-box">
+                💡 <strong>Template Choice Summary:</strong><br>
+                Template 1: Exact match → Use left <= right<br>
+                Template 2: First/Last position → Use left < right<br>
+                Template 3: Need neighbors → Use left + 1 < right
+            </div>
+        </div>
+
+        <!-- 4. Common Variations -->
+        <div class="diagram-section">
+            <h2>4️⃣ Common Binary Search Variations</h2>
+
+            <div class="variation-box">
+                <h3>Variation 1: Find First Occurrence</h3>
+                <div class="explanation">
+                    <strong>Problem:</strong> Array has duplicates, find the FIRST occurrence of target<br>
+                    <strong>Example:</strong> [1, 2, 2, 2, 3, 4], target = 2 → return 1
+                </div>
+
+                <div class="diagram">
+                    <h3>Visual Walkthrough: Finding first 2</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <strong>Step 1:</strong> Initial state
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                <div class="array-index">0</div>
+                                1
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">1</div>
+                                2
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">2</div>
+                                2
+                            </div>
+                            <div class="array-cell searching">
+                                <div class="array-index">3</div>
+                                2
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">4</div>
+                                3
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">5</div>
+                                4
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 40px;">arr[3] = 2 = target ✓ But keep searching LEFT!</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 2:</strong> Move right to mid-1, search left half
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                <div class="array-index">0</div>
+                                1
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell searching">
+                                <div class="array-index">1</div>
+                                2
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">
+                                <div class="array-index">2</div>
+                                2
+                                <div class="pointer right">R</div>
+                            </div>
+                            <div class="array-cell eliminated">
+                                <div class="array-index">3</div>
+                                2
+                            </div>
+                            <div class="array-cell eliminated">
+                                <div class="array-index">4</div>
+                                3
+                            </div>
+                            <div class="array-cell eliminated">
+                                <div class="array-index">5</div>
+                                4
+                            </div>
+                        </div>
+                        <p style="margin-top: 40px;">arr[1] = 2 = target ✓ Update result, keep searching!</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 3:</strong> Continue left
+                        <div class="array-visual">
+                            <div class="array-cell searching">
+                                <div class="array-index">0</div>
+                                1
+                                <div class="pointer left">L</div>
+                                <div class="pointer mid">M</div>
+                                <div class="pointer right">R</div>
+                            </div>
+                            <div class="array-cell eliminated">
+                                <div class="array-index">1</div>
+                                2
+                            </div>
+                            <div class="array-cell eliminated">
+                                <div class="array-index">2</div>
+                                2
+                            </div>
+                            <div class="array-cell eliminated">
+                                <div class="array-index">3</div>
+                                2
+                            </div>
+                            <div class="array-cell eliminated">
+                                <div class="array-index">4</div>
+                                3
+                            </div>
+                            <div class="array-cell eliminated">
+                                <div class="array-index">5</div>
+                                4
+                            </div>
+                        </div>
+                        <p style="margin-top: 40px;">arr[0] = 1 ≠ 2, search ends. Result = 1 ✅</p>
+                    </div>
+                </div>
+
+                <div class="code-block"><span class="code-keyword">public static int</span> findFirst(<span class="code-keyword">int</span>[] arr, <span class="code-keyword">int</span> target) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>, right = arr.length - <span class="code-number">1</span>;
+    <span class="code-keyword">int</span> result = -<span class="code-number">1</span>;
+    
+    <span class="code-keyword">while</span> (left <= right) {
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        
+        <span class="code-keyword">if</span> (arr[mid] == target) {
+            result = mid;      <span class="code-comment">// Found, but keep searching left</span>
+            right = mid - <span class="code-number">1</span>;  <span class="code-comment">// Continue searching in left half</span>
+        } <span class="code-keyword">else if</span> (arr[mid] < target) {
+            left = mid + <span class="code-number">1</span>;
+        } <span class="code-keyword">else</span> {
+            right = mid - <span class="code-number">1</span>;
+        }
+    }
+    
+    <span class="code-keyword">return</span> result;
+}</div>
+
+                <div class="success-box">
+                    <strong>✅ Practice Problems:</strong>
+                    <ol class="step-list">
+                        <li><strong>Find First and Last Position of Element</strong> (LeetCode 34)</li>
+                        <li><strong>First Bad Version</strong> (LeetCode 278)</li>
+                        <li><strong>Find Smallest Letter Greater Than Target</strong> (LeetCode 744)</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="variation-box">
+                <h3>Variation 2: Find Last Occurrence</h3>
+                <div class="explanation">
+                    <strong>Problem:</strong> Find the LAST occurrence of target<br>
+                    <strong>Example:</strong> [1, 2, 2, 2, 3, 4], target = 2 → return 3
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #2196f3; margin-top: 0;">🤔 Why Binary Search?</h3>
+                    <ul class="step-list">
+                        <li>✅ Array is <strong>sorted</strong></li>
+                        <li>✅ Need to find <strong>boundary</strong> (rightmost position)</li>
+                        <li>✅ Can eliminate half the search space: if arr[mid] ≤ target, answer is in right half or at mid</li>
+                        <li>✅ Time: O(log n) instead of O(n) linear scan</li>
+                    </ul>
+                </div>
+
+                <div class="diagram">
+                    <h3>Visual Walkthrough: Finding last 2 in [1, 2, 2, 2, 3, 4]</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <strong>Step 1:</strong> Check middle
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                1
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell">2</div>
+                            <div class="array-cell">2</div>
+                            <div class="array-cell searching">
+                                2
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">3</div>
+                            <div class="array-cell">
+                                4
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">arr[3] = 2 = target ✓ But keep searching RIGHT!</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 2:</strong> Move left to mid+1, search right half
+                        <div class="array-visual">
+                            <div class="array-cell eliminated">1</div>
+                            <div class="array-cell eliminated">2</div>
+                            <div class="array-cell eliminated">2</div>
+                            <div class="array-cell eliminated">2</div>
+                            <div class="array-cell searching">
+                                3
+                                <div class="pointer left">L</div>
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">
+                                4
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">arr[4] = 3 > 2, search left of mid</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Final:</strong> Found last occurrence!
+                        <div class="array-visual">
+                            <div class="array-cell eliminated">1</div>
+                            <div class="array-cell eliminated">2</div>
+                            <div class="array-cell eliminated">2</div>
+                            <div class="array-cell found">
+                                2
+                                <div class="pointer left">L</div>
+                                <div class="pointer mid">M</div>
+                                <div class="pointer right">R</div>
+                            </div>
+                            <div class="array-cell eliminated">3</div>
+                            <div class="array-cell eliminated">4</div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">Result = index 3 ✅</p>
+                    </div>
+                </div>
+
+                <div class="code-block"><span class="code-keyword">public static int</span> findLast(<span class="code-keyword">int</span>[] arr, <span class="code-keyword">int</span> target) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>, right = arr.length - <span class="code-number">1</span>;
+    <span class="code-keyword">int</span> result = -<span class="code-number">1</span>;
+    
+    <span class="code-keyword">while</span> (left <= right) {
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        
+        <span class="code-keyword">if</span> (arr[mid] == target) {
+            result = mid;      <span class="code-comment">// Found, but keep searching right</span>
+            left = mid + <span class="code-number">1</span>;   <span class="code-comment">// Continue searching in right half</span>
+        } <span class="code-keyword">else if</span> (arr[mid] < target) {
+            left = mid + <span class="code-number">1</span>;
+        } <span class="code-keyword">else</span> {
+            right = mid - <span class="code-number">1</span>;
+        }
+    }
+    
+    <span class="code-keyword">return</span> result;
+}</div>
+
+                <div class="success-box">
+                    <strong>✅ Practice Problems:</strong>
+                    <ol class="step-list">
+                        <li><strong>Find First and Last Position</strong> (LeetCode 34) - Use both findFirst and findLast</li>
+                        <li><strong>Count of Element Occurrences</strong> - findLast - findFirst + 1</li>
+                        <li><strong>Single Element in Sorted Array</strong> (LeetCode 540) - Modified boundary search</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="variation-box">
+                <h3>Variation 3: Search Insert Position</h3>
+                <div class="explanation">
+                    <strong>Problem:</strong> Find position where target should be inserted to keep array sorted<br>
+                    <strong>Example:</strong> [1, 3, 5, 6], target = 2 → return 1 (insert between 1 and 3)
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #2196f3; margin-top: 0;">🤔 Why Binary Search?</h3>
+                    <ul class="step-list">
+                        <li>✅ Array is <strong>sorted</strong></li>
+                        <li>✅ Finding <strong>insertion point</strong> = finding boundary where arr[i] ≥ target</li>
+                        <li>✅ If target exists, return its index; if not, return where it should go</li>
+                        <li>✅ Time: O(log n) - Can't do better than this for sorted array</li>
+                    </ul>
+                </div>
+
+                <div class="diagram">
+                    <h3>Visual: Insert 2 in [1, 3, 5, 6]</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <strong>Step 1:</strong> Check middle (index 1, value 3)
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                1
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell searching">
+                                3
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">5</div>
+                            <div class="array-cell">
+                                6
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">arr[1] = 3 > target(2), search left half</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 2:</strong> Narrow to left half
+                        <div class="array-visual">
+                            <div class="array-cell searching">
+                                1
+                                <div class="pointer left">L</div>
+                                <div class="pointer mid">M</div>
+                                <div class="pointer right">R</div>
+                            </div>
+                            <div class="array-cell eliminated">3</div>
+                            <div class="array-cell eliminated">5</div>
+                            <div class="array-cell eliminated">6</div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">arr[0] = 1 < target(2), need position after this</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Result:</strong> Insert at position 1
+                        <div class="array-visual">
+                            <div class="array-cell">1</div>
+                            <div class="array-cell found" style="border-style: dashed;">
+                                2
+                            </div>
+                            <div class="array-cell">3</div>
+                            <div class="array-cell">5</div>
+                            <div class="array-cell">6</div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">Insert 2 at index 1 → [1, 2, 3, 5, 6] ✅</p>
+                    </div>
+                </div>
+
+                <div class="code-block"><span class="code-keyword">public static int</span> searchInsert(<span class="code-keyword">int</span>[] arr, <span class="code-keyword">int</span> target) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>, right = arr.length - <span class="code-number">1</span>;
+    
+    <span class="code-keyword">while</span> (left <= right) {
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        
+        <span class="code-keyword">if</span> (arr[mid] == target) {
+            <span class="code-keyword">return</span> mid;  <span class="code-comment">// Found exact position</span>
+        } <span class="code-keyword">else if</span> (arr[mid] < target) {
+            left = mid + <span class="code-number">1</span>;
+        } <span class="code-keyword">else</span> {
+            right = mid - <span class="code-number">1</span>;
+        }
+    }
+    
+    <span class="code-keyword">return</span> left;  <span class="code-comment">// Insert position (left now points to first element >= target)</span>
+}
+
+<span class="code-comment">// Key insight: When loop ends, left is the insertion point!</span></div>
+
+                <div class="success-box">
+                    <strong>✅ Practice Problems:</strong>
+                    <ol class="step-list">
+                        <li><strong>Search Insert Position</strong> (LeetCode 35) - Classic problem</li>
+                        <li><strong>Find Smallest Letter Greater Than Target</strong> (LeetCode 744) - Next greater element</li>
+                        <li><strong>Special Array With X Elements ≥ X</strong> (LeetCode 1608) - Use insert position concept</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="variation-box">
+                <h3>Variation 4: Search in Rotated Sorted Array</h3>
+                <div class="explanation">
+                    <strong>Problem:</strong> Array was sorted then rotated (e.g., [4,5,6,7,0,1,2])<br>
+                    <strong>Example:</strong> Search for 0 in [4,5,6,7,0,1,2] → return 4
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #2196f3; margin-top: 0;">🤔 Why Binary Search Still Works?</h3>
+                    <ul class="step-list">
+                        <li>✅ <strong>Key insight:</strong> At least ONE half is always sorted!</li>
+                        <li>✅ Check which half is sorted: compare arr[left] with arr[mid]</li>
+                        <li>✅ If sorted half contains target → search there</li>
+                        <li>✅ Otherwise → search the other half</li>
+                        <li>✅ Time: O(log n) - still eliminate half each time!</li>
+                    </ul>
+                </div>
+
+                <div class="diagram">
+                    <h3>Visual: Search for 0 in [4, 5, 6, 7, 0, 1, 2]</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <strong>Step 1:</strong> Which half is sorted?
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                4
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell">5</div>
+                            <div class="array-cell">6</div>
+                            <div class="array-cell searching">
+                                7
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">0</div>
+                            <div class="array-cell">1</div>
+                            <div class="array-cell">
+                                2
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">arr[L]=4 ≤ arr[M]=7 → LEFT half is sorted [4,5,6,7]<br>
+                        Target 0 NOT in [4,7] → search RIGHT half</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 2:</strong> Search right half
+                        <div class="array-visual">
+                            <div class="array-cell eliminated">4</div>
+                            <div class="array-cell eliminated">5</div>
+                            <div class="array-cell eliminated">6</div>
+                            <div class="array-cell eliminated">7</div>
+                            <div class="array-cell">
+                                0
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell searching">
+                                1
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">
+                                2
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">arr[L]=0 ≤ arr[M]=1 → LEFT half sorted [0,1]<br>
+                        0 ≥ 0 and 0 < 1 → Target IS in sorted left half!</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 3:</strong> Found!
+                        <div class="array-visual">
+                            <div class="array-cell eliminated">4</div>
+                            <div class="array-cell eliminated">5</div>
+                            <div class="array-cell eliminated">6</div>
+                            <div class="array-cell eliminated">7</div>
+                            <div class="array-cell found">
+                                0
+                                <div class="pointer left">L</div>
+                                <div class="pointer mid">M</div>
+                                <div class="pointer right">R</div>
+                            </div>
+                            <div class="array-cell eliminated">1</div>
+                            <div class="array-cell eliminated">2</div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">Found 0 at index 4 ✅</p>
+                    </div>
+                </div>
+
+                <div class="code-block"><span class="code-keyword">public static int</span> searchRotated(<span class="code-keyword">int</span>[] arr, <span class="code-keyword">int</span> target) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>, right = arr.length - <span class="code-number">1</span>;
+    
+    <span class="code-keyword">while</span> (left <= right) {
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        
+        <span class="code-keyword">if</span> (arr[mid] == target) {
+            <span class="code-keyword">return</span> mid;
+        }
+        
+        <span class="code-comment">// Determine which half is sorted</span>
+        <span class="code-keyword">if</span> (arr[left] <= arr[mid]) {  <span class="code-comment">// Left half is sorted</span>
+            <span class="code-keyword">if</span> (target >= arr[left] && target < arr[mid]) {
+                right = mid - <span class="code-number">1</span>;  <span class="code-comment">// Target in sorted left half</span>
+            } <span class="code-keyword">else</span> {
+                left = mid + <span class="code-number">1</span>;   <span class="code-comment">// Target in right half</span>
+            }
+        } <span class="code-keyword">else</span> {  <span class="code-comment">// Right half is sorted</span>
+            <span class="code-keyword">if</span> (target > arr[mid] && target <= arr[right]) {
+                left = mid + <span class="code-number">1</span>;   <span class="code-comment">// Target in sorted right half</span>
+            } <span class="code-keyword">else</span> {
+                right = mid - <span class="code-number">1</span>;  <span class="code-comment">// Target in left half</span>
+            }
+        }
+    }
+    
+    <span class="code-keyword">return</span> -<span class="code-number">1</span>;
+}</div>
+
+                <div class="success-box">
+                    <strong>✅ Practice Problems:</strong>
+                    <ol class="step-list">
+                        <li><strong>Search in Rotated Sorted Array</strong> (LeetCode 33) - Classic, no duplicates</li>
+                        <li><strong>Search in Rotated Sorted Array II</strong> (LeetCode 81) - With duplicates (harder!)</li>
+                        <li><strong>Find Minimum in Rotated Sorted Array</strong> (LeetCode 153) - Find pivot point</li>
+                        <li><strong>Find Minimum in Rotated Sorted Array II</strong> (LeetCode 154) - With duplicates</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="variation-box">
+                <h3>Variation 5: Search in Rotated Array II (With Duplicates)</h3>
+                <div class="explanation">
+                    <strong>Problem:</strong> Rotated array WITH duplicates [2,5,6,0,0,1,2]<br>
+                    <strong>Challenge:</strong> Can't determine which half is sorted when arr[left] == arr[mid]
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition</h3>
+                    <div style="line-height: 1.8;">
+                        <strong>What's different with duplicates?</strong><br><br>
+                        
+                        Without duplicates: [4,5,6,7,0,1,2]<br>
+                        • If arr[left] ≤ arr[mid] → left half is sorted ✓<br><br>
+                        
+                        With duplicates: [<strong style="color: #f44336;">2</strong>,5,6,0,0,1,<strong style="color: #f44336;">2</strong>]<br>
+                        • If arr[left] == arr[mid] == arr[right] = 2 → <strong>Can't tell which half is sorted!</strong> ❓<br><br>
+                        
+                        <strong>The Solution:</strong><br>
+                        When stuck (all three equal), we can only <strong>shrink by 1</strong> from both ends:<br>
+                        left++, right-- → Worst case becomes O(n) 😔<br><br>
+                        
+                        But when we CAN determine which half is sorted, we still eliminate half! 🎯
+                    </div>
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #2196f3; margin-top: 0;">🤔 Why Binary Search Still Helps?</h3>
+                    <ul class="step-list">
+                        <li>✅ <strong>Best case:</strong> No duplicates at pivot points → O(log n)</li>
+                        <li>⚠️ <strong>Worst case:</strong> All elements same → O(n)</li>
+                        <li>✅ <strong>Average case:</strong> Usually better than O(n)</li>
+                        <li>✅ When we can determine sorted half, eliminate half the space</li>
+                        <li>✅ Only when ambiguous do we shrink by 1</li>
+                    </ul>
+                </div>
+
+                <div class="diagram">
+                    <h3>Visual: Search for 0 in [2, 5, 6, 0, 0, 1, 2]</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <strong>Initial Array:</strong>
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                2
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell">5</div>
+                            <div class="array-cell">6</div>
+                            <div class="array-cell">0</div>
+                            <div class="array-cell">0</div>
+                            <div class="array-cell">1</div>
+                            <div class="array-cell">
+                                2
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">Target = 0, Rotated array with duplicates</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 1:</strong> mid = 3, arr[L]=2, arr[M]=0, arr[R]=2
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                2
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell">5</div>
+                            <div class="array-cell">6</div>
+                            <div class="array-cell searching">
+                                0
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">0</div>
+                            <div class="array-cell">1</div>
+                            <div class="array-cell">
+                                2
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">arr[3] = 0 = target ✅ FOUND!</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Harder Example:</strong> Search for 3 in [1, 1, 1, 1, 1, 1, 3]
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                1
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell">1</div>
+                            <div class="array-cell">1</div>
+                            <div class="array-cell searching">
+                                1
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">1</div>
+                            <div class="array-cell">1</div>
+                            <div class="array-cell">
+                                3
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">arr[L] == arr[M] == arr[R] = 1 😕<br>
+                        Can't determine which half is sorted!<br>
+                        Solution: left++, right-- (shrink by 1)</p>
+                    </div>
+
+                    <div class="highlight-box" style="margin-top: 20px;">
+                        ⚠️ <strong>Trade-off:</strong> Duplicates can degrade to O(n) worst case,<br>
+                        but still better than always doing linear search!
+                    </div>
+                </div>
+
+                <div class="code-block"><span class="code-keyword">public static boolean</span> searchRotatedII(<span class="code-keyword">int</span>[] arr, <span class="code-keyword">int</span> target) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>, right = arr.length - <span class="code-number">1</span>;
+    
+    <span class="code-keyword">while</span> (left <= right) {
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        
+        <span class="code-keyword">if</span> (arr[mid] == target) {
+            <span class="code-keyword">return true</span>;
+        }
+        
+        <span class="code-comment">// Handle duplicates - can't determine which side is sorted</span>
+        <span class="code-keyword">if</span> (arr[left] == arr[mid] && arr[mid] == arr[right]) {
+            left++;   <span class="code-comment">// Shrink search space by 1</span>
+            right--;
+        } <span class="code-keyword">else if</span> (arr[left] <= arr[mid]) {  <span class="code-comment">// Left half sorted</span>
+            <span class="code-keyword">if</span> (target >= arr[left] && target < arr[mid]) {
+                right = mid - <span class="code-number">1</span>;
+            } <span class="code-keyword">else</span> {
+                left = mid + <span class="code-number">1</span>;
+            }
+        } <span class="code-keyword">else</span> {  <span class="code-comment">// Right half sorted</span>
+            <span class="code-keyword">if</span> (target > arr[mid] && target <= arr[right]) {
+                left = mid + <span class="code-number">1</span>;
+            } <span class="code-keyword">else</span> {
+                right = mid - <span class="code-number">1</span>;
+            }
+        }
+    }
+    
+    <span class="code-keyword">return false</span>;
+}
+
+<span class="code-comment">// Time: O(n) worst case, O(log n) average</span></div>
+
+                <div class="success-box">
+                    <strong>✅ Practice Problems:</strong>
+                    <ol class="step-list">
+                        <li><strong>Search in Rotated Sorted Array II</strong> (LeetCode 81) - With duplicates</li>
+                        <li><strong>Find Minimum in Rotated Sorted Array II</strong> (LeetCode 154) - Find min with duplicates</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="variation-box">
+                <h3>Variation 6: Find Peak Element</h3>
+                <div class="explanation">
+                    <strong>Problem:</strong> Find any peak (element greater than neighbors)<br>
+                    <strong>Example:</strong> [1,2,3,1] → peak at index 2 (value 3)
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition</h3>
+                    <div style="line-height: 1.8;">
+                        <strong>Why can we use Binary Search on unsorted array?</strong><br><br>
+                        
+                        🎯 <strong>Key Insight:</strong> If we're at any element and one neighbor is greater, moving towards that neighbor GUARANTEES we'll find a peak!<br><br>
+                        
+                        <strong>Why?</strong><br>
+                        • If arr[mid] &lt; arr[mid+1] → Going right is "uphill"<br>
+                        • Either we hit a peak, OR we hit the end (which is also a peak by definition)<br>
+                        • We can NEVER get stuck without finding a peak!<br><br>
+                        
+                        <strong>The Magic:</strong> Even though array isn't sorted, we can still eliminate half the search space by following the "uphill" direction!
+                    </div>
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #2196f3; margin-top: 0;">🤔 Why Binary Search?</h3>
+                    <ul class="step-list">
+                        <li>✅ Array doesn't need to be sorted!</li>
+                        <li>✅ We can <strong>eliminate half</strong>: Compare mid with mid+1</li>
+                        <li>✅ If arr[mid] &lt; arr[mid+1] → Peak MUST be on right (going uphill)</li>
+                        <li>✅ If arr[mid] &gt; arr[mid+1] → Peak could be mid or on left (going downhill)</li>
+                        <li>✅ Time: O(log n) instead of O(n) linear scan</li>
+                    </ul>
+                </div>
+
+                <div class="diagram">
+                    <h3>Visual Walkthrough: Finding peak in [1, 2, 3, 1]</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <strong>Initial Array:</strong>
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                1
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell">2</div>
+                            <div class="array-cell">3</div>
+                            <div class="array-cell">
+                                1
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">Looking for ANY element greater than its neighbors</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 1:</strong> mid = 1, Compare arr[1] with arr[2]
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                1
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell searching">
+                                2
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">3</div>
+                            <div class="array-cell">
+                                1
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">arr[1]=2 &lt; arr[2]=3 → Going UPHILL! 📈<br>
+                        Peak must be on RIGHT → Move left = mid+1</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 2:</strong> Eliminated left half, mid = 2
+                        <div class="array-visual">
+                            <div class="array-cell eliminated">1</div>
+                            <div class="array-cell eliminated">2</div>
+                            <div class="array-cell searching">
+                                3
+                                <div class="pointer left">L</div>
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">
+                                1
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">arr[2]=3 &gt; arr[3]=1 → Going DOWNHILL! 📉<br>
+                        Peak is at mid or left → Move right = mid</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Final:</strong> left = right = 2, FOUND PEAK!
+                        <div class="array-visual">
+                            <div class="array-cell eliminated">1</div>
+                            <div class="array-cell eliminated">2</div>
+                            <div class="array-cell found">
+                                3
+                                <div class="pointer left">L</div>
+                                <div class="pointer mid">M</div>
+                                <div class="pointer right">R</div>
+                            </div>
+                            <div class="array-cell eliminated">1</div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">Peak at index 2, value 3 ✅<br>
+                        3 &gt; 2 (left neighbor) AND 3 &gt; 1 (right neighbor)</p>
+                    </div>
+
+                    <div class="highlight-box" style="margin-top: 20px;">
+                        🎯 <strong>Why This Works:</strong><br>
+                        We always move towards the "uphill" direction.<br>
+                        Since we can't go off the edge (edges are treated as peaks),<br>
+                        we're GUARANTEED to find a peak!
+                    </div>
+                </div>
+
+                <div class="code-block"><span class="code-keyword">public static int</span> findPeakElement(<span class="code-keyword">int</span>[] arr) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>, right = arr.length - <span class="code-number">1</span>;
+    
+    <span class="code-keyword">while</span> (left < right) {
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        
+        <span class="code-keyword">if</span> (arr[mid] > arr[mid + <span class="code-number">1</span>]) {
+            <span class="code-comment">// Going downhill - peak is at mid or left</span>
+            right = mid;
+        } <span class="code-keyword">else</span> {
+            <span class="code-comment">// Going uphill - peak is on right</span>
+            left = mid + <span class="code-number">1</span>;
+        }
+    }
+    
+    <span class="code-keyword">return</span> left;  <span class="code-comment">// left == right, peak found</span>
+}
+
+<span class="code-comment">// Time: O(log n), Space: O(1)</span></div>
+
+                <div class="success-box">
+                    <strong>✅ Practice Problems:</strong>
+                    <ol class="step-list">
+                        <li><strong>Find Peak Element</strong> (LeetCode 162) - Classic problem</li>
+                        <li><strong>Peak Index in Mountain Array</strong> (LeetCode 852) - Guaranteed single peak</li>
+                        <li><strong>Find in Mountain Array</strong> (LeetCode 1095) - Find peak then search both sides</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="variation-box">
+                <h3>Variation 7: Find Minimum in Rotated Array</h3>
+                <div class="explanation">
+                    <strong>Problem:</strong> Find minimum in rotated sorted array<br>
+                    <strong>Example:</strong> [4,5,6,7,0,1,2] → return 0
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition</h3>
+                    <div style="line-height: 1.8;">
+                        <strong>Understanding Rotation:</strong><br><br>
+                        
+                        Original sorted: [0, 1, 2, 4, 5, 6, 7]<br>
+                        After rotation: [4, 5, 6, 7, 0, 1, 2]<br><br>
+                        
+                        🎯 <strong>Key Observation:</strong><br>
+                        The array is split into TWO sorted parts:<br>
+                        • [4, 5, 6, 7] ← larger values<br>
+                        • [0, 1, 2] ← smaller values (contains minimum!)<br><br>
+                        
+                        <strong>The Pattern:</strong><br>
+                        If arr[mid] &gt; arr[right] → We're in the larger part, minimum is on RIGHT<br>
+                        If arr[mid] ≤ arr[right] → We're in smaller part or minimum is at mid or LEFT<br><br>
+                        
+                        We always compare mid with <strong>right</strong>, not left!
+                    </div>
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #2196f3; margin-top: 0;">🤔 Why Binary Search?</h3>
+                    <ul class="step-list">
+                        <li>✅ Minimum is at the <strong>rotation pivot point</strong></li>
+                        <li>✅ Can determine which half contains minimum by comparing mid with right</li>
+                        <li>✅ If arr[mid] &gt; arr[right] → minimum is in right half</li>
+                        <li>✅ Otherwise → minimum is at mid or in left half</li>
+                        <li>✅ Time: O(log n) to find the pivot</li>
+                    </ul>
+                </div>
+
+                <div class="diagram">
+                    <h3>Visual: Find minimum in [4, 5, 6, 7, 0, 1, 2]</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <strong>Initial Array:</strong>
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                4
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell">5</div>
+                            <div class="array-cell">6</div>
+                            <div class="array-cell">7</div>
+                            <div class="array-cell">0</div>
+                            <div class="array-cell">1</div>
+                            <div class="array-cell">
+                                2
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">Rotated at index 4 - minimum is 0</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 1:</strong> mid = 3, compare arr[mid]=7 with arr[right]=2
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                4
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell">5</div>
+                            <div class="array-cell">6</div>
+                            <div class="array-cell searching">
+                                7
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">0</div>
+                            <div class="array-cell">1</div>
+                            <div class="array-cell">
+                                2
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">arr[mid]=7 &gt; arr[right]=2 → Minimum is in RIGHT half<br>
+                        We're still in the "large numbers" section → left = mid+1</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 2:</strong> Narrowed to right half, mid = 5
+                        <div class="array-visual">
+                            <div class="array-cell eliminated">4</div>
+                            <div class="array-cell eliminated">5</div>
+                            <div class="array-cell eliminated">6</div>
+                            <div class="array-cell eliminated">7</div>
+                            <div class="array-cell">
+                                0
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell searching">
+                                1
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">
+                                2
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">arr[mid]=1 &lt; arr[right]=2 → Minimum at mid or LEFT<br>
+                        right = mid</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 3:</strong> Continue narrowing
+                        <div class="array-visual">
+                            <div class="array-cell eliminated">4</div>
+                            <div class="array-cell eliminated">5</div>
+                            <div class="array-cell eliminated">6</div>
+                            <div class="array-cell eliminated">7</div>
+                            <div class="array-cell searching">
+                                0
+                                <div class="pointer left">L</div>
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">
+                                1
+                                <div class="pointer right">R</div>
+                            </div>
+                            <div class="array-cell eliminated">2</div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">arr[mid]=0 &lt; arr[right]=1 → right = mid</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Final:</strong> left = right = 4, FOUND MINIMUM!
+                        <div class="array-visual">
+                            <div class="array-cell eliminated">4</div>
+                            <div class="array-cell eliminated">5</div>
+                            <div class="array-cell eliminated">6</div>
+                            <div class="array-cell eliminated">7</div>
+                            <div class="array-cell found">
+                                0
+                                <div class="pointer left">L=R</div>
+                            </div>
+                            <div class="array-cell eliminated">1</div>
+                            <div class="array-cell eliminated">2</div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">Minimum = 0 ✅</p>
+                    </div>
+
+                    <div class="highlight-box" style="margin-top: 20px;">
+                        🎯 <strong>Key Decision:</strong> Always compare arr[mid] with arr[right]!<br>
+                        If mid &gt; right → We haven't crossed the pivot yet, go right<br>
+                        If mid ≤ right → We crossed the pivot or are at it, go left
+                    </div>
+                </div>
+
+                <div class="code-block"><span class="code-keyword">public static int</span> findMin(<span class="code-keyword">int</span>[] arr) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>, right = arr.length - <span class="code-number">1</span>;
+    
+    <span class="code-keyword">while</span> (left < right) {
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        
+        <span class="code-keyword">if</span> (arr[mid] > arr[right]) {
+            <span class="code-comment">// Minimum is in right half (we're in the larger section)</span>
+            left = mid + <span class="code-number">1</span>;
+        } <span class="code-keyword">else</span> {
+            <span class="code-comment">// Minimum is at mid or in left half</span>
+            right = mid;
+        }
+    }
+    
+    <span class="code-keyword">return</span> arr[left];  <span class="code-comment">// left == right at the minimum</span>
+}
+
+<span class="code-comment">// Time: O(log n), Space: O(1)</span></div>
+
+                <div class="success-box">
+                    <strong>✅ Practice Problems:</strong>
+                    <ol class="step-list">
+                        <li><strong>Find Minimum in Rotated Sorted Array</strong> (LeetCode 153) - No duplicates</li>
+                        <li><strong>Find Minimum in Rotated Sorted Array II</strong> (LeetCode 154) - With duplicates</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="variation-box">
+                <h3>Variation 8: Search in 2D Matrix</h3>
+                <div class="explanation">
+                    <strong>Problem:</strong> Search in m×n matrix where each row is sorted and first element of each row &gt; last of previous<br>
+                    <strong>Example:</strong> Search for 3 in [[1,3,5,7],[10,11,16,20],[23,30,34,60]]
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition</h3>
+                    <div style="line-height: 1.8;">
+                        <strong>The "Aha!" Moment:</strong><br><br>
+                        
+                        Matrix:
+                        <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px;">
+[1,  3,  5,  7]
+[10, 11, 16, 20]
+[23, 30, 34, 60]</pre>
+                        
+                        🎯 <strong>Key Observation:</strong> This is really just a <strong>sorted array</strong> wrapped into a matrix!<br><br>
+                        
+                        If we "unwrap" it: [1, 3, 5, 7, 10, 11, 16, 20, 23, 30, 34, 60]<br><br>
+                        
+                        <strong>The Trick:</strong> We can treat it as 1D array of length m×n!<br>
+                        • Index 0 → row 0, col 0 → value 1<br>
+                        • Index 5 → row 1, col 1 → value 11<br>
+                        • Index 11 → row 2, col 3 → value 60<br><br>
+                        
+                        <strong>Formula:</strong><br>
+                        • 1D index → row = index / n, col = index % n<br>
+                        • 2D (row, col) → index = row × n + col
+                    </div>
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #2196f3; margin-top: 0;">🤔 Why Binary Search?</h3>
+                    <ul class="step-list">
+                        <li>✅ Matrix is <strong>fully sorted</strong> (treat as 1D sorted array)</li>
+                        <li>✅ Can convert between 1D index and 2D coordinates</li>
+                        <li>✅ Apply standard binary search on virtual 1D array</li>
+                        <li>✅ Time: O(log(m×n)) instead of O(m×n) linear search</li>
+                    </ul>
+                </div>
+
+                <div class="diagram">
+                    <h3>Visual: Search for 11 in 3×4 matrix</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <strong>Matrix as 1D Array (12 elements, indices 0-11):</strong>
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                1
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell">3</div>
+                            <div class="array-cell">5</div>
+                            <div class="array-cell">7</div>
+                            <div class="array-cell">10</div>
+                            <div class="array-cell">11</div>
+                            <div class="array-cell">16</div>
+                            <div class="array-cell">20</div>
+                            <div class="array-cell">23</div>
+                            <div class="array-cell">30</div>
+                            <div class="array-cell">34</div>
+                            <div class="array-cell">
+                                60
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">Treating matrix as single sorted array</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 1:</strong> mid = 5 → row=1, col=1 → value=11
+                        <div class="array-visual">
+                            <div class="array-cell">1</div>
+                            <div class="array-cell">3</div>
+                            <div class="array-cell">5</div>
+                            <div class="array-cell">7</div>
+                            <div class="array-cell">10</div>
+                            <div class="array-cell found">
+                                11
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">16</div>
+                            <div class="array-cell">20</div>
+                            <div class="array-cell">23</div>
+                            <div class="array-cell">30</div>
+                            <div class="array-cell">34</div>
+                            <div class="array-cell">60</div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">mid = 5 → row = 5/4 = 1, col = 5%4 = 1<br>
+                        matrix[1][1] = 11 = target ✅ FOUND!</p>
+                    </div>
+
+                    <div class="highlight-box" style="margin-top: 20px;">
+                        🔄 <strong>Coordinate Conversion:</strong><br>
+                        1D index → 2D: row = index / numCols, col = index % numCols<br>
+                        Example: index 5, numCols=4 → row=1, col=1
+                    </div>
+                </div>
+
+                <div class="code-block"><span class="code-keyword">public static boolean</span> searchMatrix(<span class="code-keyword">int</span>[][] matrix, <span class="code-keyword">int</span> target) {
+    <span class="code-keyword">if</span> (matrix.length == <span class="code-number">0</span>) <span class="code-keyword">return false</span>;
+    
+    <span class="code-keyword">int</span> m = matrix.length;       <span class="code-comment">// Number of rows</span>
+    <span class="code-keyword">int</span> n = matrix[<span class="code-number">0</span>].length;  <span class="code-comment">// Number of columns</span>
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>, right = m * n - <span class="code-number">1</span>;  <span class="code-comment">// Treat as 1D array</span>
+    
+    <span class="code-keyword">while</span> (left <= right) {
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        
+        <span class="code-comment">// Convert 1D index to 2D coordinates</span>
+        <span class="code-keyword">int</span> row = mid / n;
+        <span class="code-keyword">int</span> col = mid % n;
+        <span class="code-keyword">int</span> midValue = matrix[row][col];
+        
+        <span class="code-keyword">if</span> (midValue == target) {
+            <span class="code-keyword">return true</span>;
+        } <span class="code-keyword">else if</span> (midValue < target) {
+            left = mid + <span class="code-number">1</span>;
+        } <span class="code-keyword">else</span> {
+            right = mid - <span class="code-number">1</span>;
+        }
+    }
+    
+    <span class="code-keyword">return false</span>;
+}
+
+<span class="code-comment">// Time: O(log(m×n)), Space: O(1)</span></div>
+
+                <div class="success-box">
+                    <strong>✅ Practice Problems:</strong>
+                    <ol class="step-list">
+                        <li><strong>Search a 2D Matrix</strong> (LeetCode 74) - Classic, fully sorted matrix</li>
+                        <li><strong>Search a 2D Matrix II</strong> (LeetCode 240) - Row+col sorted (different approach!)</li>
+                        <li><strong>Kth Smallest Element in Sorted Matrix</strong> (LeetCode 378) - Binary search on value</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="variation-box">
+                <h3>Variation 9: Search in 2D Matrix II (Different Pattern)</h3>
+                <div class="explanation">
+                    <strong>Problem:</strong> Matrix where rows AND columns are sorted, but rows don't have the special property<br>
+                    <strong>Example:</strong> Search for 5 in [[1,4,7,11],[2,5,8,12],[3,6,9,16]]
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition</h3>
+                    <div style="line-height: 1.8;">
+                        <strong>What's different from Variation 8?</strong><br><br>
+                        
+                        Matrix:
+                        <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px;">
+[1,  4,  7, 11]
+[2,  5,  8, 12]
+[3,  6,  9, 16]</pre>
+                        
+                        Notice: 2 &lt; 4 → <strong>Rows don't strictly follow each other!</strong><br>
+                        We CAN'T treat it as a 1D sorted array 😔<br><br>
+                        
+                        🎯 <strong>The "Aha!" Moment:</strong><br>
+                        Start at <strong>top-right corner</strong> (or bottom-left)!<br><br>
+                        
+                        At top-right (value=11):<br>
+                        • All numbers to the LEFT are smaller<br>
+                        • All numbers BELOW are larger<br><br>
+                        
+                        <strong>This gives us a binary decision!</strong><br>
+                        • If target &lt; current → Move LEFT (eliminate column)<br>
+                        • If target &gt; current → Move DOWN (eliminate row)<br>
+                        • If target == current → Found! ✅
+                    </div>
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #2196f3; margin-top: 0;">🤔 Why This Works (Not Pure BS)?</h3>
+                    <ul class="step-list">
+                        <li>✅ Each step eliminates either a <strong>full row OR full column</strong></li>
+                        <li>✅ Starting at top-right gives us TWO sorted directions</li>
+                        <li>✅ Can't miss target - we systematically eliminate spaces</li>
+                        <li>⚠️ Time: O(m+n) not O(log n), but still better than O(m×n)!</li>
+                        <li>💡 Uses elimination principle like binary search</li>
+                    </ul>
+                </div>
+
+                <div class="diagram">
+                    <h3>Visual: Search for 5 - Start at top-right</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <strong>Matrix View:</strong>
+                        <pre style="background: #fafafa; padding: 15px; border: 1px solid #ddd; border-radius: 5px; font-family: monospace;">
+[1,  4,  7,  <span style="background: #fff9c4; font-weight: bold;">11</span>] ← Start here (top-right)
+[2,  5,  8,  12]
+[3,  6,  9,  16]</pre>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 1:</strong> At (0,3), value=11, target=5
+                        <div class="array-visual">
+                            <div class="array-cell">1</div>
+                            <div class="array-cell">4</div>
+                            <div class="array-cell">7</div>
+                            <div class="array-cell searching">
+                                11
+                                <div class="pointer mid">current</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">11 &gt; 5 → Target is SMALLER<br>
+                        Move LEFT (eliminate last column)</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 2:</strong> At (0,2), value=7
+                        <div class="array-visual">
+                            <div class="array-cell">1</div>
+                            <div class="array-cell">4</div>
+                            <div class="array-cell searching">
+                                7
+                                <div class="pointer mid">current</div>
+                            </div>
+                            <div class="array-cell eliminated">11</div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">7 &gt; 5 → Still too big<br>
+                        Move LEFT again</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 3:</strong> At (0,1), value=4
+                        <div class="array-visual">
+                            <div class="array-cell">1</div>
+                            <div class="array-cell searching">
+                                4
+                                <div class="pointer mid">current</div>
+                            </div>
+                            <div class="array-cell eliminated">7</div>
+                            <div class="array-cell eliminated">11</div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">4 &lt; 5 → Target is LARGER<br>
+                        Move DOWN (eliminate first row)</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 4:</strong> At (1,1), value=5
+                        <div class="array-visual">
+                            <div class="array-cell eliminated">1</div>
+                            <div class="array-cell found">
+                                5
+                                <div class="pointer mid">current</div>
+                            </div>
+                            <div class="array-cell eliminated">7</div>
+                            <div class="array-cell eliminated">11</div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">5 == 5 → FOUND! ✅</p>
+                    </div>
+
+                    <div class="highlight-box" style="margin-top: 20px;">
+                        🎯 <strong>Path:</strong> (0,3)→(0,2)→(0,1)→(1,1) = 4 steps<br>
+                        Eliminated: 1 column + 1 row + 1 column + found<br>
+                        Max steps = m+n-1 (worst case traverse whole edge)
+                    </div>
+                </div>
+
+                <div class="code-block"><span class="code-keyword">public static boolean</span> searchMatrixII(<span class="code-keyword">int</span>[][] matrix, <span class="code-keyword">int</span> target) {
+    <span class="code-keyword">if</span> (matrix.length == <span class="code-number">0</span>) <span class="code-keyword">return false</span>;
+    
+    <span class="code-comment">// Start at top-right corner</span>
+    <span class="code-keyword">int</span> row = <span class="code-number">0</span>;
+    <span class="code-keyword">int</span> col = matrix[<span class="code-number">0</span>].length - <span class="code-number">1</span>;
+    
+    <span class="code-keyword">while</span> (row < matrix.length && col >= <span class="code-number">0</span>) {
+        <span class="code-keyword">if</span> (matrix[row][col] == target) {
+            <span class="code-keyword">return true</span>;  <span class="code-comment">// Found!</span>
+        } <span class="code-keyword">else if</span> (matrix[row][col] < target) {
+            row++;  <span class="code-comment">// Move down - eliminate row</span>
+        } <span class="code-keyword">else</span> {
+            col--;  <span class="code-comment">// Move left - eliminate column</span>
+        }
+    }
+    
+    <span class="code-keyword">return false</span>;
+}
+
+<span class="code-comment">// Time: O(m + n), Space: O(1)</span>
+<span class="code-comment">// Note: Could also start at bottom-left and move right/up</span></div>
+
+                <div class="success-box">
+                    <strong>✅ Practice Problems:</strong>
+                    <ol class="step-list">
+                        <li><strong>Search a 2D Matrix II</strong> (LeetCode 240) - Row+col sorted</li>
+                        <li><strong>Kth Smallest Element in Sorted Matrix</strong> (LeetCode 378) - Use binary search on values</li>
+                        <li><strong>Count Negative Numbers in Sorted Matrix</strong> (LeetCode 1351) - Similar approach</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="variation-box">
+                <h3>Variation 10: Square Root (Integer)</h3>
+                <div class="explanation">
+                    <strong>Problem:</strong> Find integer square root (round down)<br>
+                    <strong>Example:</strong> sqrt(8) → 2 (since 2² = 4 ≤ 8 &lt; 9 = 3²)
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition</h3>
+                    <div style="line-height: 1.8;">
+                        <strong>How do we think about this problem?</strong><br><br>
+                        
+                        🎯 <strong>Reframe the question:</strong><br>
+                        "What is sqrt(8)?" becomes "What is the largest integer k where k² ≤ 8?"<br><br>
+                        
+                        <strong>Search space:</strong> Numbers from 1 to 8<br>
+                        1² = 1 ✓ too small<br>
+                        2² = 4 ✓ still works<br>
+                        3² = 9 ✗ too big!<br><br>
+                        
+                        Answer: 2 (largest k where k² ≤ 8)<br><br>
+                        
+                        <strong>The Pattern:</strong> We're searching for a boundary in a <strong>monotonic</strong> space!<br>
+                        [1 ✓, 2 ✓, 3 ✗, 4 ✗, 5 ✗, ...] → Find last ✓
+                    </div>
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #2196f3; margin-top: 0;">🤔 Why Binary Search?</h3>
+                    <ul class="step-list">
+                        <li>✅ Search space: 1 to x (or 1 to x/2 for optimization)</li>
+                        <li>✅ Property is <strong>monotonic</strong>: if k² &gt; x, then (k+1)² &gt; x too</li>
+                        <li>✅ Finding <strong>boundary</strong>: largest k where k² ≤ x</li>
+                        <li>✅ Can eliminate half: if mid² &lt; x, answer is mid or larger</li>
+                        <li>✅ Time: O(log n) vs trying every number O(n)</li>
+                    </ul>
+                </div>
+
+                <div class="diagram">
+                    <h3>Visual: Finding sqrt(8) - search in [1...4]</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <strong>Search Space:</strong> [1, 2, 3, 4] (we know sqrt(8) ≤ 4)
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                1
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell">2</div>
+                            <div class="array-cell">3</div>
+                            <div class="array-cell">
+                                4
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">Squares: [1, 4, 9, 16] - which is largest ≤ 8?</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 1:</strong> mid = 2, check 2² = 4
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                1
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell searching">
+                                2
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">3</div>
+                            <div class="array-cell">
+                                4
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">2² = 4 &lt; 8 ✓ Valid! But can we go larger?<br>
+                        Search right half: left = mid+1</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 2:</strong> mid = 3, check 3² = 9
+                        <div class="array-visual">
+                            <div class="array-cell eliminated">1</div>
+                            <div class="array-cell eliminated">2</div>
+                            <div class="array-cell searching">
+                                3
+                                <div class="pointer left">L</div>
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">
+                                4
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">3² = 9 &gt; 8 ✗ Too big!<br>
+                        Search left: right = mid-1</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Final:</strong> Loop ends, right = 2
+                        <div class="array-visual">
+                            <div class="array-cell eliminated">1</div>
+                            <div class="array-cell found">
+                                2
+                                <div class="pointer right">R</div>
+                            </div>
+                            <div class="array-cell eliminated">3</div>
+                            <div class="array-cell eliminated">4</div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">Answer: 2 (since 2² = 4 ≤ 8 &lt; 9 = 3²) ✅</p>
+                    </div>
+
+                    <div class="highlight-box" style="margin-top: 20px;">
+                        💡 <strong>Key Insight:</strong> When loop ends, <code>right</code> points to the answer!<br>
+                        It's the largest value whose square doesn't exceed x.
+                    </div>
+                </div>
+
+                <div class="code-block"><span class="code-keyword">public static int</span> mySqrt(<span class="code-keyword">int</span> x) {
+    <span class="code-keyword">if</span> (x < <span class="code-number">2</span>) <span class="code-keyword">return</span> x;
+    
+    <span class="code-keyword">int</span> left = <span class="code-number">1</span>, right = x / <span class="code-number">2</span>;  <span class="code-comment">// sqrt(x) <= x/2 for x >= 2</span>
+    
+    <span class="code-keyword">while</span> (left <= right) {
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        <span class="code-keyword">long</span> square = (<span class="code-keyword">long</span>) mid * mid;  <span class="code-comment">// Prevent overflow</span>
+        
+        <span class="code-keyword">if</span> (square == x) {
+            <span class="code-keyword">return</span> mid;  <span class="code-comment">// Perfect square</span>
+        } <span class="code-keyword">else if</span> (square < x) {
+            left = mid + <span class="code-number">1</span>;  <span class="code-comment">// Try larger values</span>
+        } <span class="code-keyword">else</span> {
+            right = mid - <span class="code-number">1</span>;  <span class="code-comment">// Too big, go smaller</span>
+        }
+    }
+    
+    <span class="code-keyword">return</span> right;  <span class="code-comment">// Round down: right is largest k where k² <= x</span>
+}
+
+<span class="code-comment">// Time: O(log n), Space: O(1)</span></div>
+
+                <div class="success-box">
+                    <strong>✅ Practice Problems:</strong>
+                    <ol class="step-list">
+                        <li><strong>Sqrt(x)</strong> (LeetCode 69) - Classic integer square root</li>
+                        <li><strong>Valid Perfect Square</strong> (LeetCode 367) - Check if x is perfect square</li>
+                        <li><strong>Count Negative Numbers in Sorted Matrix</strong> (LeetCode 1351) - Similar boundary search</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="variation-box">
+                <h3>Variation 11: Find Closest Element</h3>
+                <div class="explanation">
+                    <strong>Problem:</strong> Find element closest to target in sorted array<br>
+                    <strong>Example:</strong> [1,3,5,7,9], target = 6 → return 5 or 7 (both distance 1)
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition</h3>
+                    <div style="line-height: 1.8;">
+                        <strong>How do we think about "closest"?</strong><br><br>
+                        
+                        Array: [1, 3, 5, 7, 9], Target: 6<br><br>
+                        
+                        🎯 <strong>Two-step approach:</strong><br>
+                        <strong>Step 1:</strong> Find where 6 would be inserted → between 5 and 7<br>
+                        <strong>Step 2:</strong> Compare the two neighbors!<br><br>
+                        
+                        Distance from 5: |5-6| = 1<br>
+                        Distance from 7: |7-6| = 1<br>
+                        Both equal! Return either (or left by convention)<br><br>
+                        
+                        <strong>The Pattern:</strong><br>
+                        Use binary search to find insertion point,<br>
+                        then compare neighbors around that point!
+                    </div>
+                </div>
+
+                <div class="pattern-box">
+                    <h3 style="color: #2196f3; margin-top: 0;">🤔 Why Binary Search?</h3>
+                    <ul class="step-list">
+                        <li>✅ Array is <strong>sorted</strong></li>
+                        <li>✅ Closest element must be near the insertion point</li>
+                        <li>✅ Binary search finds insertion point in O(log n)</li>
+                        <li>✅ Then O(1) comparison of neighbors</li>
+                        <li>✅ Total: O(log n)</li>
+                    </ul>
+                </div>
+
+                <div class="diagram">
+                    <h3>Visual: Find closest to 6 in [1, 3, 5, 7, 9]</h3>
+                    
+                    <div style="margin: 20px 0;">
+                        <strong>Step 1:</strong> Binary search for insertion point
+                        <div class="array-visual">
+                            <div class="array-cell">
+                                1
+                                <div class="pointer left">L</div>
+                            </div>
+                            <div class="array-cell">3</div>
+                            <div class="array-cell searching">
+                                5
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">7</div>
+                            <div class="array-cell">
+                                9
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">arr[2]=5 &lt; 6 → left = mid+1</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 2:</strong> Narrow down
+                        <div class="array-visual">
+                            <div class="array-cell eliminated">1</div>
+                            <div class="array-cell eliminated">3</div>
+                            <div class="array-cell eliminated">5</div>
+                            <div class="array-cell searching">
+                                7
+                                <div class="pointer left">L</div>
+                                <div class="pointer mid">M</div>
+                            </div>
+                            <div class="array-cell">
+                                9
+                                <div class="pointer right">R</div>
+                            </div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">arr[3]=7 &gt; 6 → right = mid-1<br>
+                        Loop ends: left=3 (would insert at index 3)</p>
+                    </div>
+
+                    <div style="margin: 20px 0;">
+                        <strong>Step 3:</strong> Compare neighbors at insertion point
+                        <div class="array-visual">
+                            <div class="array-cell eliminated">1</div>
+                            <div class="array-cell eliminated">3</div>
+                            <div class="array-cell found">
+                                5
+                            </div>
+                            <div class="array-cell" style="border: 3px dashed #fbc02d; background: #fff9c4;">
+                                6?
+                            </div>
+                            <div class="array-cell found">
+                                7
+                            </div>
+                            <div class="array-cell eliminated">9</div>
+                        </div>
+                        <p style="margin-top: 50px; text-align: center;">left=3 → Compare arr[2]=5 and arr[3]=7<br>
+                        |5-6|=1, |7-6|=1 → Both equal distance!<br>
+                        Return 5 (left neighbor by convention)</p>
+                    </div>
+
+                    <div class="highlight-box" style="margin-top: 20px;">
+                        🎯 <strong>Edge Cases:</strong><br>
+                        • If left=0 → Only right neighbor exists<br>
+                        • If left=n → Only left neighbor exists<br>
+                        • If exact match found → Return it immediately
+                    </div>
+                </div>
+
+                <div class="code-block"><span class="code-keyword">public static int</span> findClosest(<span class="code-keyword">int</span>[] arr, <span class="code-keyword">int</span> target) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>, right = arr.length - <span class="code-number">1</span>;
+    
+    <span class="code-comment">// Find position where target would be inserted</span>
+    <span class="code-keyword">while</span> (left < right) {
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        
+        <span class="code-keyword">if</span> (arr[mid] < target) {
+            left = mid + <span class="code-number">1</span>;
+        } <span class="code-keyword">else</span> {
+            right = mid;
+        }
+    }
+    
+    <span class="code-comment">// Handle edge cases</span>
+    <span class="code-keyword">if</span> (left == <span class="code-number">0</span>) <span class="code-keyword">return</span> arr[<span class="code-number">0</span>];
+    <span class="code-keyword">if</span> (left == arr.length) <span class="code-keyword">return</span> arr[arr.length - <span class="code-number">1</span>];
+    
+    <span class="code-comment">// Compare neighbors around insertion point</span>
+    <span class="code-keyword">int</span> leftDiff = Math.abs(arr[left - <span class="code-number">1</span>] - target);
+    <span class="code-keyword">int</span> rightDiff = Math.abs(arr[left] - target);
+    
+    <span class="code-keyword">return</span> leftDiff <= rightDiff ? arr[left - <span class="code-number">1</span>] : arr[left];
+}
+
+<span class="code-comment">// Time: O(log n), Space: O(1)</span></div>
+
+                <div class="success-box">
+                    <strong>✅ Practice Problems:</strong>
+                    <ol class="step-list">
+                        <li><strong>Find K Closest Elements</strong> (LeetCode 658) - Extended version</li>
+                        <li><strong>Find Right Interval</strong> (LeetCode 436) - Similar concept</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="variation-box">
+                <h3>Variation 12: Find K Closest Elements</h3>
+                <div class="explanation">
+                    <strong>Problem:</strong> Find k elements closest to target<br>
+                    <strong>Example:</strong> [1,2,3,4,5], target = 3, k = 4 → [1,2,3,4]
+                </div>
+                <div class="code-block"><span class="code-keyword">public static</span> List&lt;Integer&gt; findKClosest(<span class="code-keyword">int</span>[] arr, <span class="code-keyword">int</span> k, <span class="code-keyword">int</span> target) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>, right = arr.length - k;
+    
+    <span class="code-comment">// Binary search for the leftmost index of k elements</span>
+    <span class="code-keyword">while</span> (left < right) {
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        
+        <span class="code-comment">// Compare distances: arr[mid] vs arr[mid+k]</span>
+        <span class="code-keyword">if</span> (target - arr[mid] > arr[mid + k] - target) {
+            left = mid + <span class="code-number">1</span>;  <span class="code-comment">// Right side is closer</span>
+        } <span class="code-keyword">else</span> {
+            right = mid;  <span class="code-comment">// Left side is closer or equal</span>
+        }
+    }
+    
+    <span class="code-comment">// Return k elements starting from left</span>
+    List&lt;Integer&gt; result = <span class="code-keyword">new</span> ArrayList&lt;&gt;();
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = left; i < left + k; i++) {
+        result.add(arr[i]);
+    }
+    <span class="code-keyword">return</span> result;
+}</div>
+            </div>
+        </div>
+
+        <!-- 5. Binary Search on Answer -->
+        <div class="diagram-section">
+            <h2>5️⃣ Binary Search on Answer (Advanced Pattern)</h2>
+            <div class="explanation">
+                Sometimes we binary search on the <strong>answer space</strong> rather than array indices. This is used when:<br>
+                • Answer lies in a range [min, max]<br>
+                • We can verify if a value works in O(n) or better<br>
+                • If k works, then all values > k (or < k) also work
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3; margin-top: 0;">Template for Binary Search on Answer</h3>
+                <div class="code-block"><span class="code-comment">// Binary Search on Answer Template</span>
+<span class="code-keyword">public static int</span> binarySearchOnAnswer() {
+    <span class="code-keyword">int</span> left = MIN_POSSIBLE_ANSWER;
+    <span class="code-keyword">int</span> right = MAX_POSSIBLE_ANSWER;
+    
+    <span class="code-keyword">while</span> (left < right) {
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        
+        <span class="code-keyword">if</span> (isPossible(mid)) {
+            right = mid;  <span class="code-comment">// Try smaller value</span>
+        } <span class="code-keyword">else</span> {
+            left = mid + <span class="code-number">1</span>;  <span class="code-comment">// Need larger value</span>
+        }
+    }
+    
+    <span class="code-keyword">return</span> left;
+}
+
+<span class="code-keyword">private static boolean</span> isPossible(<span class="code-keyword">int</span> value) {
+    <span class="code-comment">// Check if this value satisfies the condition</span>
+    <span class="code-comment">// Usually O(n) check</span>
+}</div>
+            </div>
+
+            <div class="variation-box">
+                <h3>Example: Koko Eating Bananas (LeetCode 875)</h3>
+                <div class="explanation">
+                    <strong>Problem:</strong> Koko has piles of bananas. She can eat k bananas/hour. Find minimum k to finish all piles in h hours.<br>
+                    <strong>Insight:</strong> Binary search on k (eating speed), not on array!
+                </div>
+                <div class="code-block"><span class="code-keyword">public static int</span> minEatingSpeed(<span class="code-keyword">int</span>[] piles, <span class="code-keyword">int</span> h) {
+    <span class="code-keyword">int</span> left = <span class="code-number">1</span>;  <span class="code-comment">// Minimum possible speed</span>
+    <span class="code-keyword">int</span> right = <span class="code-number">1_000_000_000</span>;  <span class="code-comment">// Maximum possible speed</span>
+    
+    <span class="code-keyword">while</span> (left < right) {
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        
+        <span class="code-keyword">if</span> (canFinish(piles, mid, h)) {
+            right = mid;  <span class="code-comment">// Can finish, try slower speed</span>
+        } <span class="code-keyword">else</span> {
+            left = mid + <span class="code-number">1</span>;  <span class="code-comment">// Too slow, need faster</span>
+        }
+    }
+    
+    <span class="code-keyword">return</span> left;
+}
+
+<span class="code-keyword">private static boolean</span> canFinish(<span class="code-keyword">int</span>[] piles, <span class="code-keyword">int</span> k, <span class="code-keyword">int</span> h) {
+    <span class="code-keyword">int</span> hoursNeeded = <span class="code-number">0</span>;
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> pile : piles) {
+        hoursNeeded += (pile + k - <span class="code-number">1</span>) / k;  <span class="code-comment">// Ceiling division</span>
+    }
+    <span class="code-keyword">return</span> hoursNeeded <= h;
+}</div>
+            </div>
+
+            <div class="variation-box">
+                <h3>Example: Capacity to Ship Packages (LeetCode 1011)</h3>
+                <div class="explanation">
+                    <strong>Problem:</strong> Ship packages in order within D days. Find minimum ship capacity.<br>
+                    <strong>Binary search on:</strong> Capacity (not array indices)
+                </div>
+                <div class="code-block"><span class="code-keyword">public static int</span> shipWithinDays(<span class="code-keyword">int</span>[] weights, <span class="code-keyword">int</span> days) {
+    <span class="code-keyword">int</span> left = <span class="code-number">0</span>, right = <span class="code-number">0</span>;
+    
+    <span class="code-comment">// Min capacity = max weight, Max capacity = sum of all weights</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> w : weights) {
+        left = Math.max(left, w);
+        right += w;
+    }
+    
+    <span class="code-keyword">while</span> (left < right) {
+        <span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;
+        
+        <span class="code-keyword">if</span> (canShip(weights, mid, days)) {
+            right = mid;  <span class="code-comment">// Can ship, try smaller capacity</span>
+        } <span class="code-keyword">else</span> {
+            left = mid + <span class="code-number">1</span>;  <span class="code-comment">// Need larger capacity</span>
+        }
+    }
+    
+    <span class="code-keyword">return</span> left;
+}
+
+<span class="code-keyword">private static boolean</span> canShip(<span class="code-keyword">int</span>[] weights, <span class="code-keyword">int</span> capacity, <span class="code-keyword">int</span> days) {
+    <span class="code-keyword">int</span> daysNeeded = <span class="code-number">1</span>, currentWeight = <span class="code-number">0</span>;
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> w : weights) {
+        <span class="code-keyword">if</span> (currentWeight + w > capacity) {
+            daysNeeded++;
+            currentWeight = w;
+        } <span class="code-keyword">else</span> {
+            currentWeight += w;
+        }
+    }
+    
+    <span class="code-keyword">return</span> daysNeeded <= days;
+}</div>
+            </div>
+        </div>
+<!-- INSERT THIS AFTER SECTION 5 (Binary Search on Answer) -->
+
+<div class="diagram-section" style="background: linear-gradient(135deg, #fff3e0 0%, #ffecb3 100%); border: 3px solid #ff9800;">
+    <h2 style="color: #e65100;">🎯 How to IDENTIFY "Binary Search on Answer" Problems</h2>
+    
+    <div class="highlight-box" style="background: #ff6b6b; color: white; font-size: 1.2em;">
+        <strong>YOU STRUGGLE HERE!</strong> This is the HARDEST pattern to recognize!
+    </div>
+
+    <h3 style="color: #ff9800;">🔑 The "Aha!" Moment - Key Recognition Triggers</h3>
+    
+    <div class="explanation" style="background: white; border: 2px solid #ff9800;">
+        <h4 style="margin-top: 0;">Pattern Recognition Checklist:</h4>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="background: #4caf50; color: white;">
+                <th style="padding: 10px;">Trigger</th>
+                <th style="padding: 10px;">What to Look For</th>
+                <th style="padding: 10px;">Example</th>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;"><strong>"Minimum ... to satisfy"</strong></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Find minimum value that works</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Minimum speed to finish, minimum capacity</td>
+            </tr>
+            <tr style="background: #f5f5f5;">
+                <td style="padding: 10px; border: 1px solid #ddd;"><strong>"Maximum ... without exceeding"</strong></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Find maximum value that fits constraint</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Maximum books to read, maximum weight</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;"><strong>"Can you do X in Y time/space?"</strong></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Optimization problem with constraint</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Can finish in h hours? Can fit in d days?</td>
+            </tr>
+            <tr style="background: #f5f5f5;">
+                <td style="padding: 10px; border: 1px solid #ddd;"><strong>"Minimize the maximum"</strong></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Classic BSOA indicator</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Minimize max difference, minimize max time</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;"><strong>"Maximize the minimum"</strong></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Another classic indicator</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Maximize min distance, maximize min value</td>
+            </tr>
+            <tr style="background: #f5f5f5;">
+                <td style="padding: 10px; border: 1px solid #ddd;"><strong>Given constraint, find optimal</strong></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Resource limitation problem</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Given h hours, what's min speed?</td>
+            </tr>
+        </table>
+    </div>
+
+    <h3 style="color: #ff9800;">💡 The "Monotonic Property" Test</h3>
+    
+    <div class="explanation" style="background: #e8f5e9; border-left: 5px solid #4caf50;">
+        <h4 style="margin-top: 0;">Ask yourself: "If X works, does X+1 also work?"</h4>
+        <p style="font-size: 1.1em; line-height: 1.8;">
+            <strong>If YES → Binary Search on Answer!</strong><br><br>
+            <strong>Example: Koko Eating Bananas</strong><br>
+            • Can finish in h hours with speed k=5? → <span style="color: #f44336;">NO</span><br>
+            • Can finish in h hours with speed k=10? → <span style="color: #4caf50;">YES</span><br>
+            • Can finish in h hours with speed k=15? → <span style="color: #4caf50;">YES</span> (faster always works)<br>
+            • Can finish in h hours with speed k=20? → <span style="color: #4caf50;">YES</span><br>
+            <br>
+            Pattern: <span style="color: #f44336;">NO NO NO NO</span> <span style="color: #4caf50;">YES YES YES YES</span><br>
+            → We want the FIRST YES! → Binary Search!
+        </p>
+    </div>
+
+    <h3 style="color: #ff9800;">🚫 When It's NOT Binary Search on Answer</h3>
+    
+    <div class="warning-box" style="background: #ffebee; border: 2px solid #f44336;">
+        <h4>Red Flags - Don't Use BSOA When:</h4>
+        <ol style="line-height: 2;">
+            <li><strong>Array itself is what you're searching</strong> → Use regular BS</li>
+            <li><strong>Need to find EXACT element in sorted array</strong> → Template 1</li>
+            <li><strong>No clear min/max range for answer</strong> → Not BSOA</li>
+            <li><strong>Can't verify a candidate answer efficiently</strong> → Not BSOA</li>
+            <li><strong>Monotonic property doesn't hold</strong> → Not BS at all</li>
+        </ol>
+    </div>
+
+    <h3 style="color: #ff9800;">📝 Step-by-Step Recognition Process</h3>
+    
+    <div class="diagram" style="background: #f5f5f5; padding: 20px; font-family: monospace; line-height: 2;">
+        <strong style="font-size: 1.2em;">Question Analysis Framework:</strong><br><br>
+        
+        <div style="background: #2196f3; color: white; padding: 10px; margin: 5px 0; border-radius: 5px;">
+            STEP 1: Read problem → Extract optimization goal
+        </div>
+        <div style="padding-left: 20px; margin: 5px 0;">
+            ↳ "Find minimum..."<br>
+            ↳ "Find maximum..."<br>
+            ↳ "Minimize/Maximize..."
+        </div>
+        
+        <div style="background: #2196f3; color: white; padding: 10px; margin: 5px 0; border-radius: 5px;">
+            STEP 2: Identify what you're optimizing
+        </div>
+        <div style="padding-left: 20px; margin: 5px 0;">
+            ↳ Is it: speed? capacity? time? distance? threshold?<br>
+            ↳ NOT an element in the array?
+        </div>
+        
+        <div style="background: #2196f3; color: white; padding: 10px; margin: 5px 0; border-radius: 5px;">
+            STEP 3: Can you define min and max possible values?
+        </div>
+        <div style="padding-left: 20px; margin: 5px 0;">
+            ↳ YES? → Good sign for BSOA<br>
+            ↳ NO? → Probably not BSOA
+        </div>
+        
+        <div style="background: #2196f3; color: white; padding: 10px; margin: 5px 0; border-radius: 5px;">
+            STEP 4: Can you write a function: isValid(answer)?
+        </div>
+        <div style="padding-left: 20px; margin: 5px 0;">
+            ↳ Can I check if answer=X works in O(n)?<br>
+            ↳ YES? → BSOA is feasible
+        </div>
+        
+        <div style="background: #2196f3; color: white; padding: 10px; margin: 5px 0; border-radius: 5px;">
+            STEP 5: Test monotonic property
+        </div>
+        <div style="padding-left: 20px; margin: 5px 0;">
+            ↳ If X works, does X+1 work? (for minimum)<br>
+            ↳ If X works, does X-1 work? (for maximum)<br>
+            ↳ YES? → <span style="color: #4caf50; font-weight: bold;">USE BINARY SEARCH ON ANSWER!</span>
+        </div>
+    </div>
+
+    <h3 style="color: #ff9800;">🎯 Real Problem Examples - Thought Process</h3>
+    
+    <div class="pattern-box" style="border: 2px solid #4caf50;">
+        <h4 style="color: #4caf50; margin-top: 0;">✅ Example 1: Koko Eating Bananas</h4>
+        <div style="background: white; padding: 15px; border-radius: 5px; margin: 10px 0;">
+            <p><strong>Problem:</strong> "Koko loves to eat bananas. There are n piles of bananas, the ith pile has piles[i] bananas. 
+            The guards have gone and will come back in h hours. Koko can decide her bananas-per-hour eating speed of k. 
+            Each hour, she chooses some pile of bananas and eats k bananas from that pile. If the pile has less than k bananas, 
+            she eats all of them instead and will not eat any more bananas during this hour. 
+            Return the minimum integer k such that she can eat all the bananas within h hours."</p>
+            
+            <div style="background: #fff3e0; padding: 15px; margin: 10px 0; border-left: 5px solid #ff9800;">
+                <strong>🧠 Thought Process:</strong><br>
+                <ol style="line-height: 2;">
+                    <li><strong>"minimum integer k"</strong> → optimizing for k (NOT array index!)</li>
+                    <li><strong>k = eating speed</strong> → This is our answer space</li>
+                    <li><strong>Min k:</strong> 1 banana/hour, <strong>Max k:</strong> max(piles)</li>
+                    <li><strong>Can verify:</strong> For any k, calculate total hours needed → O(n)</li>
+                    <li><strong>Monotonic:</strong> If k=10 works, k=11 also works (faster is always okay)</li>
+                    <li><strong>Pattern:</strong> NO NO NO YES YES YES → Find first YES</li>
+                </ol>
+                <p style="color: #4caf50; font-weight: bold; font-size: 1.2em;">
+                    ✅ BINARY SEARCH ON ANSWER (search for k, not in array!)
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="pattern-box" style="border: 2px solid #4caf50;">
+        <h4 style="color: #4caf50; margin-top: 0;">✅ Example 2: Split Array Largest Sum (LC 410)</h4>
+        <div style="background: white; padding: 15px; border-radius: 5px; margin: 10px 0;">
+            <p><strong>Problem:</strong> "Given an array which consists of non-negative integers and an integer m, 
+            you can split the array into m non-empty continuous subarrays. Minimize the largest sum among these m subarrays."</p>
+            
+            <div style="background: #fff3e0; padding: 15px; margin: 10px 0; border-left: 5px solid #ff9800;">
+                <strong>🧠 Thought Process:</strong><br>
+                <ol style="line-height: 2;">
+                    <li><strong>"minimize the largest sum"</strong> → Classic BSOA phrase!</li>
+                    <li><strong>Answer space:</strong> [max(nums), sum(nums)]</li>
+                    <li><strong>Can verify:</strong> Given a max_sum, can we split into ≤m subarrays? → O(n)</li>
+                    <li><strong>Monotonic:</strong> If max_sum=50 works, max_sum=60 also works (more room)</li>
+                    <li><strong>Want:</strong> Minimum max_sum that allows valid split</li>
+                </ol>
+                <p style="color: #4caf50; font-weight: bold; font-size: 1.2em;">
+                    ✅ BINARY SEARCH ON ANSWER (search for max_sum value!)
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="pattern-box" style="border: 2px solid #f44336;">
+        <h4 style="color: #f44336; margin-top: 0;">❌ Example 3: Search in Rotated Sorted Array</h4>
+        <div style="background: white; padding: 15px; border-radius: 5px; margin: 10px 0;">
+            <p><strong>Problem:</strong> "There is an integer array nums sorted in ascending order (with distinct values). 
+            Prior to being passed to your function, nums is possibly rotated. Given the array nums after the possible rotation 
+            and an integer target, return the index of target if it is in nums, or -1 if it is not in nums."</p>
+            
+            <div style="background: #ffebee; padding: 15px; margin: 10px 0; border-left: 5px solid #f44336;">
+                <strong>🧠 Thought Process:</strong><br>
+                <ol style="line-height: 2;">
+                    <li><strong>"return the index"</strong> → Looking IN the array</li>
+                    <li><strong>"target"</strong> → Finding exact element</li>
+                    <li><strong>NOT optimizing a value</strong> → Just finding position</li>
+                    <li><strong>Array is given</strong> → Search within it</li>
+                </ol>
+                <p style="color: #f44336; font-weight: bold; font-size: 1.2em;">
+                    ❌ NOT Binary Search on Answer (use modified Template 1!)
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <h3 style="color: #ff9800;">📚 Practice Recognition Quiz</h3>
+    
+    <div class="explanation" style="background: #e1f5fe; border: 2px solid #0288d1;">
+        <h4 style="margin-top: 0;">Test Yourself - BSOA or Not?</h4>
+        
+        <div style="margin: 15px 0; padding: 15px; background: white; border-radius: 5px;">
+            <p><strong>1. "Find minimum speed to deliver all packages in d days"</strong></p>
+            <p style="color: #4caf50; font-weight: bold;">→ YES! BSOA on speed</p>
+        </div>
+        
+        <div style="margin: 15px 0; padding: 15px; background: white; border-radius: 5px;">
+            <p><strong>2. "Find if target exists in sorted array"</strong></p>
+            <p style="color: #f44336; font-weight: bold;">→ NO! Regular BS Template 1</p>
+        </div>
+        
+        <div style="margin: 15px 0; padding: 15px; background: white; border-radius: 5px;">
+            <p><strong>3. "Maximize minimum distance between balls in baskets"</strong></p>
+            <p style="color: #4caf50; font-weight: bold;">→ YES! BSOA on distance</p>
+        </div>
+        
+        <div style="margin: 15px 0; padding: 15px; background: white; border-radius: 5px;">
+            <p><strong>4. "Find first occurrence of target in sorted array"</strong></p>
+            <p style="color: #f44336; font-weight: bold;">→ NO! Regular BS Template 2</p>
+        </div>
+        
+        <div style="margin: 15px 0; padding: 15px; background: white; border-radius: 5px;">
+            <p><strong>5. "Minimize maximum pages read by any student when dividing books among m students"</strong></p>
+            <p style="color: #4caf50; font-weight: bold;">→ YES! BSOA on max pages</p>
+        </div>
+    </div>
+
+    <div class="highlight-box" style="background: #4caf50; color: white;">
+        <h3 style="color: white; margin-top: 0;">✅ MASTER RULE FOR RECOGNITION</h3>
+        <p style="font-size: 1.3em; line-height: 1.8;">
+            If you're asked to <strong>OPTIMIZE</strong> (minimize/maximize) a <strong>VALUE</strong> (not find an index),<br>
+            AND you can <strong>CHECK</strong> if a candidate value works,<br>
+            AND there's a <strong>RANGE</strong> [min, max] for possible answers,<br>
+            AND the <strong>MONOTONIC PROPERTY</strong> holds,<br>
+            <br>
+            → <strong>USE BINARY SEARCH ON ANSWER!</strong>
+        </p>
+    </div>
+</div>
+        <!-- 6. Common Pitfalls -->
+        <div class="diagram-section">
+            <h2>6️⃣ Common Pitfalls & How to Avoid Them</h2>
+
+            <div class="warning-box">
+                <h3 style="color: #f44336; margin-top: 0;">⚠️ Pitfall 1: Integer Overflow in mid calculation</h3>
+                <div class="code-block"><span class="code-comment">// WRONG - Can overflow!</span>
+<span class="code-keyword">int</span> mid = (left + right) / <span class="code-number">2</span>;
+
+<span class="code-comment">// CORRECT - Safe from overflow</span>
+<span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;</div>
+            </div>
+
+            <div class="warning-box">
+                <h3 style="color: #f44336; margin-top: 0;">⚠️ Pitfall 2: Infinite Loop in Template 2</h3>
+                <div class="code-block"><span class="code-comment">// When finding LAST occurrence, need to round UP mid!</span>
+
+<span class="code-comment">// WRONG - Can cause infinite loop</span>
+<span class="code-keyword">int</span> mid = left + (right - left) / <span class="code-number">2</span>;  <span class="code-comment">// Rounds down</span>
+left = mid;  <span class="code-comment">// If left=4, right=5, mid=4 → infinite loop!</span>
+
+<span class="code-comment">// CORRECT - Round up when setting left = mid</span>
+<span class="code-keyword">int</span> mid = left + (right - left + <span class="code-number">1</span>) / <span class="code-number">2</span>;  <span class="code-comment">// Rounds up</span>
+left = mid;</div>
+            </div>
+
+            <div class="warning-box">
+                <h3 style="color: #f44336; margin-top: 0;">⚠️ Pitfall 3: Wrong Loop Condition</h3>
+                <table>
+                    <tr>
+                        <th>Template</th>
+                        <th>Condition</th>
+                        <th>Why</th>
+                    </tr>
+                    <tr>
+                        <td>Template 1</td>
+                        <td><code>left <= right</code></td>
+                        <td>Check single element</td>
+                    </tr>
+                    <tr>
+                        <td>Template 2</td>
+                        <td><code>left < right</code></td>
+                        <td>Leave 1 element for post-check</td>
+                    </tr>
+                    <tr>
+                        <td>Template 3</td>
+                        <td><code>left + 1 < right</code></td>
+                        <td>Leave 2 elements for neighbor check</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="warning-box">
+                <h3 style="color: #f44336; margin-top: 0;">⚠️ Pitfall 4: Forgetting Array is Sorted</h3>
+                <div class="explanation">
+                    Binary search ONLY works on sorted data! If array is not sorted and you can't sort it, you need a different approach.
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Decision Tree -->
+        <div class="diagram-section">
+            <h2>7️⃣ Decision Tree: Which Template to Use?</h2>
+            
+            <div class="diagram">
+                <div style="text-align: center; font-family: monospace; line-height: 2;">
+                    <div style="background: #667eea; color: white; padding: 10px; border-radius: 5px; display: inline-block; margin: 10px;">
+                        Is data sorted or sortable?
+                    </div>
+                    <div>↙ YES &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NO ↘</div>
+                    <div style="display: flex; justify-content: space-around; margin: 20px 0;">
+                        <div style="background: #2196f3; color: white; padding: 10px; border-radius: 5px; width: 40%;">
+                            What are you searching for?
+                            <div style="margin-top: 10px;">↓</div>
+                        </div>
+                        <div style="background: #f44336; color: white; padding: 10px; border-radius: 5px; width: 40%;">
+                            Not Binary Search<br>
+                            <span style="font-size: 0.85em;">(Try HashMap, Linear Search, etc.)</span>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                        <div style="background: #fff3e0; padding: 15px; border-radius: 8px; width: 70%;">
+                            <div style="font-weight: bold; margin-bottom: 10px;">Exact value?</div>
+                            <div style="background: #4caf50; color: white; padding: 10px; border-radius: 5px;">
+                                ✅ Template 1 (left <= right)
+                            </div>
+                        </div>
+                        
+                        <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; width: 70%;">
+                            <div style="font-weight: bold; margin-bottom: 10px;">First/Last occurrence or boundary?</div>
+                            <div style="background: #4caf50; color: white; padding: 10px; border-radius: 5px;">
+                                ✅ Template 2 (left < right)<br>
+                                <span style="font-size: 0.85em;">Remember: Round UP mid for findLast!</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #f3e5f5; padding: 15px; border-radius: 8px; width: 70%;">
+                            <div style="font-weight: bold; margin-bottom: 10px;">Need to check neighbors (peak/valley)?</div>
+                            <div style="background: #4caf50; color: white; padding: 10px; border-radius: 5px;">
+                                ✅ Template 3 (left + 1 < right)
+                            </div>
+                        </div>
+                        
+                        <div style="background: #fff9c4; padding: 15px; border-radius: 8px; width: 70%;">
+                            <div style="font-weight: bold; margin-bottom: 10px;">Minimum/maximum satisfying condition?</div>
+                            <div style="background: #ff9800; color: white; padding: 10px; border-radius: 5px;">
+                                ✅ Binary Search on Answer<br>
+                                <span style="font-size: 0.85em;">Search answer space, not array!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. Practice Problems -->
+        <div class="diagram-section">
+            <h2>8️⃣ Practice Problems Organized by Pattern</h2>
+            
+            <div class="pattern-box">
+                <h3 style="color: #2196f3;">Pattern 1: Basic Binary Search (Exact Match)</h3>
+                <div class="explanation">
+                    <strong>Use Template 1:</strong> while (left <= right)<br>
+                    <strong>Key:</strong> Find exact value or determine if exists
+                </div>
+                <ol class="step-list">
+                    <li>🟢 <strong>Binary Search</strong> (LeetCode 704) - Classic implementation</li>
+                    <li>🟢 <strong>Guess Number Higher or Lower</strong> (LeetCode 374) - Interactive BS</li>
+                    <li>🟢 <strong>Valid Perfect Square</strong> (LeetCode 367) - Check if n is perfect square</li>
+                    <li>🟡 <strong>Find Minimum in Rotated Sorted Array II</strong> (LeetCode 154) - With duplicates</li>
+                </ol>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3;">Pattern 2: Find First/Last Occurrence (Boundaries)</h3>
+                <div class="explanation">
+                    <strong>Use Template 2:</strong> while (left < right)<br>
+                    <strong>Key:</strong> Keep searching even after finding target
+                </div>
+                <ol class="step-list">
+                    <li>🟢 <strong>First Bad Version</strong> (LeetCode 278) - Find first occurrence</li>
+                    <li>🟡 <strong>Find First and Last Position</strong> (LeetCode 34) - Both boundaries</li>
+                    <li>🟡 <strong>Find Smallest Letter Greater Than Target</strong> (LeetCode 744) - Next greater</li>
+                    <li>🟡 <strong>H-Index II</strong> (LeetCode 275) - Citations sorted</li>
+                    <li>🟡 <strong>Single Element in Sorted Array</strong> (LeetCode 540) - Find unique element</li>
+                </ol>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3;">Pattern 3: Search Insert Position</h3>
+                <div class="explanation">
+                    <strong>Key:</strong> Where to insert to maintain sorted order
+                </div>
+                <ol class="step-list">
+                    <li>🟢 <strong>Search Insert Position</strong> (LeetCode 35) - Classic problem</li>
+                    <li>🟡 <strong>Find K Closest Elements</strong> (LeetCode 658) - Insert + window</li>
+                    <li>🟡 <strong>Count Negative Numbers in Sorted Matrix</strong> (LeetCode 1351) - Row boundaries</li>
+                </ol>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3;">Pattern 4: Rotated Sorted Array</h3>
+                <div class="explanation">
+                    <strong>Key:</strong> One half is always sorted, determine which
+                </div>
+                <ol class="step-list">
+                    <li>🟡 <strong>Search in Rotated Sorted Array</strong> (LeetCode 33) - No duplicates</li>
+                    <li>🟡 <strong>Search in Rotated Sorted Array II</strong> (LeetCode 81) - With duplicates</li>
+                    <li>🟡 <strong>Find Minimum in Rotated Sorted Array</strong> (LeetCode 153) - Find min</li>
+                    <li>🟡 <strong>Find Minimum in Rotated Sorted Array II</strong> (LeetCode 154) - With duplicates</li>
+                </ol>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3;">Pattern 5: Peak/Valley Finding</h3>
+                <div class="explanation">
+                    <strong>Use Template 3:</strong> Compare with neighbors<br>
+                    <strong>Key:</strong> Move towards increasing direction
+                </div>
+                <ol class="step-list">
+                    <li>🟡 <strong>Find Peak Element</strong> (LeetCode 162) - Any peak</li>
+                    <li>🟡 <strong>Peak Index in Mountain Array</strong> (LeetCode 852) - Guaranteed peak</li>
+                    <li>🔴 <strong>Find in Mountain Array</strong> (LeetCode 1095) - Search in mountain</li>
+                </ol>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3;">Pattern 6: 2D Matrix Search</h3>
+                <div class="explanation">
+                    <strong>Key:</strong> Convert 2D to 1D OR start from corner
+                </div>
+                <ol class="step-list">
+                    <li>🟡 <strong>Search a 2D Matrix</strong> (LeetCode 74) - Fully sorted, treat as 1D</li>
+                    <li>🟡 <strong>Search a 2D Matrix II</strong> (LeetCode 240) - Row+col sorted, corner method</li>
+                    <li>🔴 <strong>Kth Smallest Element in Sorted Matrix</strong> (LeetCode 378) - BS on value</li>
+                </ol>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3;">Pattern 7: Mathematical Binary Search</h3>
+                <div class="explanation">
+                    <strong>Key:</strong> Search on number space, not array
+                </div>
+                <ol class="step-list">
+                    <li>🟢 <strong>Sqrt(x)</strong> (LeetCode 69) - Integer square root</li>
+                    <li>🟢 <strong>Valid Perfect Square</strong> (LeetCode 367) - Check perfect square</li>
+                    <li>🟡 <strong>Pow(x, n)</strong> (LeetCode 50) - Fast exponentiation</li>
+                    <li>🔴 <strong>Nth Magical Number</strong> (LeetCode 878) - LCM + BS</li>
+                </ol>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3;">Pattern 8: Binary Search on Answer Space</h3>
+                <div class="explanation">
+                    <strong>Key:</strong> BS on answer value, verify with O(n) check<br>
+                    <strong>Template:</strong> Search [min_answer, max_answer]
+                </div>
+                <ol class="step-list">
+                    <li>🟡 <strong>Koko Eating Bananas</strong> (LeetCode 875) - BS on eating speed</li>
+                    <li>🟡 <strong>Capacity To Ship Packages</strong> (LeetCode 1011) - BS on capacity</li>
+                    <li>🟡 <strong>Minimum Number of Days to Make m Bouquets</strong> (LeetCode 1482) - BS on days</li>
+                    <li>🟡 <strong>Find the Smallest Divisor</strong> (LeetCode 1283) - BS on divisor</li>
+                    <li>🟡 <strong>Magnetic Force Between Two Balls</strong> (LeetCode 1552) - BS on distance</li>
+                    <li>🔴 <strong>Split Array Largest Sum</strong> (LeetCode 410) - BS on max sum</li>
+                    <li>🔴 <strong>Minimize Max Distance to Gas Station</strong> (LeetCode 774) - BS on distance</li>
+                    <li>🔴 <strong>Allocate Mailboxes</strong> (LeetCode 1478) - BS + DP</li>
+                </ol>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3;">Pattern 9: Find Closest/K Closest Elements</h3>
+                <div class="explanation">
+                    <strong>Key:</strong> Binary search to find position, then expand/compare
+                </div>
+                <ol class="step-list">
+                    <li>🟡 <strong>Find K Closest Elements</strong> (LeetCode 658) - BS on window start</li>
+                    <li>🟡 <strong>Find Right Interval</strong> (LeetCode 436) - BS for each interval</li>
+                    <li>🔴 <strong>Find K-th Smallest Pair Distance</strong> (LeetCode 719) - BS on distance</li>
+                </ol>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3;">Pattern 10: Time-Based/Range Problems</h3>
+                <div class="explanation">
+                    <strong>Key:</strong> Binary search with timestamps or ranges
+                </div>
+                <ol class="step-list">
+                    <li>🟡 <strong>Time Based Key-Value Store</strong> (LeetCode 981) - BS on timestamp</li>
+                    <li>🟡 <strong>Random Pick with Weight</strong> (LeetCode 528) - Prefix sum + BS</li>
+                    <li>🟡 <strong>Online Election</strong> (LeetCode 911) - BS on time</li>
+                    <li>🔴 <strong>Count of Range Sum</strong> (LeetCode 327) - Merge sort + BS</li>
+                </ol>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3;">Pattern 11: Advanced/Combination Problems</h3>
+                <div class="explanation">
+                    <strong>Key:</strong> Binary search combined with other techniques
+                </div>
+                <ol class="step-list">
+                    <li>🔴 <strong>Median of Two Sorted Arrays</strong> (LeetCode 4) - Partition arrays</li>
+                    <li>🔴 <strong>Sliding Window Median</strong> (LeetCode 480) - Heaps + BS</li>
+                    <li>🔴 <strong>Maximum Average Subarray II</strong> (LeetCode 644) - BS on average</li>
+                    <li>🔴 <strong>Smallest Range Covering Elements from K Lists</strong> (LeetCode 632) - Heap + BS</li>
+                </ol>
+            </div>
+
+            <div class="success-box" style="margin-top: 20px;">
+                <h3 style="color: #2e7d32;">📚 Recommended Learning Path</h3>
+                <ol class="step-list">
+                    <li><strong>Week 1:</strong> Master Pattern 1-3 (Basic BS, Boundaries, Insert Position)</li>
+                    <li><strong>Week 2:</strong> Practice Pattern 4-5 (Rotated Arrays, Peak Finding)</li>
+                    <li><strong>Week 3:</strong> Learn Pattern 6-7 (2D Matrix, Mathematical)</li>
+                    <li><strong>Week 4:</strong> Master Pattern 8 (BS on Answer Space) - Very important!</li>
+                    <li><strong>Week 5:</strong> Practice Pattern 9-10 (Closest Elements, Time-Based)</li>
+                    <li><strong>Week 6:</strong> Challenge yourself with Pattern 11 (Advanced)</li>
+                </ol>
+                <div class="highlight-box" style="margin-top: 15px;">
+                    🎯 <strong>Goal:</strong> Solve at least 3-5 problems from EACH pattern<br>
+                    Total: ~60-80 problems to become a Binary Search master!
+                </div>
+            </div>
+        </div>
+
+        <!-- 9. Complexity Analysis -->
+        <div class="diagram-section">
+            <h2>9️⃣ Time & Space Complexity</h2>
+            
+            <table>
+                <tr>
+                    <th>Operation</th>
+                    <th>Time Complexity</th>
+                    <th>Space Complexity</th>
+                    <th>Notes</th>
+                </tr>
+                <tr>
+                    <td><strong>Basic Binary Search</strong></td>
+                    <td>O(log n)</td>
+                    <td>O(1)</td>
+                    <td>Iterative implementation</td>
+                </tr>
+                <tr>
+                    <td><strong>Recursive Binary Search</strong></td>
+                    <td>O(log n)</td>
+                    <td>O(log n)</td>
+                    <td>Recursion stack space</td>
+                </tr>
+                <tr>
+                    <td><strong>Find First/Last</strong></td>
+                    <td>O(log n)</td>
+                    <td>O(1)</td>
+                    <td>Same as basic</td>
+                </tr>
+                <tr>
+                    <td><strong>Rotated Array Search</strong></td>
+                    <td>O(log n)</td>
+                    <td>O(1)</td>
+                    <td>Modified binary search</td>
+                </tr>
+                <tr>
+                    <td><strong>Binary Search on Answer</strong></td>
+                    <td>O(n × log(max-min))</td>
+                    <td>O(1)</td>
+                    <td>O(n) to verify each mid</td>
+                </tr>
+                <tr>
+                    <td><strong>2D Matrix Search</strong></td>
+                    <td>O(log(m×n))</td>
+                    <td>O(1)</td>
+                    <td>Treat as 1D array</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box">
+                💡 <strong>Why log n?</strong><br>
+                We halve the search space at each step:<br>
+                n → n/2 → n/4 → n/8 → ... → 1<br>
+                Number of steps = log₂(n)
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="diagram-section">
+            <h2>🎯 Quick Summary</h2>
+            <div style="line-height: 2;">
+                🔍 <strong>Binary Search</strong> = Divide and conquer on sorted data<br>
+                🎯 <strong>Recognize by</strong>: Sorted array, O(log n) needed, find value/position<br>
+                📊 <strong>Three templates</strong>: Exact match (<=), Boundaries (<), Neighbors (+1<)<br>
+                ⚡ <strong>Complexity</strong>: O(log n) time, O(1) space<br>
+                🔑 <strong>Key insight</strong>: Eliminate half the search space each iteration<br>
+                💡 <strong>Advanced</strong>: Can search on answer space, not just array<br>
+                ⚠️ <strong>Watch out</strong>: Overflow in mid, wrong rounding, infinite loops<br>
+                ✅ <strong>Master this</strong>: One of the most fundamental CS algorithms!<br>
+                🚀 <strong>Remember</strong>: Array MUST be sorted (or search space has order)
+            </div>
+
+            <div class="success-box" style="margin-top: 20px;">
+                <h3 style="color: #2e7d32;">🎓 Master Checklist</h3>
+                <div class="checklist">
+                    <div class="checklist-item">Understand all 3 templates and when to use each</div>
+                    <div class="checklist-item">Can find first/last occurrence of duplicates</div>
+                    <div class="checklist-item">Can search in rotated sorted array</div>
+                    <div class="checklist-item">Understand binary search on answer pattern</div>
+                    <div class="checklist-item">Know how to avoid infinite loops and overflow</div>
+                    <div class="checklist-item">Can explain why time complexity is O(log n)</div>
+                    <div class="checklist-item">Practiced at least 10-15 problems</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

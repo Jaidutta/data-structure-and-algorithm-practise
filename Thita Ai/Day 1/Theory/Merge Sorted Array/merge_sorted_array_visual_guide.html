@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merge Sorted Array - Visual Learning Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Crimson+Pro:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0a0e27;
+            --secondary: #1a1f3a;
+            --accent: #ff6b35;
+            --accent-2: #00d9ff;
+            --text: #e8eef2;
+            --text-dim: #9aa5b1;
+            --code-bg: #0d1117;
+            --success: #00ff88;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: 'IBM Plex Mono', monospace;
+            background: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated background grid */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, rgba(255, 107, 53, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0, 217, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .pattern-label {
+            font-size: 0.9rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent-2);
+            margin-bottom: 20px;
+            animation: fadeSlideDown 0.8s ease-out;
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeSlideDown 1s ease-out 0.2s both;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            max-width: 700px;
+            margin: 0 auto;
+            animation: fadeSlideDown 1.2s ease-out 0.4s both;
+        }
+
+        @keyframes fadeSlideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section styles */
+        .section {
+            background: var(--secondary);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 16px;
+            padding: 50px;
+            margin: 60px 0;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            opacity: 0;
+            border-radius: 16px;
+            z-index: -1;
+            transition: opacity 0.3s;
+        }
+
+        .section:hover::before {
+            opacity: 0.1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title::before {
+            content: '//';
+            color: var(--accent-2);
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1.5rem;
+        }
+
+        /* Complexity badges */
+        .complexity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .complexity-card {
+            background: rgba(255, 107, 53, 0.05);
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+
+        .complexity-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(255, 107, 53, 0.3);
+        }
+
+        .complexity-label {
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-2);
+            margin-bottom: 10px;
+        }
+
+        .complexity-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--success);
+            font-family: 'Crimson Pro', serif;
+        }
+
+        /* Code block */
+        .code-wrapper {
+            background: var(--code-bg);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 30px 0;
+        }
+
+        .code-header {
+            background: rgba(0, 217, 255, 0.1);
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .code-dot:nth-child(2) {
+            background: var(--warning);
+        }
+
+        .code-dot:nth-child(3) {
+            background: var(--success);
+        }
+
+        .code-content {
+            padding: 30px;
+            overflow-x: auto;
+        }
+
+        .code-content pre {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--text);
+        }
+
+        .keyword { color: #ff79c6; font-weight: 600; }
+        .function { color: var(--accent-2); }
+        .comment { color: var(--text-dim); font-style: italic; }
+        .number { color: var(--success); }
+        .string { color: #f1fa8c; }
+
+        /* Visual diagram */
+        .visual-demo {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px dashed rgba(255, 107, 53, 0.3);
+            border-radius: 12px;
+            padding: 40px;
+            margin: 30px 0;
+        }
+
+        .array-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 30px 0;
+            align-items: center;
+        }
+
+        .array-cell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--secondary);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .array-cell.empty {
+            border-style: dashed;
+            opacity: 0.4;
+        }
+
+        .array-cell.highlight {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            animation: pulse 1.5s infinite;
+            border-color: var(--success);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .pointer {
+            position: absolute;
+            bottom: -35px;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            color: var(--accent-2);
+            text-transform: uppercase;
+        }
+
+        .arrow {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--accent-2);
+            margin: 20px 0;
+        }
+
+        /* Step indicators */
+        .steps {
+            counter-reset: step;
+        }
+
+        .step {
+            background: rgba(0, 217, 255, 0.05);
+            border-left: 4px solid var(--accent-2);
+            padding: 30px;
+            margin: 25px 0;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .step:hover {
+            background: rgba(0, 217, 255, 0.1);
+            transform: translateX(10px);
+        }
+
+        .step::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: -20px;
+            top: 30px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .step-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--accent-2);
+            margin-left: 30px;
+        }
+
+        .step-content {
+            margin-left: 30px;
+            line-height: 1.8;
+        }
+
+        /* Use cases */
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .use-case {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(0, 217, 255, 0.1));
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+
+        .use-case:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+        }
+
+        .use-case-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .use-case-text {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Tips section */
+        .tip-box {
+            background: rgba(0, 255, 136, 0.05);
+            border: 2px solid var(--success);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .tip-title {
+            color: var(--success);
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-title::before {
+            content: '💡';
+            font-size: 1.5rem;
+        }
+
+        /* Key points */
+        .key-points {
+            list-style: none;
+            padding: 0;
+        }
+
+        .key-points li {
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(255, 107, 53, 0.05);
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .key-points li:hover {
+            background: rgba(255, 107, 53, 0.1);
+            transform: translateX(5px);
+        }
+
+        .key-points li::before {
+            content: '▸';
+            color: var(--accent);
+            margin-right: 10px;
+            font-weight: 700;
+        }
+
+        /* Language tabs */
+        .language-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: -1px;
+        }
+
+        .language-tab {
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-bottom: none;
+            padding: 12px 30px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            color: var(--text-dim);
+        }
+
+        .language-tab:hover {
+            background: rgba(0, 217, 255, 0.15);
+            color: var(--text);
+        }
+
+        .language-tab.active {
+            background: var(--code-bg);
+            border-color: rgba(0, 217, 255, 0.3);
+            color: var(--accent-2);
+            box-shadow: 0 -5px 20px rgba(0, 217, 255, 0.2);
+        }
+
+        .code-content-wrapper {
+            display: none;
+        }
+
+        .code-content-wrapper.active {
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 60px 40px;
+            color: var(--text-dim);
+            border-top: 1px solid rgba(255, 107, 53, 0.2);
+            margin-top: 80px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .section {
+                padding: 30px 20px;
+            }
+
+            .array-cell {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+
+            .step {
+                margin-left: 20px;
+            }
+
+            .language-tabs {
+                flex-wrap: wrap;
+            }
+
+            .language-tab {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="pattern-label">Array/Matrix Manipulation Pattern</div>
+            <h1>Merge Sorted Array<br>(In-place from End)</h1>
+            <p class="subtitle">Master the art of combining two sorted arrays efficiently by working backward—leveraging existing space to avoid overwrites and achieve O(1) memory complexity.</p>
+        </header>
+
+        <!-- Complexity Overview -->
+        <div class="section">
+            <h2 class="section-title">Complexity Analysis</h2>
+            <div class="complexity-grid">
+                <div class="complexity-card">
+                    <div class="complexity-label">Time Complexity</div>
+                    <div class="complexity-value">O(m + n)</div>
+                    <p style="margin-top: 15px; color: var(--text-dim);">Single pass through both arrays—every element touched exactly once</p>
+                </div>
+                <div class="complexity-card">
+                    <div class="complexity-label">Space Complexity</div>
+                    <div class="complexity-value">O(1)</div>
+                    <p style="margin-top: 15px; color: var(--text-dim);">No extra space needed—merge happens directly in the existing array</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pattern Overview -->
+        <div class="section">
+            <h2 class="section-title">Pattern Overview</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 30px;">
+                The <strong style="color: var(--accent);">Merge Sorted Array (In-place from End)</strong> pattern is a technique for combining two sorted arrays into a single sorted array. You start at the <strong>end</strong> of the destination array and work backward, placing the largest elements from both arrays into the available space.
+            </p>
+            
+            <div class="tip-box">
+                <div class="tip-title">Why From the End?</div>
+                <p>If you merged from the start, you'd overwrite elements in the first array before you had a chance to compare them. By starting from the end (where there's empty space), you avoid this problem entirely.</p>
+            </div>
+
+            <p style="margin-top: 30px; line-height: 1.8;">
+                This method ensures that you do not overwrite any values in the first array before they have been processed. Use this pattern when you need to merge sorted data and the first array already has enough capacity to hold the final result.
+            </p>
+        </div>
+
+        <!-- Visual Demonstration -->
+        <div class="section">
+            <h2 class="section-title">Visual Walkthrough</h2>
+            <p style="margin-bottom: 30px;">Let's merge <code style="color: var(--accent);">nums1 = [1,2,3,0,0,0]</code> with <code style="color: var(--accent);">nums2 = [2,5,6]</code></p>
+
+            <div class="visual-demo">
+                <div style="text-align: center; margin-bottom: 20px; color: var(--accent-2);">Initial State</div>
+                <div class="array-row">
+                    <div class="array-cell">1</div>
+                    <div class="array-cell">2</div>
+                    <div class="array-cell">3</div>
+                    <div class="array-cell empty">0</div>
+                    <div class="array-cell empty">0</div>
+                    <div class="array-cell empty">0</div>
+                </div>
+                <div style="text-align: center; margin: 20px 0; color: var(--text-dim);">nums1 (m=3, capacity for m+n=6)</div>
+
+                <div class="arrow">↓</div>
+
+                <div class="array-row">
+                    <div class="array-cell">2</div>
+                    <div class="array-cell">5</div>
+                    <div class="array-cell">6</div>
+                </div>
+                <div style="text-align: center; margin: 20px 0; color: var(--text-dim);">nums2 (n=3)</div>
+
+                <div class="arrow">⬇️</div>
+
+                <div style="text-align: center; margin: 30px 0; color: var(--accent);">Compare from end: 3 vs 6</div>
+                <div class="array-row">
+                    <div class="array-cell">1</div>
+                    <div class="array-cell">2</div>
+                    <div class="array-cell">3</div>
+                    <div class="array-cell empty">0</div>
+                    <div class="array-cell empty">0</div>
+                    <div class="array-cell highlight">6
+                        <span class="pointer">k=5</span>
+                    </div>
+                </div>
+
+                <div class="arrow">⬇️</div>
+
+                <div style="text-align: center; margin: 30px 0; color: var(--accent);">Compare: 3 vs 5</div>
+                <div class="array-row">
+                    <div class="array-cell">1</div>
+                    <div class="array-cell">2</div>
+                    <div class="array-cell">3</div>
+                    <div class="array-cell empty">0</div>
+                    <div class="array-cell highlight">5
+                        <span class="pointer">k=4</span>
+                    </div>
+                    <div class="array-cell">6</div>
+                </div>
+
+                <div class="arrow">⬇️</div>
+
+                <div style="text-align: center; margin: 30px 0; color: var(--success);">Final Merged Array</div>
+                <div class="array-row">
+                    <div class="array-cell">1</div>
+                    <div class="array-cell">2</div>
+                    <div class="array-cell">2</div>
+                    <div class="array-cell">3</div>
+                    <div class="array-cell">5</div>
+                    <div class="array-cell">6</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Core Concepts -->
+        <div class="section">
+            <h2 class="section-title">Core Concepts</h2>
+            
+            <div class="tip-box" style="background: rgba(255, 170, 0, 0.05); border-color: var(--warning); margin-bottom: 30px;">
+                <div class="tip-title" style="color: var(--warning);">⚡ Why Subtract 1?</div>
+                <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 20px;">
+                    <strong>Short answer:</strong> Arrays start at index 0!<br><br>
+                    <strong>Detailed explanation:</strong>
+                </p>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <p style="line-height: 1.8; margin-bottom: 15px;">
+                        If <code style="color: var(--accent);">m = 3</code>, nums1 has valid elements at indices: <strong style="color: var(--success);">0, 1, 2</strong>
+                    </p>
+                    <div class="array-row" style="margin: 20px 0;">
+                        <div style="text-align: center; margin-right: 10px; color: var(--text-dim); font-size: 0.8rem;">Index:</div>
+                        <div class="array-cell" style="width: 50px; height: 50px;">
+                            0
+                            <span style="position: absolute; top: -25px; font-size: 0.7rem; color: var(--accent-2);">↓</span>
+                        </div>
+                        <div class="array-cell" style="width: 50px; height: 50px;">
+                            1
+                            <span style="position: absolute; top: -25px; font-size: 0.7rem; color: var(--accent-2);">↓</span>
+                        </div>
+                        <div class="array-cell" style="width: 50px; height: 50px;">
+                            2
+                            <span style="position: absolute; top: -25px; font-size: 0.7rem; color: var(--accent-2);">↓</span>
+                        </div>
+                    </div>
+                    <div class="array-row" style="margin: 20px 0;">
+                        <div style="text-align: center; margin-right: 10px; color: var(--text-dim); font-size: 0.8rem;">Value:</div>
+                        <div class="array-cell" style="width: 50px; height: 50px; font-size: 1.3rem;">1</div>
+                        <div class="array-cell" style="width: 50px; height: 50px; font-size: 1.3rem;">2</div>
+                        <div class="array-cell" style="width: 50px; height: 50px; font-size: 1.3rem;">3</div>
+                    </div>
+                    <p style="line-height: 1.8; margin-top: 15px;">
+                        So the <strong>last valid element</strong> is at index <code style="color: var(--success);">m - 1 = 2</code><br>
+                        NOT at index <code style="color: var(--danger);">m = 3</code> (that would be out of bounds!)
+                    </p>
+                </div>
+                <div style="background: rgba(0, 217, 255, 0.1); padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <p style="line-height: 1.8; margin-bottom: 15px;">
+                        Similarly, if the total capacity is <code style="color: var(--accent);">m + n = 6</code>:
+                    </p>
+                    <div class="array-row" style="margin: 20px 0;">
+                        <div style="text-align: center; margin-right: 10px; color: var(--text-dim); font-size: 0.8rem;">Index:</div>
+                        <div class="array-cell" style="width: 40px; height: 40px; font-size: 0.9rem;">0</div>
+                        <div class="array-cell" style="width: 40px; height: 40px; font-size: 0.9rem;">1</div>
+                        <div class="array-cell" style="width: 40px; height: 40px; font-size: 0.9rem;">2</div>
+                        <div class="array-cell" style="width: 40px; height: 40px; font-size: 0.9rem;">3</div>
+                        <div class="array-cell" style="width: 40px; height: 40px; font-size: 0.9rem;">4</div>
+                        <div class="array-cell highlight" style="width: 40px; height: 40px; font-size: 0.9rem;">5</div>
+                    </div>
+                    <p style="line-height: 1.8;">
+                        The <strong>last position</strong> to fill is at index <code style="color: var(--success);">m + n - 1 = 5</code><br>
+                        NOT at index <code style="color: var(--danger);">m + n = 6</code> (that's beyond the array!)
+                    </p>
+                </div>
+                <div style="background: rgba(255, 107, 53, 0.1); padding: 20px; border-radius: 8px; margin-top: 15px;">
+                    <p style="font-size: 1.05rem; line-height: 1.8;">
+                        <strong style="color: var(--accent);">The Pattern:</strong><br>
+                        • Array of size <code>n</code> has indices from <code>0</code> to <code>n-1</code><br>
+                        • First element: <code>array[0]</code><br>
+                        • Last element: <code>array[n-1]</code><br>
+                        • Length <code>n</code> is NOT a valid index!
+                    </p>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: rgba(0, 255, 136, 0.1); border-radius: 8px; border-left: 3px solid var(--success);">
+                    <p style="font-size: 1rem; line-height: 1.8;">
+                        💡 <strong>Pro Tip:</strong> When you see <code>-1</code> in index initialization, it's almost always because of 0-based indexing. This is one of the most common sources of off-by-one errors in programming!
+                    </p>
+                </div>
+            </div>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-title">Two Pointers Technique</div>
+                    <div class="step-content">
+                        Imagine two fingers pointing at the end of each sorted array. At each step, you compare the numbers under your fingers and move the larger one to the end of the destination array. This ensures you're always placing the next largest element in its correct position.
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">Initialize Three Pointers</div>
+                    <div class="step-content">
+                        <ul class="key-points">
+                            <li><strong>i = m - 1:</strong> Last valid element of nums1 (remember: 0-indexed!)</li>
+                            <li><strong>j = n - 1:</strong> Last element of nums2 (remember: 0-indexed!)</li>
+                            <li><strong>k = m + n - 1:</strong> Last position in nums1 (remember: 0-indexed!)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">Compare and Place</div>
+                    <div class="step-content">
+                        At each step, compare <code style="color: var(--accent);">nums1[i]</code> and <code style="color: var(--accent);">nums2[j]</code>. Place the larger value at <code style="color: var(--accent);">nums1[k]</code>. Move the corresponding pointer(s) backward.
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">Finish Up</div>
+                    <div class="step-content">
+                        If nums2 still has elements left, copy them into nums1. If nums1 has elements left, they're already in place—no action needed!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Implementation -->
+        <div class="section">
+            <h2 class="section-title">Implementation</h2>
+            
+            <div class="language-tabs">
+                <div class="language-tab active" onclick="switchLanguage('cpp')">C++</div>
+                <div class="language-tab" onclick="switchLanguage('java')">Java</div>
+            </div>
+
+            <!-- C++ Implementation -->
+            <div class="code-wrapper">
+                <div class="code-header">
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                    <div class="code-dot"></div>
+                    <span id="filename" style="margin-left: 10px; color: var(--text-dim);">merge_sorted_array.cpp</span>
+                </div>
+
+                <!-- C++ Code -->
+                <div id="cpp-code" class="code-content-wrapper active">
+                    <div class="code-content">
+<pre><span class="keyword">void</span> <span class="function">merge</span>(vector&lt;<span class="keyword">int</span>&gt;& nums1, <span class="keyword">int</span> m, vector&lt;<span class="keyword">int</span>&gt;& nums2, <span class="keyword">int</span> n) {
+    <span class="comment">// Initialize three pointers</span>
+    <span class="keyword">int</span> i = m - <span class="number">1</span>;      <span class="comment">// Last valid element in nums1</span>
+    <span class="keyword">int</span> j = n - <span class="number">1</span>;      <span class="comment">// Last element in nums2</span>
+    <span class="keyword">int</span> k = m + n - <span class="number">1</span>; <span class="comment">// Last position in nums1</span>
+    
+    <span class="comment">// Merge from end to beginning</span>
+    <span class="keyword">while</span> (i >= <span class="number">0</span> && j >= <span class="number">0</span>) {
+        <span class="keyword">if</span> (nums1[i] > nums2[j]) {
+            nums1[k--] = nums1[i--]; <span class="comment">// Take from nums1</span>
+        } <span class="keyword">else</span> {
+            nums1[k--] = nums2[j--]; <span class="comment">// Take from nums2</span>
+        }
+    }
+    
+    <span class="comment">// Copy remaining elements from nums2 (if any)</span>
+    <span class="comment">// Note: Remaining nums1 elements are already in place</span>
+    <span class="keyword">while</span> (j >= <span class="number">0</span>) {
+        nums1[k--] = nums2[j--];
+    }
+}</pre>
+                    </div>
+                </div>
+
+                <!-- Java Code -->
+                <div id="java-code" class="code-content-wrapper">
+                    <div class="code-content">
+<pre><span class="keyword">public</span> <span class="keyword">void</span> <span class="function">merge</span>(<span class="keyword">int</span>[] nums1, <span class="keyword">int</span> m, <span class="keyword">int</span>[] nums2, <span class="keyword">int</span> n) {
+    <span class="comment">// Initialize three pointers</span>
+    <span class="keyword">int</span> i = m - <span class="number">1</span>;      <span class="comment">// Last valid element in nums1</span>
+    <span class="keyword">int</span> j = n - <span class="number">1</span>;      <span class="comment">// Last element in nums2</span>
+    <span class="keyword">int</span> k = m + n - <span class="number">1</span>; <span class="comment">// Last position in nums1</span>
+    
+    <span class="comment">// Merge from end to beginning</span>
+    <span class="keyword">while</span> (i >= <span class="number">0</span> && j >= <span class="number">0</span>) {
+        <span class="keyword">if</span> (nums1[i] > nums2[j]) {
+            nums1[k--] = nums1[i--]; <span class="comment">// Take from nums1</span>
+        } <span class="keyword">else</span> {
+            nums1[k--] = nums2[j--]; <span class="comment">// Take from nums2</span>
+        }
+    }
+    
+    <span class="comment">// Copy remaining elements from nums2 (if any)</span>
+    <span class="comment">// Note: Remaining nums1 elements are already in place</span>
+    <span class="keyword">while</span> (j >= <span class="number">0</span>) {
+        nums1[k--] = nums2[j--];
+    }
+}
+
+<span class="comment">// Alternative: Using System.arraycopy for remaining elements</span>
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="function">mergeOptimized</span>(<span class="keyword">int</span>[] nums1, <span class="keyword">int</span> m, <span class="keyword">int</span>[] nums2, <span class="keyword">int</span> n) {
+    <span class="keyword">int</span> i = m - <span class="number">1</span>;
+    <span class="keyword">int</span> j = n - <span class="number">1</span>;
+    <span class="keyword">int</span> k = m + n - <span class="number">1</span>;
+    
+    <span class="comment">// Merge larger elements first</span>
+    <span class="keyword">while</span> (i >= <span class="number">0</span> && j >= <span class="number">0</span>) {
+        nums1[k--] = (nums1[i] > nums2[j]) ? nums1[i--] : nums2[j--];
+    }
+    
+    <span class="comment">// Efficiently copy remaining nums2 elements</span>
+    <span class="keyword">if</span> (j >= <span class="number">0</span>) {
+        System.arraycopy(nums2, <span class="number">0</span>, nums1, <span class="number">0</span>, j + <span class="number">1</span>);
+    }
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box" style="margin-top: 30px;">
+                <div class="tip-title">Key Implementation Points</div>
+                <ul class="key-points">
+                    <li>Three pointers track position in both arrays and where to write next</li>
+                    <li>Merge from end to prevent overwriting unprocessed values</li>
+                    <li>Only copy leftover nums2 elements; nums1 elements already in place</li>
+                    <li>Decrement all pointers after each placement using post-decrement</li>
+                    <li><strong>Java Bonus:</strong> System.arraycopy provides optimized bulk copy for remaining elements</li>
+                </ul>
+            </div>
+
+            <div style="background: rgba(0, 255, 136, 0.05); border: 2px solid var(--success); border-radius: 12px; padding: 30px; margin-top: 30px;">
+                <h3 style="color: var(--success); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 1.5rem;">🤔</span>
+                    Why Only Copy Remaining nums2 Elements?
+                </h3>
+                
+                <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 25px; color: var(--text);">
+                    <strong style="color: var(--accent);">Short Answer:</strong> Leftover nums1 elements are already in their correct positions!
+                </p>
+
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 25px; border-radius: 8px; margin: 20px 0;">
+                    <h4 style="color: var(--accent-2); margin-bottom: 15px;">📍 Scenario 1: nums1 runs out first (i becomes -1)</h4>
+                    <p style="line-height: 1.8; margin-bottom: 15px;">
+                        All nums1 elements have been placed. Only nums2 elements remain.<br>
+                        <strong style="color: var(--warning);">Action needed:</strong> Copy remaining nums2 into front of nums1.
+                    </p>
+                    <div style="background: rgba(255, 170, 0, 0.1); padding: 15px; border-radius: 6px; margin-top: 15px;">
+                        <strong>Example:</strong> nums1 = [1,2,3,0,0,0], nums2 = [4,5,6]
+                        <div class="array-row" style="margin: 15px 0; justify-content: flex-start;">
+                            <div style="margin-right: 20px; color: var(--text-dim);">Before loop ends:</div>
+                            <div class="array-cell" style="width: 45px; height: 45px;">?</div>
+                            <div class="array-cell" style="width: 45px; height: 45px;">?</div>
+                            <div class="array-cell" style="width: 45px; height: 45px;">?</div>
+                            <div class="array-cell" style="width: 45px; height: 45px; background: var(--secondary); border-color: var(--success);">1</div>
+                            <div class="array-cell" style="width: 45px; height: 45px; background: var(--secondary); border-color: var(--success);">2</div>
+                            <div class="array-cell" style="width: 45px; height: 45px; background: var(--secondary); border-color: var(--success);">3</div>
+                        </div>
+                        <div style="margin-top: 10px; color: var(--accent-2);">
+                            ← Need to copy 4, 5, 6 from nums2
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 25px; border-radius: 8px; margin: 20px 0;">
+                    <h4 style="color: var(--accent-2); margin-bottom: 15px;">📍 Scenario 2: nums2 runs out first (j becomes -1)</h4>
+                    <p style="line-height: 1.8; margin-bottom: 15px;">
+                        All nums2 elements have been placed. Only nums1 elements remain.<br>
+                        <strong style="color: var(--success);">Action needed:</strong> NOTHING! They're already in the correct spots!
+                    </p>
+                    <div style="background: rgba(0, 255, 136, 0.1); padding: 15px; border-radius: 6px; margin-top: 15px;">
+                        <strong>Example:</strong> nums1 = [4,5,6,0,0,0], nums2 = [1,2,3]
+                        <div class="array-row" style="margin: 15px 0; justify-content: flex-start;">
+                            <div style="margin-right: 20px; color: var(--text-dim);">After loop ends:</div>
+                            <div class="array-cell highlight" style="width: 45px; height: 45px;">4</div>
+                            <div class="array-cell highlight" style="width: 45px; height: 45px;">5</div>
+                            <div class="array-cell highlight" style="width: 45px; height: 45px;">6</div>
+                            <div class="array-cell" style="width: 45px; height: 45px; background: var(--secondary); border-color: var(--success);">1</div>
+                            <div class="array-cell" style="width: 45px; height: 45px; background: var(--secondary); border-color: var(--success);">2</div>
+                            <div class="array-cell" style="width: 45px; height: 45px; background: var(--secondary); border-color: var(--success);">3</div>
+                        </div>
+                        <div style="margin-top: 10px; color: var(--success);">
+                            ✓ Elements 4,5,6 are already sorted and in place!
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(0, 217, 255, 0.1)); padding: 25px; border-radius: 8px; margin-top: 25px; border-left: 4px solid var(--accent);">
+                    <h4 style="color: var(--accent); margin-bottom: 15px;">🎯 The Key Insight</h4>
+                    <p style="font-size: 1.05rem; line-height: 1.8;">
+                        We're merging <strong>INTO nums1</strong>. When nums2 runs out, any remaining nums1 elements haven't been moved yet, which means they're still sitting in their original positions—and those positions are already correct for the final sorted array!
+                    </p>
+                    <p style="font-size: 1.05rem; line-height: 1.8; margin-top: 15px;">
+                        Think about it: if we haven't moved them yet, it's because all nums2 elements were larger and got placed after them. So the remaining nums1 elements are already sorted at the front.
+                    </p>
+                </div>
+
+                <div style="background: rgba(255, 170, 0, 0.05); border: 2px solid var(--warning); border-radius: 8px; padding: 20px; margin-top: 25px;">
+                    <h4 style="color: var(--warning); margin-bottom: 15px;">⚠️ Why We DON'T Need This:</h4>
+                    <pre style="background: rgba(0, 0, 0, 0.5); padding: 15px; border-radius: 6px; color: var(--text-dim); text-decoration: line-through;"><span class="comment">// ❌ This loop is NOT needed!</span>
+<span class="keyword">while</span> (i >= <span class="number">0</span>) {
+    nums1[k--] = nums1[i--];  <span class="comment">// Unnecessary!</span>
+}</pre>
+                    <p style="margin-top: 15px; line-height: 1.8;">
+                        This would be copying nums1 elements <strong>to themselves</strong>. If <code style="color: var(--accent);">i = 2</code> and <code style="color: var(--accent);">k = 2</code>, you'd do <code style="color: var(--accent);">nums1[2] = nums1[2]</code> which is pointless!
+                    </p>
+                </div>
+
+                <div style="margin-top: 25px; padding: 20px; background: rgba(0, 217, 255, 0.1); border-radius: 8px;">
+                    <h4 style="color: var(--accent-2); margin-bottom: 15px;">💡 Memory Trick</h4>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        <strong>"If it's still in nums1, it's already home!"</strong><br><br>
+                        nums2 elements need to be <em>moved</em> into nums1.<br>
+                        nums1 elements are already <em>in</em> nums1 (just haven't been touched yet).
+                    </p>
+                </div>
+            </div>
+
+            <div style="background: rgba(0, 217, 255, 0.05); border: 1px solid rgba(0, 217, 255, 0.3); border-radius: 12px; padding: 25px; margin-top: 30px;">
+                <h3 style="color: var(--accent-2); margin-bottom: 15px;">Java-Specific Optimizations</h3>
+                <ul class="key-points">
+                    <li><strong>System.arraycopy:</strong> Native method for efficient array copying (faster than loop for large arrays)</li>
+                    <li><strong>Ternary operator:</strong> More concise than if-else for simple comparisons</li>
+                    <li><strong>Array bounds:</strong> Java automatically checks bounds (C++ doesn't), so no additional checks needed</li>
+                    <li><strong>Pass by reference:</strong> Arrays are objects in Java, passed by reference like C++ references</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Use Cases -->
+        <div class="section">
+            <h2 class="section-title">Real-World Use Cases</h2>
+            
+            <div class="use-case-grid">
+                <div class="use-case">
+                    <div class="use-case-icon">🏦</div>
+                    <div class="use-case-text">
+                        <strong>Bank Transactions:</strong> Merging two sorted lists of bank transactions into one historical record for auditing purposes.
+                    </div>
+                </div>
+
+                <div class="use-case">
+                    <div class="use-case-icon">📦</div>
+                    <div class="use-case-text">
+                        <strong>Database Migration:</strong> Combining two sorted lists of product IDs during a database migration or data consolidation.
+                    </div>
+                </div>
+
+                <div class="use-case">
+                    <div class="use-case-icon">📡</div>
+                    <div class="use-case-text">
+                        <strong>Sensor Data:</strong> Updating a sorted list of sensor data with a new set of sorted readings in IoT systems.
+                    </div>
+                </div>
+
+                <div class="use-case">
+                    <div class="use-case-icon">🔍</div>
+                    <div class="use-case-text">
+                        <strong>Search Results:</strong> Consolidating two sorted lists of search results on a mobile device with limited RAM.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edge Cases -->
+        <div class="section">
+            <h2 class="section-title">Edge Cases & Debugging</h2>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-title">nums2 is Empty</div>
+                    <div class="step-content">
+                        No action needed—nums1 is already sorted and complete. The while loop for copying nums2 won't execute.
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">nums1 is Empty (apart from buffer)</div>
+                    <div class="step-content">
+                        When m=0, the first while loop never executes. The second loop copies all elements from nums2 into nums1.
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">All nums2 Elements Larger</div>
+                    <div class="step-content">
+                        nums2 elements get placed at the end. nums1 elements remain at the front. Example: nums1=[1,2,3], nums2=[7,8,9] → [1,2,3,7,8,9]
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">All nums2 Elements Smaller</div>
+                    <div class="step-content">
+                        All nums1 elements get moved to the back first. Then remaining nums2 elements copied to front. Example: nums1=[7,8,9], nums2=[1,2,3] → [1,2,3,7,8,9]
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box" style="margin-top: 30px; background: rgba(255, 170, 0, 0.05); border-color: var(--warning);">
+                <div class="tip-title" style="color: var(--warning);">⚠️ Common Pitfalls</div>
+                <ul class="key-points">
+                    <li>Off-by-one errors in pointer initialization (remember: m-1, n-1, m+n-1)</li>
+                    <li>Forgetting to handle leftover nums2 elements</li>
+                    <li>Not recognizing that leftover nums1 elements don't need moving</li>
+                    <li>Comparing indices instead of actual array values</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Recognition Signals -->
+        <div class="section">
+            <h2 class="section-title">Pattern Recognition Signals</h2>
+            
+            <div style="background: rgba(0, 217, 255, 0.1); border-radius: 12px; padding: 30px; margin-top: 30px;">
+                <h3 style="color: var(--accent-2); margin-bottom: 20px;">🎯 Use This Pattern When You See:</h3>
+                <ul class="key-points">
+                    <li>Two sorted arrays that need to be merged</li>
+                    <li>First array has extra space at the end for the merge</li>
+                    <li>Problem constraints mention "O(1) extra space" or "in-place"</li>
+                    <li>You need to modify the input array directly</li>
+                    <li>Both arrays are already sorted (crucial prerequisite)</li>
+                </ul>
+            </div>
+
+            <div class="tip-box" style="margin-top: 30px;">
+                <div class="tip-title">Memory Trick</div>
+                <p style="font-size: 1.1rem; line-height: 1.8;">
+                    <strong style="color: var(--success);">"Fill from the back, never look back!"</strong><br>
+                    Visualize the process as packing a suitcase from the bottom up—largest items first, working your way down.
+                </p>
+            </div>
+        </div>
+
+        <!-- Mathematical Foundation -->
+        <div class="section">
+            <h2 class="section-title">Mathematical Foundation</h2>
+            
+            <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 30px;">
+                This pattern leverages a fundamental property of sorted arrays: <strong style="color: var(--accent);">the largest elements are at the end</strong>. By merging from the back, you ensure you never overwrite unprocessed data.
+            </p>
+
+            <div style="background: rgba(0, 0, 0, 0.3); border-radius: 12px; padding: 30px; margin: 30px 0;">
+                <h3 style="color: var(--accent-2); margin-bottom: 20px;">It's Actually Merge Sort's Merge Step!</h3>
+                <p style="line-height: 1.8;">
+                    This is a practical application of the merge step in the classic <strong>Merge Sort</strong> algorithm, optimized for in-place operations. Instead of creating a temporary array, we use the existing buffer space in nums1.
+                </p>
+            </div>
+
+            <ul class="key-points" style="margin-top: 30px;">
+                <li><strong>Invariant:</strong> At each step, elements from index k+1 to m+n-1 are in their final sorted positions</li>
+                <li><strong>Correctness:</strong> We always pick the larger of nums1[i] or nums2[j], maintaining sorted order</li>
+                <li><strong>Termination:</strong> Loop ends when we've processed all elements from at least one array</li>
+            </ul>
+        </div>
+
+        <!-- Practice Tips -->
+        <div class="section">
+            <h2 class="section-title">Practice & Mastery Tips</h2>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-title">Start Simple</div>
+                    <div class="step-content">
+                        Draw arrays on paper. Manually trace pointer movements. This builds intuition before coding.
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">Test Edge Cases</div>
+                    <div class="step-content">
+                        Always test: empty nums2, empty nums1, all nums2 larger, all nums2 smaller, equal elements.
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">Recognize Variations</div>
+                    <div class="step-content">
+                        This pattern extends to: merging K sorted arrays, merging linked lists, and merge operations in external sorting.
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-title">Time Yourself</div>
+                    <div class="step-content">
+                        With practice, you should implement this solution in under 5 minutes. It's a common interview question!
+                    </div>
+                </div>
+            </div>
+
+            <div class="tip-box" style="margin-top: 40px; background: rgba(0, 255, 136, 0.1);">
+                <div class="tip-title">🎯 Aha! Moment</div>
+                <p style="font-size: 1.1rem; line-height: 1.8;">
+                    The breakthrough realization: <strong style="color: var(--success);">leftover elements in nums1 don't need to be moved</strong> because they're already in their correct positions! This is why we only have a loop to copy remaining nums2 elements.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p style="font-size: 0.9rem; margin-bottom: 10px;">
+            Master this pattern and unlock efficient in-place array manipulation
+        </p>
+        <p style="font-size: 0.8rem; opacity: 0.6;">
+            Array/Matrix Manipulation Patterns • Visual Learning Guide
+        </p>
+    </footer>
+
+    <script>
+        function switchLanguage(lang) {
+            // Update tab styling
+            const tabs = document.querySelectorAll('.language-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update code visibility
+            const cppCode = document.getElementById('cpp-code');
+            const javaCode = document.getElementById('java-code');
+            const filename = document.getElementById('filename');
+            
+            if (lang === 'cpp') {
+                cppCode.classList.add('active');
+                javaCode.classList.remove('active');
+                filename.textContent = 'merge_sorted_array.cpp';
+            } else if (lang === 'java') {
+                cppCode.classList.remove('active');
+                javaCode.classList.add('active');
+                filename.textContent = 'MergeSortedArray.java';
+            }
+        }
+    </script>
+</body>
+</html>

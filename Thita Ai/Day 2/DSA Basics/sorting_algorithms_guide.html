@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elementary Sorting - Complete Visual Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0e27;
+            --bg-card: #1a1f3a;
+            --bg-code: #0d1117;
+            --accent-cyan: #00d9ff;
+            --accent-purple: #b845ff;
+            --accent-green: #00ff88;
+            --accent-red: #ff4757;
+            --accent-orange: #ffa502;
+            --accent-yellow: #ffd32a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 80px;
+            padding: 80px 40px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            border-radius: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            opacity: 0.1;
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: 700;
+            color: var(--bg-dark);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--bg-dark);
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 50px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(0, 217, 255, 0.2);
+        }
+
+        h2 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            color: var(--accent-cyan);
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 2rem;
+            margin: 40px 0 20px 0;
+            color: var(--accent-purple);
+            font-weight: 600;
+        }
+
+        h4 {
+            font-size: 1.5rem;
+            margin: 25px 0 15px 0;
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .analogy-box {
+            background: linear-gradient(135deg, rgba(255, 211, 42, 0.1), rgba(255, 165, 2, 0.1));
+            border-left: 5px solid var(--accent-yellow);
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            line-height: 1.9;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 217, 255, 0.1));
+            border: 2px solid var(--accent-green);
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 15px;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 71, 87, 0.1), rgba(255, 165, 2, 0.1));
+            border-left: 5px solid var(--accent-red);
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 15px;
+        }
+
+        .visual-diagram {
+            background: var(--bg-code);
+            border: 2px solid var(--accent-purple);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .code-block {
+            background: var(--bg-code);
+            border: 2px solid var(--accent-cyan);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-size: 1.1rem;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            color: var(--bg-dark);
+            padding: 20px;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        .comparison-table td {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(0, 217, 255, 0.05);
+        }
+
+        .keyword {
+            color: var(--accent-purple);
+            font-weight: 600;
+        }
+
+        .comment {
+            color: var(--accent-green);
+            font-style: italic;
+        }
+
+        .number {
+            color: var(--accent-orange);
+        }
+
+        .string {
+            color: var(--accent-yellow);
+        }
+
+        code {
+            background: rgba(0, 217, 255, 0.1);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-cyan);
+        }
+
+        .step-box {
+            background: rgba(184, 69, 255, 0.1);
+            border-left: 5px solid var(--accent-purple);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--accent-purple);
+            color: var(--bg-dark);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: 700;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 15px;
+        }
+
+        li {
+            margin: 10px 0;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .toc {
+            background: rgba(184, 69, 255, 0.1);
+            border: 2px solid var(--accent-purple);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+
+        .toc h2 {
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        .toc ul {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .toc li {
+            margin: 15px 0;
+            font-size: 1.2rem;
+        }
+
+        .toc a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .toc a:hover {
+            color: var(--accent-green);
+            padding-left: 10px;
+        }
+    
+        /* ENHANCED ARRAY VISUALIZATION STYLES */
+        .array-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 40px 0;
+            padding: 30px;
+            background: rgba(0, 217, 255, 0.05);
+            border-radius: 20px;
+            border: 2px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .array-label {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .array-grid {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .array-cell {
+            width: 80px;
+            height: 80px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--bg-card);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .array-cell .index {
+            position: absolute;
+            top: -25px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .array-cell .value {
+            font-size: 2rem;
+            color: var(--text-primary);
+        }
+
+        .array-cell.current {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(184, 69, 255, 0.6);
+        }
+
+        .array-cell.comparing {
+            background: var(--accent-orange);
+            border-color: var(--accent-orange);
+            animation: pulse 1s infinite;
+        }
+
+        .array-cell.sorted {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: var(--bg-dark);
+        }
+
+        .array-cell.swapped {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+            animation: shake 0.5s;
+        }
+
+        .array-cell.minimum {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 25px rgba(0, 217, 255, 0.8);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .step-indicator {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--accent-purple);
+            color: white;
+            border-radius: 25px;
+            font-weight: 700;
+            margin: 10px 5px;
+            font-size: 0.95rem;
+        }
+
+        .comparison-counter {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .counter-box {
+            padding: 15px 25px;
+            background: rgba(184, 69, 255, 0.1);
+            border: 2px solid var(--accent-purple);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .counter-box .label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .counter-box .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+
+        .arrow-down {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--accent-orange);
+            margin: 20px 0;
+            font-weight: 900;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.05rem;
+        }
+
+        .legend-box {
+            width: 35px;
+            height: 35px;
+            border-radius: 6px;
+            border: 2px solid;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Elementary Sorting</h1>
+            <p class="subtitle">Building Your Programming Foundations</p>
+        </header>
+
+        <!-- TABLE OF CONTENTS -->
+        <div class="toc">
+            <h2>📑 Table of Contents</h2>
+            <ul>
+                <li><a href="#overview">1. Pattern Overview - Why Sorting Matters</a></li>
+                <li><a href="#foundation">2. Foundational Understanding</a></li>
+                <li><a href="#bubble">3. Bubble Sort - The Simplest Approach</a></li>
+                <li><a href="#selection">4. Selection Sort - Find & Place</a></li>
+                <li><a href="#insertion">5. Insertion Sort - Build Gradually</a></li>
+                <li><a href="#merge">6. Merge Sort Fundamentals</a></li>
+                <li><a href="#quick">7. Quick Sort Fundamentals</a></li>
+                <li><a href="#stability">8. Stability & In-Place Sorting</a></li>
+                <li><a href="#comparison">9. Complete Comparison & When to Use What</a></li>
+                <li><a href="#practice">10. Practice Strategies & Common Mistakes</a></li>
+            </ul>
+        </div>
+
+        <!-- SECTION 1: OVERVIEW -->
+        <section id="overview" class="section">
+            <h2>1️⃣ Pattern Overview - Why Sorting Matters</h2>
+            
+            <div class="analogy-box">
+                <h3 style="color: var(--accent-yellow); margin-top: 0;">📖 The Book Pile Analogy</h3>
+                <p style="font-size: 1.2rem; line-height: 2;">
+                    Imagine you have a messy pile of books on your desk. Some are thick, some are thin, 
+                    and they're all out of order. You want to arrange them from smallest to largest.
+                </p>
+                <p style="font-size: 1.2rem; line-height: 2; margin-top: 15px;">
+                    You might:
+                </p>
+                <ul style="font-size: 1.15rem; line-height: 2;">
+                    <li><strong>Compare two at a time</strong> and swap them (Bubble Sort)</li>
+                    <li><strong>Find the thinnest book</strong> and put it at the beginning (Selection Sort)</li>
+                    <li><strong>Pick books one by one</strong> and insert them in the right spot (Insertion Sort)</li>
+                </ul>
+                <p style="font-size: 1.2rem; line-height: 2; margin-top: 15px; color: var(--accent-cyan);">
+                    <strong>This everyday act of organizing is what sorting is all about!</strong>
+                </p>
+            </div>
+
+            <h3>🎯 Why Learn Elementary Sorting?</h3>
+            <div class="highlight-box">
+                <ol style="font-size: 1.2rem; line-height: 2.5;">
+                    <li><strong style="color: var(--accent-cyan);">Foundation of Programming:</strong> Like learning the alphabet before writing sentences</li>
+                    <li><strong style="color: var(--accent-cyan);">Universal Skill:</strong> Used everywhere from file systems to online stores</li>
+                    <li><strong style="color: var(--accent-cyan);">Builds Logical Thinking:</strong> Teaches you to break problems into steps</li>
+                    <li><strong style="color: var(--accent-cyan);">Real-World Applications:</strong> Organizing scores, names, dates, products</li>
+                </ol>
+            </div>
+
+            <h3>🚀 What You'll Master</h3>
+            <ul style="font-size: 1.15rem; line-height: 2;">
+                <li>How to <strong style="color: var(--accent-green);">organize data</strong> efficiently</li>
+                <li>Understanding <strong style="color: var(--accent-green);">step-by-step algorithms</strong></li>
+                <li>Recognizing <strong style="color: var(--accent-green);">when to use which sorting method</strong></li>
+                <li>Building <strong style="color: var(--accent-green);">problem-solving confidence</strong></li>
+            </ul>
+        </section>
+
+
+        <!-- SECTION 2: FOUNDATION -->
+        <section id="foundation" class="section">
+            <h2>2️⃣ Foundational Understanding</h2>
+            
+            <h3>🔍 What is Sorting?</h3>
+            <p style="font-size: 1.2rem; line-height: 2;">
+                At its heart, sorting is about <strong style="color: var(--accent-cyan);">putting things in order</strong>. 
+                In programming, this means arranging data so you can use it more effectively.
+            </p>
+
+            <div class="highlight-box">
+                <h4 style="margin-top: 0;">Three Reasons Sorting Matters:</h4>
+                <ol style="font-size: 1.15rem; line-height: 2.5;">
+                    <li><strong style="color: var(--accent-green);">Organization:</strong> Sorted data is easier to search, analyze, and present</li>
+                    <li><strong style="color: var(--accent-green);">Efficiency:</strong> Many algorithms (like binary search) work faster on sorted data</li>
+                    <li><strong style="color: var(--accent-green);">Clarity:</strong> Sorting helps you see patterns and relationships</li>
+                </ol>
+            </div>
+
+            <h3>🎨 Six Sorting Strategies</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Algorithm</th>
+                        <th>Mental Model</th>
+                        <th>Best For</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong style="color: var(--accent-cyan);">Bubble Sort</strong></td>
+                        <td>Bubbles rise to the top</td>
+                        <td>Learning, small lists</td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: var(--accent-purple);">Selection Sort</strong></td>
+                        <td>Find minimum, place at start</td>
+                        <td>Small lists, teaching</td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: var(--accent-green);">Insertion Sort</strong></td>
+                        <td>Like sorting playing cards</td>
+                        <td>Nearly sorted data</td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: var(--accent-orange);">Merge Sort</strong></td>
+                        <td>Divide, sort, merge</td>
+                        <td>Large lists, stable sorting</td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: var(--accent-red);">Quick Sort</strong></td>
+                        <td>Partition around pivot</td>
+                        <td>Average case performance</td>
+                    </tr>
+                    <tr>
+                        <td><strong style="color: var(--accent-yellow);">Stability</strong></td>
+                        <td>Keep equal items in order</td>
+                        <td>Multiple sort criteria</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- SECTION 3: BUBBLE SORT -->
+        <section id="bubble" class="section" style="border-color: var(--accent-cyan);">
+            <h2>3️⃣ Bubble Sort - The Simplest Approach</h2>
+            
+            <div class="analogy-box">
+                <h3 style="color: var(--accent-cyan); margin-top: 0;">🫧 The Bubble Analogy</h3>
+                <p style="font-size: 1.2rem; line-height: 2;">
+                    Imagine bubbles in water rising to the surface. Larger bubbles rise faster. In Bubble Sort, 
+                    we compare adjacent elements and swap them if they're out of order. The largest values 
+                    "bubble up" to the end, just like bubbles rising to the surface!
+                </p>
+            </div>
+
+            <h3>📊 Enhanced Visual Walkthrough: [5, 2, 8, 1, 9]</h3>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-box comparing" style="background: var(--accent-orange); border-color: var(--accent-orange);"></div>
+                    <span>Comparing</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box swapped" style="background: var(--accent-red); border-color: var(--accent-red);"></div>
+                    <span>Swapped</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box sorted" style="background: var(--accent-green); border-color: var(--accent-green);"></div>
+                    <span>Sorted</span>
+                </div>
+            </div>
+
+            <!-- INITIAL STATE -->
+            <div class="array-container">
+                <div class="array-label">Initial Array</div>
+                <div class="array-grid">
+                    <div class="array-cell">
+                        <div class="index">i=0</div>
+                        <div class="value">5</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=1</div>
+                        <div class="value">2</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=2</div>
+                        <div class="value">8</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=3</div>
+                        <div class="value">1</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=4</div>
+                        <div class="value">9</div>
+                    </div>
+                </div>
+            </div>
+
+            <h4 style="color: var(--accent-cyan); font-size: 1.8rem; margin: 40px 0 20px 0;">Pass 1: Bubble the largest element to the end</h4>
+
+            <!-- STEP 1: Compare 5 and 2 -->
+            <div class="array-container">
+                <div class="array-label">Step 1: Compare arr[0]=5 and arr[1]=2 → SWAP!</div>
+                <div class="array-grid">
+                    <div class="array-cell comparing">
+                        <div class="index">i=0</div>
+                        <div class="value">5</div>
+                    </div>
+                    <div class="array-cell comparing">
+                        <div class="index">i=1</div>
+                        <div class="value">2</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=2</div>
+                        <div class="value">8</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=3</div>
+                        <div class="value">1</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=4</div>
+                        <div class="value">9</div>
+                    </div>
+                </div>
+                <div class="comparison-counter">
+                    <div class="counter-box">
+                        <div class="label">5 > 2?</div>
+                        <div class="value">TRUE</div>
+                    </div>
+                    <div class="counter-box">
+                        <div class="label">Action</div>
+                        <div class="value">SWAP</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down">↓</div>
+
+            <!-- AFTER SWAP -->
+            <div class="array-container">
+                <div class="array-label">After Swap</div>
+                <div class="array-grid">
+                    <div class="array-cell swapped">
+                        <div class="index">i=0</div>
+                        <div class="value">2</div>
+                    </div>
+                    <div class="array-cell swapped">
+                        <div class="index">i=1</div>
+                        <div class="value">5</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=2</div>
+                        <div class="value">8</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=3</div>
+                        <div class="value">1</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=4</div>
+                        <div class="value">9</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2: Compare 5 and 8 -->
+            <div class="array-container">
+                <div class="array-label">Step 2: Compare arr[1]=5 and arr[2]=8 → No Swap</div>
+                <div class="array-grid">
+                    <div class="array-cell">
+                        <div class="index">i=0</div>
+                        <div class="value">2</div>
+                    </div>
+                    <div class="array-cell comparing">
+                        <div class="index">i=1</div>
+                        <div class="value">5</div>
+                    </div>
+                    <div class="array-cell comparing">
+                        <div class="index">i=2</div>
+                        <div class="value">8</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=3</div>
+                        <div class="value">1</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=4</div>
+                        <div class="value">9</div>
+                    </div>
+                </div>
+                <div class="comparison-counter">
+                    <div class="counter-box">
+                        <div class="label">5 > 8?</div>
+                        <div class="value" style="color: var(--accent-red);">FALSE</div>
+                    </div>
+                    <div class="counter-box">
+                        <div class="label">Action</div>
+                        <div class="value" style="color: var(--accent-green);">NO SWAP</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: Compare 8 and 1 -->
+            <div class="array-container">
+                <div class="array-label">Step 3: Compare arr[2]=8 and arr[3]=1 → SWAP!</div>
+                <div class="array-grid">
+                    <div class="array-cell">
+                        <div class="index">i=0</div>
+                        <div class="value">2</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=1</div>
+                        <div class="value">5</div>
+                    </div>
+                    <div class="array-cell comparing">
+                        <div class="index">i=2</div>
+                        <div class="value">8</div>
+                    </div>
+                    <div class="array-cell comparing">
+                        <div class="index">i=3</div>
+                        <div class="value">1</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=4</div>
+                        <div class="value">9</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down">↓</div>
+
+            <div class="array-container">
+                <div class="array-label">After Swap</div>
+                <div class="array-grid">
+                    <div class="array-cell">
+                        <div class="index">i=0</div>
+                        <div class="value">2</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=1</div>
+                        <div class="value">5</div>
+                    </div>
+                    <div class="array-cell swapped">
+                        <div class="index">i=2</div>
+                        <div class="value">1</div>
+                    </div>
+                    <div class="array-cell swapped">
+                        <div class="index">i=3</div>
+                        <div class="value">8</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=4</div>
+                        <div class="value">9</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 4: Compare 8 and 9 -->
+            <div class="array-container">
+                <div class="array-label">Step 4: Compare arr[3]=8 and arr[4]=9 → No Swap</div>
+                <div class="array-grid">
+                    <div class="array-cell">
+                        <div class="index">i=0</div>
+                        <div class="value">2</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=1</div>
+                        <div class="value">5</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=2</div>
+                        <div class="value">1</div>
+                    </div>
+                    <div class="array-cell comparing">
+                        <div class="index">i=3</div>
+                        <div class="value">8</div>
+                    </div>
+                    <div class="array-cell comparing">
+                        <div class="index">i=4</div>
+                        <div class="value">9</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASS 1 COMPLETE -->
+            <div class="array-container" style="border-color: var(--accent-green);">
+                <div class="array-label" style="color: var(--accent-green);">✅ Pass 1 Complete! Largest element (9) bubbled to end</div>
+                <div class="array-grid">
+                    <div class="array-cell">
+                        <div class="index">i=0</div>
+                        <div class="value">2</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=1</div>
+                        <div class="value">5</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=2</div>
+                        <div class="value">1</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=3</div>
+                        <div class="value">8</div>
+                    </div>
+                    <div class="array-cell sorted">
+                        <div class="index">i=4</div>
+                        <div class="value">9</div>
+                    </div>
+                </div>
+            </div>
+
+            <h4 style="color: var(--accent-cyan); font-size: 1.8rem; margin: 40px 0 20px 0;">Final Passes (Summary)</h4>
+
+            <div class="array-container">
+                <div class="array-label">Pass 2 Result: 8 in position</div>
+                <div class="array-grid">
+                    <div class="array-cell">
+                        <div class="index">i=0</div>
+                        <div class="value">2</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=1</div>
+                        <div class="value">1</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=2</div>
+                        <div class="value">5</div>
+                    </div>
+                    <div class="array-cell sorted">
+                        <div class="index">i=3</div>
+                        <div class="value">8</div>
+                    </div>
+                    <div class="array-cell sorted">
+                        <div class="index">i=4</div>
+                        <div class="value">9</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down">↓</div>
+
+            <div class="array-container">
+                <div class="array-label">Pass 3 Result: 5 in position</div>
+                <div class="array-grid">
+                    <div class="array-cell">
+                        <div class="index">i=0</div>
+                        <div class="value">1</div>
+                    </div>
+                    <div class="array-cell">
+                        <div class="index">i=1</div>
+                        <div class="value">2</div>
+                    </div>
+                    <div class="array-cell sorted">
+                        <div class="index">i=2</div>
+                        <div class="value">5</div>
+                    </div>
+                    <div class="array-cell sorted">
+                        <div class="index">i=3</div>
+                        <div class="value">8</div>
+                    </div>
+                    <div class="array-cell sorted">
+                        <div class="index">i=4</div>
+                        <div class="value">9</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow-down">↓</div>
+
+            <div class="array-container" style="border: 3px solid var(--accent-green); background: rgba(0, 255, 136, 0.1);">
+                <div class="array-label" style="color: var(--accent-green); font-size: 1.5rem;">🎉 FULLY SORTED!</div>
+                <div class="array-grid">
+                    <div class="array-cell sorted">
+                        <div class="index">i=0</div>
+                        <div class="value">1</div>
+                    </div>
+                    <div class="array-cell sorted">
+                        <div class="index">i=1</div>
+                        <div class="value">2</div>
+                    </div>
+                    <div class="array-cell sorted">
+                        <div class="index">i=2</div>
+                        <div class="value">5</div>
+                    </div>
+                    <div class="array-cell sorted">
+                        <div class="index">i=3</div>
+                        <div class="value">8</div>
+                    </div>
+                    <div class="array-cell sorted">
+                        <div class="index">i=4</div>
+                        <div class="value">9</div>
+                    </div>
+                </div>
+                <div class="comparison-counter" style="margin-top: 25px;">
+                    <div class="counter-box" style="border-color: var(--accent-green); background: rgba(0, 255, 136, 0.1);">
+                        <div class="label">Total Comparisons</div>
+                        <div class="value">10</div>
+                    </div>
+                    <div class="counter-box" style="border-color: var(--accent-green); background: rgba(0, 255, 136, 0.1);">
+                        <div class="label">Total Swaps</div>
+                        <div class="value">3</div>
+                    </div>
+                    <div class="counter-box" style="border-color: var(--accent-green); background: rgba(0, 255, 136, 0.1);">
+                        <div class="label">Passes</div>
+                        <div class="value">3</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>💻 Java Implementation</h3>
+            <div class="code-block">
+<pre>
+<span class="keyword">public void</span> <span style="color: var(--accent-cyan);">bubbleSort</span>(<span class="keyword">int</span>[] arr) {
+    <span class="keyword">int</span> n = arr.length;
+    
+    <span class="comment">// Outer loop: number of passes</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < n - <span class="number">1</span>; i++) {
+        <span class="keyword">boolean</span> swapped = <span class="keyword">false</span>;
+        
+        <span class="comment">// Inner loop: compare adjacent elements</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j < n - i - <span class="number">1</span>; j++) {
+            <span class="keyword">if</span> (arr[j] > arr[j + <span class="number">1</span>]) {
+                <span class="comment">// Swap if out of order</span>
+                <span class="keyword">int</span> temp = arr[j];
+                arr[j] = arr[j + <span class="number">1</span>];
+                arr[j + <span class="number">1</span>] = temp;
+                swapped = <span class="keyword">true</span>;
+            }
+        }
+        
+        <span class="comment">// If no swaps, array is sorted!</span>
+        <span class="keyword">if</span> (!swapped) <span class="keyword">break</span>;
+    }
+}
+
+<span class="comment">/**
+ * Time Complexity:
+ *   Best Case: O(n) - already sorted
+ *   Average: O(n²)
+ *   Worst: O(n²)
+ * Space: O(1)
+ * Stable: Yes
+ */</span>
+</pre>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ When NOT to Use Bubble Sort</h4>
+                <ul style="font-size: 1.15rem; line-height: 2;">
+                    <li>Large datasets (>100 elements) - too slow!</li>
+                    <li>Production code - use built-in sort functions</li>
+                    <li>Performance-critical applications</li>
+                </ul>
+                <p style="font-size: 1.15rem; margin-top: 15px;">
+                    <strong style="color: var(--accent-orange);">Use Bubble Sort for:</strong> 
+                    Learning, teaching, small lists, or nearly sorted data
+                </p>
+            </div>
+        </section>
+
+
+
+
+        <!-- SECTION 4: SELECTION SORT -->
+        <section id="selection" class="section" style="border-color: var(--accent-purple);">
+            <h2>4️⃣ Selection Sort - Find & Place</h2>
+            
+            <div class="analogy-box">
+                <h3 style="color: var(--accent-purple); margin-top: 0;">🔍 The Selection Analogy</h3>
+                <p style="font-size: 1.2rem; line-height: 2;">
+                    Imagine you're organizing a bookshelf. You scan ALL the books, find the thinnest one, 
+                    and place it at the very beginning. Then you scan the remaining books, find the next 
+                    thinnest, and place it second. Keep repeating: find the minimum, place it in position!
+                </p>
+            </div>
+
+            <h3>📊 Enhanced Visual: [29, 10, 14, 37, 13]</h3>
+            
+            <!-- INITIAL -->
+            <div class="array-container">
+                <div class="array-label">Initial Array</div>
+                <div class="array-grid">
+                    <div class="array-cell"><div class="index">i=0</div><div class="value">29</div></div>
+                    <div class="array-cell"><div class="index">i=1</div><div class="value">10</div></div>
+                    <div class="array-cell"><div class="index">i=2</div><div class="value">14</div></div>
+                    <div class="array-cell"><div class="index">i=3</div><div class="value">37</div></div>
+                    <div class="array-cell"><div class="index">i=4</div><div class="value">13</div></div>
+                </div>
+            </div>
+
+            <h4 style="color: var(--accent-purple);">Pass 1: Find minimum (10) and place at position 0</h4>
+            
+            <div class="array-container">
+                <div class="array-label">Scanning for minimum...</div>
+                <div class="array-grid">
+                    <div class="array-cell current"><div class="index">i=0</div><div class="value">29</div></div>
+                    <div class="array-cell minimum"><div class="index">i=1</div><div class="value">10</div></div>
+                    <div class="array-cell"><div class="index">i=2</div><div class="value">14</div></div>
+                    <div class="array-cell"><div class="index">i=3</div><div class="value">37</div></div>
+                    <div class="array-cell"><div class="index">i=4</div><div class="value">13</div></div>
+                </div>
+                <div class="comparison-counter">
+                    <div class="counter-box"><div class="label">Min Found</div><div class="value">10</div></div>
+                    <div class="counter-box"><div class="label">At Index</div><div class="value">1</div></div>
+                </div>
+            </div>
+
+            <div class="arrow-down">↓ SWAP</div>
+
+            <div class="array-container">
+                <div class="array-label">After swapping positions 0 and 1</div>
+                <div class="array-grid">
+                    <div class="array-cell sorted"><div class="index">i=0</div><div class="value">10</div></div>
+                    <div class="array-cell swapped"><div class="index">i=1</div><div class="value">29</div></div>
+                    <div class="array-cell"><div class="index">i=2</div><div class="value">14</div></div>
+                    <div class="array-cell"><div class="index">i=3</div><div class="value">37</div></div>
+                    <div class="array-cell"><div class="index">i=4</div><div class="value">13</div></div>
+                </div>
+            </div>
+
+            <h4 style="color: var(--accent-purple);">Pass 2: Find minimum (13) in remaining array</h4>
+
+            <div class="array-container">
+                <div class="array-label">Scanning positions 1-4...</div>
+                <div class="array-grid">
+                    <div class="array-cell sorted"><div class="index">i=0</div><div class="value">10</div></div>
+                    <div class="array-cell current"><div class="index">i=1</div><div class="value">29</div></div>
+                    <div class="array-cell"><div class="index">i=2</div><div class="value">14</div></div>
+                    <div class="array-cell"><div class="index">i=3</div><div class="value">37</div></div>
+                    <div class="array-cell minimum"><div class="index">i=4</div><div class="value">13</div></div>
+                </div>
+            </div>
+
+            <div class="arrow-down">↓ SWAP</div>
+
+            <div class="array-container">
+                <div class="array-label">After swapping positions 1 and 4</div>
+                <div class="array-grid">
+                    <div class="array-cell sorted"><div class="index">i=0</div><div class="value">10</div></div>
+                    <div class="array-cell sorted"><div class="index">i=1</div><div class="value">13</div></div>
+                    <div class="array-cell"><div class="index">i=2</div><div class="value">14</div></div>
+                    <div class="array-cell"><div class="index">i=3</div><div class="value">37</div></div>
+                    <div class="array-cell swapped"><div class="index">i=4</div><div class="value">29</div></div>
+                </div>
+            </div>
+
+            <h4 style="color: var(--accent-purple);">Remaining Passes (Summary)</h4>
+
+            <div class="array-container" style="border: 3px solid var(--accent-green); background: rgba(0, 255, 136, 0.1);">
+                <div class="array-label" style="color: var(--accent-green); font-size: 1.5rem;">🎉 FULLY SORTED!</div>
+                <div class="array-grid">
+                    <div class="array-cell sorted"><div class="index">i=0</div><div class="value">10</div></div>
+                    <div class="array-cell sorted"><div class="index">i=1</div><div class="value">13</div></div>
+                    <div class="array-cell sorted"><div class="index">i=2</div><div class="value">14</div></div>
+                    <div class="array-cell sorted"><div class="index">i=3</div><div class="value">29</div></div>
+                    <div class="array-cell sorted"><div class="index">i=4</div><div class="value">37</div></div>
+                </div>
+            </div>
+
+            <h3>💻 Java Implementation</h3>
+            <div class="code-block">
+<pre>
+<span class="keyword">public void</span> <span style="color: var(--accent-purple);">selectionSort</span>(<span class="keyword">int</span>[] arr) {
+    <span class="keyword">int</span> n = arr.length;
+    
+    <span class="comment">// Move boundary of unsorted array one by one</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < n - <span class="number">1</span>; i++) {
+        <span class="comment">// Find minimum in unsorted part</span>
+        <span class="keyword">int</span> minIndex = i;
+        <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j < n; j++) {
+            <span class="keyword">if</span> (arr[j] < arr[minIndex]) {
+                minIndex = j;
+            }
+        }
+        
+        <span class="comment">// Swap minimum with first unsorted element</span>
+        <span class="keyword">int</span> temp = arr[minIndex];
+        arr[minIndex] = arr[i];
+        arr[i] = temp;
+    }
+}
+
+<span class="comment">/**
+ * Time: O(n²) always - even if already sorted!
+ * Space: O(1)
+ * Stable: NO ❌
+ */</span>
+</pre>
+            </div>
+        </section>
+
+        <!-- SECTION 5: INSERTION SORT -->
+        <section id="insertion" class="section" style="border-color: var(--accent-green);">
+            <h2>5️⃣ Insertion Sort - Build Gradually</h2>
+            
+            <div class="analogy-box">
+                <h3 style="color: var(--accent-green); margin-top: 0;">🎴 The Playing Cards Analogy</h3>
+                <p style="font-size: 1.2rem; line-height: 2;">
+                    You're holding cards in your left hand (sorted) and picking up new cards from the table 
+                    with your right hand. Each time you pick a card, you INSERT it into the correct position 
+                    in your left hand by shifting the larger cards to the right. This is exactly how 
+                    Insertion Sort works!
+                </p>
+            </div>
+
+            <h3>📊 Enhanced Visual: [12, 11, 13, 5, 6]</h3>
+            
+            <div class="array-container">
+                <div class="array-label">Initial Array</div>
+                <div class="array-grid">
+                    <div class="array-cell sorted"><div class="index">i=0</div><div class="value">12</div></div>
+                    <div class="array-cell"><div class="index">i=1</div><div class="value">11</div></div>
+                    <div class="array-cell"><div class="index">i=2</div><div class="value">13</div></div>
+                    <div class="array-cell"><div class="index">i=3</div><div class="value">5</div></div>
+                    <div class="array-cell"><div class="index">i=4</div><div class="value">6</div></div>
+                </div>
+                <p style="text-align:center; margin-top:15px;">Green = Sorted portion | Gray = Unsorted</p>
+            </div>
+
+            <h4 style="color: var(--accent-green);">Pass 1: Insert 11 into sorted portion</h4>
+
+            <div class="array-container">
+                <div class="array-label">Pick element at i=1 (value: 11)</div>
+                <div class="array-grid">
+                    <div class="array-cell sorted"><div class="index">i=0</div><div class="value">12</div></div>
+                    <div class="array-cell current"><div class="index">i=1</div><div class="value">11</div></div>
+                    <div class="array-cell"><div class="index">i=2</div><div class="value">13</div></div>
+                    <div class="array-cell"><div class="index">i=3</div><div class="value">5</div></div>
+                    <div class="array-cell"><div class="index">i=4</div><div class="value">6</div></div>
+                </div>
+                <div class="comparison-counter">
+                    <div class="counter-box"><div class="label">Key</div><div class="value">11</div></div>
+                    <div class="counter-box"><div class="label">Compare with</div><div class="value">12</div></div>
+                    <div class="counter-box"><div class="label">11 < 12?</div><div class="value">YES</div></div>
+                </div>
+            </div>
+
+            <div class="arrow-down">↓ INSERT</div>
+
+            <div class="array-container">
+                <div class="array-label">11 inserted before 12</div>
+                <div class="array-grid">
+                    <div class="array-cell sorted"><div class="index">i=0</div><div class="value">11</div></div>
+                    <div class="array-cell sorted"><div class="index">i=1</div><div class="value">12</div></div>
+                    <div class="array-cell"><div class="index">i=2</div><div class="value">13</div></div>
+                    <div class="array-cell"><div class="index">i=3</div><div class="value">5</div></div>
+                    <div class="array-cell"><div class="index">i=4</div><div class="value">6</div></div>
+                </div>
+            </div>
+
+            <h4 style="color: var(--accent-green);">Pass 3: Insert 5 (shifts multiple elements)</h4>
+
+            <div class="array-container">
+                <div class="array-label">Key=5 shifts 11, 12, 13 to the right</div>
+                <div class="array-grid">
+                    <div class="array-cell sorted"><div class="index">i=0</div><div class="value">11</div></div>
+                    <div class="array-cell sorted"><div class="index">i=1</div><div class="value">12</div></div>
+                    <div class="array-cell sorted"><div class="index">i=2</div><div class="value">13</div></div>
+                    <div class="array-cell current"><div class="index">i=3</div><div class="value">5</div></div>
+                    <div class="array-cell"><div class="index">i=4</div><div class="value">6</div></div>
+                </div>
+            </div>
+
+            <div class="arrow-down">↓ SHIFT & INSERT</div>
+
+            <div class="array-container">
+                <div class="array-label">5 inserted at beginning</div>
+                <div class="array-grid">
+                    <div class="array-cell sorted"><div class="index">i=0</div><div class="value">5</div></div>
+                    <div class="array-cell sorted"><div class="index">i=1</div><div class="value">11</div></div>
+                    <div class="array-cell sorted"><div class="index">i=2</div><div class="value">12</div></div>
+                    <div class="array-cell sorted"><div class="index">i=3</div><div class="value">13</div></div>
+                    <div class="array-cell"><div class="index">i=4</div><div class="value">6</div></div>
+                </div>
+            </div>
+
+            <div class="array-container" style="border: 3px solid var(--accent-green); background: rgba(0, 255, 136, 0.1);">
+                <div class="array-label" style="color: var(--accent-green); font-size: 1.5rem;">🎉 FULLY SORTED!</div>
+                <div class="array-grid">
+                    <div class="array-cell sorted"><div class="index">i=0</div><div class="value">5</div></div>
+                    <div class="array-cell sorted"><div class="index">i=1</div><div class="value">6</div></div>
+                    <div class="array-cell sorted"><div class="index">i=2</div><div class="value">11</div></div>
+                    <div class="array-cell sorted"><div class="index">i=3</div><div class="value">12</div></div>
+                    <div class="array-cell sorted"><div class="index">i=4</div><div class="value">13</div></div>
+                </div>
+            </div>
+
+            <h3>💻 Java Implementation</h3>
+            <div class="code-block">
+<pre>
+<span class="keyword">public void</span> <span style="color: var(--accent-green);">insertionSort</span>(<span class="keyword">int</span>[] arr) {
+    <span class="keyword">int</span> n = arr.length;
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < n; i++) {
+        <span class="keyword">int</span> key = arr[i];
+        <span class="keyword">int</span> j = i - <span class="number">1</span>;
+        
+        <span class="comment">// Shift elements greater than key to the right</span>
+        <span class="keyword">while</span> (j >= <span class="number">0</span> && arr[j] > key) {
+            arr[j + <span class="number">1</span>] = arr[j];
+            j--;
+        }
+        
+        <span class="comment">// Insert key at correct position</span>
+        arr[j + <span class="number">1</span>] = key;
+    }
+}
+
+<span class="comment">/**
+ * Time: 
+ *   Best: O(n) - already sorted
+ *   Average: O(n²)
+ *   Worst: O(n²)
+ * Space: O(1)
+ * Stable: YES ✅
+ * Best for nearly sorted arrays!
+ */</span>
+</pre>
+            </div>
+        </section>
+
+        <!-- SECTION 6: MERGE SORT -->
+        <section id="merge" class="section" style="border-color: var(--accent-orange);">
+            <h2>6️⃣ Merge Sort Fundamentals</h2>
+            
+            <div class="analogy-box">
+                <h3 style="color: var(--accent-orange); margin-top: 0;">📂 The Divide & Conquer Analogy</h3>
+                <p style="font-size: 1.2rem; line-height: 2;">
+                    Imagine sorting a huge pile of papers. Instead of sorting all at once, you:
+                    <strong>1) Split the pile in half,</strong> 
+                    <strong>2) Sort each half (recursively split until 1 paper),</strong> 
+                    <strong>3) Merge the two sorted halves together.</strong>
+                    Like organizing two already-sorted decks into one sorted deck!
+                </p>
+            </div>
+
+            <h3>📊 Visual Example: [38, 27, 43, 3]</h3>
+            <div class="visual-diagram">
+<pre>
+<span style="color: var(--accent-yellow);">DIVIDE Phase (Split until single elements):</span>
+
+                  [38, 27, 43, 3]
+                  /                          [38, 27]              [43, 3]
+            /      \              /               [38]      [27]        [43]      [3]
+         
+<span style="color: var(--accent-yellow);">MERGE Phase (Combine in sorted order):</span>
+
+         [38]      [27]        [43]      [3]
+            \      /              \      /
+         <span style="color: var(--accent-green);">[27, 38]</span>             <span style="color: var(--accent-green);">[3, 43]</span>
+                  \              /
+              <span style="color: var(--accent-green);">[3, 27, 38, 43]</span> ← Fully sorted!
+
+<span style="color: var(--accent-cyan);">Merging [27, 38] and [3, 43]:</span>
+Compare: 27 vs 3  → Pick 3  → [3]
+Compare: 27 vs 43 → Pick 27 → [3, 27]
+Compare: 38 vs 43 → Pick 38 → [3, 27, 38]
+Remaining: 43              → [3, 27, 38, 43]
+</pre>
+            </div>
+
+            <div class="highlight-box" style="margin: 30px 0;">
+                <h4 style="margin-top:0; color: var(--accent-orange);">📌 Note on Merge Sort Visualization</h4>
+                <p style="font-size: 1.1rem; line-height: 2;">
+                    Merge Sort uses a <strong>divide-and-conquer tree structure</strong>. The visual diagram above 
+                    shows how the array splits (divide phase) and merges back together (conquer phase). 
+                    Each level of the tree represents a recursive call, making it different from the 
+                    step-by-step comparisons in Bubble/Selection/Insertion sorts.
+                </p>
+            </div>
+
+            <h3>💻 Java Implementation</h3>
+            <div class="code-block">
+<pre>
+<span class="keyword">public void</span> <span style="color: var(--accent-orange);">mergeSort</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> left, <span class="keyword">int</span> right) {
+    <span class="keyword">if</span> (left < right) {
+        <span class="keyword">int</span> mid = left + (right - left) / <span class="number">2</span>;
+        
+        <span class="comment">// Sort first and second halves</span>
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + <span class="number">1</span>, right);
+        
+        <span class="comment">// Merge the sorted halves</span>
+        merge(arr, left, mid, right);
+    }
+}
+
+<span class="keyword">void</span> <span style="color: var(--accent-orange);">merge</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> left, <span class="keyword">int</span> mid, <span class="keyword">int</span> right) {
+    <span class="comment">// Create temp arrays</span>
+    <span class="keyword">int</span>[] L = <span class="keyword">new int</span>[mid - left + <span class="number">1</span>];
+    <span class="keyword">int</span>[] R = <span class="keyword">new int</span>[right - mid];
+    
+    <span class="comment">// Copy data</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < L.length; i++)
+        L[i] = arr[left + i];
+    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j < R.length; j++)
+        R[j] = arr[mid + <span class="number">1</span> + j];
+    
+    <span class="comment">// Merge back into arr</span>
+    <span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>, k = left;
+    <span class="keyword">while</span> (i < L.length && j < R.length) {
+        <span class="keyword">if</span> (L[i] <= R[j]) {
+            arr[k++] = L[i++];
+        } <span class="keyword">else</span> {
+            arr[k++] = R[j++];
+        }
+    }
+    
+    <span class="comment">// Copy remaining</span>
+    <span class="keyword">while</span> (i < L.length) arr[k++] = L[i++];
+    <span class="keyword">while</span> (j < R.length) arr[k++] = R[j++];
+}
+
+<span class="comment">/**
+ * Time: O(n log n) - ALWAYS!
+ * Space: O(n)
+ * Stable: YES ✅
+ */</span>
+</pre>
+            </div>
+        </section>
+
+        <!-- SECTION 7: QUICK SORT -->
+        <section id="quick" class="section" style="border-color: var(--accent-red);">
+            <h2>7️⃣ Quick Sort Fundamentals</h2>
+            
+            <div class="analogy-box">
+                <h3 style="color: var(--accent-red); margin-top: 0;">🎯 The Pivot Analogy</h3>
+                <p style="font-size: 1.2rem; line-height: 2;">
+                    Imagine organizing students by height. Pick one student (the "pivot"), then arrange 
+                    everyone: shorter students to the left, taller to the right. Now the pivot is in 
+                    the correct final position! Repeat this process for the left and right groups until 
+                    everyone is sorted.
+                </p>
+            </div>
+
+            <h3>📊 Visual Example: [10, 80, 30, 90, 40]</h3>
+            <div class="visual-diagram">
+<pre>
+<span style="color: var(--accent-yellow);">Pick pivot: 40 (last element)</span>
+
+[10, 80, 30, 90, │ <span style="color: var(--accent-red);">40</span>]
+
+<span style="color: var(--accent-yellow);">Partition around 40:</span>
+10 < 40 → Left side
+80 > 40 → Right side (don't move yet)
+30 < 40 → Left side (swap with 80)
+90 > 40 → Right side
+
+[<span style="color: var(--accent-green);">10, 30</span>, │ <span style="color: var(--accent-red);">40</span>, │ <span style="color: var(--accent-cyan);">80, 90</span>]
+ ↑ < 40      ↑ Pivot    ↑ > 40
+
+<span style="color: var(--accent-yellow);">Now recursively sort left and right:</span>
+Left: [10, 30]  → Already sorted
+Right: [80, 90] → Already sorted
+
+<span style="color: var(--accent-green);">Final: [10, 30, 40, 80, 90]</span>
+</pre>
+            </div>
+
+            <div class="highlight-box" style="margin: 30px 0;">
+                <h4 style="margin-top:0; color: var(--accent-red);">📌 Note on Quick Sort Visualization</h4>
+                <p style="font-size: 1.1rem; line-height: 2;">
+                    Quick Sort uses <strong>partitioning around a pivot</strong>. The visualization shows how 
+                    elements are rearranged into "smaller than pivot" (left) and "larger than pivot" (right) 
+                    sections. This is fundamentally different from comparison-based sorts as it reorganizes 
+                    the array in place using partition boundaries.
+                </p>
+            </div>
+
+            <h3>💻 Java Implementation</h3>
+            <div class="code-block">
+<pre>
+<span class="keyword">public void</span> <span style="color: var(--accent-red);">quickSort</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> low, <span class="keyword">int</span> high) {
+    <span class="keyword">if</span> (low < high) {
+        <span class="comment">// Partition and get pivot index</span>
+        <span class="keyword">int</span> pi = partition(arr, low, high);
+        
+        <span class="comment">// Sort elements before and after partition</span>
+        quickSort(arr, low, pi - <span class="number">1</span>);
+        quickSort(arr, pi + <span class="number">1</span>, high);
+    }
+}
+
+<span class="keyword">int</span> <span style="color: var(--accent-red);">partition</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> low, <span class="keyword">int</span> high) {
+    <span class="keyword">int</span> pivot = arr[high];  <span class="comment">// Choose last as pivot</span>
+    <span class="keyword">int</span> i = low - <span class="number">1</span>;          <span class="comment">// Index of smaller element</span>
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> j = low; j < high; j++) {
+        <span class="comment">// If current element <= pivot</span>
+        <span class="keyword">if</span> (arr[j] <= pivot) {
+            i++;
+            <span class="comment">// Swap arr[i] and arr[j]</span>
+            <span class="keyword">int</span> temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+        }
+    }
+    
+    <span class="comment">// Swap pivot to correct position</span>
+    <span class="keyword">int</span> temp = arr[i + <span class="number">1</span>];
+    arr[i + <span class="number">1</span>] = arr[high];
+    arr[high] = temp;
+    
+    <span class="keyword">return</span> i + <span class="number">1</span>;
+}
+
+<span class="comment">/**
+ * Time: 
+ *   Best: O(n log n)
+ *   Average: O(n log n)
+ *   Worst: O(n²) - rare
+ * Space: O(log n)
+ * Stable: NO ❌
+ * Usually fastest in practice!
+ */</span>
+</pre>
+            </div>
+        </section>
+
+        <!-- SECTION 8: STABILITY DETAILED -->
+        <section id="stability" class="section" style="border-color: var(--accent-green);">
+            <h2>8️⃣ Stability & In-Place Sorting</h2>
+            
+            <div class="analogy-box">
+                <h3 style="color: var(--accent-green); margin-top: 0;">🎯 What Does "Stable" Mean?</h3>
+                <p style="font-size: 1.3rem; line-height: 2;">
+                    A sorting algorithm is <strong style="color: var(--accent-green);">STABLE</strong> if it 
+                    <strong>preserves the original order</strong> of elements that have <strong>equal values</strong>.
+                </p>
+                <p style="font-size: 1.2rem; margin-top: 20px; color: var(--accent-cyan);">
+                    <strong>In other words:</strong> If two items are equal, the one that appeared first 
+                    in the original list will still appear first after sorting.
+                </p>
+            </div>
+
+            <h3>🃏 Playing Cards Example</h3>
+            <div class="visual-diagram">
+<pre style="font-size: 1.1rem; line-height: 2;">
+<span style="color: var(--accent-yellow);">Original Deck (unsorted):</span>
+
+<span style="color: var(--accent-red);">5♥₁</span>  <span style="color: var(--accent-cyan);">3♦₁</span>  <span style="color: var(--accent-red);">5♦₂</span>  <span style="color: var(--accent-cyan);">3♣₂</span>  <span style="color: var(--accent-green);">7♠</span>
+
+<span style="color: var(--text-secondary);">Note: We have TWO 5's and TWO 3's
+      The subscripts show their original order</span>
+</pre>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0;">
+                <div class="highlight-box" style="border-color: var(--accent-green);">
+                    <h4 style="color: var(--accent-green); margin-top: 0;">✅ STABLE Sort Result:</h4>
+                    <div class="visual-diagram">
+<pre>
+<span style="color: var(--accent-cyan);">3♦₁  3♣₂</span>  <span style="color: var(--accent-red);">5♥₁  5♦₂</span>  <span style="color: var(--accent-green);">7♠</span>
+
+<span style="color: var(--accent-green);">Two 3's stayed in order:
+  3♦ came before 3♣ ✓
+
+Two 5's stayed in order:
+  5♥ came before 5♦ ✓</span>
+</pre>
+                    </div>
+                    <p style="font-size: 1.1rem;">
+                        <strong>Stable algorithms preserve the original order of equal elements!</strong>
+                    </p>
+                </div>
+
+                <div class="warning-box">
+                    <h4 style="color: var(--accent-red); margin-top: 0;">❌ UNSTABLE Sort Result:</h4>
+                    <div class="visual-diagram">
+<pre>
+<span style="color: var(--accent-cyan);">3♣₂  3♦₁</span>  <span style="color: var(--accent-red);">5♦₂  5♥₁</span>  <span style="color: var(--accent-green);">7♠</span>
+
+<span style="color: var(--accent-red);">Two 3's are REVERSED:
+  3♣ now before 3♦ ✗
+
+Two 5's are REVERSED:
+  5♦ now before 5♥ ✗</span>
+</pre>
+                    </div>
+                    <p style="font-size: 1.1rem;">
+                        <strong>Unstable algorithms may change the order of equal elements!</strong>
+                    </p>
+                </div>
+            </div>
+
+            <h3>👨‍💼 Practical Example: Sorting Students</h3>
+            <p style="font-size: 1.15rem; margin-bottom: 20px;">
+                <strong>Scenario:</strong> Sort students by grade, then by name
+            </p>
+
+            <div class="visual-diagram">
+<pre style="font-size: 1.05rem; line-height: 2;">
+<span style="color: var(--accent-yellow);">Original List:</span>
+
+Name: Alice,   Grade: 85
+Name: Bob,     Grade: 90
+Name: Charlie, Grade: 85  <span style="color: var(--accent-orange);">← Same grade as Alice!</span>
+Name: David,   Grade: 90  <span style="color: var(--accent-orange);">← Same grade as Bob!</span>
+Name: Eve,     Grade: 75
+
+<span style="color: var(--accent-yellow);">Step 1: Sort by Name (alphabetically)</span>
+<span style="color: var(--accent-yellow);">Step 2: Now sort by Grade</span>
+</pre>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0;">
+                <div class="highlight-box" style="border-color: var(--accent-green);">
+                    <h4 style="color: var(--accent-green); margin-top: 0;">✅ With STABLE Sort:</h4>
+                    <div class="visual-diagram">
+<pre>
+Eve,     Grade: 75
+<span style="color: var(--accent-green);">Alice</span>,   Grade: 85  ← First
+<span style="color: var(--accent-green);">Charlie</span>, Grade: 85  ← After Alice
+<span style="color: var(--accent-cyan);">Bob</span>,     Grade: 90  ← First
+<span style="color: var(--accent-cyan);">David</span>,   Grade: 90  ← After Bob
+
+<span style="color: var(--accent-green);">✓ Alphabetical order PRESERVED!</span>
+</pre>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4 style="color: var(--accent-red); margin-top: 0;">❌ With UNSTABLE Sort:</h4>
+                    <div class="visual-diagram">
+<pre>
+Eve,     Grade: 75
+<span style="color: var(--accent-red);">Charlie</span>, Grade: 85  ← Now first!
+<span style="color: var(--accent-red);">Alice</span>,   Grade: 85  ← Moved back
+<span style="color: var(--accent-red);">David</span>,   Grade: 90  ← Now first!
+<span style="color: var(--accent-red);">Bob</span>,     Grade: 90  ← Moved back
+
+<span style="color: var(--accent-red);">✗ Alphabetical order LOST!</span>
+</pre>
+                    </div>
+                </div>
+            </div>
+
+            <h3>📊 Which Algorithms are Stable?</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Algorithm</th>
+                        <th>Stable?</th>
+                        <th>Why?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="background: rgba(0, 255, 136, 0.1);">
+                        <td><strong>Bubble Sort</strong></td>
+                        <td style="color: var(--accent-green); font-weight: bold;">✅ STABLE</td>
+                        <td>Only swaps adjacent elements when strictly greater</td>
+                    </tr>
+                    <tr style="background: rgba(0, 255, 136, 0.1);">
+                        <td><strong>Insertion Sort</strong></td>
+                        <td style="color: var(--accent-green); font-weight: bold;">✅ STABLE</td>
+                        <td>Inserts elements without changing equal items' order</td>
+                    </tr>
+                    <tr style="background: rgba(0, 255, 136, 0.1);">
+                        <td><strong>Merge Sort</strong></td>
+                        <td style="color: var(--accent-green); font-weight: bold;">✅ STABLE</td>
+                        <td>Merges equal elements in their original order</td>
+                    </tr>
+                    <tr style="background: rgba(255, 71, 87, 0.1);">
+                        <td><strong>Selection Sort</strong></td>
+                        <td style="color: var(--accent-red); font-weight: bold;">❌ UNSTABLE</td>
+                        <td>Swaps elements without checking relative positions</td>
+                    </tr>
+                    <tr style="background: rgba(255, 71, 87, 0.1);">
+                        <td><strong>Quick Sort</strong></td>
+                        <td style="color: var(--accent-red); font-weight: bold;">❌ UNSTABLE</td>
+                        <td>Partitioning can change order of equal elements</td>
+                    </tr>
+                    <tr style="background: rgba(255, 71, 87, 0.1);">
+                        <td><strong>Heap Sort</strong></td>
+                        <td style="color: var(--accent-red); font-weight: bold;">❌ UNSTABLE</td>
+                        <td>Heap operations don't preserve original order</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>🤔 When Does Stability Matter?</h3>
+            
+            <div class="analogy-box" style="background: linear-gradient(135deg, rgba(255, 211, 42, 0.1), rgba(255, 165, 2, 0.1)); border-color: var(--accent-yellow);">
+                <h4 style="color: var(--accent-yellow); margin-top: 0;">Stability Matters When:</h4>
+                <ol style="font-size: 1.15rem; line-height: 2.5;">
+                    <li><strong>Multiple Sort Criteria:</strong> Sort by grade, then by name</li>
+                    <li><strong>Database Operations:</strong> ORDER BY multiple columns</li>
+                    <li><strong>Tie-Breaking:</strong> When equal values have meaningful sub-ordering</li>
+                    <li><strong>Visual/UI Sorting:</strong> Maintaining visual consistency</li>
+                    <li><strong>Time Series Data:</strong> Keeping chronological order for ties</li>
+                </ol>
+            </div>
+
+            <div class="highlight-box" style="border-color: var(--accent-cyan);">
+                <h4 style="color: var(--accent-cyan); margin-top: 0;">Stability Doesn't Matter When:</h4>
+                <ol style="font-size: 1.15rem; line-height: 2.5;">
+                    <li><strong>Simple Sorting:</strong> Just sorting unique numbers</li>
+                    <li><strong>Performance Critical:</strong> Speed more important than order preservation</li>
+                    <li><strong>Single Criteria:</strong> Only one unique sorting key</li>
+                    <li><strong>No Equal Elements:</strong> All values are distinct</li>
+                </ol>
+            </div>
+
+            <h3>💻 Code Example: Stability in Action</h3>
+            <div class="code-block">
+<pre>
+<span class="comment">// Student class</span>
+<span class="keyword">class</span> Student {
+    String name;
+    <span class="keyword">int</span> grade;
+    
+    Student(String name, <span class="keyword">int</span> grade) {
+        <span class="keyword">this</span>.name = name;
+        <span class="keyword">this</span>.grade = grade;
+    }
+}
+
+<span class="comment">// Original list</span>
+Student[] students = {
+    <span class="keyword">new</span> Student(<span class="string">"Alice"</span>, <span class="number">85</span>),
+    <span class="keyword">new</span> Student(<span class="string">"Bob"</span>, <span class="number">90</span>),
+    <span class="keyword">new</span> Student(<span class="string">"Charlie"</span>, <span class="number">85</span>),  <span class="comment">// Same as Alice!</span>
+    <span class="keyword">new</span> Student(<span class="string">"David"</span>, <span class="number">90</span>)     <span class="comment">// Same as Bob!</span>
+};
+
+<span class="comment">// Using STABLE sort (Merge Sort)</span>
+Arrays.sort(students, (a, b) -> a.grade - b.grade);
+
+<span class="comment">// Result: Alice before Charlie, Bob before David ✓</span>
+
+<span class="comment">// Using UNSTABLE sort might change order ✗</span>
+</pre>
+            </div>
+
+            <div class="highlight-box" style="background: linear-gradient(135deg, rgba(0, 255, 136, 0.15), rgba(0, 217, 255, 0.15)); border-color: var(--accent-green);">
+                <h3 style="color: var(--accent-green); margin-top: 0; font-size: 1.8rem;">🎯 Remember This:</h3>
+                <ul style="font-size: 1.2rem; line-height: 2.5;">
+                    <li><strong>Stable:</strong> Equal elements stay in original order</li>
+                    <li><strong>Unstable:</strong> Equal elements may get rearranged</li>
+                    <li><strong>Use stable sorts when:</strong> Multiple sort keys matter</li>
+                    <li><strong>Stable algorithms:</strong> Bubble, Insertion, Merge</li>
+                    <li><strong>Unstable algorithms:</strong> Selection, Quick, Heap</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- QUICK COMPARISON SECTION -->
+        <section id="comparison" class="section">
+            <h2>9️⃣ Complete Comparison - When to Use What</h2>
+            
+            <h3>📊 Algorithm Comparison Table</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Algorithm</th>
+                        <th>Time (Best)</th>
+                        <th>Time (Average)</th>
+                        <th>Time (Worst)</th>
+                        <th>Space</th>
+                        <th>Stable?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Bubble Sort</strong></td>
+                        <td>O(n)</td>
+                        <td>O(n²)</td>
+                        <td>O(n²)</td>
+                        <td>O(1)</td>
+                        <td>✅ Yes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Selection Sort</strong></td>
+                        <td>O(n²)</td>
+                        <td>O(n²)</td>
+                        <td>O(n²)</td>
+                        <td>O(1)</td>
+                        <td>❌ No</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Insertion Sort</strong></td>
+                        <td>O(n)</td>
+                        <td>O(n²)</td>
+                        <td>O(n²)</td>
+                        <td>O(1)</td>
+                        <td>✅ Yes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Merge Sort</strong></td>
+                        <td>O(n log n)</td>
+                        <td>O(n log n)</td>
+                        <td>O(n log n)</td>
+                        <td>O(n)</td>
+                        <td>✅ Yes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Quick Sort</strong></td>
+                        <td>O(n log n)</td>
+                        <td>O(n log n)</td>
+                        <td>O(n²)</td>
+                        <td>O(log n)</td>
+                        <td>❌ No</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>🎯 Decision Guide</h3>
+            <div class="highlight-box">
+                <div class="step-box">
+                    <span class="step-number">1</span>
+                    <strong style="font-size: 1.2rem;">Small array (n < 50)?</strong>
+                    → Use <strong style="color: var(--accent-green);">Insertion Sort</strong>
+                </div>
+                
+                <div class="step-box">
+                    <span class="step-number">2</span>
+                    <strong style="font-size: 1.2rem;">Need stability?</strong>
+                    → Use <strong style="color: var(--accent-orange);">Merge Sort</strong>
+                </div>
+                
+                <div class="step-box">
+                    <span class="step-number">3</span>
+                    <strong style="font-size: 1.2rem;">Large array, average performance?</strong>
+                    → Use <strong style="color: var(--accent-red);">Quick Sort</strong>
+                </div>
+                
+                <div class="step-box">
+                    <span class="step-number">4</span>
+                    <strong style="font-size: 1.2rem;">Learning/Teaching?</strong>
+                    → Start with <strong style="color: var(--accent-cyan);">Bubble Sort</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRACTICE SECTION -->
+        <section id="practice" class="section">
+            <h2>🔟 Practice Strategies & Common Mistakes</h2>
+            
+            <h3>✅ Learning Path</h3>
+            <ol style="font-size: 1.15rem; line-height: 2.5;">
+                <li><strong>Start Simple:</strong> Master Bubble, Selection, Insertion first</li>
+                <li><strong>Visualize:</strong> Draw diagrams or use cards to act out sorting</li>
+                <li><strong>Trace by Hand:</strong> Work through small arrays step-by-step</li>
+                <li><strong>Compare:</strong> Sort the same array with different algorithms</li>
+                <li><strong>Code It:</strong> Implement each algorithm from memory</li>
+                <li><strong>Advance:</strong> Learn Merge and Quick Sort fundamentals</li>
+            </ol>
+
+            <h3>⚠️ Common Beginner Mistakes</h3>
+            <div class="warning-box">
+                <ul style="font-size: 1.15rem; line-height: 2;">
+                    <li><strong>Off-by-One Errors:</strong> Watch your loop bounds!</li>
+                    <li><strong>Forgetting Swaps:</strong> Always save the temp value</li>
+                    <li><strong>Wrong Comparisons:</strong> Use > for ascending, < for descending</li>
+                    <li><strong>Ignoring Stability:</strong> Remember which sorts preserve order</li>
+                    <li><strong>Overcomplicating:</strong> Start with simple sorts first</li>
+                </ul>
+            </div>
+
+            <h3>💡 Tips for Success</h3>
+            <div class="highlight-box">
+                <ul style="font-size: 1.15rem; line-height: 2;">
+                    <li>✓ Explain the algorithm out loud to solidify understanding</li>
+                    <li>✓ Practice with different data types (numbers, strings, objects)</li>
+                    <li>✓ Time your implementations to see the difference</li>
+                    <li>✓ Read production code to see real-world applications</li>
+                    <li>✓ Stay curious and ask "why" at every step</li>
+                </ul>
+            </div>
+        </section>
+
+        <div style="margin-top: 60px; padding: 60px; background: linear-gradient(135deg, var(--accent-green), var(--accent-cyan)); border-radius: 30px; text-align: center;">
+            <h2 style="color: var(--bg-dark); margin-top: 0; font-size: 3rem;">🎓 You've Mastered Elementary Sorting!</h2>
+            <p style="color: var(--bg-dark); font-size: 1.5rem; line-height: 2; margin-top: 20px;">
+                ✓ Understand six sorting algorithms<br>
+                ✓ Know when to use each approach<br>
+                ✓ Built a strong programming foundation<br>
+                <br>
+                <strong style="font-size: 1.7rem;">Now go practice and build amazing things! 🚀</strong>
+            </p>
+        </div>
+
+    </div>
+</body>
+</html>
+

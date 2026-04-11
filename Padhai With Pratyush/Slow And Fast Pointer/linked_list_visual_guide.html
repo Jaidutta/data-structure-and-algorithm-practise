@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked Lists - Complete Visual Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2196f3;
+            --secondary: #1976d2;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --info: #00bcd4;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            border: 2px solid #e0e0e0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .section h2 {
+            color: var(--primary);
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .section h3 {
+            color: var(--secondary);
+            font-size: 1.6em;
+            margin: 25px 0 15px 0;
+        }
+
+        .section h4 {
+            color: var(--info);
+            font-size: 1.3em;
+            margin: 20px 0 10px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fff9c4, #ffeb3b);
+            border: 3px solid #fbc02d;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            font-size: 1.15em;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid var(--info);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 5px solid var(--success);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 5px solid var(--warning);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .danger-box {
+            background: #ffebee;
+            border-left: 5px solid var(--danger);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre;
+            color: inherit;
+        }
+
+        .keyword { color: #569cd6; font-weight: bold; }
+        .comment { color: #6a9955; font-style: italic; }
+        .string { color: #ce9178; }
+        .number { color: #b5cea8; }
+
+        /* Node Visualization - Much Smaller */
+        .node-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            font-size: 0.85em;
+        }
+
+        .node {
+            display: flex;
+            border: 2px solid var(--primary);
+            border-radius: 3px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .node-data {
+            padding: 5px 10px;
+            background: #90caf9;
+            border-right: 2px solid var(--primary);
+            font-weight: bold;
+            font-size: 1em;
+            color: #1565c0;
+            min-width: 25px;
+            text-align: center;
+        }
+
+        .node-next {
+            padding: 5px 10px;
+            background: #fff59d;
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #f57f17;
+            min-width: 35px;
+            text-align: center;
+        }
+
+        .node-label {
+            text-align: center;
+            margin-top: 3px;
+            font-size: 0.7em;
+            color: #666;
+        }
+
+        .arrow {
+            font-size: 1.2em;
+            color: var(--danger);
+            font-weight: bold;
+            padding: 0 3px;
+        }
+
+        .head-pointer {
+            background: #ef5350;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 0.85em;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            text-align: center;
+            display: inline-block;
+        }
+
+        .step-box {
+            background: white;
+            border: 3px solid var(--info);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .step-box h4 {
+            color: var(--info);
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: var(--light);
+        }
+
+        .toc {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .toc li {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        .toc a {
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .toc a:hover {
+            color: var(--primary);
+            padding-left: 10px;
+        }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-box {
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔗 Linked Lists Explained</h1>
+            <p style="font-size: 1.3em;">Complete Visual Guide with Diagrams & Java Code</p>
+            <p style="font-size: 1em; margin-top: 10px;">From Concept to Implementation - Master Linked Lists!</p>
+        </header>
+
+        <div class="content">
+
+            <!-- TABLE OF CONTENTS -->
+            <div class="toc">
+                <h2>📚 Table of Contents</h2>
+                <ul>
+                    <li><a href="#intro">1. Introduction - Why Linked Lists?</a></li>
+                    <li><a href="#anatomy">2. Anatomy of a Node</a></li>
+                    <li><a href="#visualization">3. Complete List Visualization</a></li>
+                    <li><a href="#java">4. Java Implementation</a></li>
+                    <li><a href="#traversal">5. Traversal (The Postman)</a></li>
+                    <li><a href="#insert-head">6. Insert at Beginning</a></li>
+                    <li><a href="#insert-middle">7. Insert in Middle</a></li>
+                    <li><a href="#rules">8. Golden Rules</a></li>
+                </ul>
+            </div>
+
+            <!-- SECTION 1: INTRODUCTION -->
+            <section id="intro" class="section">
+                <h2>1️⃣ Introduction - Why Linked Lists?</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">The Core Problem</h3>
+                    <p style="font-size: 1.2em; line-height: 2;">
+                        <strong>Arrays require CONTINUOUS memory.</strong> If your RAM is fragmented, you might not find a continuous block even if you have enough total space!
+                    </p>
+                </div>
+
+                <h3>📊 Arrays vs Linked Lists</h3>
+                <div class="comparison-container">
+                    <div class="comparison-box" style="background: #ffebee;">
+                        <h4>🚂 Array - Continuous Train</h4>
+                        <pre style="font-family: monospace; font-size: 1.1em;">
+Memory:
+[1][2][3][4][5]
+ └─┴─┴─┴─┘
+All bogies connected
+MUST be continuous!
+
+Problem: Need 10 continuous blocks
+RAM: [x][x][ ][ ][x][x][ ][ ][ ][ ]
+     ❌ Can't fit! (fragmented)
+                        </pre>
+                    </div>
+
+                    <div class="comparison-box" style="background: #e8f5e9;">
+                        <h4>🔗 Linked List - Scattered Train</h4>
+                        <pre style="font-family: monospace; font-size: 1.1em;">
+Memory:
+[1@200] ... [2@500] ... [3@100]
+   ↓           ↓           ↓
+Address 200  Address 500  Address 100
+
+Bogies scattered anywhere!
+Connected by addresses (pointers)
+
+✓ Can use scattered blocks!
+                        </pre>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h4>✅ Solution: Linked Lists</h4>
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        Use <strong>scattered memory boxes</strong> located anywhere in the system.<br>
+                        Keep them connected by storing the <strong>address</strong> (or "House Number") of the next box in each node!
+                    </p>
+                </div>
+
+                <h3>🏠 The House Number Analogy</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        Think of a <strong>scavenger hunt</strong>:<br><br>
+                        
+                        🏠 <strong>House #100:</strong> "Find the treasure at House #200"<br>
+                        🏠 <strong>House #200:</strong> "Find the treasure at House #300"<br>
+                        🏠 <strong>House #300:</strong> "No more houses!" (null)<br><br>
+                        
+                        Each house tells you where the next house is!
+                    </p>
+                </div>
+            </section>
+
+
+            <!-- SECTION 2: ANATOMY -->
+            <section id="anatomy" class="section">
+                <h2>2️⃣ Anatomy of a Node</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        In a Linked List, every "box" is called a <strong>Node</strong>.<br>
+                        A Node has TWO parts: <strong>Data</strong> and <strong>Next</strong>
+                    </p>
+                </div>
+
+                <h3>📦 Single Node - Compact Visual</h3>
+                <div style="text-align: center; margin: 20px 0;">
+                    <div class="node" style="display: inline-flex;">
+                        <div class="node-data">1</div>
+                        <div class="node-next">200</div>
+                    </div>
+                    <div class="node-label">Node at Address 100</div>
+                </div>
+
+                <div class="info-box">
+                    <h4>Two Parts Explained:</h4>
+                    <ol style="font-size: 1.1em; line-height: 2; padding-left: 25px;">
+                        <li><strong>Data:</strong> The actual value (e.g., integer 1)</li>
+                        <li><strong>Next:</strong> Address of next node (e.g., 200)</li>
+                    </ol>
+                </div>
+
+                <h3>📊 Clear ASCII Diagram</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <pre style="font-family: monospace; font-size: 1.1em; line-height: 1.6;">
+Node at Address 100
+┌──────┬───────┐
+│ Data │ Next  │
+│  1   │  200  │ ───→ Points to next node at address 200
+└──────┴───────┘
+
+Parts:
+• Data = 1 (the value we're storing)
+• Next = 200 (memory address of next node)
+                    </pre>
+                </div>
+            </section>
+
+            <!-- SECTION 3: VISUALIZATION -->
+            <section id="visualization" class="section">
+                <h2>3️⃣ Complete Linked List Visualization</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">Key Components:</h3>
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li><strong>HEAD:</strong> Pointer storing address of first node</li>
+                        <li><strong>Nodes:</strong> Data boxes connected by addresses</li>
+                        <li><strong>NULL:</strong> Last node points to null (end)</li>
+                    </ul>
+                </div>
+
+                <h3>📊 Compact Visual: 1 → 2 → 3</h3>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <div class="node-container" style="justify-content: center;">
+                        <div>
+                            <div class="head-pointer">HEAD<br>100</div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="node">
+                                <div class="node-data">1</div>
+                                <div class="node-next">200</div>
+                            </div>
+                            <div class="node-label">#100</div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="node">
+                                <div class="node-data">2</div>
+                                <div class="node-next">300</div>
+                            </div>
+                            <div class="node-label">#200</div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="node">
+                                <div class="node-data">3</div>
+                                <div class="node-next">∅</div>
+                            </div>
+                            <div class="node-label">#300</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ CRITICAL:</h4>
+                    <p style="font-size: 1.2em;">
+                        If <strong>HEAD is lost</strong>, the ENTIRE list is lost!<br>
+                        HEAD is your only entry point to the chain.
+                    </p>
+                </div>
+
+                <h3>📝 Clear ASCII Diagram</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 1em; line-height: 1.5;">
+HEAD = 100
+  │
+  ├──→ Node #100        Node #200        Node #300
+       ┌────┬─────┐     ┌────┬─────┐     ┌────┬─────┐
+       │ 1  │ 200 │ ──→ │ 2  │ 300 │ ──→ │ 3  │null │
+       └────┴─────┘     └────┴─────┘     └────┴─────┘
+       
+• HEAD stores 100 (address of first node)
+• Node #100: data=1, next=200
+• Node #200: data=2, next=300  
+• Node #300: data=3, next=null (end of list)
+                    </pre>
+                </div>
+            </section>
+
+
+            <!-- SECTION 4: JAVA -->
+            <section id="java" class="section">
+                <h2>4️⃣ Java Implementation</h2>
+                
+                <h3>💻 Node Class Definition</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Node Class - The Building Block
+ * 
+ * Represents a single "box" in the linked list
+ * Contains: data value + reference to next node
+ */</span>
+<span class="keyword">class</span> Node {
+    <span class="keyword">int</span> data;       <span class="comment">// The value stored</span>
+    Node next;      <span class="comment">// Address (reference) of next node</span>
+
+    <span class="comment">// Constructor to create a new node</span>
+    Node(<span class="keyword">int</span> data) {
+        <span class="keyword">this</span>.data = data;
+        <span class="keyword">this</span>.next = <span class="keyword">null</span>;  <span class="comment">// By default, points to null</span>
+    }
+}</pre></div>
+
+                <div class="info-box">
+                    <h4>Key Differences from C++:</h4>
+                    <p style="font-size: 1.1em;">
+                        • Java uses <strong>dot notation</strong> (.): <code>head.data</code><br>
+                        • C++ uses arrow: <code>head->data</code>
+                    </p>
+                </div>
+            </section>
+
+            <!-- SECTION 5: TRAVERSAL -->
+            <section id="traversal" class="section">
+                <h2>5️⃣ Traversal - The Postman Analogy</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">🚶 The Postman Method</h3>
+                    <p style="font-size: 1.2em; line-height: 2;">
+                        Act like a postman delivering letters:<br>
+                        • Visit house, read address, go to next house<br>
+                        • Repeat until you reach null (no more houses)
+                    </p>
+                </div>
+
+                <div class="danger-box">
+                    <h4>⚠️ GOLDEN RULE:</h4>
+                    <p style="font-size: 1.2em; font-weight: bold;">
+                        NEVER move the HEAD variable directly!<br>
+                        If you lose HEAD, you lose the entire list!
+                    </p>
+                </div>
+
+                <h3>📊 Traversal Step-by-Step</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 1em; line-height: 1.6;">
+Step 0: Initialize
+HEAD = 100        temp = 100 (copy HEAD, don't move it!)
+  │                 │
+  └─────────────────┘
+
+Step 1: Visit first node
+temp → [1|200]    Print: 1    Move: temp = 200
+
+Step 2: Visit second node  
+temp → [2|300]    Print: 2    Move: temp = 300
+
+Step 3: Visit third node
+temp → [3|null]   Print: 3    Move: temp = null
+
+Step 4: Stop
+temp = null       Stop! (end of list)
+
+Output: 1 2 3
+
+HEAD still = 100 ✓ (Never changed!)
+                    </pre>
+                </div>
+
+                <h3>💻 Traversal Code (Fully Commented)</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Traversal - Visit every node and print data
+ * 
+ * Time: O(N) - visit each node once
+ * Space: O(1) - only one temporary pointer
+ */</span>
+<span class="keyword">void</span> traverse(Node head) {
+    <span class="comment">// Create temporary pointer - NEVER move head!</span>
+    Node t = head;
+    
+    <span class="comment">// Loop until we reach null (end of list)</span>
+    <span class="keyword">while</span> (t != <span class="keyword">null</span>) {
+        <span class="comment">// Print current node's data</span>
+        System.out.print(t.data + <span class="string">" "</span>);
+        
+        <span class="comment">// Move to next node (follow the address)</span>
+        t = t.next;
+    }
+}</pre></div>
+            </section>
+
+            <!-- SECTION 6: INSERT AT HEAD -->
+            <section id="insert-head" class="section">
+                <h2>6️⃣ Insert at Beginning (Head)</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Goal:</strong> Add new node (4) BEFORE current head<br>
+                        <strong>Before:</strong> 1 → 2 → 3<br>
+                        <strong>After:</strong> 4 → 1 → 2 → 3
+                    </p>
+                </div>
+
+                <h3>📊 BEFORE - The Problem</h3>
+                <div style="background: #ffebee; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <pre style="font-family: monospace; font-size: 1em; line-height: 1.8;">
+New Node (created, but not connected):
+┌───┬──────┐
+│ 4 │ null │ ❌ Should point to 100!
+└───┴──────┘
+ Address: 400
+
+Current List:
+HEAD = 100  ❌ Should be 400!
+  │
+  └──→ ┌───┬─────┐     ┌───┬─────┐     ┌───┬──────┐
+       │ 1 │ 200 │ ──→ │ 2 │ 300 │ ──→ │ 3 │ null │
+       └───┴─────┘     └───┴─────┘     └───┴──────┘
+       #100            #200            #300
+
+<span style="color: #d32f2f; font-weight: bold;">TWO ERRORS:</span>
+❌ HEAD points to 100 (should point to 400)
+❌ New node points to null (should point to 100)
+                    </pre>
+                </div>
+
+                <h3>📊 AFTER - The Solution</h3>
+                <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <pre style="font-family: monospace; font-size: 1em; line-height: 1.8;">
+HEAD = 400  ✓ Updated!
+  │
+  └──→ ┌───┬─────┐     ┌───┬─────┐     ┌───┬─────┐     ┌───┬──────┐
+       │ 4 │ 100 │ ──→ │ 1 │ 200 │ ──→ │ 2 │ 300 │ ──→ │ 3 │ null │
+       └───┴─────┘     └───┴─────┘     └───┴─────┘     └───┴──────┘
+       #400  ✓         #100            #200            #300
+
+<span style="color: #2e7d32; font-weight: bold;">ALL FIXED:</span>
+✓ HEAD now points to 400 (new first node)
+✓ Node 400 points to 100 (old first node)
+✓ Chain is intact!
+                    </pre>
+                </div>
+
+                <h3>🔧 Fix Steps (Order Matters!)</h3>
+                <div style="background: #fff9c4; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <pre style="font-family: monospace; font-size: 1em; line-height: 1.8;">
+<span style="font-weight: bold;">Step 1: Fix new node FIRST</span>
+newNode.next = head;  // 400.next = 100
+
+Before:  ┌───┬──────┐
+         │ 4 │ null │
+         └───┴──────┘
+
+After:   ┌───┬─────┐
+         │ 4 │ 100 │ ──→ (points to old head)
+         └───┴─────┘
+
+<span style="font-weight: bold;">Step 2: Update HEAD</span>
+head = newNode;  // HEAD = 400
+
+Before:  HEAD = 100
+
+After:   HEAD = 400  ✓
+
+<span style="color: #d32f2f; font-weight: bold;">WHY THIS ORDER?</span>
+If you update HEAD first, you LOSE the old list!
+Always connect the new node BEFORE changing HEAD.
+                    </pre>
+                </div>
+
+                <h3>💻 Insert at Head - Code (Fully Commented)</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Insert at Beginning (Head)
+ * 
+ * Time: O(1) - constant time, no traversal needed
+ * Space: O(1) - only creating one new node
+ */</span>
+Node insertAtHead(Node head, <span class="keyword">int</span> value) {
+    <span class="comment">// Step 1: Create new node</span>
+    <span class="comment">// System allocates memory, let's say at address 400</span>
+    Node newNode = <span class="keyword">new</span> Node(value);
+    
+    <span class="comment">// Step 2: Connect new node to existing list FIRST</span>
+    <span class="comment">// newNode.next = head (400 points to 100)</span>
+    <span class="comment">// This preserves the chain!</span>
+    newNode.next = head;
+    
+    <span class="comment">// Step 3: Update HEAD to point to new node</span>
+    <span class="comment">// head = newNode (HEAD now stores 400)</span>
+    head = newNode;
+    
+    <span class="comment">// Return updated head</span>
+    <span class="keyword">return</span> head;
+}
+
+<span class="comment">/*
+ * CRITICAL: Why order matters
+ * 
+ * ❌ WRONG ORDER:
+ * head = newNode;        // Lost the old list!
+ * newNode.next = head;   // Now points to itself!
+ * 
+ * ✓ CORRECT ORDER:
+ * newNode.next = head;   // Save the chain first
+ * head = newNode;        // Now safe to update HEAD
+ */</span></pre></div>
+            </section>
+
+            <!-- SECTION 7: INSERT IN MIDDLE -->
+            <section id="insert-middle" class="section">
+                <h2>7️⃣ Insert in Middle (2nd Position)</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Goal:</strong> Insert 4 BETWEEN nodes 1 and 2<br>
+                        <strong>Before:</strong> 1 → 2 → 3<br>
+                        <strong>After:</strong> 1 → 4 → 2 → 3
+                    </p>
+                </div>
+
+                <h3>📊 BEFORE - The Problem</h3>
+                <div style="background: #ffebee; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <pre style="font-family: monospace; font-size: 1em; line-height: 1.8;">
+HEAD = 100
+  │
+  └──→ ┌───┬─────┐     ┌───┬─────┐     ┌───┬──────┐
+       │ 1 │ 200 │ ──→ │ 2 │ 300 │ ──→ │ 3 │ null │
+       └───┴─────┘     └───┴─────┘     └───┴──────┘
+       #100 ❌         #200            #300
+       Should point to 400, not 200!
+
+New Node (floating, not connected):
+┌───┬──────┐
+│ 4 │ null │ ❌ Should point to 200!
+└───┴──────┘
+ #400
+
+<span style="color: #d32f2f; font-weight: bold;">TWO ERRORS:</span>
+❌ Node 1 points to 200 (should point to 400)
+❌ New node points to null (should point to 200)
+                    </pre>
+                </div>
+
+                <h3>📊 AFTER - The Solution</h3>
+                <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <pre style="font-family: monospace; font-size: 1em; line-height: 1.8;">
+HEAD = 100
+  │
+  └──→ ┌───┬─────┐     ┌───┬─────┐     ┌───┬─────┐     ┌───┬──────┐
+       │ 1 │ 400 │ ──→ │ 4 │ 200 │ ──→ │ 2 │ 300 │ ──→ │ 3 │ null │
+       └───┴─────┘     └───┴─────┘     └───┴─────┘     └───┴──────┘
+       #100  ✓         #400  ✓         #200            #300
+
+<span style="color: #2e7d32; font-weight: bold;">ALL FIXED:</span>
+✓ Node 1 (100) now points to 400
+✓ New node (400) points to 200
+✓ Chain is intact: 1 → 4 → 2 → 3
+                    </pre>
+                </div>
+
+                <h3>🔧 Fix Steps (CRITICAL ORDER!)</h3>
+                <div style="background: #fff9c4; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <pre style="font-family: monospace; font-size: 1em; line-height: 1.8;">
+<span style="font-weight: bold; color: #d32f2f;">STEP 1: FIX RIGHT SIDE FIRST! (Save address 200)</span>
+newNode.next = head.next;  // 400.next = 200
+
+┌───┬──────┐
+│ 4 │ null │  →  Becomes  →  ┌───┬─────┐
+└───┴──────┘                  │ 4 │ 200 │ ──→ (saved!)
+                               └───┴─────┘
+
+<span style="font-weight: bold; color: #2e7d32;">STEP 2: FIX LEFT SIDE (Now safe to break old link)</span>
+head.next = newNode;  // 100.next = 400
+
+┌───┬─────┐                   ┌───┬─────┐
+│ 1 │ 200 │  →  Becomes  →   │ 1 │ 400 │ ──→ (connected!)
+└───┴─────┘                   └───┴─────┘
+
+<span style="font-weight: bold; font-size: 1.1em;">⚠️ WHY THIS ORDER IS CRITICAL:</span>
+
+<span style="color: #d32f2f;">❌ WRONG ORDER (Left first):</span>
+1. head.next = newNode     // Lost 200! Can't find rest of list!
+2. newNode.next = head.next // Now newNode points to itself (400)!
+
+<span style="color: #2e7d32;">✓ CORRECT ORDER (Right first):</span>
+1. newNode.next = head.next // Saved 200 safely
+2. head.next = newNode      // Now safe to update
+                    </pre>
+                </div>
+
+                <h3>📊 Visual Proof - Wrong vs Right Order</h3>
+                <div class="comparison-container">
+                    <div class="comparison-box" style="background: #ffebee; border: 2px solid #f44336;">
+                        <h4 style="color: #d32f2f;">❌ WRONG Order</h4>
+                        <pre style="font-size: 0.85em; line-height: 1.6;">
+Step 1: head.next = newNode
+┌───┬─────┐   ┌───┬──────┐
+│ 1 │ 400 │ →│ 4 │ null │
+└───┴─────┘   └───┴──────┘
+LOST ADDRESS 200! ❌
+
+Step 2: newNode.next = head.next
+┌───┬─────┐
+│ 4 │ 400 │ → Points to itself!
+└───┴─────┘
+BROKEN CHAIN! ❌
+                        </pre>
+                    </div>
+
+                    <div class="comparison-box" style="background: #e8f5e9; border: 2px solid #4caf50;">
+                        <h4 style="color: #2e7d32;">✓ CORRECT Order</h4>
+                        <pre style="font-size: 0.85em; line-height: 1.6;">
+Step 1: newNode.next = head.next
+┌───┬─────┐
+│ 4 │ 200 │ → Saved 200! ✓
+└───┴─────┘
+
+Step 2: head.next = newNode
+┌───┬─────┐   ┌───┬─────┐   ┌───┬───┐
+│ 1 │ 400 │ →│ 4 │ 200 │ →│ 2 │...│
+└───┴─────┘   └───┴─────┘   └───┴───┘
+PERFECT CHAIN! ✓
+                        </pre>
+                    </div>
+                </div>
+
+                <h3>💻 Insert in Middle - Code (Fully Commented)</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Insert After a Given Node (Middle Insertion)
+ * 
+ * Example: Insert after head (becomes 2nd node)
+ * 
+ * Time: O(1) - if we already have the node reference
+ * Space: O(1) - only one new node created
+ */</span>
+<span class="keyword">void</span> insertAfter(Node prevNode, <span class="keyword">int</span> value) {
+    <span class="comment">// Safety check</span>
+    <span class="keyword">if</span> (prevNode == <span class="keyword">null</span>) {
+        System.out.println(<span class="string">"Previous node cannot be null"</span>);
+        <span class="keyword">return</span>;
+    }
+    
+    <span class="comment">// Step 1: Create new node (system gives it address 400)</span>
+    Node newNode = <span class="keyword">new</span> Node(value);
+    
+    <span class="comment">// Step 2: FIX RIGHT SIDE FIRST! (Critical!)</span>
+    <span class="comment">// Save the address of node 2 BEFORE we lose it</span>
+    <span class="comment">// newNode.next = prevNode.next (400.next = 200)</span>
+    <span class="comment">// This connects new node to rest of list</span>
+    newNode.next = prevNode.next;
+    
+    <span class="comment">// Step 3: FIX LEFT SIDE (Now safe)</span>
+    <span class="comment">// Connect previous node to new node</span>
+    <span class="comment">// prevNode.next = newNode (100.next = 400)</span>
+    prevNode.next = newNode;
+    
+    <span class="comment">// Done! Chain: 1 → 4 → 2 → 3</span>
+}
+
+<span class="comment">/*
+ * MEMORY AID: "Save before you break"
+ * 
+ * Think of it like a bridge:
+ * 1. Build the NEW bridge section first (right side)
+ * 2. THEN connect it to the old bridge (left side)
+ * 
+ * If you break the old bridge first, people fall!
+ * If you build the new section first, everyone stays safe!
+ * 
+ * Same with linked lists:
+ * 1. Connect new node to REST of list (save address)
+ * 2. THEN connect previous node to new node
+ */</span></pre></div>
+            </section>
+
+            <!-- SECTION 8: RULES -->
+            <section id="rules" class="section" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+                <h2 style="color: white; border-color: white;">8️⃣ Golden Rules</h2>
+                
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: white; margin-top: 0;">✅ Two Rules to Rule Them All</h3>
+                    <div style="font-size: 1.2em; line-height: 2.5;">
+                        <p><strong>Rule #1: HEAD Check</strong></p>
+                        <p>Does HEAD contain the address of the VERY FIRST node?</p>
+                        <p style="margin-bottom: 30px;">✓ If yes, you can access the list<br>✗ If no, list is lost!</p>
+
+                        <p><strong>Rule #2: NEXT Check</strong></p>
+                        <p>Does every node's NEXT contain the correct address of the following node?</p>
+                        <p>✓ Last node should point to null<br>✓ All others should point to valid addresses</p>
+                    </div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.2); padding: 30px; border-radius: 15px;">
+                    <h3 style="color: white; margin-top: 0;">📝 Problem-Solving Checklist</h3>
+                    <ol style="font-size: 1.2em; line-height: 2.5;">
+                        <li>✏️ DRAW the nodes and addresses on paper</li>
+                        <li>🔍 IDENTIFY which links are wrong</li>
+                        <li>📋 WRITE the fix order (right side first!)</li>
+                        <li>💻 CODE the solution</li>
+                        <li>✅ VERIFY: Check both golden rules!</li>
+                    </ol>
+                </div>
+
+                <div style="text-align: center; margin-top: 40px; padding: 30px; background: rgba(255,255,255,0.2); border-radius: 15px;">
+                    <h2 style="color: white;">🎉 You've Mastered Linked Lists!</h2>
+                    <p style="font-size: 1.3em; line-height: 2;">
+                        You now understand:<br>
+                        • Why linked lists exist<br>
+                        • How nodes are structured<br>
+                        • Traversal techniques<br>
+                        • Insertion operations<br>
+                        • The golden rules<br><br>
+                        <strong>Now practice implementing and drawing!</strong>
+                    </p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Heap & Heapify Master Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 50px;
+        }
+        
+        h1 {
+            color: #ff6b6b;
+            text-align: center;
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.3em;
+            margin-bottom: 50px;
+        }
+        
+        h2 {
+            color: #ee5a6f;
+            margin-top: 50px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid #ff6b6b;
+            font-size: 2.2em;
+        }
+        
+        h3 {
+            color: #ff6b6b;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.6em;
+        }
+        
+        h4 {
+            color: #ee5a6f;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .toc {
+            background: #fff9c4;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border-left: 5px solid #ff6b6b;
+        }
+        
+        .toc h2 {
+            margin-top: 0;
+            border: none;
+            color: #ff6b6b;
+        }
+        
+        .toc ul {
+            list-style: none;
+        }
+        
+        .toc li {
+            margin: 10px 0;
+        }
+        
+        .toc a {
+            color: #333;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        
+        .toc a:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+        
+        .highlight-box h3 {
+            color: white;
+            margin-top: 0;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .success-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .tree-visual {
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 25px 0;
+            font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            line-height: 1.3;
+            overflow-x: auto;
+        }
+        
+        .tree-visual pre {
+            font-family: inherit;
+            margin: 0;
+            line-height: inherit;
+        }
+        
+        .node {
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+        
+        .node-highlight {
+            background: #4caf50;
+            animation: pulse 1s infinite;
+        }
+        
+        .node-swap {
+            background: #ff9800;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .code-block {
+            background: #263238;
+            color: #aed581;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.05em;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            color: inherit;
+        }
+        
+        .keyword {
+            color: #c792ea;
+            font-weight: bold;
+        }
+        
+        .comment {
+            color: #80cbc4;
+            font-style: italic;
+        }
+        
+        .string {
+            color: #c3e88d;
+        }
+        
+        .number {
+            color: #f78c6c;
+        }
+        
+        .method {
+            color: #82aaff;
+        }
+        
+        .array-visual {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 20px 0;
+        }
+        
+        .array-cell {
+            background: #fff;
+            border: 2px solid #ff6b6b;
+            padding: 15px 20px;
+            font-weight: bold;
+            font-size: 1.1em;
+            border-radius: 5px;
+            min-width: 50px;
+            text-align: center;
+        }
+        
+        .array-cell-highlight {
+            background: #4caf50;
+            color: white;
+            border-color: #4caf50;
+        }
+        
+        .array-cell-swap {
+            background: #ff9800;
+            color: white;
+            border-color: #ff9800;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+        }
+        
+        th {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        
+        .arrow-up {
+            color: #4caf50;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        
+        .arrow-down {
+            color: #f44336;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #2196f3;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 Complete Heap & Heapify Master Guide</h1>
+        <p class="subtitle">Master Binary Heaps with Visual Examples & Complete Walkthroughs</p>
+        
+        <!-- TABLE OF CONTENTS -->
+        <div class="toc">
+            <h2>📋 Table of Contents</h2>
+            <ul>
+                <li><a href="#what-is-heap">1. What is a Heap?</a></li>
+                <li><a href="#heap-property">2. Heap Property & Types</a></li>
+                <li><a href="#array-representation">3. Array Representation</a></li>
+                <li><a href="#heapify">4. What is Heapify?</a></li>
+                <li><a href="#heapify-done">4.5. When is Heapify Done?</a></li>
+                <li><a href="#where-used">5. Where & When Heaps Are Used</a></li>
+                <li><a href="#operations">6. Core Operations</a></li>
+                <li><a href="#insertion-examples">7. Five Complete Insertion Examples</a></li>
+                <li><a href="#deletion-examples">8. Five Complete Deletion Examples</a></li>
+                <li><a href="#build-heap">9. Building a Heap from Array</a></li>
+                <li><a href="#complexity">10. Time & Space Complexity</a></li>
+                <li><a href="#code-templates">11. Code Templates</a></li>
+            </ul>
+        </div>
+
+        <!-- SECTION 1: WHAT IS A HEAP -->
+        <section id="what-is-heap">
+            <h2>1. What is a Heap? 🤔</h2>
+            
+            <div class="highlight-box">
+                <h3>Simple Definition:</h3>
+                <p style="font-size: 1.2em; line-height: 1.8;">
+                    A <strong>heap</strong> is a <strong>complete binary tree</strong> where every parent node has a specific 
+                    ordering relationship with its children. It's NOT sorted, but has a partial ordering that makes it 
+                    perfect for priority queues and finding min/max elements quickly.
+                </p>
+            </div>
+
+            <h3>Key Characteristics:</h3>
+            <div class="info-box">
+                <ul style="line-height: 2; margin-left: 20px; font-size: 1.1em;">
+                    <li>✓ <strong>Complete Binary Tree:</strong> Filled level by level, left to right</li>
+                    <li>✓ <strong>Heap Property:</strong> Parent-child ordering (max or min)</li>
+                    <li>✓ <strong>NOT Sorted:</strong> Only partial ordering exists</li>
+                    <li>✓ <strong>Array-based:</strong> Usually stored in array, not with pointers</li>
+                    <li>✓ <strong>Efficient:</strong> O(log n) insertions and deletions</li>
+                </ul>
+            </div>
+
+            <h3>Complete Binary Tree Visualization:</h3>
+            <div class="tree-visual">
+<pre>
+✅ COMPLETE (Valid Heap Structure):
+        1
+       /   \
+     2     3
+    / \   /
+  4  5 6
+
+Filled left to right, level by level
+
+
+❌ NOT COMPLETE (Invalid):
+        1
+       /   \
+     2     3
+    /     / \
+  4    5  6
+
+Gap at level 2! Not filled left to right
+</pre>
+            </div>
+        </section>
+
+PART_1_COMPLETE
+
+        <!-- SECTION 2: HEAP PROPERTY -->
+        <section id="heap-property">
+            <h2>2. Heap Property & Types 🎯</h2>
+            
+            <div class="highlight-box">
+                <h3>Two Types of Heaps:</h3>
+            </div>
+
+            <h3>Max-Heap (Parent ≥ Children)</h3>
+            <div class="success-box">
+                <p><strong>Property:</strong> Every parent is <strong>greater than or equal to</strong> its children</p>
+                <p><strong>Root contains:</strong> <strong>Maximum</strong> element in the heap</p>
+                <p><strong>Use when:</strong> Need to quickly access the largest element</p>
+            </div>
+
+            <div class="tree-visual">
+<pre>
+<strong>MAX-HEAP Example:</strong>
+
+            100
+           /    \
+        90          80
+       /  \     /  \
+     70   60    75  50
+
+✓ 100 ≥ 90, 80
+✓ 90 ≥ 70, 60
+✓ 80 ≥ 75, 50
+<strong>All parent ≥ children relationships satisfied!</strong>
+</pre>
+            </div>
+
+            <h3>Min-Heap (Parent ≤ Children)</h3>
+            <div class="info-box">
+                <p><strong>Property:</strong> Every parent is <strong>less than or equal to</strong> its children</p>
+                <p><strong>Root contains:</strong> <strong>Minimum</strong> element in the heap</p>
+                <p><strong>Use when:</strong> Need to quickly access the smallest element</p>
+            </div>
+
+            <div class="tree-visual">
+<pre>
+<strong>MIN-HEAP Example:</strong>
+
+            10
+           /    \
+        20          30
+       /  \     /  \
+     40   50    60  70
+
+✓ 10 ≤ 20, 30
+✓ 20 ≤ 40, 50
+✓ 30 ≤ 60, 70
+<strong>All parent ≤ children relationships satisfied!</strong>
+</pre>
+            </div>
+
+            <div class="warning-box">
+                <strong>Important Note:</strong> Heaps are NOT sorted! Siblings have no ordering relationship.
+                For example, in the max-heap above, 90 and 80 have no required order between them.
+            </div>
+        </section>
+
+        <!-- SECTION 3: ARRAY REPRESENTATION -->
+        <section id="array-representation">
+            <h2>3. Array Representation 📊</h2>
+            
+            <div class="highlight-box">
+                <h3>Why Use Arrays?</h3>
+                <p style="font-size: 1.15em; line-height: 1.8;">
+                    Heaps are stored in arrays (not with left/right pointers) because:
+                </p>
+                <ul style="margin-left: 20px; line-height: 2; font-size: 1.1em;">
+                    <li>✓ <strong>Space efficient:</strong> No pointer overhead</li>
+                    <li>✓ <strong>Cache friendly:</strong> Better memory locality</li>
+                    <li>✓ <strong>Simple indexing:</strong> Easy parent/child calculation</li>
+                </ul>
+            </div>
+
+            <h3>Index Formulas (0-based indexing):</h3>
+            <div class="code-block">
+<pre>
+<span class="comment">// For any node at index i:</span>
+<span class="keyword">Parent index</span>      = (i - <span class="number">1</span>) / <span class="number">2</span>
+<span class="keyword">Left child index</span>  = <span class="number">2</span> * i + <span class="number">1</span>
+<span class="keyword">Right child index</span> = <span class="number">2</span> * i + <span class="number">2</span>
+</pre>
+            </div>
+
+            <h3>Visual Example: Tree to Array Mapping</h3>
+            <div class="tree-visual">
+<pre>
+<strong>Tree View:</strong>
+              90         ← index 0
+
+                         /    \
+
+                       /        \
+
+                     70          80     ← indices 1, 2
+
+                    /  \        /  \
+
+                  60   65    75   50 ← indices 3, 4, 5, 6
+
+<strong>Array View:</strong>
+Index:  0   1   2   3   4   5   6
+       ┌───┬───┬───┬───┬───┬───┬───┐
+Array: │90 │70 │80 │60 │65 │75 │50 │
+       └───┴───┴───┴───┴───┴───┴───┘
+
+<strong>Relationships:</strong>
+90 (index 0): left = 1 (70), right = 2 (80)
+70 (index 1): left = 3 (60), right = 4 (65), parent = 0 (90)
+80 (index 2): left = 5 (75), right = 6 (50), parent = 0 (90)
+</pre>
+            </div>
+
+            <div class="array-visual">
+                <div class="array-cell">90<br><small>i=0</small></div>
+                <div class="array-cell">70<br><small>i=1</small></div>
+                <div class="array-cell">80<br><small>i=2</small></div>
+                <div class="array-cell">60<br><small>i=3</small></div>
+                <div class="array-cell">65<br><small>i=4</small></div>
+                <div class="array-cell">75<br><small>i=5</small></div>
+                <div class="array-cell">50<br><small>i=6</small></div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: WHAT IS HEAPIFY -->
+        <section id="heapify">
+            <h2>4. What is Heapify? ⚡</h2>
+            
+            <div class="highlight-box">
+                <h3>Definition:</h3>
+                <p style="font-size: 1.2em; line-height: 1.8;">
+                    <strong>Heapify</strong> is the process of <strong>restoring the heap property</strong> when it has been violated.
+                    It "fixes" the heap by moving elements up or down until the parent-child relationships are correct again.
+                </p>
+            </div>
+
+            <h3>Two Types of Heapify:</h3>
+            
+            <h4>🔼 Heapify Up (Sift Up / Bubble Up)</h4>
+            <div class="success-box">
+                <p><strong>When to use:</strong></p>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>✓ After inserting a new element at the bottom</li>
+                    <li>✓ The new element might be too large (max-heap) or too small (min-heap)</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>What it does:</strong></p>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>→ Compares node with its <strong>parent</strong></li>
+                    <li>→ Swaps if heap property violated</li>
+                    <li>→ Moves <span class="arrow-up">⬆ UP</span> toward root until property satisfied</li>
+                </ul>
+            </div>
+
+            <h4>🔽 Heapify Down (Sift Down / Bubble Down)</h4>
+            <div class="info-box">
+                <p><strong>When to use:</strong></p>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>✓ After removing the root (extract max/min)</li>
+                    <li>✓ When building a heap from an array</li>
+                    <li>✓ The replacement element might be too small (max-heap) or too large (min-heap)</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>What it does:</strong></p>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>→ Compares node with its <strong>children</strong></li>
+                    <li>→ Swaps with larger child (max-heap) or smaller child (min-heap)</li>
+                    <li>→ Moves <span class="arrow-down">⬇ DOWN</span> toward leaves until property satisfied</li>
+                </ul>
+            </div>
+
+            <h3>Quick Visual Summary:</h3>
+            <div class="tree-visual">
+<pre>
+<strong>HEAPIFY UP (Insert):</strong>
+Insert at bottom → Check parent → Swap if needed → Move UP ⬆
+
+        Root
+         ↑
+         ↑  (bubble up)
+         ↑
+    New Element
+
+
+<strong>HEAPIFY DOWN (Delete Root):</strong>
+Replace root → Check children → Swap with best child → Move DOWN ⬇
+
+    Replacement
+         ↓
+         ↓  (sink down)
+         ↓
+       Leaves
+</pre>
+            </div>
+        </section>
+
+
+
+        <!-- SECTION 4.5: WHEN IS HEAPIFY DONE -->
+        <section id="heapify-done">
+            <h2>4.5. When is Heapify Done? 🛑</h2>
+            
+            <div class="highlight-box">
+                <h3>Quick Answer:</h3>
+                <p style="font-size: 1.2em; line-height: 1.8;">
+                    Heapify is done when the <strong>heap property is satisfied</strong> - meaning every parent 
+                    is correctly ordered with respect to its children, and we can't move the element any further.
+                </p>
+            </div>
+
+            <h3>Heapify Up Stops When:</h3>
+            <div class="success-box">
+                <ol style="line-height: 2; font-size: 1.1em; margin-left: 20px;">
+                    <li><strong>Reached the root:</strong> No parent to compare with → DONE ✅</li>
+                    <li><strong>Parent is valid:</strong> 
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Max-heap: parent ≥ current node → DONE ✅</li>
+                            <li>Min-heap: parent ≤ current node → DONE ✅</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <h4>Example: Heapify Up Stops</h4>
+            <div class="tree-visual">
+<pre>
+<strong>Max-Heap: Insert 95</strong>
+
+Initial:    110
+           /   \
+         85     100
+
+After insert at end:
+            110
+           /   \
+         85     100
+        /
+      95
+
+Check: 95 > parent(85)? YES → Swap
+
+After swap:
+            110
+           /   \
+         95     100    ← 95 moved up
+        /
+      85              ← 85 moved down
+
+Check: 95 > parent(110)? NO ✅
+<strong>STOP! Heapify up is DONE</strong>
+Parent (110) ≥ current (95), heap property satisfied!
+</pre>
+            </div>
+
+            <h3>Heapify Down Stops When:</h3>
+            <div class="info-box">
+                <ol style="line-height: 2; font-size: 1.1em; margin-left: 20px;">
+                    <li><strong>Reached a leaf:</strong> No children to compare with → DONE ✅</li>
+                    <li><strong>Current node is valid:</strong>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Max-heap: current ≥ both children → DONE ✅</li>
+                            <li>Min-heap: current ≤ both children → DONE ✅</li>
+                        </ul>
+                    </li>
+                    <li><strong>Only one child and valid:</strong> Check only that child → DONE if valid ✅</li>
+                </ol>
+            </div>
+
+            <h4>Example: Heapify Down Stops</h4>
+            <div class="tree-visual">
+<pre>
+<strong>Max-Heap: Delete root, replace with 85</strong>
+
+After replacement:
+             85         ← Too small!
+           /   \
+         140    130
+
+Check: 85 < max(140, 130) = 140? YES → Swap with 140
+
+After swap:
+            140         ← 140 up
+           /   \
+         85     130     ← 85 down
+        /  \
+      120  110
+
+Check: 85 < max(120, 110) = 120? YES → Swap with 120
+
+After swap:
+            140
+           /   \
+         120    130     ← 120 up
+        /  \
+      85   110         ← 85 down
+
+Check: 85 has no children? YES ✅
+<strong>STOP! Heapify down is DONE</strong>
+Reached a leaf node!
+</pre>
+            </div>
+
+            <h3>Common Stopping Scenarios:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Scenario</th>
+                        <th>Heapify Up</th>
+                        <th>Heapify Down</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Best Case</strong></td>
+                        <td>Element already in correct position (0 swaps)</td>
+                        <td>Replacement already larger than children (0 swaps)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Worst Case</strong></td>
+                        <td>Bubble all the way to root (log n swaps)</td>
+                        <td>Sink all the way to leaf (log n swaps)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Partial Case</strong></td>
+                        <td>Stop somewhere in middle when parent ≥ child</td>
+                        <td>Stop somewhere in middle when current ≥ children</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Pseudocode with Stop Conditions:</h3>
+            <div class="code-block">
+<pre>
+<span class="comment">// HEAPIFY UP (Max-Heap)</span>
+<span class="keyword">void</span> <span class="method">heapifyUp</span>(<span class="keyword">int</span> index) {
+    <span class="keyword">while</span> (index > <span class="number">0</span>) {  <span class="comment">// Not at root yet</span>
+        <span class="keyword">int</span> parentIdx = (index - <span class="number">1</span>) / <span class="number">2</span>;
+        
+        <span class="comment">// STOP CONDITION: Parent is valid (parent ≥ current)</span>
+        <span class="keyword">if</span> (heap[parentIdx] >= heap[index]) {
+            <span class="keyword">break</span>;  <span class="comment">// ✅ DONE! Heap property satisfied</span>
+        }
+        
+        <span class="comment">// Swap and continue</span>
+        swap(heap[parentIdx], heap[index]);
+        index = parentIdx;
+    }
+    <span class="comment">// Also stops when index = 0 (reached root)</span>
+}
+
+<span class="comment">// HEAPIFY DOWN (Max-Heap)</span>
+<span class="keyword">void</span> <span class="method">heapifyDown</span>(<span class="keyword">int</span> index) {
+    <span class="keyword">int</span> size = heap.length;
+    
+    <span class="keyword">while</span> (<span class="keyword">true</span>) {
+        <span class="keyword">int</span> leftChild = <span class="number">2</span> * index + <span class="number">1</span>;
+        <span class="keyword">int</span> rightChild = <span class="number">2</span> * index + <span class="number">2</span>;
+        <span class="keyword">int</span> largest = index;
+        
+        <span class="comment">// STOP CONDITION 1: No left child (reached leaf)</span>
+        <span class="keyword">if</span> (leftChild >= size) {
+            <span class="keyword">break</span>;  <span class="comment">// ✅ DONE! No children to compare</span>
+        }
+        
+        <span class="comment">// Find largest among current, left child, right child</span>
+        <span class="keyword">if</span> (heap[leftChild] > heap[largest]) {
+            largest = leftChild;
+        }
+        <span class="keyword">if</span> (rightChild < size && heap[rightChild] > heap[largest]) {
+            largest = rightChild;
+        }
+        
+        <span class="comment">// STOP CONDITION 2: Current is already largest</span>
+        <span class="keyword">if</span> (largest == index) {
+            <span class="keyword">break</span>;  <span class="comment">// ✅ DONE! Heap property satisfied</span>
+        }
+        
+        <span class="comment">// Swap and continue</span>
+        swap(heap[index], heap[largest]);
+        index = largest;
+    }
+}
+</pre>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Important Notes:</h4>
+                <ul style="line-height: 2; margin-left: 20px;">
+                    <li><strong>Always check bounds:</strong> Make sure child indices are within array bounds</li>
+                    <li><strong>Single child edge case:</strong> Last level might have only left child, handle carefully</li>
+                    <li><strong>Equal values:</strong> If parent = child, heap property is satisfied (stop)</li>
+                    <li><strong>No infinite loops:</strong> Each iteration moves closer to stopping condition</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h4>✅ Summary - Heapify is Done When:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Stop Condition</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Heapify Up</strong></td>
+                            <td>Reached root OR parent ≥ current (max) / parent ≤ current (min)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Heapify Down</strong></td>
+                            <td>Reached leaf OR current ≥ both children (max) / current ≤ both children (min)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECTION 5: WHERE & WHEN USED -->
+        <section id="where-used">
+            <h2>5. Where & When Heaps Are Used 🎯</h2>
+            
+            <div class="highlight-box">
+                <h3>Heaps are the foundation for many important algorithms and data structures!</h3>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Use Case</th>
+                        <th style="width: 35%;">Why Heap?</th>
+                        <th style="width: 40%;">Examples</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Priority Queue</strong></td>
+                        <td>Always get highest/lowest priority in O(1)</td>
+                        <td>Task scheduling, event simulation, Dijkstra's algorithm</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Heap Sort</strong></td>
+                        <td>O(n log n) sorting with O(1) space</td>
+                        <td>In-place sorting algorithm</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Top K Problems</strong></td>
+                        <td>Efficiently maintain k largest/smallest</td>
+                        <td>K largest elements, K closest points, median of stream</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Graph Algorithms</strong></td>
+                        <td>Efficiently get next best edge/node</td>
+                        <td>Dijkstra's shortest path, Prim's MST, A* search</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Merge K Sorted Lists</strong></td>
+                        <td>Always get smallest element across K lists</td>
+                        <td>External sorting, merge sorted streams</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Median Finding</strong></td>
+                        <td>Two heaps give O(log n) insert, O(1) median</td>
+                        <td>Running median, sliding window median</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Event Scheduling</strong></td>
+                        <td>Get next event by timestamp</td>
+                        <td>Timers, discrete event simulation</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>When to Choose Heap vs Other Structures:</h3>
+            <div class="info-box">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Need</th>
+                            <th>Use Heap If...</th>
+                            <th>Use Something Else If...</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Fast max/min</td>
+                            <td>✓ O(1) access to max/min</td>
+                            <td>BST if need full sorting</td>
+                        </tr>
+                        <tr>
+                            <td>Priority queue</td>
+                            <td>✓ Standard choice</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Sorted order</td>
+                            <td>✗ Heap is NOT sorted</td>
+                            <td>Use BST or sort array</td>
+                        </tr>
+                        <tr>
+                            <td>Search by value</td>
+                            <td>✗ O(n) search</td>
+                            <td>Use HashMap or BST</td>
+                        </tr>
+                        <tr>
+                            <td>Frequent updates</td>
+                            <td>✓ O(log n) insert/delete</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SECTION 6: CORE OPERATIONS -->
+        <section id="operations">
+            <h2>6. Core Heap Operations 🔧</h2>
+            
+            <h3>Operation Summary:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>What It Does</th>
+                        <th>Time Complexity</th>
+                        <th>Uses</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Insert</strong></td>
+                        <td>Add element at end, heapify up</td>
+                        <td>O(log n)</td>
+                        <td>Heapify Up</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Extract Max/Min</strong></td>
+                        <td>Remove root, replace with last, heapify down</td>
+                        <td>O(log n)</td>
+                        <td>Heapify Down</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Peek</strong></td>
+                        <td>Look at root (don't remove)</td>
+                        <td>O(1)</td>
+                        <td>Just return arr[0]</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Build Heap</strong></td>
+                        <td>Convert array to heap</td>
+                        <td>O(n)</td>
+                        <td>Heapify Down from n/2 to 0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Heap Sort</strong></td>
+                        <td>Extract all elements in order</td>
+                        <td>O(n log n)</td>
+                        <td>Repeated extract max/min</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+        <!-- SECTION 7: FIVE INSERTION EXAMPLES -->
+        <section id="insertion-examples">
+            <h2>7. Five Complete Insertion Examples 🔼</h2>
+            
+            <div class="highlight-box">
+                <h3>Insertion Pattern (Max-Heap):</h3>
+                <ol style="font-size: 1.15em; line-height: 2; margin-left: 20px;">
+                    <li><strong>Step 1:</strong> Insert new element at the end (maintain complete tree property)</li>
+                    <li><strong>Step 2:</strong> Compare with parent</li>
+                    <li><strong>Step 3:</strong> If child > parent, swap them (Heapify Up <span class="arrow-up">⬆</span>)</li>
+                    <li><strong>Step 4:</strong> Repeat until parent ≥ child or reach root</li>
+                </ol>
+            </div>
+
+            <!-- INSERTION EXAMPLE 1 -->
+            <div style="border: 3px solid #4caf50; border-radius: 15px; padding: 30px; margin: 30px 0;">
+                <h3 style="color: #4caf50; margin-top: 0;">📌 Example 1: Insert 120 into Large Heap</h3>
+                
+                <h4><span class="step-number">Start</span> Initial Heap:</h4>
+                <div class="tree-visual">
+<pre>
+          100
+         /   \
+       90     80
+      / \   / \
+    70  60 75 50
+    / \
+  20  30
+
+<strong>Array:</strong> [100, 90, 80, 70, 60, 75, 50, 20, 30]
+</pre>
+                </div>
+
+                <h4><span class="step-number">Step 1</span> Insert 120 at End:</h4>
+                <div class="tree-visual">
+<pre>
+                100
+              /      \
+           90        80
+          /  \       /  \
+       70   60   75   50
+      / \   /
+    20 30 120 ← NEW
+
+<strong>Array:</strong> [100, 90, 80, 70, 60, 75, 50, 20, 30, <strong style="color: #4caf50;">120</strong>]
+                                                          ↑ index 9
+
+<strong>Check:</strong> 120 > parent(70)? YES ❌ Violates heap property!
+</pre>
+                </div>
+
+                <h4><span class="step-number">Step 2</span> Heapify Up: Swap 120 <span class="arrow-up">⬆</span> with 70:</h4>
+                <div class="tree-visual">
+<pre>
+                100
+              /      \
+           90        80
+          /  \       /  \
+       120  60   75   50 ← 120 moved up
+      / \   
+    20 30 70 ← 70 moved down
+
+<strong>Swapped:</strong> index 3 ↔ index 9
+
+<strong>Check:</strong> 120 > parent(90)? YES ❌ Still violates!
+</pre>
+                </div>
+
+                <h4><span class="step-number">Step 3</span> Heapify Up: Swap 120 <span class="arrow-up">⬆</span> with 90:</h4>
+                <div class="tree-visual">
+<pre>
+                100
+              /      \
+           120       80 ← 120 moved up
+          /  \       /  \
+       90   60   75   50 ← 90 moved down
+      / \   
+    20 30 70
+
+<strong>Swapped:</strong> index 1 ↔ index 3
+
+<strong>Check:</strong> 120 > parent(100)? YES ❌ Still violates!
+</pre>
+                </div>
+
+                <h4><span class="step-number">Step 4</span> Heapify Up: Swap 120 <span class="arrow-up">⬆</span> with 100:</h4>
+                <div class="tree-visual">
+<pre>
+                120 ← NEW ROOT!
+              /      \
+           100       80 ← 100 moved down
+          /  \       /  \
+       90   60   75   50
+      / \   
+    20 30 70
+
+<strong>Swapped:</strong> index 0 ↔ index 1
+
+<strong>Check:</strong> 120 is now root! ✅ Done!
+
+<strong>Final Array:</strong> [<strong style="color: #4caf50;">120</strong>, 100, 80, 90, 60, 75, 50, 20, 30, 70]
+</pre>
+                </div>
+
+                <div class="success-box">
+                    <strong>🎉 Result:</strong> Successfully inserted 120! It bubbled all the way to the root.
+                    <br><strong>Swaps Made:</strong> 3 (log₂(10) ≈ 3.32)
+                </div>
+            </div>
+
+            <!-- INSERTION EXAMPLE 2 -->
+            <div style="border: 3px solid #2196f3; border-radius: 15px; padding: 30px; margin: 30px 0;">
+                <h3 style="color: #2196f3; margin-top: 0;">📌 Example 2: Insert 95 (Partial Bubble)</h3>
+                
+                <h4><span class="step-number">Start</span> Initial Heap:</h4>
+                <div class="tree-visual">
+<pre>
+          110
+         /   \
+       85     100
+      / \   /  \
+    60  70 90  50
+    /
+  40
+
+<strong>Array:</strong> [110, 85, 100, 60, 70, 90, 50, 40]
+</pre>
+                </div>
+
+                <h4><span class="step-number">Step 1</span> Insert 95 at index 8:</h4>
+                <div class="tree-visual">
+<pre>
+                110
+              /      \
+           85        100
+          /  \       /   \
+       60   70   90    50
+      / \
+    40 95 ← NEW
+
+Parent of 95 = 60 (index 3)
+<strong>Check:</strong> 95 > 60? YES ❌
+</pre>
+                </div>
+
+                <h4><span class="step-number">Step 2</span> Swap 95 <span class="arrow-up">⬆</span> with 60:</h4>
+                <div class="tree-visual">
+<pre>
+                110
+              /      \
+           85        100
+          /  \       /   \
+       95   70   90    50 ← 95 up
+      / \
+    40 60 ← 60 down
+
+Parent of 95 = 85 (index 1)
+<strong>Check:</strong> 95 > 85? YES ❌
+</pre>
+                </div>
+
+                <h4><span class="step-number">Step 3</span> Swap 95 <span class="arrow-up">⬆</span> with 85:</h4>
+                <div class="tree-visual">
+<pre>
+                110
+              /      \
+           95       100 ← 95 up
+          /  \       /   \
+       85   70   90    50 ← 85 down
+      / \
+    40 60
+
+Parent of 95 = 110 (index 0)
+<strong>Check:</strong> 95 > 110? NO ✅ Done!
+
+<strong>Final Array:</strong> [110, <strong style="color: #2196f3;">95</strong>, 100, 85, 70, 90, 50, 40, 60]
+</pre>
+                </div>
+
+                <div class="success-box">
+                    <strong>🎉 Result:</strong> 95 bubbled up 2 levels but stopped at 110.
+                    <br><strong>Swaps Made:</strong> 2
+                </div>
+            </div>
+
+            <!-- INSERTION EXAMPLE 3 -->
+            <div style="border: 3px solid #ff9800; border-radius: 15px; padding: 30px; margin: 30px 0;">
+                <h3 style="color: #ff9800; margin-top: 0;">📌 Example 3: Insert 65 (No Movement)</h3>
+                
+                <h4><span class="step-number">Start</span> Initial Heap:</h4>
+                <div class="tree-visual">
+<pre>
+                150
+              /      \
+           140       130
+          /  \       /   \
+       120   110    100   90
+      /  \
+    80  70
+
+<strong>Array:</strong> [150, 140, 130, 120, 110, 100, 90, 80, 70]
+</pre>
+                </div>
+
+                <h4><span class="step-number">Step 1</span> Insert 65 at index 9:</h4>
+                <div class="tree-visual">
+<pre>
+                150
+              /      \
+           140       130
+          /  \       /   \
+       120   110    100   90
+      /  \   /
+    80  70 65 ← NEW
+
+Parent of 65 = 110 (index 4)
+<strong>Check:</strong> 65 > 110? NO ✅ Already valid!
+
+<strong>Final Array:</strong> [150, 140, 130, 120, 110, 100, 90, 80, 70, <strong style="color: #ff9800;">65</strong>]
+</pre>
+                </div>
+
+                <div class="success-box">
+                    <strong>🎉 Result:</strong> 65 doesn't need to move! It's smaller than its parent.
+                    <br><strong>Swaps Made:</strong> 0 (Best case!)
+                </div>
+            </div>
+
+
+            <!-- INSERTION EXAMPLE 4 -->
+            <div style="border: 3px solid #9c27b0; border-radius: 15px; padding: 30px; margin: 30px 0;">
+                <h3 style="color: #9c27b0; margin-top: 0;">📌 Example 4: Insert 200 (Maximum Element)</h3>
+                
+                <h4><span class="step-number">Start</span> Initial Heap:</h4>
+                <div class="tree-visual">
+<pre>
+          150
+         /   \
+       140    130
+      / \
+    120 110
+
+<strong>Array:</strong> [150, 140, 130, 120, 110]
+</pre>
+                </div>
+
+                <h4>Full Bubble Up Sequence:</h4>
+                <div class="tree-visual">
+<pre>
+<strong>Step 1:</strong> Insert 200 at end (becomes right child of 130)
+          150
+         /   \\
+       140    130
+      / \\    /
+    120 110 200  → 200 > parent(130)? YES ❌
+
+<strong>Step 2:</strong> Swap 200 with 130
+          150
+         /   \\
+       140    200    → 200 moved up
+      / \\    /
+    120 110 130      → 130 moved down
+                     → 200 > parent(150)? YES ❌
+
+<strong>Step 3:</strong> Swap 200 with 150 (becomes root!)
+          200         ← NEW MAX!
+         /   \\
+       140    150    → 150 moved down
+      / \\    /
+    120 110 130
+
+<strong>Final Array:</strong> [200, 140, 150, 120, 110, 130]
+</pre>
+                </div>
+
+                <div class="success-box">
+                    <strong>🎉 Result:</strong> 200 is the new maximum! Bubbled to root.
+                    <br><strong>Swaps Made:</strong> 2
+                </div>
+            </div>
+
+            <!-- INSERTION EXAMPLE 5 -->
+            <div style="border: 3px solid #f44336; border-radius: 15px; padding: 30px; margin: 30px 0;">
+                <h3 style="color: #f44336; margin-top: 0;">📌 Example 5: Insert 160 into Full Tree</h3>
+                
+                <h4><span class="step-number">Start</span> Initial Heap:</h4>
+                <div class="tree-visual">
+<pre>
+                170
+              /      \
+           150       160
+          /  \       /   \
+       130   120    140   100
+      / \   / \   / \   /
+    80 90 85 95 75 65 50
+
+<strong>Array:</strong> [170, 150, 160, 130, 120, 140, 100, 80, 90, 85, 95, 75, 65, 50]
+</pre>
+                </div>
+
+                <h4>Insertion Process:</h4>
+                <div class="tree-visual">
+<pre>
+<strong>Insert 160 at index 14:</strong>
+Parent = index 6 (140)
+160 > 140? YES ❌ → Swap
+
+After swap with 140:
+Parent = index 2 (160)
+160 > 160? NO (equal) ✅ → Stop
+
+<strong>Final Position:</strong> 160 moved from leaf to middle of tree
+
+<strong>Final Array:</strong> [170, 150, <strong style="color: #f44336;">160</strong>, 130, 120, <strong style="color: #f44336;">160</strong>, 100, 80, 90, 85, 95, 75, 65, 50, 140]
+                                            ↑ Both 160s now (equals allowed)
+</pre>
+                </div>
+
+                <div class="success-box">
+                    <strong>🎉 Result:</strong> 160 bubbled up once, stopped when meeting equal value.
+                    <br><strong>Swaps Made:</strong> 1
+                    <br><strong>Note:</strong> Duplicates are allowed in heaps!
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>Key Takeaways from Insertion Examples:</h4>
+                <ul style="line-height: 2; font-size: 1.05em;">
+                    <li>✓ Always insert at END to keep tree complete</li>
+                    <li>✓ Bubble UP ⬆ by comparing with parent</li>
+                    <li>✓ Best case: O(1) when element already in correct position (Example 3)</li>
+                    <li>✓ Worst case: O(log n) when element bubbles to root (Example 1, 4)</li>
+                    <li>✓ Average case: O(log n)</li>
+                    <li>✓ Duplicates are allowed (Example 5)</li>
+                </ul>
+            </div>
+        </section>
+
+
+        <!-- SECTION 8: FIVE DELETION EXAMPLES -->
+        <section id="deletion-examples">
+            <h2>8. Five Complete Deletion Examples 🔽</h2>
+            
+            <div class="highlight-box">
+                <h3>Deletion Pattern (Extract Max from Max-Heap):</h3>
+                <ol style="font-size: 1.15em; line-height: 2; margin-left: 20px;">
+                    <li><strong>Step 1:</strong> Save root value (this is what we're returning)</li>
+                    <li><strong>Step 2:</strong> Replace root with LAST element</li>
+                    <li><strong>Step 3:</strong> Remove last element (shrink heap size)</li>
+                    <li><strong>Step 4:</strong> Heapify Down <span class="arrow-down">⬇</span> from root</li>
+                    <li><strong>Step 5:</strong> Compare with children, swap with LARGER child (max-heap)</li>
+                    <li><strong>Step 6:</strong> Repeat until parent ≥ both children or reach leaf</li>
+                </ol>
+            </div>
+
+            <!-- DELETION EXAMPLE 1 -->
+            <div style="border: 3px solid #f44336; border-radius: 15px; padding: 30px; margin: 30px 0;">
+                <h3 style="color: #f44336; margin-top: 0;">📌 Example 1: Delete 200 (Root Removal)</h3>
+                
+                <h4><span class="step-number">Start</span> Initial Heap:</h4>
+                <div class="tree-visual">
+<pre>
+                200 ← Delete this!
+              /      \
+           150       180
+          /  \       /   \
+       120   140    160   100
+
+<strong>Array:</strong> [<strong style="color: #f44336;">200</strong>, 150, 180, 120, 140, 160, 100]
+</pre>
+                </div>
+
+                <h4><span class="step-number">Step 1</span> Replace Root with Last Element (100):</h4>
+                <div class="tree-visual">
+<pre>
+                100 ← Moved from end
+              /      \
+           150       180
+          /  \       /
+       120   140    160
+
+<strong>Array:</strong> [<strong style="color: #ff9800;">100</strong>, 150, 180, 120, 140, 160]
+                 ↑ Now at root!
+
+<strong>Check:</strong> 100 < max(150, 180)? YES ❌ Violates heap!
+                    Larger child = 180
+</pre>
+                </div>
+
+                <h4><span class="step-number">Step 2</span> Heapify Down: Swap 100 <span class="arrow-down">⬇</span> with 180:</h4>
+                <div class="tree-visual">
+<pre>
+                180 ← 180 up
+              /      \
+           150       100 ← 100 down
+          /  \       /
+       120   140    160
+
+<strong>Check:</strong> 100 < 160? YES ❌ Still violates!
+</pre>
+                </div>
+
+                <h4><span class="step-number">Step 3</span> Heapify Down: Swap 100 <span class="arrow-down">⬇</span> with 160:</h4>
+                <div class="tree-visual">
+<pre>
+                180 ← NEW ROOT!
+              /      \
+           150       160 ← 160 up
+          /  \       /
+       120   140    100 ← 100 at leaf
+
+<strong>Check:</strong> 100 is now a leaf ✅ Done!
+
+<strong>Final Array:</strong> [<strong style="color: #f44336;">180</strong>, 150, 160, 120, 140, 100]
+<strong>Returned:</strong> 200
+</pre>
+                </div>
+
+                <div class="success-box">
+                    <strong>🎉 Result:</strong> Successfully removed 200, 180 is new max.
+                    <br><strong>Swaps Made:</strong> 2
+                </div>
+            </div>
+
+            <!-- DELETION EXAMPLE 2 -->
+            <div style="border: 3px solid #2196f3; border-radius: 15px; padding: 30px; margin: 30px 0;">
+                <h3 style="color: #2196f3; margin-top: 0;">📌 Example 2: Delete 170</h3>
+                
+                <h4><span class="step-number">Start</span> Initial Heap:</h4>
+                <div class="tree-visual">
+<pre>
+                170
+              /      \
+           150       160
+          /  \       /   \
+       130   120    140   100
+      /
+    90
+
+<strong>Array:</strong> [170, 150, 160, 130, 120, 140, 100, 90]
+</pre>
+                </div>
+
+                <h4>Deletion Process (Replace with 90, then sink down):</h4>
+                <div class="tree-visual">
+<pre>
+<strong>Step 1:</strong> Replace root with 90
+                90
+              /      \
+           150       160
+          /  \       /   \
+       130   120    140   100
+
+Larger child = max(150, 160) = 160
+90 < 160? YES ❌ → Swap
+
+<strong>Step 2:</strong> After swap with 160
+                160
+              /      \
+           150       90
+          /  \       /   \
+       130   120    140   100
+
+Larger child = max(140, 100) = 140
+90 < 140? YES ❌ → Swap
+
+<strong>Step 3:</strong> After swap with 140
+                160
+              /      \
+           150       140
+          /  \       /   \
+       130  120  90   100
+
+90 < 100? YES ❌ → Swap
+
+<strong>Step 4:</strong> After swap with 100
+                160
+              /      \
+           150       140
+          /  \       /   \
+       130   120    100   90 ← Leaf ✅
+
+<strong>Final Array:</strong> [<strong style="color: #2196f3;">160</strong>, 150, 140, 130, 120, 100, 90]
+</pre>
+                </div>
+
+                <div class="success-box">
+                    <strong>🎉 Result:</strong> 90 sank all the way to a leaf position.
+                    <br><strong>Swaps Made:</strong> 3 (max depth)
+                </div>
+            </div>
+
+            <!-- DELETION EXAMPLE 3 -->
+            <div style="border: 3px solid #4caf50; border-radius: 15px; padding: 30px; margin: 30px 0;">
+                <h3 style="color: #4caf50; margin-top: 0;">📌 Example 3: Delete 150 (Partial Sink)</h3>
+                
+                <h4><span class="step-number">Start</span> Initial Heap:</h4>
+                <div class="tree-visual">
+<pre>
+                150
+              /      \
+           130       140
+          /  \       /   \
+       120   110    100   90
+      / \
+    80 85
+
+<strong>Array:</strong> [150, 130, 140, 120, 110, 100, 90, 80, 85]
+</pre>
+                </div>
+
+                <h4>Deletion Process:</h4>
+                <div class="tree-visual">
+<pre>
+<strong>Replace with 85, then heapify down:</strong>
+
+Step 1: 85 at root → max child = max(130, 140) = 140
+        85 < 140? YES → Swap
+
+Step 2: 85 moved to right subtree → max child = max(100, 90) = 100
+        85 < 100? YES → Swap
+
+Step 3: 85 < 100's children? 85 has no children ✅ Stop
+
+<strong>Final Structure:</strong>
+                140 ← New max
+              /      \
+           130       100
+          /  \       /   \
+       120   110    85   90
+      / \
+    80 85 (wait... duplicate!)
+
+<strong>Final Array:</strong> [<strong style="color: #4caf50;">140</strong>, 130, 100, 120, 110, 85, 90, 80]
+</pre>
+                </div>
+
+                <div class="success-box">
+                    <strong>🎉 Result:</strong> 85 sank partially down the tree.
+                    <br><strong>Swaps Made:</strong> 2
+                </div>
+            </div>
+
+            <!-- DELETION EXAMPLE 4 -->
+            <div style="border: 3px solid #ff9800; border-radius: 15px; padding: 30px; margin: 30px 0;">
+                <h3 style="color: #ff9800; margin-top: 0;">📌 Example 4: Delete 300 (Large Heap)</h3>
+                
+                <h4><span class="step-number">Start</span> Initial Heap:</h4>
+                <div class="tree-visual">
+<pre>
+                300
+              /      \
+           250       280
+          /  \       /   \
+       200   240    260   270
+      / \
+    150 180
+
+<strong>Array:</strong> [300, 250, 280, 200, 240, 260, 270, 150, 180]
+</pre>
+                </div>
+
+                <h4>Quick Sink Down Summary:</h4>
+                <div class="tree-visual">
+<pre>
+<strong>Replace 300 with 180:</strong>
+
+180 → Compare with max(250, 280) = 280 → Swap
+180 → Compare with max(260, 270) = 270 → Swap
+180 < 270's children? No children ✅ Stop
+
+<strong>Final:</strong>
+                280
+              /      \
+           250       270
+          /  \       /   \
+       200   240    260   180
+      / \
+    150 <span class="node">???</span> (removed)
+
+<strong>Final Array:</strong> [<strong style="color: #ff9800;">280</strong>, 250, 270, 200, 240, 260, 180, 150]
+</pre>
+                </div>
+
+                <div class="success-box">
+                    <strong>🎉 Result:</strong> 280 becomes new max.
+                    <br><strong>Swaps Made:</strong> 2
+                </div>
+            </div>
+
+            <!-- DELETION EXAMPLE 5 -->
+            <div style="border: 3px solid #9c27b0; border-radius: 15px; padding: 30px; margin: 30px 0;">
+                <h3 style="color: #9c27b0; margin-top: 0;">📌 Example 5: Delete from Small Heap</h3>
+                
+                <h4><span class="step-number">Start</span> Initial Heap:</h4>
+                <div class="tree-visual">
+<pre>
+        100
+       /    \
+     50          30
+
+<strong>Array:</strong> [100, 50, 30]
+</pre>
+                </div>
+
+                <h4>Deletion Process:</h4>
+                <div class="tree-visual">
+<pre>
+<strong>Step 1:</strong> Replace 100 with 30 (last element)
+        30
+       /
+     50
+
+30 < 50? YES → Swap
+
+<strong>Step 2:</strong> After swap
+        50 ← New max
+       /
+     30
+
+<strong>Final Array:</strong> [<strong style="color: #9c27b0;">50</strong>, 30]
+</pre>
+                </div>
+
+                <div class="success-box">
+                    <strong>🎉 Result:</strong> Simple one-swap deletion.
+                    <br><strong>Swaps Made:</strong> 1
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>Key Takeaways from Deletion Examples:</h4>
+                <ul style="line-height: 2; font-size: 1.05em;">
+                    <li>✓ Always replace root with LAST element</li>
+                    <li>✓ Sink DOWN ⬇ by comparing with BOTH children</li>
+                    <li>✓ Swap with LARGER child in max-heap (smaller child in min-heap)</li>
+                    <li>✓ Best case: O(1) when replacement is already larger than children</li>
+                    <li>✓ Worst case: O(log n) when element sinks to leaf (Example 2)</li>
+                    <li>✓ Average case: O(log n)</li>
+                    <li>✓ Root (max/min) extraction is the primary delete operation</li>
+                </ul>
+            </div>
+        </section>
+
+
+        <!-- SECTION 9: BUILD HEAP -->
+        <section id="build-heap">
+            <h2>9. Building a Heap from Array 🏗️</h2>
+            
+            <div class="highlight-box">
+                <h3>Build Heap Algorithm:</h3>
+                <p style="font-size: 1.15em; line-height: 1.8;">
+                    Start from the last non-leaf node and heapify down to the root.
+                    This is surprisingly O(n), not O(n log n)!
+                </p>
+            </div>
+
+            <h3>Why Start from n/2 - 1?</h3>
+            <div class="info-box">
+                <p><strong>Key Insight:</strong> Nodes from index n/2 to n-1 are all leaves (have no children).</p>
+                <p>Heapify-ing a leaf does nothing, so we skip them and start from the last non-leaf node at index (n/2 - 1).</p>
+            </div>
+
+            <h3>Example: Build Max-Heap from [10, 20, 15, 30, 40]</h3>
+            <div class="tree-visual">
+<pre>
+<strong>Initial Array:</strong> [10, 20, 15, 30, 40]
+<strong>Tree View (before heapify):</strong>
+
+        10
+       /    \
+     20          15
+    /  \
+  30  40
+
+<strong>Start from index (5/2 - 1) = 1</strong>
+
+<strong>Step 1:</strong> Heapify at index 1 (20)
+- Children: 30, 40
+- Max child = 40
+- 20 < 40 → Swap
+
+        10
+       /    \
+     40          15
+    /  \
+  30  20
+
+<strong>Step 2:</strong> Heapify at index 0 (10)
+- Children: 40, 15
+- Max child = 40
+- 10 < 40 → Swap
+
+        40
+       /    \
+     10          15
+    /  \
+  30  20
+
+- Continue heapify down 10:
+- Children: 30, 20
+- Max child = 30
+- 10 < 30 → Swap
+
+<strong>Final Max-Heap:</strong>
+
+        40
+       /    \
+     30          15
+    /  \
+  10  20
+
+<strong>Final Array:</strong> [40, 30, 15, 10, 20]
+</pre>
+            </div>
+        </section>
+
+        <!-- SECTION 10: COMPLEXITY -->
+        <section id="complexity">
+            <h2>10. Time & Space Complexity ⏱️</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Time Complexity</th>
+                        <th>Space Complexity</th>
+                        <th>Explanation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Peek (Get Max/Min)</strong></td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                        <td>Just return arr[0]</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Insert</strong></td>
+                        <td>O(log n)</td>
+                        <td>O(1)</td>
+                        <td>Bubble up max log n levels</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Extract Max/Min</strong></td>
+                        <td>O(log n)</td>
+                        <td>O(1)</td>
+                        <td>Sink down max log n levels</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Build Heap</strong></td>
+                        <td>O(n)</td>
+                        <td>O(1)</td>
+                        <td>Tighter analysis shows O(n), not O(n log n)!</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Heap Sort</strong></td>
+                        <td>O(n log n)</td>
+                        <td>O(1)</td>
+                        <td>Build heap O(n) + n extractions O(log n)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Search for element</strong></td>
+                        <td>O(n)</td>
+                        <td>O(1)</td>
+                        <td>Must check all elements (not optimized for search)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <h4>Why Build Heap is O(n), not O(n log n):</h4>
+                <p style="line-height: 1.8;">
+                    While each heapify-down operation is O(log n), most nodes are near the bottom of the tree 
+                    and only need to sink a few levels. The mathematical analysis (summing over all levels) proves 
+                    the total work is O(n).
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 11: CODE TEMPLATES -->
+        <section id="code-templates">
+            <h2>11. Code Templates 💻</h2>
+            
+            <h3>Max-Heap Implementation in Java:</h3>
+            <div class="code-block">
+<pre>
+<span class="keyword">class</span> <span class="method">MaxHeap</span> {
+    <span class="keyword">private int</span>[] heap;
+    <span class="keyword">private int</span> size;
+    <span class="keyword">private int</span> capacity;
+    
+    <span class="comment">// Constructor</span>
+    <span class="keyword">public</span> <span class="method">MaxHeap</span>(<span class="keyword">int</span> capacity) {
+        <span class="keyword">this</span>.capacity = capacity;
+        <span class="keyword">this</span>.size = <span class="number">0</span>;
+        <span class="keyword">this</span>.heap = <span class="keyword">new int</span>[capacity];
+    }
+    
+    <span class="comment">// Parent/child index calculations</span>
+    <span class="keyword">private int</span> <span class="method">parent</span>(<span class="keyword">int</span> i) { <span class="keyword">return</span> (i - <span class="number">1</span>) / <span class="number">2</span>; }
+    <span class="keyword">private int</span> <span class="method">leftChild</span>(<span class="keyword">int</span> i) { <span class="keyword">return</span> <span class="number">2</span> * i + <span class="number">1</span>; }
+    <span class="keyword">private int</span> <span class="method">rightChild</span>(<span class="keyword">int</span> i) { <span class="keyword">return</span> <span class="number">2</span> * i + <span class="number">2</span>; }
+    
+    <span class="comment">// Swap helper</span>
+    <span class="keyword">private void</span> <span class="method">swap</span>(<span class="keyword">int</span> i, <span class="keyword">int</span> j) {
+        <span class="keyword">int</span> temp = heap[i];
+        heap[i] = heap[j];
+        heap[j] = temp;
+    }
+    
+    <span class="comment">// HEAPIFY UP (after insertion)</span>
+    <span class="keyword">private void</span> <span class="method">heapifyUp</span>(<span class="keyword">int</span> i) {
+        <span class="keyword">while</span> (i > <span class="number">0</span> && heap[parent(i)] < heap[i]) {
+            swap(i, parent(i));
+            i = parent(i);
+        }
+    }
+    
+    <span class="comment">// HEAPIFY DOWN (after deletion)</span>
+    <span class="keyword">private void</span> <span class="method">heapifyDown</span>(<span class="keyword">int</span> i) {
+        <span class="keyword">int</span> maxIndex = i;
+        <span class="keyword">int</span> left = leftChild(i);
+        <span class="keyword">int</span> right = rightChild(i);
+        
+        <span class="comment">// Find largest among root, left, right</span>
+        <span class="keyword">if</span> (left < size && heap[left] > heap[maxIndex]) {
+            maxIndex = left;
+        }
+        <span class="keyword">if</span> (right < size && heap[right] > heap[maxIndex]) {
+            maxIndex = right;
+        }
+        
+        <span class="comment">// If root is not largest, swap and continue</span>
+        <span class="keyword">if</span> (i != maxIndex) {
+            swap(i, maxIndex);
+            heapifyDown(maxIndex);
+        }
+    }
+    
+    <span class="comment">// INSERT</span>
+    <span class="keyword">public void</span> <span class="method">insert</span>(<span class="keyword">int</span> value) {
+        <span class="keyword">if</span> (size == capacity) {
+            <span class="keyword">throw new</span> RuntimeException(<span class="string">"Heap is full"</span>);
+        }
+        
+        <span class="comment">// Add at end</span>
+        heap[size] = value;
+        size++;
+        
+        <span class="comment">// Heapify up from last position</span>
+        heapifyUp(size - <span class="number">1</span>);
+    }
+    
+    <span class="comment">// EXTRACT MAX (delete root)</span>
+    <span class="keyword">public int</span> <span class="method">extractMax</span>() {
+        <span class="keyword">if</span> (size == <span class="number">0</span>) {
+            <span class="keyword">throw new</span> RuntimeException(<span class="string">"Heap is empty"</span>);
+        }
+        
+        <span class="keyword">int</span> max = heap[<span class="number">0</span>];
+        
+        <span class="comment">// Replace root with last element</span>
+        heap[<span class="number">0</span>] = heap[size - <span class="number">1</span>];
+        size--;
+        
+        <span class="comment">// Heapify down from root</span>
+        <span class="keyword">if</span> (size > <span class="number">0</span>) {
+            heapifyDown(<span class="number">0</span>);
+        }
+        
+        <span class="keyword">return</span> max;
+    }
+    
+    <span class="comment">// PEEK (get max without removing)</span>
+    <span class="keyword">public int</span> <span class="method">peek</span>() {
+        <span class="keyword">if</span> (size == <span class="number">0</span>) {
+            <span class="keyword">throw new</span> RuntimeException(<span class="string">"Heap is empty"</span>);
+        }
+        <span class="keyword">return</span> heap[<span class="number">0</span>];
+    }
+    
+    <span class="comment">// BUILD HEAP from array</span>
+    <span class="keyword">public static void</span> <span class="method">buildHeap</span>(<span class="keyword">int</span>[] arr) {
+        <span class="keyword">int</span> n = arr.length;
+        
+        <span class="comment">// Start from last non-leaf node</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = n / <span class="number">2</span> - <span class="number">1</span>; i >= <span class="number">0</span>; i--) {
+            <span class="comment">// Heapify down each node</span>
+            heapifyDownArray(arr, n, i);
+        }
+    }
+    
+    <span class="keyword">private static void</span> <span class="method">heapifyDownArray</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> n, <span class="keyword">int</span> i) {
+        <span class="keyword">int</span> largest = i;
+        <span class="keyword">int</span> left = <span class="number">2</span> * i + <span class="number">1</span>;
+        <span class="keyword">int</span> right = <span class="number">2</span> * i + <span class="number">2</span>;
+        
+        <span class="keyword">if</span> (left < n && arr[left] > arr[largest]) largest = left;
+        <span class="keyword">if</span> (right < n && arr[right] > arr[largest]) largest = right;
+        
+        <span class="keyword">if</span> (largest != i) {
+            <span class="keyword">int</span> temp = arr[i];
+            arr[i] = arr[largest];
+            arr[largest] = temp;
+            heapifyDownArray(arr, n, largest);
+        }
+    }
+}
+</pre>
+            </div>
+
+            <h3>Using Java's Built-in PriorityQueue:</h3>
+            <div class="code-block">
+<pre>
+<span class="keyword">import</span> java.util.PriorityQueue;
+<span class="keyword">import</span> java.util.Collections;
+
+<span class="comment">// Min-Heap (default)</span>
+PriorityQueue&lt;Integer&gt; minHeap = <span class="keyword">new</span> PriorityQueue&lt;&gt;();
+
+<span class="comment">// Max-Heap (use reverse comparator)</span>
+PriorityQueue&lt;Integer&gt; maxHeap = <span class="keyword">new</span> PriorityQueue&lt;&gt;(Collections.reverseOrder());
+
+<span class="comment">// Operations</span>
+maxHeap.offer(<span class="number">10</span>);     <span class="comment">// Insert</span>
+maxHeap.poll();       <span class="comment">// Extract max</span>
+maxHeap.peek();       <span class="comment">// Get max without removing</span>
+maxHeap.size();       <span class="comment">// Get size</span>
+</pre>
+            </div>
+        </section>
+
+        <!-- FINAL SUMMARY -->
+        <div class="highlight-box" style="margin-top: 50px;">
+            <h2 style="color: white; margin-top: 0;">🎯 Quick Reference Summary</h2>
+            
+            <table style="background: white; color: #333;">
+                <thead>
+                    <tr>
+                        <th>Concept</th>
+                        <th>Key Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>What is Heap?</strong></td>
+                        <td>Complete binary tree with heap property (parent ≥ children for max-heap)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Heapify Up</strong></td>
+                        <td>After insert: compare with parent, swap if needed, move UP ⬆</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Heapify Down</strong></td>
+                        <td>After delete: compare with children, swap with larger, move DOWN ⬇</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Insert</strong></td>
+                        <td>Add at end → Heapify Up → O(log n)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Delete Max</strong></td>
+                        <td>Replace root with last → Heapify Down → O(log n)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>When to Use</strong></td>
+                        <td>Priority queues, top K problems, graph algorithms, scheduling</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 50px; padding: 40px; background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); color: white; border-radius: 15px; text-align: center;">
+            <h2 style="margin-top: 0;">🎓 You've Mastered Heaps!</h2>
+            <p style="font-size: 1.2em; line-height: 2;">
+                You now understand:<br>
+                ✓ What heaps are and how they work<br>
+                ✓ Heapify up (insertion) and heapify down (deletion)<br>
+                ✓ Complete step-by-step examples<br>
+                ✓ When and where to use heaps<br>
+                ✓ Full implementation code<br>
+                <br>
+                <strong style="font-size: 1.3em;">Ready to solve heap problems! 🚀</strong>
+            </p>
+        </div>
+
+    </div>
+</body>
+</html>

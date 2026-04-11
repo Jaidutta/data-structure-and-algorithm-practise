@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heap & Priority Queue - Complete Visual Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #2196f3; --secondary: #1976d2; --success: #4caf50;
+            --warning: #ff9800; --danger: #f44336; --info: #00bcd4;
+            --light: #ecf0f1; --dark: #2c3e50;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6; color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px; margin: 0 auto; background: white;
+            border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white; padding: 60px 40px; text-align: center;
+        }
+        header h1 { font-size: 3.5em; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .content { padding: 40px; }
+        .section {
+            background: white; border-radius: 15px; padding: 40px; margin: 30px 0;
+            border: 2px solid #e0e0e0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .section h2 {
+            color: var(--primary); font-size: 2.2em; margin-bottom: 25px;
+            padding-bottom: 15px; border-bottom: 3px solid var(--primary);
+        }
+        .section h3 { color: var(--secondary); font-size: 1.6em; margin: 25px 0 15px 0; }
+        .section h4 { color: var(--info); font-size: 1.3em; margin: 20px 0 10px 0; }
+        .highlight-box {
+            background: linear-gradient(135deg, #fff9c4, #ffeb3b);
+            border: 3px solid #fbc02d; border-radius: 10px; padding: 25px;
+            margin: 25px 0; font-size: 1.15em;
+        }
+        .info-box {
+            background: #e3f2fd; border-left: 5px solid var(--info);
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+        .success-box {
+            background: #e8f5e9; border-left: 5px solid var(--success);
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+        .warning-box {
+            background: #fff3e0; border-left: 5px solid var(--warning);
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+        .danger-box {
+            background: #ffebee; border-left: 5px solid var(--danger);
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+        .code-block {
+            background: #1e1e1e; color: #d4d4d4; border-radius: 10px;
+            padding: 25px; margin: 25px 0; overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px; line-height: 1.8;
+        }
+        .keyword { color: #569cd6; font-weight: bold; }
+        .comment { color: #6a9955; font-style: italic; }
+        .string { color: #ce9178; }
+        .number { color: #b5cea8; }
+        .toc {
+            background: var(--light); border-radius: 10px;
+            padding: 30px; margin-bottom: 40px;
+        }
+        .toc ul { list-style: none; padding-left: 20px; }
+        .toc li { margin: 10px 0; font-size: 1.1em; }
+        .toc a {
+            color: var(--dark); text-decoration: none; transition: all 0.3s;
+        }
+        .toc a:hover { color: var(--primary); padding-left: 10px; }
+        table {
+            width: 100%; border-collapse: collapse; margin: 20px 0;
+        }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: var(--primary); color: white; }
+        tr:nth-child(even) { background: var(--light); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏔️ Heap & Priority Queue Mastery</h1>
+            <p style="font-size: 1.3em;">Complete Visual Guide - From Theory to Top K Problems</p>
+            <p style="font-size: 1em; margin-top: 10px;">Master Min Heap, Max Heap & Greedy Algorithms</p>
+        </header>
+
+        <div class="content">
+
+            <!-- TABLE OF CONTENTS -->
+            <div class="toc">
+                <h2>📚 Table of Contents</h2>
+                <ul>
+                    <li><a href="#intro">1. Introduction - The Pyramid Analogy</a></li>
+                    <li><a href="#golden-rule">2. The Golden Rule (Min vs Max)</a></li>
+                    <li><a href="#template">3. 7-Step Template for Top K</a></li>
+                    <li><a href="#kth-smallest">4. Kth Smallest Element</a></li>
+                    <li><a href="#top-k-frequent">5. Top K Frequent Elements</a></li>
+                    <li><a href="#merge-k">6. Merge K Sorted Lists</a></li>
+                    <li><a href="#ipo">7. IPO (Capital & Profit)</a></li>
+                    <li><a href="#reorganize">8. Reorganize String</a></li>
+                    <li><a href="#task-scheduler">9. Task Scheduler</a></li>
+                    <li><a href="#summary">10. Summary & Patterns</a></li>
+                </ul>
+            </div>
+
+            <!-- SECTION 1: INTRODUCTION -->
+            <section id="intro" class="section">
+                <h2>1️⃣ Introduction - The Pyramid Analogy</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">🏔️ Heap as a Pyramid</h3>
+                    <p style="font-size: 1.2em; line-height: 2;">
+                        A <strong>Min Heap</strong> is like a human pyramid:<br>
+                        The <strong>lightest person</strong> is at the <strong>top</strong>,<br>
+                        supported by heavier people below.
+                    </p>
+                </div>
+
+                <h3>📊 Visual Structure</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 1em; line-height: 1.6;">
+Min Heap (Smallest at Top):
+        1  ← Root (Lightest/Smallest)
+       / \
+      3   2  ← Children (Heavier than parent)
+     / \
+    5   4
+
+Rule: Parent ≤ Both Children
+
+Max Heap (Largest at Top):
+        10  ← Root (Heaviest/Largest)
+       /  \
+      5    8  ← Children (Lighter than parent)
+     / \
+    2   3
+
+Rule: Parent ≥ Both Children
+                    </pre>
+                </div>
+
+                <h3>⚡ Key Operations</h3>
+                <table>
+                    <tr>
+                        <th>Operation</th>
+                        <th>Java (PriorityQueue)</th>
+                        <th>Time</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Peek Top</strong></td>
+                        <td><code>pq.peek()</code></td>
+                        <td>O(1)</td>
+                        <td>See min/max without removing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Insert</strong></td>
+                        <td><code>pq.add(x)</code></td>
+                        <td>O(log N)</td>
+                        <td>Add element, bubble up</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Remove Top</strong></td>
+                        <td><code>pq.poll()</code></td>
+                        <td>O(log N)</td>
+                        <td>Remove min/max, bubble down</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Size</strong></td>
+                        <td><code>pq.size()</code></td>
+                        <td>O(1)</td>
+                        <td>Get number of elements</td>
+                    </tr>
+                </table>
+
+                <h3>🎯 When to Use Heap</h3>
+                <div class="success-box">
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li>✓ Find <strong>Top K</strong> elements (largest, smallest, frequent)</li>
+                        <li>✓ Find <strong>Kth</strong> element (Kth largest, Kth smallest)</li>
+                        <li>✓ <strong>Merge K</strong> sorted structures</li>
+                        <li>✓ <strong>Greedy</strong> problems (always pick best available)</li>
+                        <li>✓ <strong>Scheduling</strong> with priorities</li>
+                        <li>✓ <strong>Stream data</strong> where you need min/max</li>
+                    </ul>
+                </div>
+
+                <h3>💻 Java Declaration</h3>
+                <div class="code-block"><pre><span class="comment">// Min Heap (default - smallest at top)</span>
+PriorityQueue&lt;Integer&gt; minHeap = <span class="keyword">new</span> PriorityQueue&lt;&gt;();
+
+<span class="comment">// Max Heap (reverse order - largest at top)</span>
+PriorityQueue&lt;Integer&gt; maxHeap = <span class="keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; b - a);
+
+<span class="comment">// Custom comparator for pairs/objects</span>
+PriorityQueue&lt;int[]&gt; heap = <span class="keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; a[<span class="number">0</span>] - b[<span class="number">0</span>]);</pre></div>
+
+                <h3>🔧 Detailed Operations</h3>
+                
+                <h4>Insert Operation (Bubble Up)</h4>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <pre style="font-family: monospace; font-size: 0.95em; line-height: 1.6;">
+<span style="font-weight: bold;">Insert 2 into Min Heap:</span>
+
+Initial:
+     3
+   /   \
+  5     4
+ / \
+8   10
+
+Step 1: Add 2 to bottom (next available spot)
+     3
+   /   \
+  5     4
+ / \   /
+8  10 2  ← New element
+
+Step 2: Compare with parent (4)
+2 < 4 → Swap!
+
+     3
+   /   \
+  5     2  ← Swapped
+ / \   /
+8  10 4
+
+Step 3: Compare with parent (3)
+2 < 3 → Swap!
+
+     2  ← New root!
+   /   \
+  5     3
+ / \   /
+8  10 4
+
+<span style="color: #2e7d32; font-weight: bold;">Bubbled up to correct position!</span>
+Time: O(log N) - height of tree
+                    </pre>
+                </div>
+
+                <h4>Delete Operation (Bubble Down)</h4>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <pre style="font-family: monospace; font-size: 0.95em; line-height: 1.6;">
+<span style="font-weight: bold;">Remove root from Min Heap:</span>
+
+Initial:
+     2
+   /   \
+  5     3
+ / \   /
+8  10 4
+
+Step 1: Swap root with last element
+     4  ← Last element moved to root
+   /   \
+  5     3
+ / \
+8  10  (2 removed)
+
+Step 2: Compare with children (5 and 3)
+4 > 3 (smaller child) → Swap with 3
+
+     3  ← Swapped
+   /   \
+  5     4
+ / \
+8  10
+
+Step 3: Compare with children (none on right)
+4 has no children → STOP
+
+<span style="color: #2e7d32; font-weight: bold;">Bubbled down to correct position!</span>
+Time: O(log N)
+                    </pre>
+                </div>
+
+                <div class="danger-box">
+                    <h4>⚠️ What Heap CANNOT Do</h4>
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        ❌ <strong>Search for specific element:</strong> O(N) - must check all<br>
+                        ❌ <strong>Delete specific element:</strong> O(N) - must find it first<br>
+                        ❌ <strong>Access middle elements:</strong> Only top is O(1)<br><br>
+                        
+                        <strong>Heap is ONLY good for:</strong><br>
+                        ✓ Finding/removing min or max (top element)<br>
+                        ✓ Maintaining best K elements
+                    </p>
+                </div>
+            </section>
+
+            <!-- NEW SECTION: HEAP ON PAIRS -->
+            <section id="heap-pairs" class="section">
+                <h2>🔗 Heap on Pairs - Custom Comparators</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">Problem: Complex Objects in Heap</h3>
+                    <p style="font-size: 1.2em; line-height: 2;">
+                        What if we need to sort by <strong>TWO properties</strong>?<br>
+                        Example: Sort by frequency, then by word (Top K Frequent Words)
+                    </p>
+                </div>
+
+                <h3>📊 Common Patterns</h3>
+                
+                <h4>Pattern 1: Min on First, Min on Second</h4>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Use Case:</strong> Sort pairs by first value, break ties with second<br>
+                        <strong>Example:</strong> {frequency, word} - both ascending
+                    </p>
+                </div>
+                <div class="code-block"><pre><span class="comment">// If first values differ, use first</span>
+<span class="comment">// If first values same, use second</span>
+PriorityQueue&lt;Pair&gt; pq = <span class="keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; {
+    <span class="keyword">if</span> (a.first != b.first) {
+        <span class="keyword">return</span> a.first - b.first;  <span class="comment">// Min on first</span>
+    } <span class="keyword">else</span> {
+        <span class="keyword">return</span> a.second - b.second;  <span class="comment">// Min on second</span>
+    }
+});</pre></div>
+
+                <h4>Pattern 2: Min on First, Max on Second</h4>
+                <div class="warning-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Use Case:</strong> Top K Frequent Words (LC 692)<br>
+                        Min heap on frequency, but lexicographically largest word at top<br>
+                        <strong>Why?</strong> Eliminate least frequent, or alphabetically last word
+                    </p>
+                </div>
+                <div class="code-block"><pre><span class="comment">// Top K Frequent Words pattern</span>
+<span class="keyword">class</span> Pair {
+    <span class="keyword">int</span> freq;
+    String word;
+    Pair(<span class="keyword">int</span> f, String w) { freq = f; word = w; }
+}
+
+<span class="comment">// Min Heap on frequency, Max (reverse) on word</span>
+PriorityQueue&lt;Pair&gt; pq = <span class="keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; {
+    <span class="keyword">if</span> (a.freq != b.freq) {
+        <span class="keyword">return</span> a.freq - b.freq;  <span class="comment">// Min Heap for frequency</span>
+    } <span class="keyword">else</span> {
+        <span class="comment">// REVERSE for Max Heap behavior on strings</span>
+        <span class="keyword">return</span> b.word.compareTo(a.word);  <span class="comment">// Lexicographically larger at top</span>
+    }
+});
+
+<span class="comment">/*
+ * Example: If we have:
+ * {"the", freq=3}, {"day", freq=3}
+ * 
+ * Compare frequencies: 3 == 3 (same)
+ * Compare words: b.word.compareTo(a.word) = "day".compareTo("the")
+ * Result: negative (day < the), so "the" comes first
+ * 
+ * This puts "the" at top of heap (lexicographically larger)
+ * When we need to eliminate, we remove "the" first
+ */</span></pre></div>
+
+                <h4>Complete Example: Top K Frequent Words</h4>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 0.95em; line-height: 1.6;">
+Input: words = ["the", "day", "is", "sunny", "the", "the", "is"], k = 2
+
+<span style="font-weight: bold;">Step 1: Count Frequencies</span>
+{
+  "the": 3,
+  "is": 2,
+  "day": 1,
+  "sunny": 1
+}
+
+<span style="font-weight: bold;">Step 2: Use Min Heap (size k=2) on frequency</span>
+<span style="font-weight: bold;">If frequency same, keep lexicographically smaller</span>
+
+Process {"the": 3}:
+  Heap: [{"the", 3}]
+  Size: 1 < 2
+
+Process {"is": 2}:
+  Heap: [{"is", 2}, {"the", 3}]
+       {"is", 2}  ← Root (min freq)
+          /
+    {"the", 3}
+  Size: 2 = 2 → Full!
+
+Process {"day": 1}:
+  Compare freq 1 with root freq (2)
+  1 < 2 → "day" has lower frequency → IGNORE
+
+Process {"sunny": 1}:
+  Same, IGNORE
+
+<span style="color: #2e7d32; font-weight: bold;">Result: ["the", "is"]</span>
+                    </pre>
+                </div>
+
+                <div class="success-box">
+                    <h4>✅ Key Takeaway</h4>
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Primary Sort:</strong> Determines Min/Max Heap behavior<br>
+                        <strong>Secondary Sort:</strong> Breaks ties<br>
+                        <strong>Reverse Order:</strong> Use <code>b.compareTo(a)</code> for Max behavior
+                    </p>
+                </div>
+            </section>
+
+            <!-- SECTION 2: GOLDEN RULE -->
+            <section id="golden-rule" class="section">
+                <h2>2️⃣ The Golden Rule: Min vs Max Heap</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">🎯 Counter-Intuitive Truth!</h3>
+                    <p style="font-size: 1.3em; line-height: 2; font-weight: bold;">
+                        To find TOP K LARGEST → Use MIN Heap<br>
+                        To find BOTTOM K SMALLEST → Use MAX Heap
+                    </p>
+                </div>
+
+                <h3>🤔 Why This Works - The Elimination Logic</h3>
+                
+                <div class="info-box">
+                    <h4>Scenario A: Find Top K Largest</h4>
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        Think of a <strong>"Winners' Bench"</strong> with K seats:<br><br>
+                        
+                        • You want to keep the K <strong>best</strong> players<br>
+                        • The <strong>weakest player</strong> on the bench is the cutoff<br>
+                        • If new player is better than weakest → kick weakest out<br>
+                        • <strong>Min Heap</strong> puts weakest at top for easy removal!
+                    </p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>Scenario B: Find Bottom K Smallest</h4>
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        Think of a <strong>"Small Items Bench"</strong> with K seats:<br><br>
+                        
+                        • You want to keep the K <strong>smallest</strong> items<br>
+                        • The <strong>largest</strong> of your small items is the danger<br>
+                        • If new item is smaller than largest → kick largest out<br>
+                        • <strong>Max Heap</strong> puts largest at top for easy removal!
+                    </p>
+                </div>
+
+                <h3>📊 Visual Example: Kth Smallest</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 0.95em; line-height: 1.6;">
+Problem: Find 4th Smallest from [10, 5, 4, 3, 48, 2]
+Use: MAX Heap of size 4 (keep 4 smallest)
+
+<span style="font-weight: bold;">Step 1: Fill bench with first 4 elements</span>
+MaxHeap: {10, 5, 4, 3}
+    10  ← Root (Largest of the 4 smallest)
+   /  \
+  5    4
+ /
+3
+
+<span style="font-weight: bold;">Step 2: New element = 48</span>
+Compare 48 with root (10)
+48 > 10 → 48 is too large for "smallest" list → IGNORE
+
+<span style="font-weight: bold;">Step 3: New element = 2</span>
+Compare 2 with root (10)
+2 < 10 → 2 deserves a spot!
+Action: Remove 10, Insert 2
+
+New MaxHeap: {5, 4, 3, 2}
+     5  ← New Root (Cutoff)
+   /  \
+  3    4
+ /
+2
+
+<span style="color: #2e7d32; font-weight: bold;">Result: Root (5) is the 4th smallest!</span>
+                    </pre>
+                </div>
+
+                <div class="danger-box">
+                    <h4>⚠️ Common Mistake</h4>
+                    <p style="font-size: 1.2em;">
+                        <strong>DON'T use Max Heap for "largest"!</strong><br>
+                        Max Heap keeps largest at top, but you can't eliminate anything!<br>
+                        Use Min Heap to eliminate the smallest (weakest) from your top K.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Continuing with remaining sections in next part... -->
+
+        </div>
+    </div>
+</body>
+</html>
+
+            <!-- SECTION 3: 7-STEP TEMPLATE -->
+            <section id="template" class="section">
+                <h2>3️⃣ The 7-Step Template for Top K Problems</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em; line-height: 2;">
+                        Universal template that works for <strong>ANY</strong> Top K or Bottom K problem!
+                    </p>
+                </div>
+
+                <h3>📋 The Template Steps</h3>
+                <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <ol style="font-size: 1.1em; line-height: 2.5;">
+                        <li><strong>Identify:</strong> Is it a Top/Bottom K problem?</li>
+                        <li><strong>Metric:</strong> What are we comparing? (value, frequency, distance)</li>
+                        <li><strong>Structure:</strong> Create Heap of Pairs {Metric, Element}</li>
+                        <li><strong>Heap Type:</strong> Choose Min (Top K) or Max (Bottom K)</li>
+                        <li><strong>Push K:</strong> Add first K elements unconditionally</li>
+                        <li><strong>Push-Pop:</strong> For remaining elements, add then remove top</li>
+                        <li><strong>Result:</strong> Extract K elements from heap</li>
+                    </ol>
+                </div>
+
+                <h3>💻 Template Code</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Universal Top K Template
+ * Adjust heap type based on problem
+ */</span>
+<span class="keyword">public</span> ResultType topK(InputType[] arr, <span class="keyword">int</span> k) {
+    <span class="comment">// Step 4: Choose heap type</span>
+    <span class="comment">// For TOP K LARGEST → Min Heap</span>
+    PriorityQueue&lt;Type&gt; heap = <span class="keyword">new</span> PriorityQueue&lt;&gt;();
+    
+    <span class="comment">// Steps 5 & 6: Process all elements</span>
+    <span class="keyword">for</span> (Type element : arr) {
+        heap.add(element);  <span class="comment">// Push</span>
+        
+        <span class="keyword">if</span> (heap.size() &gt; k) {
+            heap.poll();    <span class="comment">// Pop to maintain size K</span>
+        }
+    }
+    
+    <span class="comment">// Step 7: Extract result</span>
+    <span class="keyword">return</span> extractFromHeap(heap);
+}</pre></div>
+            </section>
+
+            <!-- SECTION 4: KTH SMALLEST -->
+            <section id="kth-smallest" class="section">
+                <h2>4️⃣ Problem: Kth Smallest Element</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Problem:</strong> Find the Kth smallest element in an array<br>
+                        <strong>Example:</strong> [3, 2, 1, 5, 6, 4], K = 2 → Answer: 2
+                    </p>
+                </div>
+
+                <h3>🎯 The Bench Analogy</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Imagine a bench with K seats</strong> for the smallest students:<br><br>
+                        
+                        • The <strong>tallest person</strong> on this bench is the Kth smallest overall<br>
+                        • If someone shorter comes, kick the tallest off the bench<br>
+                        • Use <strong>Max Heap</strong> to track tallest (largest) of the smallest
+                    </p>
+                </div>
+
+                <h3>📊 Complete Walkthrough</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 0.9em; line-height: 1.6;">
+Array: [10, 5, 4, 3, 48, 2], Find 3rd Smallest
+
+<span style="font-weight: bold;">Iteration 1: Element = 10</span>
+MaxHeap: {10}
+Size: 1 < 3 → Keep
+
+<span style="font-weight: bold;">Iteration 2: Element = 5</span>
+MaxHeap: {10, 5}
+Size: 2 < 3 → Keep
+
+<span style="font-weight: bold;">Iteration 3: Element = 4</span>
+MaxHeap: {10, 5, 4}
+     10
+    /  \
+   5    4
+Size: 3 = 3 → Bench full!
+
+<span style="font-weight: bold;">Iteration 4: Element = 3</span>
+MaxHeap: {10, 5, 4}
+Compare 3 with root (10)
+3 < 10 → Remove 10, Add 3
+
+New MaxHeap: {5, 4, 3}
+     5
+   /  \
+  4    3
+
+<span style="font-weight: bold;">Iteration 5: Element = 48</span>
+Compare 48 with root (5)
+48 > 5 → IGNORE (too large)
+
+<span style="font-weight: bold;">Iteration 6: Element = 2</span>
+Compare 2 with root (5)
+2 < 5 → Remove 5, Add 2
+
+Final MaxHeap: {4, 3, 2}
+     4  ← This is the 3rd smallest!
+   /  \
+  2    3
+
+<span style="color: #2e7d32; font-weight: bold;">Answer: 4</span>
+                    </pre>
+                </div>
+
+                <h3>💻 Java Code (Fully Commented)</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Kth Smallest Element in Array
+ * 
+ * Strategy: Max Heap of size K
+ * - Keep K smallest elements
+ * - Root is the largest of the smallest = Kth smallest
+ * 
+ * Time: O(N log K)
+ * Space: O(K)
+ */</span>
+<span class="keyword">public int</span> findKthSmallest(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k) {
+    <span class="comment">// Max Heap (largest at top)</span>
+    PriorityQueue&lt;Integer&gt; maxHeap = 
+        <span class="keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; b - a);
+    
+    <span class="comment">// Process each element</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) {
+        maxHeap.add(num);
+        
+        <span class="comment">// If heap size exceeds K, remove largest</span>
+        <span class="comment">// This keeps only the K smallest elements</span>
+        <span class="keyword">if</span> (maxHeap.size() &gt; k) {
+            maxHeap.poll();  <span class="comment">// Remove largest (root)</span>
+        }
+    }
+    
+    <span class="comment">// Root is the largest of the K smallest</span>
+    <span class="comment">// = Kth smallest overall</span>
+    <span class="keyword">return</span> maxHeap.peek();
+}</pre></div>
+            </section>
+
+            <!-- SECTION 5: TOP K FREQUENT -->
+            <section id="top-k-frequent" class="section">
+                <h2>5️⃣ Problem: Top K Frequent Elements</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>LeetCode 347:</strong> Find K most frequent elements<br>
+                        <strong>Example:</strong> [1,1,1,2,2,3], K = 2 → [1, 2]
+                    </p>
+                </div>
+
+                <h3>🎯 Why Min Heap?</h3>
+                <div class="warning-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Trap:</strong> Don't use Max Heap for all N elements!<br>
+                        That's O(N log N) - same as sorting!<br><br>
+                        
+                        <strong>Smart Approach:</strong> Use Min Heap of size K<br>
+                        Keep only top K frequencies → O(N log K)
+                    </p>
+                </div>
+
+                <h3>📊 Walkthrough</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 0.95em; line-height: 1.6;">
+Input: [1, 1, 1, 2, 2, 3], K = 2
+
+<span style="font-weight: bold;">Step 1: Build Frequency Map</span>
+{1: 3, 2: 2, 3: 1}
+
+<span style="font-weight: bold;">Step 2: Use Min Heap (size K=2)</span>
+
+Process {1: freq=3}:
+MinHeap: {1:3}
+Size: 1 < 2 → Keep
+
+Process {2: freq=2}:
+MinHeap: {1:3, 2:2}
+     2  ← Min frequency
+    /
+   1
+Size: 2 = 2 → Full!
+
+Process {3: freq=1}:
+MinHeap: {1:3, 2:2}
+Compare freq 1 with root freq (2)
+1 < 2 → 3 has lower frequency than 2
+Action: IGNORE (don't add 3)
+
+<span style="color: #2e7d32; font-weight: bold;">Result: Heap contains {1, 2} - Top 2 frequent!</span>
+                    </pre>
+                </div>
+
+                <h3>💻 Java Code</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Top K Frequent Elements
+ * LeetCode 347
+ * 
+ * Time: O(N log K)
+ * Space: O(N) for map + O(K) for heap
+ */</span>
+<span class="keyword">public int</span>[] topKFrequent(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> k) {
+    <span class="comment">// Step 1: Count frequencies</span>
+    Map&lt;Integer, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();
+    <span class="keyword">for</span> (<span class="keyword">int</span> n : nums) {
+        map.put(n, map.getOrDefault(n, <span class="number">0</span>) + <span class="number">1</span>);
+    }
+    
+    <span class="comment">// Step 2: Min Heap based on frequency</span>
+    <span class="comment">// We want TOP K frequencies, so use Min Heap</span>
+    PriorityQueue&lt;Integer&gt; minHeap = 
+        <span class="keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; map.get(a) - map.get(b));
+    
+    <span class="comment">// Step 3: Process each unique number</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> key : map.keySet()) {
+        minHeap.add(key);
+        
+        <span class="comment">// If heap exceeds K, remove element with min frequency</span>
+        <span class="keyword">if</span> (minHeap.size() &gt; k) {
+            minHeap.poll();  <span class="comment">// Eliminate weakest</span>
+        }
+    }
+    
+    <span class="comment">// Step 4: Extract result</span>
+    <span class="keyword">int</span>[] result = <span class="keyword">new int</span>[k];
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; k; i++) {
+        result[i] = minHeap.poll();
+    }
+    <span class="keyword">return</span> result;
+}</pre></div>
+            </section>
+
+            <!-- Continue in next message due to length... -->
+
+            <!-- SECTION 6-9: Remaining Problems (Condensed) -->
+            <section id="merge-k" class="section">
+                <h2>6️⃣ Merge K Sorted Lists</h2>
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Problem:</strong> Merge K sorted arrays into one sorted array<br>
+                        <strong>Example:</strong> [[1,4,5], [1,3,4], [2,6]] → [1,1,2,3,4,4,5,6]
+                    </p>
+                </div>
+
+                <h3>🏃 The Race Tracks Analogy</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        Imagine <strong>K race tracks</strong> (sorted arrays):<br><br>
+                        
+                        • You can only see the <strong>runner at the start line</strong> of each track<br>
+                        • You need to pick the <strong>fastest (smallest)</strong> runner<br>
+                        • After a runner leaves, the <strong>next runner</strong> from that track comes to start<br><br>
+                        
+                        <strong>Problem:</strong> Comparing K runners linearly = O(K) per pick<br>
+                        <strong>Solution:</strong> Use Min Heap = O(log K) per pick!
+                    </p>
+                </div>
+
+                <h3>📊 Complete Visualization</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 0.9em; line-height: 1.6;">
+<span style="font-weight: bold;">Three Race Tracks (Arrays):</span>
+Track 0: [1, 4, 5]
+Track 1: [1, 3, 4]
+Track 2: [2, 6]
+
+<span style="font-weight: bold;">Step 1: Initialize - First runner from each track</span>
+Heap: [{val:1, track:0, pos:0}, 
+       {val:1, track:1, pos:0}, 
+       {val:2, track:2, pos:0}]
+
+Min Heap (by value):
+     {1,0,0}  ← Track 0's runner (1)
+      /    \
+{1,1,0}   {2,2,0}
+
+<span style="font-weight: bold;">Step 2: Pick winner (smallest)</span>
+Winner: {1, track:0, pos:0}
+Add 1 to result
+Next from Track 0: {4, track:0, pos:1}
+
+New Heap:
+     {1,1,0}  ← Track 1's runner (1)
+      /    \
+{2,2,0}   {4,0,1}
+
+<span style="font-weight: bold;">Step 3: Pick winner</span>
+Winner: {1, track:1, pos:0}
+Add 1 to result
+Next from Track 1: {3, track:1, pos:1}
+
+New Heap:
+     {2,2,0}  ← Track 2's runner (2)
+      /    \
+{3,1,1}   {4,0,1}
+
+<span style="font-weight: bold;">Continue until all tracks empty...</span>
+
+<span style="color: #2e7d32; font-weight: bold;">Result: [1, 1, 2, 3, 4, 4, 5, 6]</span>
+                    </pre>
+                </div>
+
+                <h3>🎯 Why This Works</h3>
+                <div class="warning-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Naive Approach:</strong> Check all K pointers = O(K × N) total<br>
+                        <strong>Heap Approach:</strong> O(log K) to find min × N elements = <strong>O(N log K)</strong><br><br>
+                        
+                        With K=100 lists and N=10,000 total elements:<br>
+                        • Naive: 1,000,000 operations<br>
+                        • Heap: 66,000 operations ✓
+                    </p>
+                </div>
+
+                <h3>💻 Complete Java Code</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Merge K Sorted Arrays
+ * 
+ * Time: O(N log K) where N = total elements
+ * Space: O(K) for heap
+ */</span>
+<span class="keyword">class</span> Node {
+    <span class="keyword">int</span> value;  <span class="comment">// The runner's number</span>
+    <span class="keyword">int</span> row;    <span class="comment">// Which track (array)</span>
+    <span class="keyword">int</span> col;    <span class="comment">// Position in that track</span>
+    
+    Node(<span class="keyword">int</span> v, <span class="keyword">int</span> r, <span class="keyword">int</span> c) {
+        value = v; row = r; col = c;
+    }
+}
+
+<span class="keyword">public</span> List&lt;Integer&gt; mergeKSortedArrays(<span class="keyword">int</span>[][] arrays) {
+    <span class="comment">// Min Heap based on value</span>
+    PriorityQueue&lt;Node&gt; pq = 
+        <span class="keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; a.value - b.value);
+    
+    List&lt;Integer&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    
+    <span class="comment">// Step 1: Add first element from each array</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arrays.length; i++) {
+        <span class="keyword">if</span> (arrays[i].length &gt; <span class="number">0</span>) {
+            pq.add(<span class="keyword">new</span> Node(arrays[i][<span class="number">0</span>], i, <span class="number">0</span>));
+        }
+    }
+    
+    <span class="comment">// Step 2: Process until heap is empty</span>
+    <span class="keyword">while</span> (!pq.isEmpty()) {
+        Node curr = pq.poll();  <span class="comment">// Get smallest (winner)</span>
+        result.add(curr.value);
+        
+        <span class="comment">// Step 3: Add next element from SAME array</span>
+        <span class="comment">// This is KEY - we track which array it came from!</span>
+        <span class="keyword">if</span> (curr.col + <span class="number">1</span> &lt; arrays[curr.row].length) {
+            pq.add(<span class="keyword">new</span> Node(
+                arrays[curr.row][curr.col + <span class="number">1</span>],
+                curr.row,
+                curr.col + <span class="number">1</span>
+            ));
+        }
+    }
+    
+    <span class="keyword">return</span> result;
+}
+
+<span class="comment">/*
+ * Why we need {value, row, col}:
+ * 
+ * We can't just store values in heap because:
+ * - When we poll a value, we need to know WHICH array it came from
+ * - So we can fetch the NEXT element from that specific array
+ * 
+ * Example: Poll value 1 from array 0
+ * Without tracking row: We don't know if it's from array 0 or 1!
+ * With tracking: We know it's from array 0, fetch arrays[0][1] next
+ */</span></pre></div>
+            </section>
+
+            <section id="ipo" class="section">
+                <h2>7️⃣ IPO Problem (LC 502)</h2>
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Problem:</strong> Maximize capital by selecting up to K projects<br>
+                        <strong>Constraint:</strong> Can only start project if capital >= required
+                    </p>
+                </div>
+
+                <h3>🏠 The Unlocked Room Analogy</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        Imagine <strong>two rooms</strong>:<br><br>
+                        
+                        <strong>Room 1 (Sorted Array):</strong> All projects, locked by cost<br>
+                        • Sorted by capital requirement (cheapest first)<br>
+                        • Projects "unlock" as you gain more money<br><br>
+                        
+                        <strong>Room 2 (Max Heap):</strong> Projects you can afford NOW<br>
+                        • Organized by profit (highest first)<br>
+                        • Pick the most profitable available project (Greedy)
+                    </p>
+                </div>
+
+                <h3>📊 Complete Walkthrough</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 0.9em; line-height: 1.6;">
+<span style="font-weight: bold;">Projects: [(capital, profit)]</span>
+[(0, 1), (1, 2), (1, 3), (2, 5)]
+K = 2 (can do 2 projects)
+W = 0 (initial capital)
+
+<span style="font-weight: bold;">Step 1: Sort by capital (already sorted)</span>
+Room 1 (Locked): [(0,1), (1,2), (1,3), (2,5)]
+
+<span style="font-weight: bold;">Iteration 1:</span>
+Current W = 0
+
+Room 1: Unlock affordable projects
+  • (0, 1): cost=0 <= W=0? YES → Move to Room 2
+  • (1, 2): cost=1 <= W=0? NO → STOP
+
+Room 2 (Max Heap by profit): [1]
+
+Pick Best: profit=1
+New W = 0 + 1 = 1
+
+<span style="font-weight: bold;">Iteration 2:</span>
+Current W = 1
+
+Room 1: Continue unlocking
+  • (1, 2): cost=1 <= W=1? YES → Move to Room 2
+  • (1, 3): cost=1 <= W=1? YES → Move to Room 2
+  • (2, 5): cost=2 <= W=1? NO → STOP
+
+Room 2 (Max Heap): [3, 2]
+     3  ← Max profit
+    /
+   2
+
+Pick Best: profit=3
+New W = 1 + 3 = 4
+
+<span style="font-weight: bold;">Done (K=2 projects completed)</span>
+<span style="color: #2e7d32; font-weight: bold;">Final Capital: 4</span>
+
+Note: Project (2,5) is now affordable (W=4 >= 2)
+but we already did K=2 projects!
+                    </pre>
+                </div>
+
+                <h3>🎯 Why Sort + Heap?</h3>
+                <div class="warning-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Can't just use Heap for everything!</strong><br><br>
+                        
+                        ❌ <strong>Heap by Profit only:</strong> Might pick expensive project we can't afford<br>
+                        ❌ <strong>Heap by Capital only:</strong> Might pick cheap project with low profit<br><br>
+                        
+                        ✓ <strong>Sort + Heap solution:</strong><br>
+                        • Sort lets us efficiently find "unlocked" projects as W grows<br>
+                        • Heap lets us greedily pick best profit among affordable<br>
+                        • Pointer ensures we never re-check old projects
+                    </p>
+                </div>
+
+                <h3>💻 Complete Java Code</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * IPO - Maximize Capital
+ * LeetCode 502
+ * 
+ * Time: O(N log N) for sort + O(K log N) for heap ops
+ * Space: O(N)
+ */</span>
+<span class="keyword">public int</span> findMaximizedCapital(<span class="keyword">int</span> k, <span class="keyword">int</span> w, 
+                                  <span class="keyword">int</span>[] profits, <span class="keyword">int</span>[] capital) {
+    <span class="keyword">int</span> n = profits.length;
+    
+    <span class="comment">// Step 1: Create array of {capital, profit} pairs</span>
+    <span class="keyword">int</span>[][] projects = <span class="keyword">new int</span>[n][<span class="number">2</span>];
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {
+        projects[i][<span class="number">0</span>] = capital[i];
+        projects[i][<span class="number">1</span>] = profits[i];
+    }
+    
+    <span class="comment">// Step 2: Sort by capital (Room 1 - locked by cost)</span>
+    Arrays.sort(projects, (a, b) -&gt; a[<span class="number">0</span>] - b[<span class="number">0</span>]);
+    
+    <span class="comment">// Step 3: Max Heap for profits (Room 2 - affordable)</span>
+    PriorityQueue&lt;Integer&gt; maxHeap = 
+        <span class="keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; b - a);
+    
+    <span class="keyword">int</span> i = <span class="number">0</span>;  <span class="comment">// Pointer for sorted array</span>
+    
+    <span class="comment">// Step 4: Do K projects (or until stuck)</span>
+    <span class="keyword">while</span> (k-- &gt; <span class="number">0</span>) {
+        <span class="comment">// THE UNLOCK PHASE:</span>
+        <span class="comment">// Move ALL affordable projects from Room 1 to Room 2</span>
+        <span class="keyword">while</span> (i &lt; n && projects[i][<span class="number">0</span>] &lt;= w) {
+            maxHeap.add(projects[i][<span class="number">1</span>]);  <span class="comment">// Add profit to heap</span>
+            i++;  <span class="comment">// Move pointer (never go back)</span>
+        }
+        
+        <span class="comment">// THE GREEDY CHOICE:</span>
+        <span class="comment">// If no projects affordable, we're stuck</span>
+        <span class="keyword">if</span> (maxHeap.isEmpty()) <span class="keyword">break</span>;
+        
+        <span class="comment">// Pick project with maximum profit</span>
+        w += maxHeap.poll();
+    }
+    
+    <span class="keyword">return</span> w;
+}
+
+<span class="comment">/*
+ * Critical Understanding:
+ * 
+ * Q: Why pointer i instead of re-checking all projects?
+ * A: Array is sorted! Once a project is unaffordable, 
+ *    all remaining are also unaffordable.
+ *    When W increases, we just continue from i.
+ * 
+ * Q: Why inner while, not if?
+ * A: W might have increased a LOT from last project.
+ *    Multiple projects might now be affordable.
+ *    We need to unlock ALL of them before choosing.
+ * 
+ * Example: W=0 initially, only project (0,1) affordable
+ *          After: W=1, projects (1,2) and (1,3) both affordable
+ *          Must add BOTH to heap, then pick best (3)
+ */</span></pre></div>
+            </section>
+
+            <section id="reorganize" class="section">
+                <h2>8️⃣ Reorganize String (LC 767)</h2>
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Problem:</strong> Rearrange string so no two adjacent are same<br>
+                        <strong>Example:</strong> "aab" → "aba" or "baa"<br>
+                        <strong>If impossible:</strong> return ""
+                    </p>
+                </div>
+
+                <h3>👨‍🏫 The PT Teacher / Corner Analogy</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Imagine seating students:</strong><br><br>
+                        
+                        • Students line up by <strong>frequency</strong> (Max Heap)<br>
+                        • Always seat the <strong>most frequent</strong> student next (Greedy)<br>
+                        • <strong>Can't seat same student twice in a row!</strong><br>
+                        • After seating student A, send them to <strong>"the corner"</strong><br>
+                        • Seat next student B, then bring A back from corner<br>
+                        • The "prev" variable is the corner
+                    </p>
+                </div>
+
+                <h3>📊 Complete Visualization</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 0.9em; line-height: 1.6;">
+<span style="font-weight: bold;">String: "aaabbc", frequencies: {a:3, b:2, c:1}</span>
+
+<span style="font-weight: bold;">Initial State:</span>
+MaxHeap (by frequency): {a:3, b:2, c:1}
+      a:3  ← Most frequent
+     /   \
+   b:2   c:1
+Corner (prev): null
+Result: []
+
+<span style="font-weight: bold;">Step 1: Seat 'a'</span>
+Pop a from heap
+Result: [a]
+a still has 2 left → Send to corner
+Corner (prev): {a:2}
+Heap: {b:2, c:1}
+
+<span style="font-weight: bold;">Step 2: Seat 'b'</span>
+Pop b from heap
+Result: [a, b]
+b still has 1 left → Will go to corner
+
+<span style="color: #d32f2f; font-weight: bold;">IMPORTANT: Before sending b to corner, bring a back!</span>
+Check corner: a exists and has count > 0
+Add a back to heap
+Heap: {a:2, c:1}
+
+Now send b to corner
+Corner (prev): {b:1}
+
+<span style="font-weight: bold;">Step 3: Seat 'a' (again)</span>
+Pop a from heap
+Result: [a, b, a]
+a still has 1 left
+
+Bring b back from corner
+Heap: {b:1, c:1}
+Corner (prev): {a:1}
+
+<span style="font-weight: bold;">Step 4: Seat 'b'</span>
+Pop b from heap
+Result: [a, b, a, b]
+b has 0 left (done)
+
+Bring a back from corner
+Heap: {a:1, c:1}
+Corner (prev): null (b is done)
+
+<span style="font-weight: bold;">Step 5: Seat 'a'</span>
+Pop a from heap
+Result: [a, b, a, b, a]
+a has 0 left
+
+Corner (prev): null
+Heap: {c:1}
+
+<span style="font-weight: bold;">Step 6: Seat 'c'</span>
+Pop c from heap
+Result: [a, b, a, b, a, c]
+
+<span style="color: #2e7d32; font-weight: bold;">Final: "ababac" ✓ (no adjacent duplicates!)</span>
+                    </pre>
+                </div>
+
+                <h3>🎯 Why This Works</h3>
+                <div class="warning-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Why always pick most frequent?</strong><br>
+                        If you save the most common character for last,<br>
+                        you won't have enough other characters to separate them!<br><br>
+                        
+                        Example: "aaab"<br>
+                        ❌ Wrong: Save 'a' for later → "baaa" (adjacent a's!)<br>
+                        ✓ Correct: Use 'a' early → "abaa" → "abaa"... wait still fails!<br>
+                        Actually "aaab" is impossible - (a=3, others=1, total=4)<br>
+                        Need at least 3 others to separate 3 a's!<br><br>
+                        
+                        <strong>Impossibility condition:</strong><br>
+                        If any character appears more than (n+1)/2 times → impossible
+                    </p>
+                </div>
+
+                <h3>💻 Complete Java Code</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Reorganize String
+ * LeetCode 767
+ * 
+ * Time: O(N log 26) = O(N)
+ * Space: O(26) = O(1)
+ */</span>
+<span class="keyword">public</span> String reorganizeString(String s) {
+    <span class="comment">// Step 1: Count frequencies</span>
+    <span class="keyword">int</span>[] counts = <span class="keyword">new int</span>[<span class="number">26</span>];
+    <span class="keyword">for</span> (<span class="keyword">char</span> c : s.toCharArray()) {
+        counts[c - <span class="string">'a'</span>]++;
+    }
+    
+    <span class="comment">// Step 2: Max Heap by frequency</span>
+    <span class="comment">// Store character indices (0-25), sorted by their counts</span>
+    PriorityQueue&lt;Integer&gt; pq = 
+        <span class="keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; counts[b] - counts[a]);
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">26</span>; i++) {
+        <span class="keyword">if</span> (counts[i] &gt; <span class="number">0</span>) {
+            pq.add(i);
+        }
+    }
+    
+    StringBuilder sb = <span class="keyword">new</span> StringBuilder();
+    <span class="keyword">int</span> prev = -<span class="number">1</span>;  <span class="comment">// The "corner" - holds previous character</span>
+    
+    <span class="comment">// Step 3: Greedy placement</span>
+    <span class="keyword">while</span> (!pq.isEmpty()) {
+        <span class="keyword">int</span> curr = pq.poll();  <span class="comment">// Pick most frequent</span>
+        
+        <span class="comment">// Add current character to result</span>
+        sb.append((<span class="keyword">char</span>) (curr + <span class="string">'a'</span>));
+        counts[curr]--;
+        
+        <span class="comment">// CRITICAL: Bring previous character back from corner</span>
+        <span class="comment">// We do this BEFORE sending current to corner</span>
+        <span class="keyword">if</span> (prev &gt;= <span class="number">0</span> && counts[prev] &gt; <span class="number">0</span>) {
+            pq.add(prev);  <span class="comment">// Previous is now valid (non-adjacent)</span>
+        }
+        
+        <span class="comment">// Send current to the corner</span>
+        <span class="comment">// It can't be used in next position (would be adjacent)</span>
+        prev = curr;
+    }
+    
+    <span class="comment">// Step 4: Check if we used all characters</span>
+    <span class="keyword">if</span> (sb.length() != s.length()) {
+        <span class="keyword">return</span> <span class="string">""</span>;  <span class="comment">// Impossible</span>
+    }
+    
+    <span class="keyword">return</span> sb.toString();
+}
+
+<span class="comment">/*
+ * Critical Understanding:
+ * 
+ * Q: Why update prev AFTER adding prev back to heap?
+ * A: The sequence is:
+ *    1. Use current character
+ *    2. Bring OLD prev back (it's now far enough)
+ *    3. Make current the NEW prev (can't use it next)
+ * 
+ * Q: What if we did it the other way?
+ * A: If we set prev = curr first, then add prev to heap,
+ *    we'd be adding the SAME character we just used!
+ * 
+ * Q: Why check sb.length() != s.length()?
+ * A: If a character is too frequent, we'll run out of 
+ *    other characters to place between them.
+ *    The heap will empty early, leaving characters unused.
+ * 
+ * Example impossible case: "aaab"
+ * After: "a b a a" - only 4 positions, but a in prev with count=1
+ * Heap empty but prev still has a character → Failed!
+ * Result length = 3, but input length = 4 → return ""
+ */</span></pre></div>
+            </section>
+
+            <section id="task-scheduler" class="section">
+                <h2>9️⃣ Task Scheduler (LC 621)</h2>
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Problem:</strong> Schedule tasks with n-interval cooling period<br>
+                        <strong>Example:</strong> tasks = [A,A,A,B,B,B], n = 2 → Output: 8
+                    </p>
+                </div>
+
+                <h3>🏃 The PT Teacher Analogy</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Imagine a PE class:</strong><br><br>
+                        
+                        • Students (Tasks) line up by how many laps they need to run<br>
+                        • Most laps goes first (Greedy - use Max Heap)<br>
+                        • After running, student must <strong>rest for n intervals</strong><br>
+                        • Resting students sit in a "Waiting Room" (Queue)<br>
+                        • When rest time is over, they rejoin the line<br>
+                        • If no student ready, teacher waits (IDLE)
+                    </p>
+                </div>
+
+                <h3>📊 Complete Walkthrough</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+                    <pre style="font-family: monospace; font-size: 0.9em; line-height: 1.6;">
+<span style="font-weight: bold;">Tasks: [A, A, A, B, B, B], n = 2 (gap between same tasks)</span>
+Frequencies: {A: 3, B: 3}
+
+<span style="font-weight: bold;">Time = 0:</span>
+MaxHeap: {A:3, B:3}
+WaitQueue: []
+
+<span style="font-weight: bold;">Time = 1: Execute A</span>
+Action: Pop A from heap
+Execute: A
+Remaining: A has 2 left
+Send to waiting room: {A:2, returnTime: 1+2+1=4}
+
+MaxHeap: {B:3}
+WaitQueue: [{A:2, time:4}]
+CPU: [A]
+
+<span style="font-weight: bold;">Time = 2: Execute B</span>
+Action: Pop B from heap
+Execute: B
+Send to waiting: {B:2, returnTime:5}
+
+MaxHeap: {}
+WaitQueue: [{A:2, t:4}, {B:2, t:5}]
+CPU: [A, B]
+
+<span style="font-weight: bold;">Time = 3: IDLE</span>
+MaxHeap is empty!
+Check WaitQueue: A returns at time 4 (not yet)
+Action: CPU IDLE
+
+MaxHeap: {}
+WaitQueue: [{A:2, t:4}, {B:2, t:5}]
+CPU: [A, B, idle]
+
+<span style="font-weight: bold;">Time = 4: Execute A</span>
+Check WaitQueue: A ready! (returnTime = 4)
+Move A to MaxHeap
+Pop A from heap
+Execute: A
+Send to waiting: {A:1, returnTime:7}
+
+MaxHeap: {}
+WaitQueue: [{B:2, t:5}, {A:1, t:7}]
+CPU: [A, B, idle, A]
+
+<span style="font-weight: bold;">Time = 5: Execute B</span>
+Check WaitQueue: B ready!
+Move B to MaxHeap
+Execute: B
+Send to waiting: {B:1, returnTime:8}
+
+CPU: [A, B, idle, A, B]
+
+<span style="font-weight: bold;">Time = 6: IDLE</span>
+CPU: [A, B, idle, A, B, idle]
+
+<span style="font-weight: bold;">Time = 7: Execute A (last A)</span>
+CPU: [A, B, idle, A, B, idle, A]
+
+<span style="font-weight: bold;">Time = 8: Execute B (last B)</span>
+CPU: [A, B, idle, A, B, idle, A, B]
+
+<span style="color: #2e7d32; font-weight: bold;">Total Time: 8</span>
+                    </pre>
+                </div>
+
+                <h3>🎯 Key Decisions</h3>
+                <div class="warning-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Why Max Heap?</strong><br>
+                        Always execute most frequent task first (Greedy)<br>
+                        Ensures we spread out common tasks<br><br>
+                        
+                        <strong>Why Queue?</strong><br>
+                        Tasks cooling down can't be executed yet<br>
+                        Need to track when each task can return<br><br>
+                        
+                        <strong>Why Simulation?</strong><br>
+                        Must track time step-by-step<br>
+                        CPU might be idle if all tasks cooling
+                    </p>
+                </div>
+
+                <h3>💻 Complete Java Code</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Task Scheduler (CPU Scheduling)
+ * LeetCode 621
+ * 
+ * Time: O(N) where N = number of tasks
+ * Space: O(26) = O(1) for frequencies
+ */</span>
+<span class="keyword">public int</span> leastInterval(<span class="keyword">char</span>[] tasks, <span class="keyword">int</span> n) {
+    <span class="comment">// Step 1: Count frequencies</span>
+    Map&lt;Character, Integer&gt; counts = <span class="keyword">new</span> HashMap&lt;&gt;();
+    <span class="keyword">for</span> (<span class="keyword">char</span> c : tasks) {
+        counts.put(c, counts.getOrDefault(c, <span class="number">0</span>) + <span class="number">1</span>);
+    }
+    
+    <span class="comment">// Step 2: Max Heap (most frequent first)</span>
+    PriorityQueue&lt;Integer&gt; maxHeap = 
+        <span class="keyword">new</span> PriorityQueue&lt;&gt;((a, b) -&gt; b - a);
+    maxHeap.addAll(counts.values());
+    
+    <span class="comment">// Step 3: Waiting room (Queue)</span>
+    <span class="comment">// Stores {frequency, returnTime}</span>
+    Queue&lt;<span class="keyword">int</span>[]&gt; waitList = <span class="keyword">new</span> LinkedList&lt;&gt;();
+    
+    <span class="keyword">int</span> time = <span class="number">0</span>;
+    
+    <span class="comment">// Step 4: Simulate time step by step</span>
+    <span class="keyword">while</span> (!maxHeap.isEmpty() || !waitList.isEmpty()) {
+        time++;  <span class="comment">// Advance time</span>
+        
+        <span class="comment">// If heap has tasks, execute one</span>
+        <span class="keyword">if</span> (!maxHeap.isEmpty()) {
+            <span class="keyword">int</span> freq = maxHeap.poll();  <span class="comment">// Execute task</span>
+            
+            <span class="comment">// If task has more executions left</span>
+            <span class="keyword">if</span> (freq - <span class="number">1</span> &gt; <span class="number">0</span>) {
+                <span class="comment">// Send to waiting room with return time</span>
+                waitList.add(<span class="keyword">new int</span>[]{freq - <span class="number">1</span>, time + n});
+            }
+        }
+        <span class="comment">// Else: CPU is IDLE (time still advances)</span>
+        
+        <span class="comment">// Check if any task's cooling period is over</span>
+        <span class="keyword">if</span> (!waitList.isEmpty() && waitList.peek()[<span class="number">1</span>] == time) {
+            <span class="comment">// Move back to heap</span>
+            maxHeap.add(waitList.poll()[<span class="number">0</span>]);
+        }
+    }
+    
+    <span class="keyword">return</span> time;
+}
+
+<span class="comment">/*
+ * Critical Understanding:
+ * 
+ * Q: Why not just calculate mathematically?
+ * A: Because of idle time complexity. 
+ *    Formula works for simple cases, but simulation handles all cases.
+ * 
+ * Q: Why check waitList AFTER executing?
+ * A: A task executed at time T can't return until T+n.
+ *    We check if tasks from PREVIOUS cycles are ready now.
+ * 
+ * Q: What if heap empty but waitList not?
+ * A: CPU IDLE - time advances but no task executes.
+ *    This is why we check "!maxHeap.isEmpty() || !waitList.isEmpty()"
+ */</span></pre></div>
+            </section>
+
+            <!-- SECTION 10: SUMMARY -->
+            <section id="summary" class="section" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+                <h2 style="color: white; border-color: white;">🎯 Summary & Patterns</h2>
+                
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: white; margin-top: 0;">📊 Pattern Recognition Table</h3>
+                    <table style="background: white; color: #333;">
+                        <tr>
+                            <th>Problem Type</th>
+                            <th>Heap Type</th>
+                            <th>Key Insight</th>
+                        </tr>
+                        <tr>
+                            <td>Top K Largest</td>
+                            <td>Min Heap (size K)</td>
+                            <td>Eliminate smallest from top K</td>
+                        </tr>
+                        <tr>
+                            <td>Bottom K Smallest</td>
+                            <td>Max Heap (size K)</td>
+                            <td>Eliminate largest from bottom K</td>
+                        </tr>
+                        <tr>
+                            <td>Kth Largest</td>
+                            <td>Min Heap (size K)</td>
+                            <td>Root is Kth largest</td>
+                        </tr>
+                        <tr>
+                            <td>Kth Smallest</td>
+                            <td>Max Heap (size K)</td>
+                            <td>Root is Kth smallest</td>
+                        </tr>
+                        <tr>
+                            <td>Merge K Sorted</td>
+                            <td>Min Heap</td>
+                            <td>Track {value, row, col}</td>
+                        </tr>
+                        <tr>
+                            <td>Greedy Choice</td>
+                            <td>Max Heap</td>
+                            <td>Always pick best available</td>
+                        </tr>
+                        <tr>
+                            <td>With Cooldown</td>
+                            <td>Max Heap + Queue</td>
+                            <td>Hold prev, use wait list</td>
+                        </tr>
+                        <tr>
+                            <td>Two Properties</td>
+                            <td>Sort + Heap</td>
+                            <td>Sort one, heap other</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.2); padding: 30px; border-radius: 15px;">
+                    <h3 style="color: white; margin-top: 0;">🎯 Decision Flowchart</h3>
+                    <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; font-family: monospace;">
+<pre style="color: white; line-height: 2;">
+Question: Find Top K?
+  ├─ Top K LARGEST → Use MIN Heap
+  └─ Bottom K SMALLEST → Use MAX Heap
+
+Question: Greedy choice?
+  └─ Always pick BEST → Use MAX Heap
+
+Question: Merge K structures?
+  └─ Use MIN Heap with tuples
+
+Question: Cooldown/Gap?
+  └─ Use MAX Heap + Wait Queue
+
+Question: Two constraints?
+  └─ SORT one, HEAP the other
+</pre>
+                    </div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: white; margin-top: 0;">⚡ Complexity Cheat Sheet</h3>
+                    <p style="font-size: 1.2em; line-height: 2;">
+                        <strong>Top K from N elements:</strong><br>
+                        • Brute Force (Sort all): O(N log N)<br>
+                        • Heap Approach: O(N log K) ✓ Better!<br><br>
+                        
+                        <strong>Merge K lists (total N):</strong><br>
+                        • O(N log K) - much better than O(K×N)!<br><br>
+                        
+                        <strong>Space:</strong><br>
+                        • Heap size: O(K) or O(N)<br>
+                        • Always better than O(N²) approaches
+                    </p>
+                </div>
+
+                <div style="text-align: center; margin-top: 40px; padding: 30px; background: rgba(255,255,255,0.2); border-radius: 15px;">
+                    <h2 style="color: white;">🎉 You've Mastered Heaps!</h2>
+                    <p style="font-size: 1.3em; line-height: 2;">
+                        You now understand:<br>
+                        • The Golden Rule (Min for Top, Max for Bottom)<br>
+                        • 7-Step Template for Top K<br>
+                        • Elimination logic<br>
+                        • Greedy + Heap patterns<br>
+                        • All major heap problems!<br><br>
+                        <strong>Practice these to become a Heap master!</strong>
+                    </p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</body>
+</html>

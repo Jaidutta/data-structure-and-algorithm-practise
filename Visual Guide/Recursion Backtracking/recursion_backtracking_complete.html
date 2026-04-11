@@ -1,0 +1,2974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Recursion & Backtracking Guide - All 12 Patterns</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+        
+        h2 {
+            color: #764ba2;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        h3 {
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        h4 {
+            color: #764ba2;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .visual-box {
+            background: #f8f9ff;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        
+        .keyword { color: #ff79c6; }
+        .function { color: #50fa7b; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; }
+        .number { color: #bd93f9; }
+        .type { color: #8be9fd; }
+        
+        .pattern-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .pattern-card h3 {
+            color: white;
+            margin-top: 0;
+        }
+        
+        .recognition-box {
+            background: #fff9c4;
+            border-left: 5px solid #fbc02d;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .recognition-box h4 {
+            color: #f57f17;
+            margin-top: 0;
+        }
+        
+        .tip-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .tip-box h4 {
+            color: #155724;
+            margin-top: 0;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box h4 {
+            color: #856404;
+            margin-top: 0;
+        }
+        
+        .problem-box {
+            background: #e7f3ff;
+            border: 2px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .problem-box h4 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        
+        .difficulty {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .easy { background: #d4edda; color: #155724; }
+        .medium { background: #fff3cd; color: #856404; }
+        .hard { background: #f8d7da; color: #721c24; }
+        
+        .tree-visualization {
+            background: white;
+            border: 3px solid #667eea;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .tree-node {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            background: #e3f2fd;
+            font-weight: bold;
+        }
+        
+        .tree-node.base {
+            background: #c8e6c9;
+            border-color: #4caf50;
+        }
+        
+        .tree-node.recursive {
+            background: #fff9c4;
+            border-color: #fbc02d;
+        }
+        
+        .tree-node.backtrack {
+            background: #ffcdd2;
+            border-color: #f44336;
+            text-decoration: line-through;
+        }
+        
+        .stack-visualization {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .stack-frame {
+            background: #3d3d3d;
+            border: 2px solid #667eea;
+            border-left: 5px solid #667eea;
+            padding: 15px;
+            margin: 8px 0;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .stack-frame.active {
+            border-color: #50fa7b;
+            border-left-color: #50fa7b;
+            background: #4d4d4d;
+        }
+        
+        .stack-frame.returned {
+            border-color: #fbc02d;
+            border-left-color: #fbc02d;
+            opacity: 0.7;
+        }
+        
+        .stack-label {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: #667eea;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+        }
+        
+        .step {
+            background: white;
+            border-left: 3px solid #667eea;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+        
+        .formula {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.1em;
+            border: 2px dashed #667eea;
+        }
+        
+        .call-trace {
+            background: #fff;
+            border: 2px solid #667eea;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Complete Recursion & Backtracking Guide</h1>
+        <p class="subtitle">All 12 Patterns | Java Code | Visual Call Stacks | Decision Trees | Intuitive Recognition</p>
+        
+        <div style="background: #f8f9ff; padding: 20px; border-left: 5px solid #667eea; border-radius: 5px; margin-bottom: 30px;">
+            <h4 style="color: #667eea; margin-top: 0;">📋 Complete Coverage - 12 Patterns</h4>
+            
+            <h4 style="color: #764ba2; margin-top: 20px;">Recursion Patterns (6):</h4>
+            <ol style="margin-left: 20px;">
+                <li><strong>Simple Linear Recursion</strong> - Process one element at a time</li>
+                <li><strong>Multiple Recursion (Tree)</strong> - Multiple calls per function</li>
+                <li><strong>Divide and Conquer</strong> - Split, solve, merge</li>
+                <li><strong>Tail Recursion</strong> - Last operation is recursive call</li>
+                <li><strong>Tree/Graph Recursion</strong> - DFS traversal patterns</li>
+                <li><strong>Memoization (Top-Down DP)</strong> - Cache recursive results</li>
+            </ol>
+            
+            <h4 style="color: #764ba2; margin-top: 20px;">Backtracking Patterns (6):</h4>
+            <ol style="margin-left: 20px;">
+                <li><strong>Subsets/Combinations</strong> - All possible selections</li>
+                <li><strong>Permutations</strong> - All possible orderings</li>
+                <li><strong>Combination Sum</strong> - Combinations that satisfy target</li>
+                <li><strong>N-Queens/Constraint Satisfaction</strong> - Board placement with rules</li>
+                <li><strong>Grid Backtracking</strong> - 2D maze/word search</li>
+                <li><strong>Palindrome/Partition</strong> - Split with constraints</li>
+            </ol>
+        </div>
+        
+        <h2>🎯 Core Concepts</h2>
+        
+        <div class="visual-box">
+            <h3>What is Recursion?</h3>
+            <p><strong>Definition:</strong> A function that calls itself to solve smaller instances of the same problem.</p>
+            
+            <div class="formula">
+                function solve(problem) {<br>
+                &nbsp;&nbsp;if (problem is simple enough) return direct_answer;<br>
+                &nbsp;&nbsp;return solve(smaller_version_of_problem);<br>
+                }
+            </div>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Base Case:</strong> Simplest version that can be solved directly (stops recursion)
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Recursive Case:</strong> Break problem into smaller piece, call function on it
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Progress Toward Base:</strong> Each call must get closer to base case
+            </div>
+        </div>
+        
+        <div class="visual-box">
+            <h3>What is Backtracking?</h3>
+            <p><strong>Definition:</strong> Try all possibilities by making choices, exploring them, then undoing them to try other options.</p>
+            
+            <div class="formula">
+                backtrack(choices, current_solution) {<br>
+                &nbsp;&nbsp;if (solution_complete) save_it;<br>
+                &nbsp;&nbsp;for each choice:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;make_choice();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Choose<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;backtrack(...);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Explore<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;undo_choice();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Unchoose (Backtrack)<br>
+                }
+            </div>
+            
+            <p style="margin-top: 15px;"><strong>Key: The "Undo" step!</strong> This is what makes it backtracking, not just recursion.</p>
+        </div>
+        
+        <h2>🔍 How to Identify Backtracking Problems</h2>
+        
+        <div class="recognition-box">
+            <h4>🎯 THE ULTIMATE BACKTRACKING IDENTIFICATION GUIDE</h4>
+            
+            <h4 style="color: #f57f17; margin-top: 20px;">✅ You're 99% sure it's BACKTRACKING when you see:</h4>
+            
+            <div style="background: #fff; padding: 15px; margin: 15px 0; border: 3px solid #f57f17; border-radius: 5px;">
+                <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 10px;">Magic Phrase #1: "All possible..."</p>
+                <ul style="margin-left: 20px;">
+                    <li>✓ "Find <strong>all possible</strong> combinations"</li>
+                    <li>✓ "Generate <strong>all possible</strong> permutations"</li>
+                    <li>✓ "Print <strong>all possible</strong> solutions"</li>
+                    <li>✓ "Return <strong>all valid</strong> arrangements"</li>
+                </ul>
+                <p style="margin-top: 10px; color: #c62828;"><strong>Why:</strong> "All possible" = need to explore every option = backtracking!</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; margin: 15px 0; border: 3px solid #f57f17; border-radius: 5px;">
+                <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 10px;">Magic Phrase #2: Combinatorial Problems</p>
+                <ul style="margin-left: 20px;">
+                    <li>✓ "Subsets" / "Power set"</li>
+                    <li>✓ "Permutations" / "Arrangements"</li>
+                    <li>✓ "Combinations" / "Choose K items"</li>
+                    <li>✓ "Partition" / "Split into groups"</li>
+                </ul>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; margin: 15px 0; border: 3px solid #f57f17; border-radius: 5px;">
+                <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 10px;">Magic Phrase #3: Constraint Satisfaction</p>
+                <ul style="margin-left: 20px;">
+                    <li>✓ "Place N queens on chessboard" (with rules)</li>
+                    <li>✓ "Solve Sudoku"</li>
+                    <li>✓ "Valid placement with constraints"</li>
+                    <li>✓ "Find path that satisfies conditions"</li>
+                </ul>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; margin: 15px 0; border: 3px solid #f57f17; border-radius: 5px;">
+                <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 10px;">Magic Phrase #4: Grid Exploration</p>
+                <ul style="margin-left: 20px;">
+                    <li>✓ "Word search in 2D grid"</li>
+                    <li>✓ "Find path in maze"</li>
+                    <li>✓ "Count paths from top-left to bottom-right"</li>
+                    <li>✓ "Explore 4 directions (up, down, left, right)"</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="warning-box">
+            <h4>❌ NOT Backtracking When You See:</h4>
+            <ul style="margin-left: 20px;">
+                <li>❌ "Find THE maximum/minimum" (just one answer) → Usually DP or Greedy</li>
+                <li>❌ "Count number of ways" (just count, not generate) → DP</li>
+                <li>❌ "Shortest path" (optimization) → BFS or Dijkstra</li>
+                <li>❌ "Check if exists" (yes/no) → Usually BFS/DFS without backtracking</li>
+            </ul>
+        </div>
+        
+        <div class="tip-box">
+            <h4>💡 The Golden Rule</h4>
+            <p style="font-size: 1.1em; font-weight: bold; margin: 10px 0;">
+                If the problem asks you to GENERATE or FIND ALL solutions (not just count or find optimal),<br>
+                and you need to explore multiple choices at each step,<br>
+                → IT'S BACKTRACKING!
+            </p>
+        </div>
+        
+        <div class="visual-box">
+            <h4>🔍 Quick Identification Examples</h4>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Problem Statement</th>
+                        <th>Backtracking?</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>"Generate all subsets of [1,2,3]"</td>
+                        <td style="color: #2e7d32; font-weight: bold;">✓ YES</td>
+                        <td>"All subsets" = generate all</td>
+                    </tr>
+                    <tr>
+                        <td>"Count number of subsets"</td>
+                        <td style="color: #c62828; font-weight: bold;">✗ NO</td>
+                        <td>Just count, don't generate (DP or math)</td>
+                    </tr>
+                    <tr>
+                        <td>"Find all permutations of string"</td>
+                        <td style="color: #2e7d32; font-weight: bold;">✓ YES</td>
+                        <td>"All permutations" = generate all</td>
+                    </tr>
+                    <tr>
+                        <td>"Find longest palindrome substring"</td>
+                        <td style="color: #c62828; font-weight: bold;">✗ NO</td>
+                        <td>Find ONE optimal (DP or expand around center)</td>
+                    </tr>
+                    <tr>
+                        <td>"List all valid parentheses combinations"</td>
+                        <td style="color: #2e7d32; font-weight: bold;">✓ YES</td>
+                        <td>"All valid" = generate all</td>
+                    </tr>
+                    <tr>
+                        <td>"Place 8 queens on chessboard"</td>
+                        <td style="color: #2e7d32; font-weight: bold;">✓ YES</td>
+                        <td>Constraint satisfaction, try placements</td>
+                    </tr>
+                    <tr>
+                        <td>"Find shortest path in maze"</td>
+                        <td style="color: #c62828; font-weight: bold;">✗ NO</td>
+                        <td>Shortest = optimization (BFS)</td>
+                    </tr>
+                    <tr>
+                        <td>"Word search - does word exist in grid?"</td>
+                        <td style="color: #2e7d32; font-weight: bold;">✓ YES</td>
+                        <td>Grid exploration, try all paths</td>
+                    </tr>
+                    <tr>
+                        <td>"Partition string into palindromes"</td>
+                        <td style="color: #2e7d32; font-weight: bold;">✓ YES</td>
+                        <td>Try all ways to split</td>
+                    </tr>
+                    <tr>
+                        <td>"Maximum sum subarray"</td>
+                        <td style="color: #c62828; font-weight: bold;">✗ NO</td>
+                        <td>Find ONE maximum (Kadane's algorithm)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎓 Pro Tips for Identification</h4>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Look at Return Type:</strong><br>
+                • List&lt;List&lt;Integer&gt;&gt; or List&lt;String&gt; → Likely backtracking (returning all solutions)<br>
+                • int or boolean → Likely DP/Greedy (returning one answer)
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Count the Keywords:</strong><br>
+                If you see 2+ of these: "all", "generate", "find every", "list all", "possible"<br>
+                → 90% chance it's backtracking
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Think About Solution Space:</strong><br>
+                • Exponential (2^N or N!) solutions exist? → Backtracking<br>
+                • Polynomial solutions? → Probably DP
+            </div>
+            
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>The "Build and Undo" Test:</strong><br>
+                Ask: "Do I need to build a solution piece by piece, and sometimes undo my choice to try another?"<br>
+                • YES → Backtracking<br>
+                • NO → Something else
+            </div>
+        </div>
+
+        <h2>🔍 How to Recognize Patterns Intuitively</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 20%;">Pattern Type</th>
+                    <th style="width: 40%;">Immediate Recognition Signals</th>
+                    <th style="width: 40%;">Ask Yourself</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Linear Recursion</strong></td>
+                    <td>Single path forward<br>• Process array/list one by one<br>• "nth element"<br>• Factorial, power, reverse</td>
+                    <td>Can I solve for n using solution for n-1?</td>
+                </tr>
+                <tr>
+                    <td><strong>Tree Recursion</strong></td>
+                    <td>Multiple branches<br>• Fibonacci (needs F(n-1) AND F(n-2))<br>• Binary tree problems<br>• "left and right"</td>
+                    <td>Do I need results from 2+ subproblems?</td>
+                </tr>
+                <tr>
+                    <td><strong>Divide & Conquer</strong></td>
+                    <td>"Split in half"<br>• Merge sort, quick sort<br>• Binary search<br>• "divide", "merge", "combine"</td>
+                    <td>Can I split into equal parts, solve each, then merge?</td>
+                </tr>
+                <tr>
+                    <td><strong>Backtracking - Subsets</strong></td>
+                    <td>"All subsets"<br>"All combinations"<br>"Power set"<br>"Choose K items"</td>
+                    <td>Am I selecting items where ORDER DOESN'T MATTER?</td>
+                </tr>
+                <tr>
+                    <td><strong>Backtracking - Permutations</strong></td>
+                    <td>"All arrangements"<br>"All permutations"<br>"All orderings"</td>
+                    <td>Does ORDER MATTER? Is [1,2] different from [2,1]?</td>
+                </tr>
+                <tr>
+                    <td><strong>Backtracking - Constraint</strong></td>
+                    <td>"Place N queens"<br>"Sudoku"<br>"Valid placement"<br>"Rules/constraints"</td>
+                    <td>Are there rules about what can go where?</td>
+                </tr>
+                <tr>
+                    <td><strong>Grid Backtracking</strong></td>
+                    <td>"Word search in grid"<br>"Maze"<br>"Path in matrix"<br>"4 directions"</td>
+                    <td>Am I exploring a 2D grid with up/down/left/right?</td>
+                </tr>
+            </tbody>
+        </table>
+
+PATTERN1_START
+
+        <!-- PATTERN 1: SIMPLE LINEAR RECURSION -->
+        <h2>Pattern 1: Simple Linear Recursion</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 1: Simple Linear Recursion</h3>
+            <p><strong>Definition:</strong> One recursive call per function, processes one element at a time</p>
+            <p><strong>Time:</strong> O(N) where N is recursion depth</p>
+            <p><strong>Space:</strong> O(N) for call stack</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 Intuitive Recognition</h4>
+            <p><strong>You'll know it's this pattern when:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ Problem says "process array/list element by element"</li>
+                <li>✓ Problem mentions "factorial", "nth power", "sum of array"</li>
+                <li>✓ You need to reduce problem by 1 each time (n → n-1)</li>
+                <li>✓ Only ONE path forward (not branching like trees)</li>
+                <li>✓ Keywords: "calculate", "reverse", "sum", "count", "nth element"</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>Think:</strong> "Can I solve for N if I know the answer for N-1?"</p>
+            <p><strong>Example:</strong> factorial(5) = 5 × factorial(4)</p>
+        </div>
+        
+        <h3>Example 1: Factorial</h3>
+        
+        <div class="code-block"><pre><span class="keyword">public class</span> <span class="type">Solution</span> {
+    <span class="keyword">public int</span> <span class="function">factorial</span>(<span class="keyword">int</span> n) {
+        <span class="comment">// Base case: factorial of 0 or 1 is 1</span>
+        <span class="keyword">if</span> (n <= <span class="number">1</span>) {
+            <span class="keyword">return</span> <span class="number">1</span>;
+        }
+        
+        <span class="comment">// Recursive case: n! = n × (n-1)!</span>
+        <span class="keyword">return</span> n * factorial(n - <span class="number">1</span>);
+    }
+}</pre></div>
+
+        <div class="tree-visualization">
+            <h4 style="color: #667eea; margin-top: 0;">🌳 Recursion Tree: factorial(5)</h4>
+            <p style="margin-bottom: 20px;">Each level represents one function call:</p>
+            
+            <div style="text-align: center; line-height: 3;">
+                <div>
+                    <div class="tree-node recursive">factorial(5)</div>
+                    <div style="margin: 10px 0;">returns: 5 × factorial(4)</div>
+                </div>
+                
+                <div style="margin-left: 40px;">
+                    <div class="tree-node recursive">factorial(4)</div>
+                    <div style="margin: 10px 0;">returns: 4 × factorial(3)</div>
+                </div>
+                
+                <div style="margin-left: 80px;">
+                    <div class="tree-node recursive">factorial(3)</div>
+                    <div style="margin: 10px 0;">returns: 3 × factorial(2)</div>
+                </div>
+                
+                <div style="margin-left: 120px;">
+                    <div class="tree-node recursive">factorial(2)</div>
+                    <div style="margin: 10px 0;">returns: 2 × factorial(1)</div>
+                </div>
+                
+                <div style="margin-left: 160px;">
+                    <div class="tree-node base">factorial(1)</div>
+                    <div style="margin: 10px 0; color: #2e7d32; font-weight: bold;">BASE CASE! returns: 1</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: #fff3e0; border-radius: 5px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">🔙 Return Path (Unwinding Stack):</p>
+                <p style="margin: 5px 0;">factorial(2) = 2 × 1 = <strong>2</strong></p>
+                <p style="margin: 5px 0;">factorial(3) = 3 × 2 = <strong>6</strong></p>
+                <p style="margin: 5px 0;">factorial(4) = 4 × 6 = <strong>24</strong></p>
+                <p style="margin: 5px 0;">factorial(5) = 5 × 24 = <strong style="color: #f57c00; font-size: 1.2em;">120</strong> ✓</p>
+            </div>
+        </div>
+        
+        <div class="stack-visualization">
+            <h4 style="color: #50fa7b; margin-top: 0;">📚 Call Stack Visualization</h4>
+            <p style="margin-bottom: 15px;">Stack grows DOWN as we make calls, shrinks UP as we return:</p>
+            
+            <div style="background: #1d1d1d; padding: 20px; border-radius: 5px; margin: 15px 0;">
+                <p style="color: #fbc02d; font-weight: bold; margin-bottom: 10px;">PHASE 1: Growing Stack (Making Calls)</p>
+                
+                <div class="stack-frame">
+                    <span class="stack-label">Frame 1</span>
+                    factorial(5) - waiting for factorial(4)...
+                </div>
+                <div class="stack-frame">
+                    <span class="stack-label">Frame 2</span>
+                    factorial(4) - waiting for factorial(3)...
+                </div>
+                <div class="stack-frame">
+                    <span class="stack-label">Frame 3</span>
+                    factorial(3) - waiting for factorial(2)...
+                </div>
+                <div class="stack-frame">
+                    <span class="stack-label">Frame 4</span>
+                    factorial(2) - waiting for factorial(1)...
+                </div>
+                <div class="stack-frame active">
+                    <span class="stack-label" style="background: #50fa7b; color: #000;">ACTIVE</span>
+                    factorial(1) - BASE CASE! returns 1
+                </div>
+            </div>
+            
+            <div style="background: #1d1d1d; padding: 20px; border-radius: 5px; margin: 15px 0;">
+                <p style="color: #fbc02d; font-weight: bold; margin-bottom: 10px;">PHASE 2: Shrinking Stack (Returning Values)</p>
+                
+                <div class="stack-frame returned">
+                    factorial(5) - receives 24, returns 5×24 = 120
+                </div>
+                <div class="stack-frame returned">
+                    factorial(4) - receives 6, returns 4×6 = 24
+                </div>
+                <div class="stack-frame returned">
+                    factorial(3) - receives 2, returns 3×2 = 6
+                </div>
+                <div class="stack-frame active">
+                    <span class="stack-label" style="background: #fbc02d; color: #000;">RETURNING</span>
+                    factorial(2) - receives 1, returns 2×1 = 2
+                </div>
+            </div>
+        </div>
+        
+        <div class="visual-box" style="background: #e8f5e9;">
+            <h4 style="color: #2e7d32;">💻 Step-by-Step Code Execution</h4>
+            
+            <div class="call-trace">
+                <p style="font-weight: bold; margin-bottom: 10px;">▶ Call: factorial(5)</p>
+                <p style="margin: 5px 0 5px 20px;">• Check: n=5, is 5 <= 1? <strong>No</strong></p>
+                <p style="margin: 5px 0 5px 20px;">• Execute: return 5 * factorial(4)</p>
+                <p style="margin: 5px 0 5px 20px; color: #1976d2;">• Make recursive call: factorial(4)</p>
+            </div>
+            
+            <div class="call-trace">
+                <p style="font-weight: bold; margin-bottom: 10px;">▶ Call: factorial(4)</p>
+                <p style="margin: 5px 0 5px 20px;">• Check: n=4, is 4 <= 1? <strong>No</strong></p>
+                <p style="margin: 5px 0 5px 20px;">• Execute: return 4 * factorial(3)</p>
+                <p style="margin: 5px 0 5px 20px; color: #1976d2;">• Make recursive call: factorial(3)</p>
+            </div>
+            
+            <div class="call-trace">
+                <p style="font-weight: bold; margin-bottom: 10px;">▶ Call: factorial(3)</p>
+                <p style="margin: 5px 0 5px 20px;">• Check: n=3, is 3 <= 1? <strong>No</strong></p>
+                <p style="margin: 5px 0 5px 20px;">• Execute: return 3 * factorial(2)</p>
+                <p style="margin: 5px 0 5px 20px; color: #1976d2;">• Make recursive call: factorial(2)</p>
+            </div>
+            
+            <div class="call-trace">
+                <p style="font-weight: bold; margin-bottom: 10px;">▶ Call: factorial(2)</p>
+                <p style="margin: 5px 0 5px 20px;">• Check: n=2, is 2 <= 1? <strong>No</strong></p>
+                <p style="margin: 5px 0 5px 20px;">• Execute: return 2 * factorial(1)</p>
+                <p style="margin: 5px 0 5px 20px; color: #1976d2;">• Make recursive call: factorial(1)</p>
+            </div>
+            
+            <div class="call-trace" style="background: #c8e6c9;">
+                <p style="font-weight: bold; margin-bottom: 10px;">▶ Call: factorial(1) - BASE CASE!</p>
+                <p style="margin: 5px 0 5px 20px; color: #2e7d32;">• Check: n=1, is 1 <= 1? <strong>YES!</strong></p>
+                <p style="margin: 5px 0 5px 20px; color: #2e7d32; font-weight: bold;">• Return: 1</p>
+            </div>
+            
+            <div class="call-trace" style="background: #fff9c4;">
+                <p style="font-weight: bold; margin-bottom: 10px;">◀ Return to factorial(2)</p>
+                <p style="margin: 5px 0 5px 20px;">• Received: 1</p>
+                <p style="margin: 5px 0 5px 20px;">• Calculate: 2 * 1 = 2</p>
+                <p style="margin: 5px 0 5px 20px; font-weight: bold;">• Return: 2</p>
+            </div>
+            
+            <div class="call-trace" style="background: #fff9c4;">
+                <p style="font-weight: bold; margin-bottom: 10px;">◀ Return to factorial(3)</p>
+                <p style="margin: 5px 0 5px 20px;">• Received: 2</p>
+                <p style="margin: 5px 0 5px 20px;">• Calculate: 3 * 2 = 6</p>
+                <p style="margin: 5px 0 5px 20px; font-weight: bold;">• Return: 6</p>
+            </div>
+            
+            <div class="call-trace" style="background: #fff9c4;">
+                <p style="font-weight: bold; margin-bottom: 10px;">◀ Return to factorial(4)</p>
+                <p style="margin: 5px 0 5px 20px;">• Received: 6</p>
+                <p style="margin: 5px 0 5px 20px;">• Calculate: 4 * 6 = 24</p>
+                <p style="margin: 5px 0 5px 20px; font-weight: bold;">• Return: 24</p>
+            </div>
+            
+            <div class="call-trace" style="background: #fff9c4;">
+                <p style="font-weight: bold; margin-bottom: 10px;">◀ Return to factorial(5)</p>
+                <p style="margin: 5px 0 5px 20px;">• Received: 24</p>
+                <p style="margin: 5px 0 5px 20px;">• Calculate: 5 * 24 = 120</p>
+                <p style="margin: 5px 0 5px 20px; font-weight: bold; color: #f57c00; font-size: 1.1em;">• Return: 120 🎉</p>
+            </div>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 1 <span class="difficulty easy">Easy-Medium</span></h4>
+            <ol>
+                <li><strong>Power(x, n) (LC 50)</strong> - x^n recursively</li>
+                <li><strong>Reverse String (LC 344)</strong></li>
+                <li><strong>Reverse Linked List (LC 206)</strong></li>
+                <li><strong>Climbing Stairs (LC 70)</strong></li>
+                <li><strong>Sum of Array</strong> - Calculate sum recursively</li>
+                <li><strong>Count Digits</strong> - Count digits in number</li>
+            </ol>
+        </div>
+
+
+        <!-- PATTERN 2: TREE RECURSION (MULTIPLE RECURSION) -->
+        <h2>Pattern 2: Tree Recursion (Multiple Recursion)</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 2: Tree Recursion (Multiple Calls)</h3>
+            <p><strong>Definition:</strong> Function makes MULTIPLE recursive calls, creating a tree structure</p>
+            <p><strong>Time:</strong> Often O(2^N) or O(branches^depth)</p>
+            <p><strong>Space:</strong> O(depth) for call stack</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 Intuitive Recognition</h4>
+            <p><strong>You'll know it's this pattern when:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ Need results from 2+ subproblems (not just one!)</li>
+                <li>✓ Problem mentions "Fibonacci", "binary tree", "left and right"</li>
+                <li>✓ Each call branches into multiple calls</li>
+                <li>✓ Keywords: "explore all paths", "tree structure", "combinations of results"</li>
+                <li>✓ Formula involves ADDING results: f(n-1) + f(n-2)</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>Think:</strong> "Do I need to combine results from 2+ recursive calls?"</p>
+            <p><strong>Example:</strong> fib(5) = fib(4) + fib(3) ← TWO calls!</p>
+        </div>
+        
+        <h3>Example: Fibonacci</h3>
+        
+        <div class="code-block"><pre><span class="keyword">public class</span> <span class="type">Solution</span> {
+    <span class="keyword">public int</span> <span class="function">fibonacci</span>(<span class="keyword">int</span> n) {
+        <span class="comment">// Base cases</span>
+        <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;
+        <span class="keyword">if</span> (n == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;
+        
+        <span class="comment">// Recursive case: TWO recursive calls!</span>
+        <span class="keyword">return</span> fibonacci(n - <span class="number">1</span>) + fibonacci(n - <span class="number">2</span>);
+    }
+}</pre></div>
+
+        <div class="tree-visualization">
+            <h4 style="color: #667eea; margin-top: 0;">🌳 Complete Recursion Tree: fibonacci(5)</h4>
+            <p style="margin-bottom: 20px;">Notice how each node branches into TWO children (except base cases):</p>
+            
+            <div style="font-family: monospace; font-size: 14px; line-height: 2.5;">
+                <div style="text-align: center;">
+                    <div class="tree-node recursive" style="font-size: 16px;">fib(5)</div>
+                    <div>↙ ↘</div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 100px; margin: 10px 0;">
+                    <div style="text-align: center;">
+                        <div class="tree-node recursive">fib(4)</div>
+                        <div>↙ ↘</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node recursive">fib(3)</div>
+                        <div>↙ ↘</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 50px; margin: 10px 0;">
+                    <div style="text-align: center;">
+                        <div class="tree-node recursive">fib(3)</div>
+                        <div>↙ ↘</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node recursive">fib(2)</div>
+                        <div>↙ ↘</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node recursive">fib(2)</div>
+                        <div>↙ ↘</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node base">fib(1)=1</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 25px; margin: 10px 0;">
+                    <div style="text-align: center;">
+                        <div class="tree-node recursive">fib(2)</div>
+                        <div>↙ ↘</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node base">fib(1)=1</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node base">fib(1)=1</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node base">fib(0)=0</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node base">fib(1)=1</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node base">fib(0)=0</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: flex-start; gap: 25px; margin: 10px 0; margin-left: 50px;">
+                    <div style="text-align: center;">
+                        <div class="tree-node base">fib(1)=1</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node base">fib(0)=0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: #ffebee; border-left: 5px solid #f44336; border-radius: 5px;">
+                <h4 style="color: #c62828; margin-top: 0;">⚠️ The Inefficiency Problem!</h4>
+                <p style="margin: 10px 0;"><strong>Notice the repetition:</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>fib(3) is calculated <strong>2 times</strong></li>
+                    <li>fib(2) is calculated <strong>3 times</strong></li>
+                    <li>fib(1) is calculated <strong>5 times</strong></li>
+                    <li>fib(0) is calculated <strong>3 times</strong></li>
+                </ul>
+                <p style="margin: 10px 0; font-weight: bold;">This is why naive Fibonacci is O(2^N) - exponential!</p>
+                <p style="margin: 10px 0; color: #2e7d32;"><strong>Solution:</strong> Use Memoization (Pattern 6) to cache results!</p>
+            </div>
+            
+            <div style="margin-top: 20px; padding: 20px; background: #e8f5e9; border-radius: 5px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">🔙 Calculating Returns (Bottom-Up):</p>
+                <p style="margin: 5px 0;">fib(2) = fib(1) + fib(0) = 1 + 0 = <strong>1</strong></p>
+                <p style="margin: 5px 0;">fib(3) = fib(2) + fib(1) = 1 + 1 = <strong>2</strong></p>
+                <p style="margin: 5px 0;">fib(4) = fib(3) + fib(2) = 2 + 1 = <strong>3</strong></p>
+                <p style="margin: 5px 0;">fib(5) = fib(4) + fib(3) = 3 + 2 = <strong style="color: #f57c00; font-size: 1.2em;">5</strong> ✓</p>
+            </div>
+        </div>
+        
+        <div class="visual-box" style="background: #e8f5e9;">
+            <h4 style="color: #2e7d32;">💻 Step-by-Step Execution: fib(4)</h4>
+            <p style="margin-bottom: 10px;">Let's trace a smaller example to see the pattern:</p>
+            
+            <div class="call-trace">
+                <p style="font-weight: bold; margin-bottom: 10px;">▶ Call: fib(4)</p>
+                <p style="margin: 5px 0 5px 20px;">• Check: n=4, not 0 or 1</p>
+                <p style="margin: 5px 0 5px 20px;">• Execute: return fib(3) + fib(2)</p>
+                <p style="margin: 5px 0 5px 20px; color: #1976d2;">• First call: fib(3)</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 40px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">▶ Call: fib(3)</p>
+                <p style="margin: 5px 0 5px 20px;">• Check: n=3, not 0 or 1</p>
+                <p style="margin: 5px 0 5px 20px;">• Execute: return fib(2) + fib(1)</p>
+                <p style="margin: 5px 0 5px 20px; color: #1976d2;">• First call: fib(2)</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 80px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">▶ Call: fib(2)</p>
+                <p style="margin: 5px 0 5px 20px;">• Execute: return fib(1) + fib(0)</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 120px; background: #c8e6c9;">
+                <p style="font-weight: bold; margin-bottom: 10px;">▶ Call: fib(1) - BASE!</p>
+                <p style="margin: 5px 0 5px 20px; color: #2e7d32; font-weight: bold;">• Return: 1</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 120px; background: #c8e6c9;">
+                <p style="font-weight: bold; margin-bottom: 10px;">▶ Call: fib(0) - BASE!</p>
+                <p style="margin: 5px 0 5px 20px; color: #2e7d32; font-weight: bold;">• Return: 0</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 80px; background: #fff9c4;">
+                <p style="font-weight: bold; margin-bottom: 10px;">◀ fib(2) returns: 1 + 0 = 1</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 80px; background: #c8e6c9;">
+                <p style="font-weight: bold; margin-bottom: 10px;">▶ Call: fib(1) - BASE!</p>
+                <p style="margin: 5px 0 5px 20px; color: #2e7d32; font-weight: bold;">• Return: 1</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 40px; background: #fff9c4;">
+                <p style="font-weight: bold; margin-bottom: 10px;">◀ fib(3) returns: 1 + 1 = 2</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 40px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">▶ Now second call from fib(4): fib(2)</p>
+                <p style="margin: 5px 0 5px 20px; color: #c62828;">⚠️ We already calculated this, but doing it again!</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 80px; background: #fff9c4;">
+                <p style="font-weight: bold; margin-bottom: 10px;">◀ fib(2) returns: 1 (recalculated)</p>
+            </div>
+            
+            <div class="call-trace" style="background: #fff9c4;">
+                <p style="font-weight: bold; margin-bottom: 10px;">◀ fib(4) returns: 2 + 1 = <strong style="color: #f57c00; font-size: 1.2em;">3</strong> ✓</p>
+            </div>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 2 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Fibonacci Number (LC 509)</strong></li>
+                <li><strong>Climbing Stairs (LC 70)</strong> - Same pattern as Fibonacci!</li>
+                <li><strong>Unique Binary Search Trees (LC 96)</strong> - Catalan number</li>
+                <li><strong>Different Ways to Add Parentheses (LC 241)</strong></li>
+                <li><strong>Count Complete Tree Nodes (LC 222)</strong></li>
+            </ol>
+        </div>
+
+
+        <!-- PATTERN 7: SUBSETS (BACKTRACKING) -->
+        <h2>Pattern 7: Subsets / Combinations (Backtracking)</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 7: Subsets / Combinations</h3>
+            <p><strong>Problem:</strong> Generate all possible subsets (power set)</p>
+            <p><strong>Key:</strong> For each element: include it OR exclude it</p>
+            <p><strong>Time:</strong> O(2^N), Space: O(N) recursion depth</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 Intuitive Recognition - THE GOLDEN RULES</h4>
+            <p><strong>You KNOW it's Subsets when:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ Problem says "all subsets", "all combinations", "power set"</li>
+                <li>✓ Asks for "choose K elements from N"</li>
+                <li>✓ <strong>ORDER DOESN'T MATTER:</strong> [1,2] is SAME as [2,1]</li>
+                <li>✓ Keywords: "select", "choose", "pick", "all possible selections"</li>
+                <li>✓ NOT asking for arrangements (that's permutations!)</li>
+            </ul>
+            
+            <p style="margin-top: 15px; padding: 15px; background: #fff9c4; border-radius: 5px;">
+                <strong>Quick Test:</strong> If problem says "choose 3 items from [1,2,3,4,5]",<br>
+                is [1,2,3] different from [3,2,1]?<br>
+                • If NO (same subset) → Use THIS pattern<br>
+                • If YES (different order) → Use Permutations (Pattern 8)
+            </p>
+        </div>
+        
+        <h3>Example: Subsets of [1,2,3]</h3>
+        
+        <div class="code-block"><pre><span class="keyword">import</span> java.util.*;
+
+<span class="keyword">public class</span> <span class="type">Solution</span> {
+    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="function">subsets</span>(<span class="keyword">int</span>[] nums) {
+        List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+        backtrack(nums, <span class="keyword">new</span> ArrayList&lt;&gt;(), <span class="number">0</span>, result);
+        <span class="keyword">return</span> result;
+    }
+    
+    <span class="keyword">private void</span> <span class="function">backtrack</span>(<span class="keyword">int</span>[] nums, List&lt;Integer&gt; current,
+                          <span class="keyword">int</span> start, List&lt;List&lt;Integer&gt;&gt; result) {
+        <span class="comment">// Every state is a valid subset - add it!</span>
+        result.add(<span class="keyword">new</span> ArrayList&lt;&gt;(current));
+        
+        <span class="comment">// Try adding each remaining element</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt; nums.length; i++) {
+            current.add(nums[i]);              <span class="comment">// Choose</span>
+            backtrack(nums, current, i + <span class="number">1</span>, result);  <span class="comment">// Explore</span>
+            current.remove(current.size() - <span class="number">1</span>);    <span class="comment">// Unchoose (Backtrack!)</span>
+        }
+    }
+}</pre></div>
+
+        <div class="tree-visualization">
+            <h4 style="color: #667eea; margin-top: 0;">🌳 Decision Tree: subsets([1,2,3])</h4>
+            <p style="margin-bottom: 20px;">At each node, we decide which elements to add next:</p>
+            
+            <div style="font-family: monospace; line-height: 2;">
+                <div style="text-align: center;">
+                    <div class="tree-node" style="background: #e3f2fd;">[]</div>
+                    <div style="color: #2e7d32; font-weight: bold;">✓ Add [] to result</div>
+                    <div style="margin: 10px 0;">Try: 1, 2, 3</div>
+                    <div>↙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↘</div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 80px; margin: 20px 0;">
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #e3f2fd;">[1]</div>
+                        <div style="color: #2e7d32; font-weight: bold;">✓ Add [1]</div>
+                        <div style="margin: 10px 0;">Try: 2, 3</div>
+                        <div>↙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↘</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #e3f2fd;">[2]</div>
+                        <div style="color: #2e7d32; font-weight: bold;">✓ Add [2]</div>
+                        <div style="margin: 10px 0;">Try: 3</div>
+                        <div>↓</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #e3f2fd;">[3]</div>
+                        <div style="color: #2e7d32; font-weight: bold;">✓ Add [3]</div>
+                        <div style="margin: 10px 0;">Nothing left</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: flex-start; gap: 100px; margin: 20px 0; margin-left: 100px;">
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #e3f2fd;">[1,2]</div>
+                        <div style="color: #2e7d32; font-weight: bold;">✓ Add [1,2]</div>
+                        <div style="margin: 10px 0;">Try: 3</div>
+                        <div>↓</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #e3f2fd;">[1,3]</div>
+                        <div style="color: #2e7d32; font-weight: bold;">✓ Add [1,3]</div>
+                        <div style="margin: 10px 0;">Nothing left</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #e3f2fd;">[2,3]</div>
+                        <div style="color: #2e7d32; font-weight: bold;">✓ Add [2,3]</div>
+                        <div style="margin: 10px 0;">Nothing left</div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin: 20px 0; margin-left: 100px;">
+                    <div class="tree-node" style="background: #e3f2fd;">[1,2,3]</div>
+                    <div style="color: #2e7d32; font-weight: bold;">✓ Add [1,2,3]</div>
+                    <div style="margin: 10px 0;">Nothing left - backtrack!</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: #e8f5e9; border-radius: 5px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">✅ All Subsets Found (2^3 = 8):</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">
+                    [], [1], [1,2], [1,2,3], [1,3], [2], [2,3], [3]
+                </p>
+            </div>
+        </div>
+        
+        <div class="stack-visualization">
+            <h4 style="color: #50fa7b; margin-top: 0;">📚 Call Stack with Backtracking</h4>
+            <p style="margin-bottom: 15px;">Watch how we build, explore, then UNDO (backtrack):</p>
+            
+            <div style="background: #1d1d1d; padding: 20px; border-radius: 5px; margin: 15px 0;">
+                <p style="color: #fbc02d; font-weight: bold; margin-bottom: 10px;">State 1: Starting</p>
+                <div class="stack-frame active">
+                    <span class="stack-label" style="background: #50fa7b; color: #000;">ACTIVE</span>
+                    current = [], start = 0<br>
+                    ✓ Add [] to result<br>
+                    Loop: try i=0 (value=1)
+                </div>
+            </div>
+            
+            <div style="background: #1d1d1d; padding: 20px; border-radius: 5px; margin: 15px 0;">
+                <p style="color: #fbc02d; font-weight: bold; margin-bottom: 10px;">State 2: Choose 1</p>
+                <div class="stack-frame">
+                    current = [], start = 0
+                </div>
+                <div class="stack-frame active">
+                    <span class="stack-label" style="background: #50fa7b; color: #000;">ACTIVE</span>
+                    current = [1], start = 1<br>
+                    ✓ Add [1] to result<br>
+                    Loop: try i=1 (value=2)
+                </div>
+            </div>
+            
+            <div style="background: #1d1d1d; padding: 20px; border-radius: 5px; margin: 15px 0;">
+                <p style="color: #fbc02d; font-weight: bold; margin-bottom: 10px;">State 3: Choose 2</p>
+                <div class="stack-frame">
+                    current = [], start = 0
+                </div>
+                <div class="stack-frame">
+                    current = [1], start = 1
+                </div>
+                <div class="stack-frame active">
+                    <span class="stack-label" style="background: #50fa7b; color: #000;">ACTIVE</span>
+                    current = [1,2], start = 2<br>
+                    ✓ Add [1,2] to result<br>
+                    Loop: try i=2 (value=3)
+                </div>
+            </div>
+            
+            <div style="background: #1d1d1d; padding: 20px; border-radius: 5px; margin: 15px 0;">
+                <p style="color: #fbc02d; font-weight: bold; margin-bottom: 10px;">State 4: Choose 3</p>
+                <div class="stack-frame">
+                    current = [1], start = 1
+                </div>
+                <div class="stack-frame">
+                    current = [1,2], start = 2
+                </div>
+                <div class="stack-frame active">
+                    <span class="stack-label" style="background: #50fa7b; color: #000;">ACTIVE</span>
+                    current = [1,2,3], start = 3<br>
+                    ✓ Add [1,2,3] to result<br>
+                    Loop: i=3 >= 3, loop ends<br>
+                    <span style="color: #f44336; font-weight: bold;">RETURN (backtrack)</span>
+                </div>
+            </div>
+            
+            <div style="background: #1d1d1d; padding: 20px; border-radius: 5px; margin: 15px 0;">
+                <p style="color: #f44336; font-weight: bold; margin-bottom: 10px;">🔙 Backtrack: Remove 3</p>
+                <div class="stack-frame">
+                    current = [1], start = 1
+                </div>
+                <div class="stack-frame active">
+                    <span class="stack-label" style="background: #f44336;">BACKTRACK</span>
+                    current = [1,2], start = 2<br>
+                    <span style="color: #f44336;">current.remove(2) → current = [1,2] becomes [1]</span><br>
+                    Loop: i=3 >= 3, loop ends<br>
+                    RETURN
+                </div>
+            </div>
+            
+            <div style="background: #1d1d1d; padding: 20px; border-radius: 5px; margin: 15px 0;">
+                <p style="color: #f44336; font-weight: bold; margin-bottom: 10px;">🔙 Backtrack: Remove 2, Try 3</p>
+                <div class="stack-frame active">
+                    <span class="stack-label" style="background: #f44336;">BACKTRACK</span>
+                    current = [1], start = 1<br>
+                    <span style="color: #f44336;">current.remove(1) → current = [1,2] becomes [1]</span><br>
+                    Loop continues: i=2 (value=3)<br>
+                    current.add(3) → current = [1,3]
+                </div>
+            </div>
+            
+            <div style="background: #1d1d1d; padding: 20px; border-radius: 5px; margin: 15px 0;">
+                <p style="color: #50fa7b; font-weight: bold; margin-bottom: 10px;">State 5: Now at [1,3]</p>
+                <div class="stack-frame">
+                    current = [1], start = 1
+                </div>
+                <div class="stack-frame active">
+                    <span class="stack-label" style="background: #50fa7b; color: #000;">ACTIVE</span>
+                    current = [1,3], start = 3<br>
+                    ✓ Add [1,3] to result<br>
+                    Loop: i=3 >= 3, loop ends<br>
+                    RETURN
+                </div>
+            </div>
+            
+            <p style="margin-top: 20px; color: #fbc02d; font-weight: bold;">... and so on until all branches explored!</p>
+        </div>
+
+
+        <div class="visual-box" style="background: #e8f5e9;">
+            <h4 style="color: #2e7d32;">💻 Complete Code Execution Trace</h4>
+            
+            <div class="call-trace">
+                <p style="font-weight: bold;">▶ backtrack(nums=[1,2,3], current=[], start=0)</p>
+                <p style="margin: 5px 0 5px 20px;">• result.add([]) → result = [[]]</p>
+                <p style="margin: 5px 0 5px 20px;">• Loop i=0: current.add(1) → current=[1]</p>
+                <p style="margin: 5px 0 5px 20px; color: #1976d2;">• Recurse: backtrack(nums, [1], 1)</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 40px;">
+                <p style="font-weight: bold;">▶ backtrack(nums=[1,2,3], current=[1], start=1)</p>
+                <p style="margin: 5px 0 5px 20px;">• result.add([1]) → result = [[], [1]]</p>
+                <p style="margin: 5px 0 5px 20px;">• Loop i=1: current.add(2) → current=[1,2]</p>
+                <p style="margin: 5px 0 5px 20px; color: #1976d2;">• Recurse: backtrack(nums, [1,2], 2)</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 80px;">
+                <p style="font-weight: bold;">▶ backtrack(nums=[1,2,3], current=[1,2], start=2)</p>
+                <p style="margin: 5px 0 5px 20px;">• result.add([1,2]) → result = [[], [1], [1,2]]</p>
+                <p style="margin: 5px 0 5px 20px;">• Loop i=2: current.add(3) → current=[1,2,3]</p>
+                <p style="margin: 5px 0 5px 20px; color: #1976d2;">• Recurse: backtrack(nums, [1,2,3], 3)</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 120px; background: #c8e6c9;">
+                <p style="font-weight: bold;">▶ backtrack(nums=[1,2,3], current=[1,2,3], start=3)</p>
+                <p style="margin: 5px 0 5px 20px;">• result.add([1,2,3]) → result = [[], [1], [1,2], [1,2,3]]</p>
+                <p style="margin: 5px 0 5px 20px; color: #2e7d32;">• Loop: i=3 >= 3, doesn't execute</p>
+                <p style="margin: 5px 0 5px 20px; color: #d32f2f; font-weight: bold;">• RETURN</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 80px; background: #ffebee;">
+                <p style="font-weight: bold;">◀ Back in previous call</p>
+                <p style="margin: 5px 0 5px 20px; color: #c62828;">• current.remove(2) → current=[1,2] → [1]</p>
+                <p style="margin: 5px 0 5px 20px;">• Loop continues: i=3 >= 3, ends</p>
+                <p style="margin: 5px 0 5px 20px; color: #d32f2f; font-weight: bold;">• RETURN</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 40px;">
+                <p style="font-weight: bold;">◀ Back in call with current=[1]</p>
+                <p style="margin: 5px 0 5px 20px; color: #c62828;">• current.remove(1) → current=[1,2] → [1]</p>
+                <p style="margin: 5px 0 5px 20px;">• Loop continues: i=2, current.add(3) → current=[1,3]</p>
+                <p style="margin: 5px 0 5px 20px; color: #1976d2;">• Recurse: backtrack(nums, [1,3], 3)</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 80px; background: #c8e6c9;">
+                <p style="font-weight: bold;">▶ backtrack(nums=[1,2,3], current=[1,3], start=3)</p>
+                <p style="margin: 5px 0 5px 20px;">• result.add([1,3]) → result = [[], [1], [1,2], [1,2,3], [1,3]]</p>
+                <p style="margin: 5px 0 5px 20px; color: #d32f2f; font-weight: bold;">• RETURN</p>
+            </div>
+            
+            <p style="margin-top: 20px; padding: 15px; background: #fff9c4; border-radius: 5px; font-weight: bold;">
+                Pattern continues: backtrack removes 3, returns, removes 1, tries 2, then 3...
+            </p>
+            
+            <div style="margin-top: 20px; padding: 20px; background: #c8e6c9; border-radius: 5px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">✅ Final Result:</p>
+                <p style="font-family: 'Courier New', monospace;">
+                    [[], [1], [1,2], [1,2,3], [1,3], [2], [2,3], [3]]
+                </p>
+            </div>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 7 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Subsets (LC 78) ⭐</strong> - The classic</li>
+                <li><strong>Subsets II (LC 90)</strong> - With duplicates</li>
+                <li><strong>Combinations (LC 77)</strong> - Choose K items</li>
+                <li><strong>Combination Sum III (LC 216)</strong></li>
+                <li><strong>Letter Case Permutation (LC 784)</strong></li>
+            </ol>
+        </div>
+
+        <!-- PATTERN 8: PERMUTATIONS -->
+        <h2>Pattern 8: Permutations (Backtracking)</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 8: Permutations</h3>
+            <p><strong>Problem:</strong> Generate all possible orderings/arrangements</p>
+            <p><strong>Key Difference:</strong> ORDER MATTERS! [1,2] ≠ [2,1]</p>
+            <p><strong>Time:</strong> O(N! × N), Space: O(N)</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 Intuitive Recognition - THE CRITICAL DIFFERENCE</h4>
+            <p><strong>You KNOW it's Permutations when:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ Problem says "all permutations", "all arrangements", "all orderings"</li>
+                <li>✓ <strong>ORDER MATTERS:</strong> [1,2,3] is DIFFERENT from [3,2,1]</li>
+                <li>✓ Keywords: "arrange", "order", "sequence", "lineup"</li>
+                <li>✓ NOT about selecting (that's subsets!), but about ORDERING</li>
+                <li>✓ Result size is N! not 2^N</li>
+            </ul>
+            
+            <p style="margin-top: 15px; padding: 15px; background: #fff9c4; border-radius: 5px;">
+                <strong>Golden Rule:</strong><br>
+                • Subsets: [1,2,3] → 2^3 = 8 subsets ([] to [1,2,3])<br>
+                • Permutations: [1,2,3] → 3! = 6 orderings ([1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1])
+            </p>
+            
+            <p style="margin-top: 15px;"><strong>Quick Test:</strong> Is [A,B,C] different from [C,B,A]?<br>
+            • If YES → Permutations<br>
+            • If NO (same set) → Subsets</p>
+        </div>
+        
+        <h3>Example: Permutations of [1,2,3]</h3>
+        
+        <div class="code-block"><pre><span class="keyword">import</span> java.util.*;
+
+<span class="keyword">public class</span> <span class="type">Solution</span> {
+    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="function">permute</span>(<span class="keyword">int</span>[] nums) {
+        List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+        backtrack(nums, <span class="keyword">new</span> ArrayList&lt;&gt;(), <span class="keyword">new boolean</span>[nums.length], result);
+        <span class="keyword">return</span> result;
+    }
+    
+    <span class="keyword">private void</span> <span class="function">backtrack</span>(<span class="keyword">int</span>[] nums, List&lt;Integer&gt; current, 
+                          <span class="keyword">boolean</span>[] used, List&lt;List&lt;Integer&gt;&gt; result) {
+        <span class="comment">// Base case: permutation complete</span>
+        <span class="keyword">if</span> (current.size() == nums.length) {
+            result.add(<span class="keyword">new</span> ArrayList&lt;&gt;(current));
+            <span class="keyword">return</span>;
+        }
+        
+        <span class="comment">// Try adding each unused number at current position</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; nums.length; i++) {
+            <span class="keyword">if</span> (used[i]) <span class="keyword">continue</span>;  <span class="comment">// Skip if already used</span>
+            
+            <span class="comment">// Choose</span>
+            current.add(nums[i]);
+            used[i] = <span class="keyword">true</span>;
+            
+            <span class="comment">// Explore</span>
+            backtrack(nums, current, used, result);
+            
+            <span class="comment">// Unchoose (Backtrack!)</span>
+            current.remove(current.size() - <span class="number">1</span>);
+            used[i] = <span class="keyword">false</span>;
+        }
+    }
+}</pre></div>
+
+        <div class="tree-visualization">
+            <h4 style="color: #667eea; margin-top: 0;">🌳 Decision Tree: permute([1,2,3])</h4>
+            <p style="margin-bottom: 20px;">At each level, choose ANY unused number:</p>
+            
+            <div style="font-family: monospace; font-size: 13px; line-height: 2.5;">
+                <div style="text-align: center;">
+                    <div class="tree-node" style="background: #f3e5f5; font-size: 14px;">[]</div>
+                    <div style="margin: 5px 0;">used=[F,F,F]</div>
+                    <div>Can choose: 1, 2, 3</div>
+                    <div>↙&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↘</div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 100px; margin: 20px 0;">
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #f3e5f5;">[1]</div>
+                        <div style="margin: 5px 0;">used=[T,F,F]</div>
+                        <div>Can choose: 2, 3</div>
+                        <div>↙&nbsp;&nbsp;&nbsp;&nbsp;↘</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #f3e5f5;">[2]</div>
+                        <div style="margin: 5px 0;">used=[F,T,F]</div>
+                        <div>Can choose: 1, 3</div>
+                        <div>↙&nbsp;&nbsp;&nbsp;&nbsp;↘</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #f3e5f5;">[3]</div>
+                        <div style="margin: 5px 0;">used=[F,F,T]</div>
+                        <div>Can choose: 1, 2</div>
+                        <div>↙&nbsp;&nbsp;&nbsp;&nbsp;↘</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 40px; margin: 20px 0;">
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #e1bee7;">[1,2]</div>
+                        <div>Choose: 3</div>
+                        <div>↓</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #e1bee7;">[1,3]</div>
+                        <div>Choose: 2</div>
+                        <div>↓</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #e1bee7;">[2,1]</div>
+                        <div>Choose: 3</div>
+                        <div>↓</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #e1bee7;">[2,3]</div>
+                        <div>Choose: 1</div>
+                        <div>↓</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #e1bee7;">[3,1]</div>
+                        <div>Choose: 2</div>
+                        <div>↓</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #e1bee7;">[3,2]</div>
+                        <div>Choose: 1</div>
+                        <div>↓</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 40px; margin: 20px 0;">
+                    <div class="tree-node base">[1,2,3]</div>
+                    <div class="tree-node base">[1,3,2]</div>
+                    <div class="tree-node base">[2,1,3]</div>
+                    <div class="tree-node base">[2,3,1]</div>
+                    <div class="tree-node base">[3,1,2]</div>
+                    <div class="tree-node base">[3,2,1]</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: #e8f5e9; border-radius: 5px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">✅ All 6 Permutations (3! = 6):</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">
+                    [1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]
+                </p>
+                <p style="margin-top: 10px;"><strong>Notice:</strong> Each ordering is different!</p>
+            </div>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 8 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Permutations (LC 46) ⭐</strong> - Classic</li>
+                <li><strong>Permutations II (LC 47)</strong> - With duplicates</li>
+                <li><strong>Letter Combinations of a Phone Number (LC 17)</strong></li>
+                <li><strong>Next Permutation (LC 31)</strong></li>
+                <li><strong>Permutation Sequence (LC 60)</strong></li>
+            </ol>
+        </div>
+
+
+        <!-- REMAINING PATTERNS SUMMARY -->
+        <h2>🎯 Remaining Patterns Summary</h2>
+        
+        <!-- PATTERN 3: DIVIDE AND CONQUER -->
+        <h2>Pattern 3: Divide and Conquer</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 3: Divide and Conquer</h3>
+            <p><strong>Definition:</strong> Split problem in half, solve each half recursively, combine results</p>
+            <p><strong>Time:</strong> Often O(N log N) - splits log N times, merges N elements</p>
+            <p><strong>Space:</strong> O(log N) for call stack</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 Intuitive Recognition</h4>
+            <p><strong>You'll know it's Divide & Conquer when:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ Problem says "split in half", "binary search", "merge", "partition"</li>
+                <li>✓ Can break into TWO EQUAL parts (not just smaller by 1)</li>
+                <li>✓ Solution involves: divide → solve both → combine</li>
+                <li>✓ Keywords: "merge sort", "quick sort", "binary search", "divide array"</li>
+                <li>✓ Usually more efficient than processing one by one</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>Think:</strong> "Can I split this in HALF and solve both halves?"</p>
+            <p><strong>Classic Examples:</strong> Merge Sort, Binary Search, Quick Sort</p>
+        </div>
+        
+        <h3>Example: Merge Sort</h3>
+        
+        <div class="code-block"><pre><span class="keyword">public class</span> <span class="type">Solution</span> {
+    <span class="keyword">public void</span> <span class="function">mergeSort</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> left, <span class="keyword">int</span> right) {
+        <span class="comment">// Base case: single element or empty</span>
+        <span class="keyword">if</span> (left >= right) {
+            <span class="keyword">return</span>;
+        }
+        
+        <span class="comment">// Divide: find middle</span>
+        <span class="keyword">int</span> mid = left + (right - left) / <span class="number">2</span>;
+        
+        <span class="comment">// Conquer: sort both halves</span>
+        mergeSort(arr, left, mid);      <span class="comment">// Sort left half</span>
+        mergeSort(arr, mid + <span class="number">1</span>, right);  <span class="comment">// Sort right half</span>
+        
+        <span class="comment">// Combine: merge the sorted halves</span>
+        merge(arr, left, mid, right);
+    }
+    
+    <span class="keyword">private void</span> <span class="function">merge</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> left, <span class="keyword">int</span> mid, <span class="keyword">int</span> right) {
+        <span class="comment">// Create temp arrays</span>
+        <span class="keyword">int</span> n1 = mid - left + <span class="number">1</span>;
+        <span class="keyword">int</span> n2 = right - mid;
+        <span class="keyword">int</span>[] L = <span class="keyword">new int</span>[n1];
+        <span class="keyword">int</span>[] R = <span class="keyword">new int</span>[n2];
+        
+        <span class="comment">// Copy data to temp arrays</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < n1; i++)
+            L[i] = arr[left + i];
+        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j < n2; j++)
+            R[j] = arr[mid + <span class="number">1</span> + j];
+        
+        <span class="comment">// Merge the temp arrays back</span>
+        <span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>, k = left;
+        <span class="keyword">while</span> (i < n1 && j < n2) {
+            <span class="keyword">if</span> (L[i] <= R[j]) {
+                arr[k++] = L[i++];
+            } <span class="keyword">else</span> {
+                arr[k++] = R[j++];
+            }
+        }
+        
+        <span class="comment">// Copy remaining elements</span>
+        <span class="keyword">while</span> (i < n1) arr[k++] = L[i++];
+        <span class="keyword">while</span> (j < n2) arr[k++] = R[j++];
+    }
+}</pre></div>
+
+        <div class="tree-visualization">
+            <h4 style="color: #667eea; margin-top: 0;">🌳 Divide & Conquer Tree: mergeSort([38,27,43,3,9,82,10])</h4>
+            <p style="margin-bottom: 20px;">Notice how we split in HALF each time:</p>
+            
+            <div style="font-family: monospace; font-size: 13px; line-height: 2.5;">
+                <div style="text-align: center;">
+                    <div class="tree-node" style="background: #ffebee; font-size: 14px;">[38,27,43,3,9,82,10]</div>
+                    <div style="margin: 5px 0; color: #666;">Split in half ↓</div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 100px; margin: 20px 0;">
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #ffebee;">[38,27,43,3]</div>
+                        <div style="margin: 5px 0; color: #666;">Split ↓</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #ffebee;">[9,82,10]</div>
+                        <div style="margin: 5px 0; color: #666;">Split ↓</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 50px; margin: 20px 0;">
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #fff9c4;">[38,27]</div>
+                        <div style="margin: 5px 0; color: #666;">Split ↓</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #fff9c4;">[43,3]</div>
+                        <div style="margin: 5px 0; color: #666;">Split ↓</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #fff9c4;">[9,82]</div>
+                        <div style="margin: 5px 0; color: #666;">Split ↓</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node base">[10]</div>
+                        <div style="margin: 5px 0; color: #2e7d32;">Base!</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 25px; margin: 20px 0;">
+                    <div class="tree-node base">[38]</div>
+                    <div class="tree-node base">[27]</div>
+                    <div class="tree-node base">[43]</div>
+                    <div class="tree-node base">[3]</div>
+                    <div class="tree-node base">[9]</div>
+                    <div class="tree-node base">[82]</div>
+                    <div style="opacity: 0;">[10]</div>
+                </div>
+                
+                <div style="margin: 30px 0; padding: 2px; background: #667eea; height: 3px;"></div>
+                <p style="text-align: center; font-weight: bold; color: #667eea; margin: 20px 0;">🔙 MERGE Phase (Combine Sorted Halves)</p>
+                
+                <div style="display: flex; justify-content: center; gap: 25px; margin: 20px 0;">
+                    <div class="tree-node" style="background: #c8e6c9;">[27,38]</div>
+                    <div class="tree-node" style="background: #c8e6c9;">[3,43]</div>
+                    <div class="tree-node" style="background: #c8e6c9;">[9,82]</div>
+                    <div style="opacity: 0;">[10]</div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 100px; margin: 20px 0;">
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #a5d6a7;">[3,27,38,43]</div>
+                        <div style="margin: 5px 0; color: #2e7d32;">Merged!</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #a5d6a7;">[9,10,82]</div>
+                        <div style="margin: 5px 0; color: #2e7d32;">Merged!</div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin: 20px 0;">
+                    <div class="tree-node" style="background: #66bb6a; font-size: 15px; font-weight: bold;">[3,9,10,27,38,43,82]</div>
+                    <div style="margin: 10px 0; color: #2e7d32; font-weight: bold;">✓ FULLY SORTED!</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="visual-box" style="background: #e8f5e9;">
+            <h4 style="color: #2e7d32;">💻 Step-by-Step Execution: mergeSort([38,27,43,3])</h4>
+            
+            <div class="call-trace">
+                <p style="font-weight: bold;">▶ Call 1: mergeSort(arr, left=0, right=3)</p>
+                <p style="margin: 5px 0 5px 20px;">• Array: [38, 27, 43, 3]</p>
+                <p style="margin: 5px 0 5px 20px;">• mid = 0 + (3-0)/2 = 1</p>
+                <p style="margin: 5px 0 5px 20px; color: #1976d2;">• Recurse LEFT: mergeSort(arr, 0, 1)</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 40px;">
+                <p style="font-weight: bold;">▶ Call 2: mergeSort(arr, left=0, right=1)</p>
+                <p style="margin: 5px 0 5px 20px;">• Subarray: [38, 27]</p>
+                <p style="margin: 5px 0 5px 20px;">• mid = 0 + (1-0)/2 = 0</p>
+                <p style="margin: 5px 0 5px 20px; color: #1976d2;">• Recurse LEFT: mergeSort(arr, 0, 0)</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 80px; background: #c8e6c9;">
+                <p style="font-weight: bold;">▶ Call 3: mergeSort(arr, left=0, right=0)</p>
+                <p style="margin: 5px 0 5px 20px; color: #2e7d32;">• Subarray: [38]</p>
+                <p style="margin: 5px 0 5px 20px; color: #2e7d32;">• Check: 0 >= 0? YES - BASE CASE!</p>
+                <p style="margin: 5px 0 5px 20px; color: #2e7d32; font-weight: bold;">• RETURN (already sorted)</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 40px;">
+                <p style="font-weight: bold;">◀ Back in Call 2</p>
+                <p style="margin: 5px 0 5px 20px; color: #1976d2;">• Recurse RIGHT: mergeSort(arr, 1, 1)</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 80px; background: #c8e6c9;">
+                <p style="font-weight: bold;">▶ Call 4: mergeSort(arr, left=1, right=1)</p>
+                <p style="margin: 5px 0 5px 20px; color: #2e7d32;">• Subarray: [27]</p>
+                <p style="margin: 5px 0 5px 20px; color: #2e7d32;">• Check: 1 >= 1? YES - BASE CASE!</p>
+                <p style="margin: 5px 0 5px 20px; color: #2e7d32; font-weight: bold;">• RETURN</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 40px; background: #fff9c4;">
+                <p style="font-weight: bold;">◀ Back in Call 2 - MERGE TIME!</p>
+                <p style="margin: 5px 0 5px 20px;">• Left half: [38] (sorted)</p>
+                <p style="margin: 5px 0 5px 20px;">• Right half: [27] (sorted)</p>
+                <p style="margin: 5px 0 5px 20px; color: #f57c00; font-weight: bold;">• merge(arr, 0, 0, 1)</p>
+                <p style="margin: 5px 0 5px 20px;">• Compare: 38 vs 27 → take 27</p>
+                <p style="margin: 5px 0 5px 20px;">• Then take 38</p>
+                <p style="margin: 5px 0 5px 20px; color: #2e7d32; font-weight: bold;">• Result: [27, 38]</p>
+            </div>
+            
+            <div class="call-trace">
+                <p style="font-weight: bold;">◀ Back in Call 1</p>
+                <p style="margin: 5px 0 5px 20px;">• Left half sorted: [27, 38]</p>
+                <p style="margin: 5px 0 5px 20px; color: #1976d2;">• Now recurse RIGHT: mergeSort(arr, 2, 3)</p>
+            </div>
+            
+            <div class="call-trace" style="margin-left: 40px;">
+                <p style="font-weight: bold;">▶ Call 5: mergeSort(arr, left=2, right=3)</p>
+                <p style="margin: 5px 0 5px 20px;">• Subarray: [43, 3]</p>
+                <p style="margin: 5px 0 5px 20px;">• After recursion, merges to: [3, 43]</p>
+            </div>
+            
+            <div class="call-trace" style="background: #fff9c4;">
+                <p style="font-weight: bold;">◀ Final MERGE in Call 1</p>
+                <p style="margin: 5px 0 5px 20px;">• Left half: [27, 38]</p>
+                <p style="margin: 5px 0 5px 20px;">• Right half: [3, 43]</p>
+                <p style="margin: 5px 0 5px 20px; color: #f57c00; font-weight: bold;">• merge(arr, 0, 1, 3)</p>
+                <p style="margin: 5px 0 5px 20px;">• Compare: 27 vs 3 → take 3</p>
+                <p style="margin: 5px 0 5px 20px;">• Compare: 27 vs 43 → take 27</p>
+                <p style="margin: 5px 0 5px 20px;">• Compare: 38 vs 43 → take 38</p>
+                <p style="margin: 5px 0 5px 20px;">• Take remaining: 43</p>
+                <p style="margin: 5px 0 5px 20px; color: #2e7d32; font-weight: bold; font-size: 1.1em;">• FINAL: [3, 27, 38, 43] ✓</p>
+            </div>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 3 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Sort an Array (LC 912)</strong> - Merge sort</li>
+                <li><strong>Kth Largest Element (LC 215)</strong> - Quick select</li>
+                <li><strong>Merge k Sorted Lists (LC 23)</strong></li>
+                <li><strong>Count of Smaller Numbers After Self (LC 315)</strong></li>
+                <li><strong>Maximum Subarray (LC 53)</strong> - D&C approach</li>
+            </ol>
+        </div>
+        
+        <div class="pattern-card">
+            <h3>Pattern 4: Tail Recursion</h3>
+            <p><strong>Recognition:</strong> Recursive call is LAST operation (can optimize to loop)</p>
+            <p><strong>Key:</strong> Pass accumulated result as parameter</p>
+            <p><strong>Examples:</strong> Factorial with accumulator, Reverse list tail-recursive</p>
+        </div>
+        
+        <div class="pattern-card">
+            <h3>Pattern 5: Tree/Graph Recursion (DFS)</h3>
+            <p><strong>Recognition:</strong> "Binary tree", "graph traversal", "DFS", "path in tree"</p>
+            <p><strong>Template:</strong> Process node → Recurse left → Recurse right</p>
+            <p><strong>Examples:</strong> Max Depth (LC 104), Path Sum (LC 112), Inorder Traversal (LC 94)</p>
+        </div>
+        
+        <div class="pattern-card">
+            <h3>Pattern 6: Memoization (Top-Down DP)</h3>
+            <p><strong>Recognition:</strong> Repeated subproblems (like Fibonacci)</p>
+            <p><strong>Solution:</strong> Cache results in HashMap/array</p>
+            <p><strong>Examples:</strong> Fibonacci (LC 509), Climbing Stairs (LC 70), House Robber (LC 198)</p>
+            <div class="code-block" style="margin-top: 15px;"><pre><span class="keyword">private</span> Map&lt;Integer, Integer&gt; memo = <span class="keyword">new</span> HashMap&lt;&gt;();
+
+<span class="keyword">public int</span> <span class="function">fib</span>(<span class="keyword">int</span> n) {
+    <span class="keyword">if</span> (n <= <span class="number">1</span>) <span class="keyword">return</span> n;
+    <span class="keyword">if</span> (memo.containsKey(n)) <span class="keyword">return</span> memo.get(n);  <span class="comment">// Check cache!</span>
+    
+    <span class="keyword">int</span> result = fib(n-<span class="number">1</span>) + fib(n-<span class="number">2</span>);
+    memo.put(n, result);  <span class="comment">// Cache it!</span>
+    <span class="keyword">return</span> result;
+}</pre></div>
+        </div>
+        
+        <!-- PATTERN 9: COMBINATION SUM -->
+        <h2>Pattern 9: Combination Sum (Backtracking)</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 9: Combination Sum</h3>
+            <p><strong>Problem:</strong> Find all combinations that sum to a target value</p>
+            <p><strong>Key:</strong> Subsets + constraint (must equal target)</p>
+            <p><strong>Time:</strong> O(2^N), Space: O(target/min_value)</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 Intuitive Recognition</h4>
+            <p><strong>You'll know it's Combination Sum when:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ "Find combinations that sum to target"</li>
+                <li>✓ "Coin change - all ways to make amount"</li>
+                <li>✓ "Subset sum equals K"</li>
+                <li>✓ Keywords: "sum to target", "add up to", "combinations with sum"</li>
+                <li>✓ Usually can reuse elements (check problem!)</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>Think:</strong> "It's like Subsets, but I only keep ones that sum to target"</p>
+        </div>
+        
+        <h3>Example: Combination Sum (can reuse elements)</h3>
+        
+        <div class="code-block"><pre><span class="keyword">import</span> java.util.*;
+
+<span class="keyword">public class</span> <span class="type">Solution</span> {
+    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="function">combinationSum</span>(<span class="keyword">int</span>[] candidates, <span class="keyword">int</span> target) {
+        List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+        Arrays.sort(candidates);  <span class="comment">// Optional: helps with pruning</span>
+        backtrack(candidates, target, <span class="number">0</span>, <span class="keyword">new</span> ArrayList&lt;&gt;(), result);
+        <span class="keyword">return</span> result;
+    }
+    
+    <span class="keyword">private void</span> <span class="function">backtrack</span>(<span class="keyword">int</span>[] candidates, <span class="keyword">int</span> remaining,
+                          <span class="keyword">int</span> start, List&lt;Integer&gt; current,
+                          List&lt;List&lt;Integer&gt;&gt; result) {
+        <span class="comment">// Base case: found valid combination!</span>
+        <span class="keyword">if</span> (remaining == <span class="number">0</span>) {
+            result.add(<span class="keyword">new</span> ArrayList&lt;&gt;(current));
+            <span class="keyword">return</span>;
+        }
+        
+        <span class="comment">// Pruning: if remaining becomes negative, stop</span>
+        <span class="keyword">if</span> (remaining < <span class="number">0</span>) {
+            <span class="keyword">return</span>;
+        }
+        
+        <span class="comment">// Try each candidate</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i < candidates.length; i++) {
+            current.add(candidates[i]);                    <span class="comment">// Choose</span>
+            <span class="comment">// NOTE: use 'i' not 'i+1' because we can reuse same element!</span>
+            backtrack(candidates, remaining - candidates[i], i, current, result);
+            current.remove(current.size() - <span class="number">1</span>);          <span class="comment">// Unchoose</span>
+        }
+    }
+}</pre></div>
+
+        <div class="tree-visualization">
+            <h4 style="color: #667eea; margin-top: 0;">🌳 Decision Tree: combinationSum([2,3,6,7], target=7)</h4>
+            <p style="margin-bottom: 20px;">Each branch explores adding a number, tracking remaining sum:</p>
+            
+            <div style="font-family: monospace; font-size: 12px; line-height: 2.5;">
+                <div style="text-align: center;">
+                    <div class="tree-node" style="background: #e3f2fd;">[]</div>
+                    <div style="margin: 5px 0;">remaining=7</div>
+                    <div>Try: 2, 3, 6, 7</div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 60px; margin: 20px 0;">
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #e3f2fd;">[2]</div>
+                        <div style="margin: 5px 0;">rem=5</div>
+                        <div>Try: 2,3,6,7</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #e3f2fd;">[3]</div>
+                        <div style="margin: 5px 0;">rem=4</div>
+                        <div>Try: 3,6,7</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node" style="background: #e3f2fd;">[6]</div>
+                        <div style="margin: 5px 0;">rem=1</div>
+                        <div>Try: 6,7</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="tree-node base">[7]</div>
+                        <div style="margin: 5px 0; color: #2e7d32; font-weight: bold;">rem=0 ✓</div>
+                    </div>
+                </div>
+                
+                <div style="margin-left: 50px;">
+                    <p style="font-weight: bold; margin: 10px 0;">From [2] (rem=5):</p>
+                    <div style="display: flex; gap: 40px; margin: 10px 0;">
+                        <div style="text-align: center;">
+                            <div class="tree-node" style="background: #fff9c4;">[2,2]</div>
+                            <div>rem=3</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div class="tree-node" style="background: #fff9c4;">[2,3]</div>
+                            <div>rem=2</div>
+                        </div>
+                    </div>
+                    
+                    <p style="font-weight: bold; margin: 10px 0;">From [2,2] (rem=3):</p>
+                    <div style="display: flex; gap: 40px; margin: 10px 0;">
+                        <div style="text-align: center;">
+                            <div class="tree-node" style="background: #ffebee;">[2,2,2]</div>
+                            <div>rem=1</div>
+                            <div style="color: #c62828;">Can't reach 0!</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div class="tree-node base">[2,2,3]</div>
+                            <div style="color: #2e7d32; font-weight: bold;">rem=0 ✓</div>
+                        </div>
+                    </div>
+                    
+                    <p style="font-weight: bold; margin: 10px 0;">From [2,3] (rem=2):</p>
+                    <div style="display: flex; gap: 40px; margin: 10px 0;">
+                        <div style="text-align: center;">
+                            <div class="tree-node base">[2,3,2]</div>
+                            <div style="color: #2e7d32; font-weight: bold;">rem=0 ✓</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: #e8f5e9; border-radius: 5px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">✅ All Valid Combinations That Sum to 7:</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">[2,2,3], [2,3,2], [7]</p>
+                <p style="margin-top: 10px;"><strong>Note:</strong> [2,2,3] and [2,3,2] are actually same combination!</p>
+                <p>To avoid duplicates, only move forward in array (use i+1 instead of i)</p>
+            </div>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 9 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Combination Sum (LC 39) ⭐</strong> - Can reuse</li>
+                <li><strong>Combination Sum II (LC 40)</strong> - Each element once</li>
+                <li><strong>Combination Sum III (LC 216)</strong> - K numbers sum to N</li>
+                <li><strong>Target Sum (LC 494)</strong></li>
+                <li><strong>Coin Change 2 (LC 518)</strong> - Count ways</li>
+            </ol>
+        </div>
+        
+        <div class="pattern-card">
+            <h3>Pattern 10: N-Queens / Constraint Satisfaction</h3>
+            <p><strong>Recognition:</strong> "Place N items with rules", "valid placement", "Sudoku"</p>
+            <p><strong>Key:</strong> Check if placement is valid before recursing</p>
+            <p><strong>Examples:</strong> N-Queens (LC 51), Sudoku Solver (LC 37)</p>
+            <p><strong>Template:</strong> For each position → Check if valid → Place → Recurse → Remove</p>
+        </div>
+        
+        <!-- PATTERN 11: GRID BACKTRACKING -->
+        <h2>Pattern 11: Grid Backtracking</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 11: Grid Backtracking (2D Exploration)</h3>
+            <p><strong>Problem:</strong> Explore 2D grid trying all paths (word search, maze)</p>
+            <p><strong>Key:</strong> Mark visited, explore 4 directions, unmark when backtracking</p>
+            <p><strong>Time:</strong> O(4^N) where N is path length, Space: O(N) recursion</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 Intuitive Recognition</h4>
+            <p><strong>You'll know it's Grid Backtracking when:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ "Word search in 2D grid/board"</li>
+                <li>✓ "Find path in maze"</li>
+                <li>✓ "Explore matrix in 4 directions"</li>
+                <li>✓ Problem gives you a 2D char[][] or int[][] grid</li>
+                <li>✓ Keywords: "grid", "board", "matrix", "up/down/left/right"</li>
+                <li>✓ Need to track visited cells</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>Think:</strong> "Do I explore a 2D grid trying different paths?"</p>
+        </div>
+        
+        <h3>Example: Word Search</h3>
+        
+        <div class="code-block"><pre><span class="keyword">public class</span> <span class="type">Solution</span> {
+    <span class="keyword">public boolean</span> <span class="function">exist</span>(<span class="keyword">char</span>[][] board, String word) {
+        <span class="keyword">int</span> rows = board.length;
+        <span class="keyword">int</span> cols = board[<span class="number">0</span>].length;
+        
+        <span class="comment">// Try starting from each cell</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < rows; i++) {
+            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j < cols; j++) {
+                <span class="keyword">if</span> (backtrack(board, word, i, j, <span class="number">0</span>)) {
+                    <span class="keyword">return true</span>;
+                }
+            }
+        }
+        <span class="keyword">return false</span>;
+    }
+    
+    <span class="keyword">private boolean</span> <span class="function">backtrack</span>(<span class="keyword">char</span>[][] board, String word,
+                              <span class="keyword">int</span> row, <span class="keyword">int</span> col, <span class="keyword">int</span> index) {
+        <span class="comment">// Base case: found the word!</span>
+        <span class="keyword">if</span> (index == word.length()) {
+            <span class="keyword">return true</span>;
+        }
+        
+        <span class="comment">// Boundary checks and character match</span>
+        <span class="keyword">if</span> (row < <span class="number">0</span> || row >= board.length || 
+            col < <span class="number">0</span> || col >= board[<span class="number">0</span>].length ||
+            board[row][col] != word.charAt(index)) {
+            <span class="keyword">return false</span>;
+        }
+        
+        <span class="comment">// Mark as visited (choose)</span>
+        <span class="keyword">char</span> temp = board[row][col];
+        board[row][col] = <span class="string">'#'</span>;  <span class="comment">// Mark visited</span>
+        
+        <span class="comment">// Explore 4 directions (explore)</span>
+        <span class="keyword">boolean</span> found = 
+            backtrack(board, word, row + <span class="number">1</span>, col, index + <span class="number">1</span>) ||  <span class="comment">// Down</span>
+            backtrack(board, word, row - <span class="number">1</span>, col, index + <span class="number">1</span>) ||  <span class="comment">// Up</span>
+            backtrack(board, word, row, col + <span class="number">1</span>, index + <span class="number">1</span>) ||  <span class="comment">// Right</span>
+            backtrack(board, word, row, col - <span class="number">1</span>, index + <span class="number">1</span>);    <span class="comment">// Left</span>
+        
+        <span class="comment">// Unmark (unchoose/backtrack)</span>
+        board[row][col] = temp;
+        
+        <span class="keyword">return</span> found;
+    }
+}</pre></div>
+
+        <div class="tree-visualization">
+            <h4 style="color: #667eea; margin-top: 0;">🌳 Complete Grid Exploration: Finding "ABCE"</h4>
+            
+            <div style="margin: 20px 0;">
+                <p><strong>Original Grid:</strong></p>
+                <table style="width: auto; margin: 10px auto; font-family: monospace; border-collapse: separate; border-spacing: 5px;">
+                    <tr>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; font-weight: bold; text-align: center;">A</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">B</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                    </tr>
+                </table>
+                <p style="text-align: center; margin: 10px 0; font-weight: bold;">Target Word: "ABCE"</p>
+            </div>
+            
+            <div style="font-family: monospace; font-size: 13px; line-height: 2;">
+                
+                <!-- STEP 1 -->
+                <div style="background: #fff9c4; padding: 20px; margin: 20px 0; border-radius: 8px; border: 3px solid #fbc02d;">
+                    <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 15px;">
+                        📍 STEP 1: Start at (0,0) = 'A', looking for word[0] = 'A'
+                    </p>
+                    
+                    <div style="display: flex; gap: 40px; align-items: center; justify-content: center;">
+                        <div>
+                            <p style="font-weight: bold; margin-bottom: 10px;">Grid State:</p>
+                            <table style="border-collapse: separate; border-spacing: 5px;">
+                                <tr>
+                                    <td style="padding: 15px; background: #ffeb3b; border: 4px solid #f57c00; font-weight: bold; text-align: center;">A</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">B</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                                </tr>
+                            </table>
+                            <p style="margin-top: 10px; text-align: center;">🟡 Current position</p>
+                        </div>
+                        
+                        <div style="background: #fff; padding: 15px; border-radius: 5px; border: 2px solid #f57c00;">
+                            <p style="margin: 5px 0;"><strong>Position:</strong> (0, 0)</p>
+                            <p style="margin: 5px 0;"><strong>Cell value:</strong> 'A'</p>
+                            <p style="margin: 5px 0;"><strong>Looking for:</strong> word[0] = 'A'</p>
+                            <p style="margin: 5px 0; color: #2e7d32; font-weight: bold;">✓ MATCH!</p>
+                            <p style="margin: 5px 0;"><strong>Action:</strong> Mark (0,0) as visited</p>
+                            <p style="margin: 5px 0;"><strong>Next:</strong> Explore 4 directions for 'B'</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 15px; padding: 10px; background: #fff; border-radius: 5px;">
+                        <p style="font-weight: bold;">After marking visited:</p>
+                        <table style="margin: 10px auto; border-collapse: separate; border-spacing: 5px;">
+                            <tr>
+                                <td style="padding: 15px; background: #9e9e9e; border: 4px solid #f57c00; font-weight: bold; text-align: center; color: white;">#</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">B</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            </tr>
+                        </table>
+                        <p style="text-align: center; margin-top: 5px;">⚫ '#' = visited (can't reuse)</p>
+                    </div>
+                    
+                    <div style="margin-top: 15px; padding: 10px; background: #e7f3ff; border-radius: 5px;">
+                        <p style="font-weight: bold;">Try 4 directions from (0,0):</p>
+                        <p style="margin: 5px 0;">• ⬇️ Down (1,0) = 'S' ≠ 'B' ❌</p>
+                        <p style="margin: 5px 0;">• ⬆️ Up (-1,0) = out of bounds ❌</p>
+                        <p style="margin: 5px 0;">• ➡️ Right (0,1) = 'B' = 'B' ✓ Continue here!</p>
+                        <p style="margin: 5px 0;">• ⬅️ Left (0,-1) = out of bounds ❌</p>
+                    </div>
+                </div>
+                
+                <!-- STEP 2 -->
+                <div style="background: #e8f5e9; padding: 20px; margin: 20px 0; border-radius: 8px; border: 3px solid #4caf50;">
+                    <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 15px;">
+                        📍 STEP 2: Move Right to (0,1) = 'B', looking for word[1] = 'B'
+                    </p>
+                    
+                    <div style="display: flex; gap: 40px; align-items: center; justify-content: center;">
+                        <div>
+                            <p style="font-weight: bold; margin-bottom: 10px;">Grid State:</p>
+                            <table style="border-collapse: separate; border-spacing: 5px;">
+                                <tr>
+                                    <td style="padding: 15px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                                    <td style="padding: 15px; background: #ffeb3b; border: 4px solid #f57c00; font-weight: bold; text-align: center;">B</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                                </tr>
+                            </table>
+                            <p style="margin-top: 10px; text-align: center;">🟡 Current | ⚫ Visited</p>
+                        </div>
+                        
+                        <div style="background: #fff; padding: 15px; border-radius: 5px; border: 2px solid #4caf50;">
+                            <p style="margin: 5px 0;"><strong>Position:</strong> (0, 1)</p>
+                            <p style="margin: 5px 0;"><strong>Cell value:</strong> 'B'</p>
+                            <p style="margin: 5px 0;"><strong>Looking for:</strong> word[1] = 'B'</p>
+                            <p style="margin: 5px 0; color: #2e7d32; font-weight: bold;">✓ MATCH!</p>
+                            <p style="margin: 5px 0;"><strong>Path so far:</strong> A → B</p>
+                            <p style="margin: 5px 0;"><strong>Action:</strong> Mark (0,1) as visited</p>
+                            <p style="margin: 5px 0;"><strong>Next:</strong> Explore 4 directions for 'C'</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 15px; padding: 10px; background: #fff; border-radius: 5px;">
+                        <p style="font-weight: bold;">After marking visited:</p>
+                        <table style="margin: 10px auto; border-collapse: separate; border-spacing: 5px;">
+                            <tr>
+                                <td style="padding: 15px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                                <td style="padding: 15px; background: #9e9e9e; border: 4px solid #f57c00; font-weight: bold; text-align: center; color: white;">#</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div style="margin-top: 15px; padding: 10px; background: #e7f3ff; border-radius: 5px;">
+                        <p style="font-weight: bold;">Try 4 directions from (0,1):</p>
+                        <p style="margin: 5px 0;">• ⬇️ Down (1,1) = 'F' ≠ 'C' ❌</p>
+                        <p style="margin: 5px 0;">• ⬆️ Up (-1,1) = out of bounds ❌</p>
+                        <p style="margin: 5px 0;">• ➡️ Right (0,2) = 'C' = 'C' ✓ Continue here!</p>
+                        <p style="margin: 5px 0;">• ⬅️ Left (0,0) = '#' (visited) ❌</p>
+                    </div>
+                </div>
+                
+                <!-- STEP 3 -->
+                <div style="background: #fff9c4; padding: 20px; margin: 20px 0; border-radius: 8px; border: 3px solid #fbc02d;">
+                    <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 15px;">
+                        📍 STEP 3: Move Right to (0,2) = 'C', looking for word[2] = 'C'
+                    </p>
+                    
+                    <div style="display: flex; gap: 40px; align-items: center; justify-content: center;">
+                        <div>
+                            <p style="font-weight: bold; margin-bottom: 10px;">Grid State:</p>
+                            <table style="border-collapse: separate; border-spacing: 5px;">
+                                <tr>
+                                    <td style="padding: 15px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                                    <td style="padding: 15px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                                    <td style="padding: 15px; background: #ffeb3b; border: 4px solid #f57c00; font-weight: bold; text-align: center;">C</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div style="background: #fff; padding: 15px; border-radius: 5px; border: 2px solid #fbc02d;">
+                            <p style="margin: 5px 0;"><strong>Position:</strong> (0, 2)</p>
+                            <p style="margin: 5px 0;"><strong>Cell value:</strong> 'C'</p>
+                            <p style="margin: 5px 0;"><strong>Looking for:</strong> word[2] = 'C'</p>
+                            <p style="margin: 5px 0; color: #2e7d32; font-weight: bold;">✓ MATCH!</p>
+                            <p style="margin: 5px 0;"><strong>Path so far:</strong> A → B → C</p>
+                            <p style="margin: 5px 0;"><strong>Action:</strong> Mark (0,2) as visited</p>
+                            <p style="margin: 5px 0;"><strong>Next:</strong> Explore 4 directions for 'E'</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 15px; padding: 10px; background: #fff; border-radius: 5px;">
+                        <p style="font-weight: bold;">After marking visited:</p>
+                        <table style="margin: 10px auto; border-collapse: separate; border-spacing: 5px;">
+                            <tr>
+                                <td style="padding: 15px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                                <td style="padding: 15px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                                <td style="padding: 15px; background: #9e9e9e; border: 4px solid #f57c00; font-weight: bold; text-align: center; color: white;">#</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div style="margin-top: 15px; padding: 10px; background: #e7f3ff; border-radius: 5px;">
+                        <p style="font-weight: bold;">Try 4 directions from (0,2):</p>
+                        <p style="margin: 5px 0;">• ⬇️ Down (1,2) = 'C' ≠ 'E' ❌</p>
+                        <p style="margin: 5px 0;">• ⬆️ Up (-1,2) = out of bounds ❌</p>
+                        <p style="margin: 5px 0;">• ➡️ Right (0,3) = 'E' = 'E' ✓ Continue here!</p>
+                        <p style="margin: 5px 0;">• ⬅️ Left (0,1) = '#' (visited) ❌</p>
+                    </div>
+                </div>
+                
+                <!-- STEP 4 - SUCCESS! -->
+                <div style="background: #c8e6c9; padding: 20px; margin: 20px 0; border-radius: 8px; border: 3px solid #2e7d32;">
+                    <p style="font-weight: bold; font-size: 1.2em; margin-bottom: 15px; color: #2e7d32;">
+                        🎉 STEP 4: Move Right to (0,3) = 'E', looking for word[3] = 'E' - SUCCESS!
+                    </p>
+                    
+                    <div style="display: flex; gap: 40px; align-items: center; justify-content: center;">
+                        <div>
+                            <p style="font-weight: bold; margin-bottom: 10px;">Final Grid State:</p>
+                            <table style="border-collapse: separate; border-spacing: 5px;">
+                                <tr>
+                                    <td style="padding: 15px; background: #66bb6a; border: 3px solid #2e7d32; font-weight: bold; text-align: center; color: white;">A<br>①</td>
+                                    <td style="padding: 15px; background: #66bb6a; border: 3px solid #2e7d32; font-weight: bold; text-align: center; color: white;">B<br>②</td>
+                                    <td style="padding: 15px; background: #66bb6a; border: 3px solid #2e7d32; font-weight: bold; text-align: center; color: white;">C<br>③</td>
+                                    <td style="padding: 15px; background: #66bb6a; border: 3px solid #2e7d32; font-weight: bold; text-align: center; color: white;">E<br>④</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                                    <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                                </tr>
+                            </table>
+                            <p style="margin-top: 10px; text-align: center; color: #2e7d32; font-weight: bold;">🟢 Complete path found!</p>
+                        </div>
+                        
+                        <div style="background: #fff; padding: 15px; border-radius: 5px; border: 2px solid #2e7d32;">
+                            <p style="margin: 5px 0;"><strong>Position:</strong> (0, 3)</p>
+                            <p style="margin: 5px 0;"><strong>Cell value:</strong> 'E'</p>
+                            <p style="margin: 5px 0;"><strong>Looking for:</strong> word[3] = 'E'</p>
+                            <p style="margin: 5px 0; color: #2e7d32; font-weight: bold;">✓ MATCH!</p>
+                            <p style="margin: 5px 0;"><strong>Index:</strong> 4 == word.length()</p>
+                            <p style="margin: 5px 0; color: #2e7d32; font-weight: bold; font-size: 1.1em;">🎉 WORD FOUND!</p>
+                            <p style="margin: 10px 0 5px 0;"><strong>Complete path:</strong></p>
+                            <p style="margin: 5px 0;">(0,0)→(0,1)→(0,2)→(0,3)</p>
+                            <p style="margin: 5px 0;">A → B → C → E</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: #fff; border-radius: 5px; border: 2px solid #2e7d32;">
+                        <p style="font-weight: bold; margin-bottom: 10px;">✅ Recursion Stack Unwinds:</p>
+                        <p style="margin: 5px 0;">• (0,3) returns TRUE</p>
+                        <p style="margin: 5px 0;">• (0,2) restores 'C' and returns TRUE</p>
+                        <p style="margin: 5px 0;">• (0,1) restores 'B' and returns TRUE</p>
+                        <p style="margin: 5px 0;">• (0,0) restores 'A' and returns TRUE</p>
+                        <p style="margin: 10px 0 5px 0; font-weight: bold; color: #2e7d32;">Final result: TRUE (word exists!)</p>
+                    </div>
+                </div>
+                
+                <!-- WHAT IF IT FAILED? -->
+                <div style="background: #ffebee; padding: 20px; margin: 20px 0; border-radius: 8px; border: 3px solid #f44336;">
+                    <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 15px; color: #c62828;">
+                        ❌ What if a path FAILS? Example: Looking for "SEE"
+                    </p>
+                    
+                    <div style="background: #fff; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                        <p style="font-weight: bold; margin-bottom: 10px;">Scenario: Start at (1,0) = 'S'</p>
+                        
+                        <table style="margin: 10px auto; border-collapse: separate; border-spacing: 5px;">
+                            <tr>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">B</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px; background: #ffeb3b; border: 4px solid #f57c00; font-weight: bold; text-align: center;">S</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                                <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            </tr>
+                        </table>
+                        
+                        <p style="margin: 10px 0;"><strong>Step 1:</strong> At (1,0)='S', match! Mark visited, look for 'E'</p>
+                        <p style="margin: 5px 0;">Try 4 directions: A, F, A (none are 'E')</p>
+                        <p style="margin: 10px 0; color: #c62828; font-weight: bold;">❌ No valid neighbor! Return FALSE</p>
+                        <p style="margin: 10px 0;"><strong>Backtrack:</strong> Restore (1,0) from '#' back to 'S'</p>
+                        <p style="margin: 5px 0;">Continue trying other starting positions...</p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+        <div class="visual-box" style="background: #e3f2fd;">
+            <h4 style="color: #1976d2;">🔑 Key Backtracking Concepts in Grid Problems</h4>
+            
+            <div style="background: #fff; padding: 15px; margin: 10px 0; border-radius: 5px; border-left: 5px solid #2196f3;">
+                <p style="font-weight: bold; margin-bottom: 10px;">1. Marking Visited Cells</p>
+                <p style="margin: 5px 0;"><strong>Why?</strong> Prevent revisiting same cell in current path</p>
+                <p style="margin: 5px 0;"><strong>How?</strong> Change cell value to '#' or use boolean visited[][]</p>
+                <p style="margin: 5px 0;"><strong>Critical:</strong> Must RESTORE when backtracking!</p>
+                <div class="code-block" style="margin: 10px 0;"><pre><span class="keyword">char</span> temp = board[row][col];  <span class="comment">// Save original</span>
+board[row][col] = <span class="string">'#'</span>;          <span class="comment">// Mark visited</span>
+<span class="comment">// ... explore ...</span>
+board[row][col] = temp;          <span class="comment">// RESTORE (backtrack!)</span></pre></div>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; margin: 10px 0; border-radius: 5px; border-left: 5px solid #2196f3;">
+                <p style="font-weight: bold; margin-bottom: 10px;">2. Exploring 4 Directions</p>
+                <p style="margin: 5px 0;">Standard pattern for grid navigation:</p>
+                <div class="code-block" style="margin: 10px 0;"><pre><span class="keyword">int</span>[][] dirs = {{<span class="number">1</span>,<span class="number">0</span>}, {-<span class="number">1</span>,<span class="number">0</span>}, {<span class="number">0</span>,<span class="number">1</span>}, {<span class="number">0</span>,-<span class="number">1</span>}};  <span class="comment">// Down, Up, Right, Left</span>
+
+<span class="keyword">for</span> (<span class="keyword">int</span>[] dir : dirs) {
+    <span class="keyword">int</span> newRow = row + dir[<span class="number">0</span>];
+    <span class="keyword">int</span> newCol = col + dir[<span class="number">1</span>];
+    backtrack(board, newRow, newCol, ...);
+}</pre></div>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; margin: 10px 0; border-radius: 5px; border-left: 5px solid #2196f3;">
+                <p style="font-weight: bold; margin-bottom: 10px;">3. Boundary Checking</p>
+                <p style="margin: 5px 0;">Always check before accessing grid:</p>
+                <div class="code-block" style="margin: 10px 0;"><pre><span class="keyword">if</span> (row < <span class="number">0</span> || row >= board.length || 
+    col < <span class="number">0</span> || col >= board[<span class="number">0</span>].length) {
+    <span class="keyword">return false</span>;  <span class="comment">// Out of bounds</span>
+}</pre></div>
+            </div>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 11 <span class="difficulty medium">Medium-Hard</span></h4>
+            <ol>
+                <li><strong>Word Search (LC 79) ⭐</strong> - Classic grid backtracking</li>
+                <li><strong>Number of Islands (LC 200)</strong> - DFS in grid</li>
+                <li><strong>Surrounded Regions (LC 130)</strong></li>
+                <li><strong>Pacific Atlantic Water Flow (LC 417)</strong></li>
+                <li><strong>Word Search II (LC 212)</strong> - Multiple words (Hard)</li>
+            </ol>
+        </div>
+        
+        <div class="pattern-card">
+            <h3>Pattern 12: Palindrome Partitioning</h3>
+            <p><strong>Recognition:</strong> "Split string into palindromes", "partition with constraint"</p>
+            <p><strong>Key:</strong> Try all possible splits, check each part is valid</p>
+            <p><strong>Examples:</strong> Palindrome Partitioning (LC 131), Restore IP Addresses (LC 93)</p>
+            <p><strong>Template:</strong> For each position → Try split here if valid → Recurse on rest</p>
+        </div>
+
+        <h2>🚫 Common Mistakes</h2>
+        
+        <div class="warning-box">
+            <h4>Mistake 1: Missing Base Case</h4>
+            <p><strong>Problem:</strong> Infinite recursion, stack overflow</p>
+            <p><strong>Fix:</strong> ALWAYS have at least one base case that stops recursion</p>
+        </div>
+        
+        <div class="warning-box">
+            <h4>Mistake 2: Not Making Progress</h4>
+            <p><strong>Problem:</strong> Recursive call doesn't move toward base case</p>
+            <p><strong>Fix:</strong> Ensure n decreases, index increases, or problem gets simpler</p>
+        </div>
+        
+        <div class="warning-box">
+            <h4>Mistake 3: Forgetting to Backtrack</h4>
+            <div class="code-block"><pre><span class="comment">// ❌ Wrong</span>
+current.add(element);
+backtrack(current);
+<span class="comment">// Missing: current.remove(current.size() - 1);</span>
+
+<span class="comment">// ✅ Correct</span>
+current.add(element);
+backtrack(current);
+current.remove(current.size() - <span class="number">1</span>);  <span class="comment">// Undo!</span></pre></div>
+        </div>
+        
+        <div class="warning-box">
+            <h4>Mistake 4: Adding Reference Instead of Copy</h4>
+            <div class="code-block"><pre><span class="comment">// ❌ Wrong - all results point to same list!</span>
+result.add(current);
+
+<span class="comment">// ✅ Correct - add a copy</span>
+result.add(<span class="keyword">new</span> ArrayList&lt;&gt;(current));</pre></div>
+        </div>
+        
+        <h2>📚 Complete Problem List (70+ Problems)</h2>
+        
+        <h3>Recursion - Easy (12)</h3>
+        <div class="problem-box">
+            <ol style="column-count: 2; column-gap: 40px;">
+                <li>Fibonacci Number (LC 509)</li>
+                <li>Climbing Stairs (LC 70)</li>
+                <li>Reverse String (LC 344)</li>
+                <li>Reverse Linked List (LC 206)</li>
+                <li>Power of Two (LC 231)</li>
+                <li>Power of Three (LC 326)</li>
+                <li>Power of Four (LC 342)</li>
+                <li>Pascal's Triangle (LC 118)</li>
+                <li>Range Sum of BST (LC 938)</li>
+                <li>Search in BST (LC 700)</li>
+                <li>Sum of Left Leaves (LC 404)</li>
+                <li>Merge Two Sorted Lists (LC 21)</li>
+            </ol>
+        </div>
+        
+        <h3>Recursion - Medium (18)</h3>
+        <div class="problem-box">
+            <ol style="column-count: 2; column-gap: 40px;">
+                <li>Pow(x, n) (LC 50)</li>
+                <li>K-th Symbol in Grammar (LC 779)</li>
+                <li>Different Ways to Add Parentheses (LC 241)</li>
+                <li>Decode String (LC 394)</li>
+                <li>Construct Binary Tree (LC 105)</li>
+                <li>Validate BST (LC 98)</li>
+                <li>Binary Tree Level Order (LC 102)</li>
+                <li>Path Sum II (LC 113)</li>
+                <li>Sum Root to Leaf Numbers (LC 129)</li>
+                <li>Kth Smallest in BST (LC 230)</li>
+                <li>Count Complete Tree Nodes (LC 222)</li>
+                <li>Flatten Binary Tree (LC 114)</li>
+                <li>Lowest Common Ancestor (LC 236)</li>
+                <li>Binary Tree Right Side View (LC 199)</li>
+                <li>Unique BSTs II (LC 95)</li>
+                <li>Merge k Sorted Lists (LC 23)</li>
+                <li>Sort List (LC 148)</li>
+                <li>Predict the Winner (LC 486)</li>
+            </ol>
+        </div>
+        
+        <h3>Backtracking - Medium (30)</h3>
+        <div class="problem-box">
+            <ol style="column-count: 2; column-gap: 40px;">
+                <li><strong>Subsets (LC 78) ⭐</strong></li>
+                <li><strong>Permutations (LC 46) ⭐</strong></li>
+                <li><strong>Combination Sum (LC 39) ⭐</strong></li>
+                <li><strong>Word Search (LC 79) ⭐</strong></li>
+                <li>Subsets II (LC 90)</li>
+                <li>Permutations II (LC 47)</li>
+                <li>Combination Sum II (LC 40)</li>
+                <li>Combination Sum III (LC 216)</li>
+                <li>Combinations (LC 77)</li>
+                <li>Letter Combinations (LC 17)</li>
+                <li>Generate Parentheses (LC 22)</li>
+                <li>Palindrome Partitioning (LC 131)</li>
+                <li>Restore IP Addresses (LC 93)</li>
+                <li>Target Sum (LC 494)</li>
+                <li>Letter Case Permutation (LC 784)</li>
+                <li>Partition K Equal Sum Subsets (LC 698)</li>
+                <li>Matchsticks to Square (LC 473)</li>
+                <li>Beautiful Arrangement (LC 526)</li>
+                <li>Additive Number (LC 306)</li>
+                <li>Factor Combinations (LC 254)</li>
+                <li>Split Array into Fibonacci (LC 842)</li>
+                <li>All Paths From Source to Target (LC 797)</li>
+                <li>Combinations Sum IV (LC 377)</li>
+                <li>Gray Code (LC 89)</li>
+                <li>Binary Watch (LC 401)</li>
+                <li>Maximum Length of Concatenated String (LC 1239)</li>
+                <li>Iterator for Combination (LC 1286)</li>
+                <li>Sequential Digits (LC 1291)</li>
+                <li>Find Unique Binary String (LC 1980)</li>
+                <li>Count Sorted Vowel Strings (LC 1641)</li>
+            </ol>
+        </div>
+        
+        <h3>Backtracking - Hard (10)</h3>
+        <div class="problem-box">
+            <ol style="column-count: 2; column-gap: 40px;">
+                <li><strong>N-Queens (LC 51) ⭐</strong></li>
+                <li><strong>Sudoku Solver (LC 37) ⭐</strong></li>
+                <li>Word Search II (LC 212)</li>
+                <li>Remove Invalid Parentheses (LC 301)</li>
+                <li>Expression Add Operators (LC 282)</li>
+                <li>Regular Expression Matching (LC 10)</li>
+                <li>Wildcard Matching (LC 44)</li>
+                <li>N-Queens II (LC 52)</li>
+                <li>Palindrome Partitioning II (LC 132)</li>
+                <li>Concatenated Words (LC 472)</li>
+            </ol>
+        </div>
+        
+        <h2>🎯 Quick Reference</h2>
+        
+        <div class="visual-box">
+            <h3>Decision Flowchart</h3>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                Does problem ask for "all possible solutions"?<br>
+                <strong>YES</strong> → Likely Backtracking<br>
+                <strong>NO</strong> → Likely Simple Recursion
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                Is it a tree/graph problem?<br>
+                <strong>YES</strong> → Use Pattern 5 (Tree Recursion / DFS)
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                Does it say "all subsets" or "all combinations"?<br>
+                <strong>YES</strong> → Pattern 7 (Subsets)<br>
+                <strong>Check:</strong> Does order matter? If yes → Pattern 8 (Permutations)
+            </div>
+            
+            <div class="step">
+                <span class="step-number">4</span>
+                See repeated calculations?<br>
+                <strong>YES</strong> → Add Pattern 6 (Memoization)
+            </div>
+        </div>
+        
+        <div class="visual-box">
+            <h3>The 3 Laws of Recursion</h3>
+            
+            <div class="formula">
+                1. Must have BASE CASE<br>
+                2. Must make PROGRESS toward base case<br>
+                3. Must call ITSELF
+            </div>
+        </div>
+        
+        <div class="visual-box">
+            <h3>The Backtracking Mantra</h3>
+            
+            <div class="formula" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: white;">
+                CHOOSE → EXPLORE → UNCHOOSE
+            </div>
+            
+            <p style="margin-top: 15px;"><strong>Never forget the UNCHOOSE step!</strong> That's what makes it backtracking.</p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 50px; padding: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px;">
+            <h2 style="color: white; margin: 0; font-size: 2em;">🎉 You've Mastered Recursion & Backtracking!</h2>
+            <p style="margin: 20px 0; font-size: 1.2em;">All 12 Patterns | Complete Visualizations | Recognition Skills</p>
+            <p style="margin: 10px 0;">✓ Linear Recursion | ✓ Tree Recursion | ✓ Divide & Conquer</p>
+            <p style="margin: 10px 0;">✓ Subsets | ✓ Permutations | ✓ Constraint Satisfaction</p>
+            <p style="margin: 20px 0; font-size: 1.1em; font-weight: bold;">
+                Remember: Choose → Explore → Unchoose
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+
+        <!-- ENHANCED GRID BACKTRACKING VISUALIZATION WITH COMPLETE FAILURE EXAMPLE -->
+        <div class="tree-visualization" style="margin-top: 40px;">
+            <h4 style="color: #667eea; margin-top: 0;">🔄 Complete Backtracking Visualization: What Happens When Path FAILS?</h4>
+            <p style="margin-bottom: 20px; font-weight: bold; font-size: 1.1em;">Let's search for "ABCG" (which doesn't exist!) to see backtracking UNDO in action:</p>
+            
+            <div style="margin: 20px 0;">
+                <p><strong>Grid:</strong></p>
+                <table style="width: auto; margin: 10px auto; font-family: monospace; border-collapse: separate; border-spacing: 5px;">
+                    <tr>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; font-weight: bold; text-align: center;">A</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">B</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        <td style="padding: 15px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                    </tr>
+                </table>
+                <p style="text-align: center; margin: 10px 0; font-weight: bold;">Target: "ABCG" (G doesn't exist in grid!)</p>
+            </div>
+            
+            <!-- ANIMATED STEPS -->
+            <div style="background: #fff9c4; padding: 20px; margin: 20px 0; border-radius: 8px; border: 3px solid #fbc02d;">
+                <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 15px;">📍 STEP 1: At (0,0)='A' ✓ Mark as visited</p>
+                
+                <div style="display: flex; gap: 30px; justify-content: center; align-items: center;">
+                    <table style="border-collapse: separate; border-spacing: 3px;">
+                        <tr>
+                            <td style="padding: 12px; background: #ffeb3b; border: 3px solid #f57c00; font-weight: bold; text-align: center;">A</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">B</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                    </table>
+                    
+                    <div style="font-size: 3em;">→</div>
+                    
+                    <table style="border-collapse: separate; border-spacing: 3px;">
+                        <tr>
+                            <td style="padding: 12px; background: #9e9e9e; border: 3px solid #f57c00; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">B</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div style="background: #e8f5e9; padding: 20px; margin: 20px 0; border-radius: 8px; border: 3px solid #4caf50;">
+                <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 15px;">📍 STEP 2: Move to (0,1)='B' ✓ Mark as visited</p>
+                
+                <div style="display: flex; gap: 30px; justify-content: center; align-items: center;">
+                    <table style="border-collapse: separate; border-spacing: 3px;">
+                        <tr>
+                            <td style="padding: 12px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #ffeb3b; border: 3px solid #f57c00; font-weight: bold; text-align: center;">B</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                    </table>
+                    
+                    <div style="font-size: 3em;">→</div>
+                    
+                    <table style="border-collapse: separate; border-spacing: 3px;">
+                        <tr>
+                            <td style="padding: 12px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #9e9e9e; border: 3px solid #f57c00; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div style="background: #fff9c4; padding: 20px; margin: 20px 0; border-radius: 8px; border: 3px solid #fbc02d;">
+                <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 15px;">📍 STEP 3: Move to (0,2)='C' ✓ Mark as visited</p>
+                
+                <div style="display: flex; gap: 30px; justify-content: center; align-items: center;">
+                    <table style="border-collapse: separate; border-spacing: 3px;">
+                        <tr>
+                            <td style="padding: 12px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #ffeb3b; border: 3px solid #f57c00; font-weight: bold; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                    </table>
+                    
+                    <div style="font-size: 3em;">→</div>
+                    
+                    <table style="border-collapse: separate; border-spacing: 3px;">
+                        <tr>
+                            <td style="padding: 12px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #9e9e9e; border: 3px solid #f57c00; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div style="background: #ffebee; padding: 20px; margin: 20px 0; border-radius: 8px; border: 3px solid #f44336;">
+                <p style="font-weight: bold; font-size: 1.2em; margin-bottom: 15px; color: #c62828;">❌ STEP 4: Looking for 'G'... NO VALID NEIGHBORS!</p>
+                
+                <table style="margin: 10px auto; border-collapse: separate; border-spacing: 3px;">
+                    <tr>
+                        <td style="padding: 12px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                        <td style="padding: 12px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                        <td style="padding: 12px; background: #9e9e9e; border: 3px solid #f44336; font-weight: bold; text-align: center; color: white;">#</td>
+                        <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                        <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                        <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                        <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                        <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                        <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                    </tr>
+                </table>
+                
+                <div style="background: #fff; padding: 15px; border-radius: 5px; margin-top: 15px;">
+                    <p style="font-weight: bold;">Try 4 directions from (0,2):</p>
+                    <p style="margin: 5px 0;">• ⬇️ Down (1,2) = 'C' ≠ 'G' ❌</p>
+                    <p style="margin: 5px 0;">• ⬆️ Up = out of bounds ❌</p>
+                    <p style="margin: 5px 0;">• ➡️ Right (0,3) = 'E' ≠ 'G' ❌</p>
+                    <p style="margin: 5px 0;">• ⬅️ Left (0,1) = '#' (visited) ❌</p>
+                    <p style="margin-top: 10px; color: #c62828; font-weight: bold;">NO MATCH! Must BACKTRACK!</p>
+                </div>
+            </div>
+            
+            <div style="background: #e1bee7; padding: 20px; margin: 20px 0; border-radius: 8px; border: 3px solid #9c27b0;">
+                <p style="font-weight: bold; font-size: 1.2em; margin-bottom: 15px; color: #6a1b9a;">🔙 BACKTRACK: Restore (0,2) from '#' → 'C'</p>
+                
+                <div style="display: flex; gap: 30px; justify-content: center; align-items: center;">
+                    <table style="border-collapse: separate; border-spacing: 3px;">
+                        <tr>
+                            <td style="padding: 12px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #9e9e9e; border: 3px solid #9c27b0; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                    </table>
+                    
+                    <div style="font-size: 3em; color: #9c27b0;">⟲</div>
+                    
+                    <table style="border-collapse: separate; border-spacing: 3px;">
+                        <tr>
+                            <td style="padding: 12px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 3px solid #9c27b0; font-weight: bold; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                    </table>
+                </div>
+                <p style="margin-top: 15px; text-align: center; font-weight: bold;">board[0][2] = 'C'; // RESTORED!</p>
+            </div>
+            
+            <div style="background: #e1bee7; padding: 20px; margin: 20px 0; border-radius: 8px; border: 3px solid #9c27b0;">
+                <p style="font-weight: bold; font-size: 1.2em; margin-bottom: 15px; color: #6a1b9a;">🔙 BACKTRACK: Restore (0,1) from '#' → 'B'</p>
+                
+                <div style="display: flex; gap: 30px; justify-content: center; align-items: center;">
+                    <table style="border-collapse: separate; border-spacing: 3px;">
+                        <tr>
+                            <td style="padding: 12px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #9e9e9e; border: 3px solid #9c27b0; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                    </table>
+                    
+                    <div style="font-size: 3em; color: #9c27b0;">⟲</div>
+                    
+                    <table style="border-collapse: separate; border-spacing: 3px;">
+                        <tr>
+                            <td style="padding: 12px; background: #9e9e9e; border: 2px solid #666; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 3px solid #9c27b0; font-weight: bold; text-align: center;">B</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                    </table>
+                </div>
+                <p style="margin-top: 15px; text-align: center; font-weight: bold;">board[0][1] = 'B'; // RESTORED!</p>
+            </div>
+            
+            <div style="background: #e1bee7; padding: 20px; margin: 20px 0; border-radius: 8px; border: 3px solid #9c27b0;">
+                <p style="font-weight: bold; font-size: 1.2em; margin-bottom: 15px; color: #6a1b9a;">🔙 BACKTRACK: Restore (0,0) from '#' → 'A'</p>
+                
+                <div style="display: flex; gap: 30px; justify-content: center; align-items: center;">
+                    <table style="border-collapse: separate; border-spacing: 3px;">
+                        <tr>
+                            <td style="padding: 12px; background: #9e9e9e; border: 3px solid #9c27b0; font-weight: bold; text-align: center; color: white;">#</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">B</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">F</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">S</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">A</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">D</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                            <td style="padding: 12px; background: #e3f2fd; border: 2px solid #666; text-align: center;">E</td>
+                        </tr>
+                    </table>
+                    
+                    <div style="font-size: 3em; color: #9c27b0;">⟲</div>
+                    
+                    <table style="border-collapse: separate; border-spacing: 3px;">
+                        <tr>
+                            <td style="padding: 12px; background: #c8e6c9; border: 3px solid #4caf50; font-weight: bold; text-align: center;">A</td>
+                            <td style="padding: 12px; background: #c8e6c9; border: 3px solid #4caf50; text-align: center;">B</td>
+                            <td style="padding: 12px; background: #c8e6c9; border: 3px solid #4caf50; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #c8e6c9; border: 3px solid #4caf50; text-align: center;">E</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #c8e6c9; border: 3px solid #4caf50; text-align: center;">S</td>
+                            <td style="padding: 12px; background: #c8e6c9; border: 3px solid #4caf50; text-align: center;">F</td>
+                            <td style="padding: 12px; background: #c8e6c9; border: 3px solid #4caf50; text-align: center;">C</td>
+                            <td style="padding: 12px; background: #c8e6c9; border: 3px solid #4caf50; text-align: center;">S</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; background: #c8e6c9; border: 3px solid #4caf50; text-align: center;">A</td>
+                            <td style="padding: 12px; background: #c8e6c9; border: 3px solid #4caf50; text-align: center;">D</td>
+                            <td style="padding: 12px; background: #c8e6c9; border: 3px solid #4caf50; text-align: center;">E</td>
+                            <td style="padding: 12px; background: #c8e6c9; border: 3px solid #4caf50; text-align: center;">E</td>
+                        </tr>
+                    </table>
+                </div>
+                <p style="margin-top: 15px; text-align: center; font-weight: bold; color: #2e7d32;">✅ GRID COMPLETELY RESTORED!</p>
+                <p style="margin-top: 10px; text-align: center;">Continue trying from other starting positions...</p>
+            </div>
+            
+            <div style="background: #e7f3ff; padding: 20px; border-radius: 8px; border: 3px solid #2196f3; margin-top: 30px;">
+                <h4 style="color: #1565c0; margin-top: 0;">🎓 Critical Backtracking Lessons</h4>
+                <div style="background: #fff; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                    <p style="font-weight: bold; color: #d32f2f;">❌ Common Mistake: Forgetting to Restore</p>
+                    <p>If you DON'T restore the cell, it stays marked as '#' forever, blocking all future paths!</p>
+                </div>
+                <div style="background: #fff; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                    <p style="font-weight: bold; color: #2e7d32;">✅ Correct Pattern:</p>
+                    <div class="code-block" style="margin: 10px 0;"><pre><span class="keyword">char</span> temp = board[row][col];  <span class="comment">// 1. Save original</span>
+board[row][col] = <span class="string">'#'</span>;          <span class="comment">// 2. Mark visited</span>
+<span class="keyword">boolean</span> found = explore_4_directions(...);
+board[row][col] = temp;          <span class="comment">// 3. MUST RESTORE!</span></pre></div>
+                </div>
+                <div style="background: #fff; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                    <p style="font-weight: bold;">🔑 The ESSENCE of Backtracking:</p>
+                    <p style="margin-top: 5px;">1. Make a choice (mark cell)</p>
+                    <p style="margin-top: 5px;">2. Explore consequences</p>
+                    <p style="margin-top: 5px;">3. UNDO the choice (restore cell)</p>
+                    <p style="margin-top: 10px; font-weight: bold; color: #764ba2;">This "undo" step is what makes it BACKtracking!</p>
+                </div>
+            </div>
+        </div>
+

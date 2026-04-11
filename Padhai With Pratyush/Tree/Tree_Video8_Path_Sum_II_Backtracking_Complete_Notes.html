@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video 8: Path Sum II - Backtracking - Complete Visual Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.7;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 60px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 45px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            color: #1e293b;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h3 {
+            color: #334155;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        h4 {
+            color: #475569;
+            font-size: 1.4em;
+            margin: 25px 0 15px 0;
+        }
+
+        .problem-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 15px;
+            padding: 35px;
+            margin: 25px 0;
+            border-left: 8px solid #f59e0b;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+        }
+
+        .tree-visual {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .tree-box {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            line-height: 2.5;
+            display: inline-block;
+            text-align: left;
+        }
+
+        .visual-tree-step {
+            background: white;
+            border: 3px solid #3b82f6;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .backtrack-action {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #ef4444;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .path-box {
+            background: #f1f5f9;
+            border: 3px solid #64748b;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .current-path {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #3b82f6;
+            padding: 15px 25px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+
+        .valid-path {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 2px solid #10b981;
+            padding: 15px 25px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 600;
+            color: #065f46;
+        }
+
+        .code-box {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            line-height: 1.9;
+            font-size: 1em;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-keyword {
+            color: #c084fc;
+        }
+
+        .code-function {
+            color: #60a5fa;
+        }
+
+        .code-string {
+            color: #34d399;
+        }
+
+        .code-comment {
+            color: #94a3b8;
+        }
+
+        .output-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 3px solid #10b981;
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #065f46;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 6px solid #3b82f6;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 6px solid #f59e0b;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 6px solid #10b981;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+            border-left: 6px solid #ef4444;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 15px;
+        }
+
+        li {
+            margin: 12px 0;
+            line-height: 1.8;
+        }
+
+        strong {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .emoji {
+            font-size: 1.3em;
+        }
+
+        .tree-animation {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #667eea;
+            font-weight: bold;
+            align-self: center;
+        }
+
+        .path-highlight {
+            background: #fef3c7;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 2px solid #f59e0b;
+            font-weight: 600;
+        }
+
+        .sum-box {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin: 5px;
+        }
+
+        .sum-box.target {
+            background: #10b981;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Path Sum II - Backtracking</h1>
+            <p style="font-size: 1.3em; margin-top: 15px;">Finding All Root-to-Leaf Paths with Target Sum</p>
+            <p style="font-size: 1.1em; margin-top: 10px; opacity: 0.9;">Master the backtracking pattern for tree problems</p>
+        </header>
+
+        <div class="content">
+
+            <!-- PROBLEM STATEMENT -->
+            <div class="section">
+                <h2><span class="emoji">📋</span> Problem Statement</h2>
+                
+                <div class="problem-box">
+                    <h3 style="margin-top: 0;">What We Need to Find:</h3>
+                    <p style="font-size: 1.2em; margin: 20px 0;">
+                        Given a Binary Tree and a <strong>target sum</strong>, return <strong>all root-to-leaf paths</strong> where the sum of node values equals the target.
+                    </p>
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
+                        <p style="font-size: 1.15em; margin-bottom: 15px;"><strong>Important Points:</strong></p>
+                        <ul style="font-size: 1.1em;">
+                            <li><strong>Root-to-Leaf:</strong> Path must start at root and end at a leaf node</li>
+                            <li><strong>Leaf node:</strong> A node with no children (both left and right are null)</li>
+                            <li><strong>Return all paths:</strong> Not just one, but all paths that match</li>
+                            <li><strong>Path values:</strong> List of node values in order from root to leaf</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tree-visual">
+                    <h3>🌳 Example Tree</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.2em; line-height: 2.8;">
+Target Sum: 22
+
+                    ┌─────┐
+                    │  5  │  ← Root
+                    └──┬──┘
+          ┌────────────┴────────────┐
+       ┌──┴──┐                   ┌──┴──┐
+       │  4  │                   │  8  │
+       └──┬──┘                   └──┬──┘
+     ┌────┴────┐              ┌────┴────┐
+  ┌──┴──┐    NULL          ┌──┴──┐   ┌──┴──┐
+  │ 11  │                  │ 13  │   │  4  │
+  └──┬──┘                  └─────┘   └──┬──┘
+┌────┴────┐                         ┌────┴────┐
+┴──┐   ┌──┴──┐                    NULL     ┌──┴──┐
+│  7  │   │  2  │                          │  1  │
+└─────┘   └─────┘                          └─────┘
+
+Paths and their sums:
+• 5 → 4 → 11 → 7:  Sum = 27 ❌
+• 5 → 4 → 11 → 2:  Sum = 22 ✅
+• 5 → 8 → 13:      Sum = 26 ❌
+• 5 → 8 → 4 → 1:   Sum = 18 ❌
+
+<span style="background: #10b981; color: white; padding: 10px 20px; border-radius: 8px;">
+Valid Paths: [[5, 4, 11, 2]]
+</span>
+</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BACKTRACKING CONCEPT -->
+            <div class="section">
+                <h2><span class="emoji">🔄</span> Understanding Backtracking</h2>
+
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">🎯 What is Backtracking?</h3>
+                    <p style="font-size: 1.2em; margin: 20px 0; line-height: 1.9;">
+                        Backtracking is like exploring a maze:<br><br>
+                        1. <strong>Choose:</strong> Pick a path and walk down it<br>
+                        2. <strong>Explore:</strong> See where it leads<br>
+                        3. <strong>Check:</strong> Did we find what we're looking for?<br>
+                        4. <strong>Backtrack:</strong> Return and try a different path<br>
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>🎮 The Three Steps of Backtracking:</h3>
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
+                        <div style="background: #dbeafe; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                            <h4 style="margin-top: 0; color: #3b82f6;">Step 1: Make a Choice</h4>
+                            <p style="font-size: 1.1em; margin-top: 10px;">
+                                Add the current node to our path<br>
+                                <code style="background: white; padding: 5px 10px; border-radius: 4px;">currentPath.add(node.val)</code>
+                            </p>
+                        </div>
+
+                        <div style="background: #fef3c7; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                            <h4 style="margin-top: 0; color: #f59e0b;">Step 2: Explore</h4>
+                            <p style="font-size: 1.1em; margin-top: 10px;">
+                                If it's a leaf, check if sum equals target<br>
+                                If not a leaf, recursively explore children
+                            </p>
+                        </div>
+
+                        <div style="background: #fecaca; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                            <h4 style="margin-top: 0; color: #ef4444;">Step 3: Backtrack (Undo)</h4>
+                            <p style="font-size: 1.1em; margin-top: 10px;">
+                                Remove the current node from path before returning<br>
+                                <code style="background: white; padding: 5px 10px; border-radius: 4px;">currentPath.remove(currentPath.size() - 1)</code>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h3>✨ Why Backtrack?</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px; line-height: 1.9;">
+                        We use a <strong>single list</strong> (currentPath) to build all paths.<br>
+                        After exploring one branch, we need to <strong>remove nodes</strong> to try other branches.<br><br>
+                        Without backtracking, our path would keep growing and never reset!
+                    </p>
+                </div>
+            </div>
+
+            <!-- THE ALGORITHM -->
+            <div class="section">
+                <h2><span class="emoji">💡</span> The Algorithm</h2>
+
+                <div class="info-box">
+                    <h3>🎯 High-Level Strategy:</h3>
+                    <ol style="font-size: 1.15em; margin-top: 15px; line-height: 2;">
+                        <li>Start at root with an empty path</li>
+                        <li>At each node:
+                            <ul style="margin-top: 10px;">
+                                <li>Add current node to path</li>
+                                <li>Subtract node value from remaining sum</li>
+                                <li>If it's a leaf AND sum is 0 → Found a valid path!</li>
+                                <li>If not a leaf → Explore left and right children</li>
+                                <li>Remove current node from path (backtrack)</li>
+                            </ul>
+                        </li>
+                        <li>Collect all valid paths in a result list</li>
+                    </ol>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🔑 Key Insight:</h3>
+                    <p style="font-size: 1.2em; margin-top: 15px; line-height: 1.9;">
+                        Instead of checking if <code>sum == target</code>,<br>
+                        we <strong>subtract each node's value</strong> and check if <code>remaining == 0</code> at leaves.<br><br>
+                        This is cleaner and avoids passing the original target everywhere!
+                    </p>
+                </div>
+            </div>
+
+            <!-- STEP BY STEP EXECUTION -->
+            <div class="section">
+                <h2><span class="emoji">🔄</span> Step-by-Step Execution</h2>
+
+                <div class="info-box">
+                    <p style="font-size: 1.2em; font-weight: 600;">
+                        Let's trace through a simplified tree with <span class="sum-box target">Target = 22</span>
+                    </p>
+                </div>
+
+                <div class="tree-visual">
+                    <h3>Simplified Tree:</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.15em;">
+         5
+        / \
+       4   8
+      /   / \
+     11  13  4
+    / \       \
+   7   2       1
+</pre>
+                    </div>
+                </div>
+
+                <!-- Step 1 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 1: Visit Root (5)</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+        <span style="background: #f59e0b; color: white; padding: 8px 15px; border-radius: 50%;">5</span> ← Current
+        / \
+       4   8
+      /   / \
+     11  13  4
+    / \       \
+   7   2       1
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="path-box">
+                                <p style="font-weight: 600; margin-bottom: 10px;">Actions:</p>
+                                <p style="margin: 8px 0;">✅ Add 5 to path</p>
+                                <div class="current-path">Current Path: [5]</div>
+                                <p style="margin: 8px 0;">Remaining sum: 22 - 5 = <span class="sum-box">17</span></p>
+                                <p style="margin: 8px 0;">Is leaf? <strong>NO</strong></p>
+                                <p style="margin: 8px 0;">Action: Explore left child (4)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 2: Visit 4</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+         5
+        / \
+      <span style="background: #f59e0b; color: white; padding: 8px 15px; border-radius: 50%;">4</span>   8
+      /   / \
+     11  13  4
+    / \       \
+   7   2       1
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="path-box">
+                                <p style="font-weight: 600; margin-bottom: 10px;">Actions:</p>
+                                <p style="margin: 8px 0;">✅ Add 4 to path</p>
+                                <div class="current-path">Current Path: [5, 4]</div>
+                                <p style="margin: 8px 0;">Remaining sum: 17 - 4 = <span class="sum-box">13</span></p>
+                                <p style="margin: 8px 0;">Is leaf? <strong>NO</strong></p>
+                                <p style="margin: 8px 0;">Action: Explore left child (11)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 3: Visit 11</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+         5
+        / \
+       4   8
+      /   / \
+    <span style="background: #f59e0b; color: white; padding: 8px 15px; border-radius: 50%;">11</span>  13  4
+    / \       \
+   7   2       1
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="path-box">
+                                <p style="font-weight: 600; margin-bottom: 10px;">Actions:</p>
+                                <p style="margin: 8px 0;">✅ Add 11 to path</p>
+                                <div class="current-path">Current Path: [5, 4, 11]</div>
+                                <p style="margin: 8px 0;">Remaining sum: 13 - 11 = <span class="sum-box">2</span></p>
+                                <p style="margin: 8px 0;">Is leaf? <strong>NO</strong></p>
+                                <p style="margin: 8px 0;">Action: Explore left child (7)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 4: Visit 7 (LEAF)</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+         5
+        / \
+       4   8
+      /   / \
+     11  13  4
+    / \       \
+  <span style="background: #f59e0b; color: white; padding: 8px 15px; border-radius: 50%;">7</span>   2       1
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="path-box">
+                                <p style="font-weight: 600; margin-bottom: 10px;">Actions:</p>
+                                <p style="margin: 8px 0;">✅ Add 7 to path</p>
+                                <div class="current-path">Current Path: [5, 4, 11, 7]</div>
+                                <p style="margin: 8px 0;">Remaining sum: 2 - 7 = <span class="sum-box">-5</span></p>
+                                <p style="margin: 8px 0;">Is leaf? <strong>YES</strong> ✅</p>
+                                <p style="margin: 8px 0;">Remaining == 0? <strong>NO</strong> ❌</p>
+                                <p style="margin: 8px 0; color: #ef4444; font-weight: 600;">Not a valid path!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5 - Backtrack from 7 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 5: Backtrack from 7</div>
+                    <div class="backtrack-action">⬅️ BACKTRACK</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+         5
+        / \
+       4   8
+      /   / \
+     <span style="background: #3b82f6; color: white; padding: 8px 15px; border-radius: 50%;">11</span>  13  4
+    / \       \
+   7   2       1
+   ↑
+   Back here
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="path-box">
+                                <p style="font-weight: 600; margin-bottom: 10px;">Backtracking:</p>
+                                <p style="margin: 8px 0; color: #ef4444;">❌ Remove 7 from path</p>
+                                <div class="current-path">Current Path: [5, 4, 11]</div>
+                                <p style="margin: 8px 0;">Return to node 11</p>
+                                <p style="margin: 8px 0;">Action: Explore right child (2)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 6: Visit 2 (LEAF)</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+         5
+        / \
+       4   8
+      /   / \
+     11  13  4
+    / \       \
+   7  <span style="background: #10b981; color: white; padding: 8px 15px; border-radius: 50%;">2</span>       1
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="path-box">
+                                <p style="font-weight: 600; margin-bottom: 10px;">Actions:</p>
+                                <p style="margin: 8px 0;">✅ Add 2 to path</p>
+                                <div class="current-path">Current Path: [5, 4, 11, 2]</div>
+                                <p style="margin: 8px 0;">Remaining sum: 2 - 2 = <span class="sum-box target">0</span></p>
+                                <p style="margin: 8px 0;">Is leaf? <strong>YES</strong> ✅</p>
+                                <p style="margin: 8px 0;">Remaining == 0? <strong>YES</strong> ✅</p>
+                                <div class="valid-path" style="margin-top: 15px;">
+                                    🎉 VALID PATH FOUND!<br>
+                                    Save: [5, 4, 11, 2]
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Continue backtracking -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 7-10: Continue Backtracking</div>
+                    <div class="backtrack-action">⬅️ BACKTRACK</div>
+                    <div class="path-box">
+                        <p style="font-weight: 600; margin-bottom: 15px;">Remaining Exploration:</p>
+                        <p style="margin: 10px 0;">❌ Remove 2 → Path: [5, 4, 11]</p>
+                        <p style="margin: 10px 0;">❌ Remove 11 → Path: [5, 4]</p>
+                        <p style="margin: 10px 0;">❌ Remove 4 → Path: [5]</p>
+                        <p style="margin: 10px 0;">✅ Explore right subtree (8)</p>
+                        <p style="margin: 10px 0;">Visit 8 → Path: [5, 8]</p>
+                        <p style="margin: 10px 0;">Visit 13 → Path: [5, 8, 13] → Sum = 26 ❌</p>
+                        <p style="margin: 10px 0;">Visit 4 → Path: [5, 8, 4]</p>
+                        <p style="margin: 10px 0;">Visit 1 → Path: [5, 8, 4, 1] → Sum = 18 ❌</p>
+                        <p style="margin: 10px 0; font-weight: 600; color: #10b981; margin-top: 20px;">
+                            Final Result: [[5, 4, 11, 2]]
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JAVA CODE -->
+            <div class="section">
+                <h2><span class="emoji">💻</span> Java Implementation</h2>
+
+                <div class="code-box">
+<pre><span class="code-keyword">import</span> java.util.*;
+
+<span class="code-keyword">class</span> <span class="code-function">Solution</span> {
+    <span class="code-keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="code-function">pathSum</span>(Node root, <span class="code-keyword">int</span> targetSum) {
+        List&lt;List&lt;Integer&gt;&gt; result = <span class="code-keyword">new</span> ArrayList&lt;&gt;();
+        List&lt;Integer&gt; currentPath = <span class="code-keyword">new</span> ArrayList&lt;&gt;();
+        
+        backtrack(root, targetSum, currentPath, result);
+        
+        <span class="code-keyword">return</span> result;
+    }
+    
+    <span class="code-keyword">private void</span> <span class="code-function">backtrack</span>(Node node, <span class="code-keyword">int</span> remainingSum, 
+                           List&lt;Integer&gt; currentPath, 
+                           List&lt;List&lt;Integer&gt;&gt; result) {
+        <span class="code-comment">// BASE CASE: Null node</span>
+        <span class="code-keyword">if</span> (node == <span class="code-keyword">null</span>) <span class="code-keyword">return</span>;
+        
+        <span class="code-comment">// STEP 1: CHOOSE - Add current node to path</span>
+        currentPath.add(node.val);
+        
+        <span class="code-comment">// STEP 2: EXPLORE - Check if we found a valid path</span>
+        <span class="code-keyword">if</span> (node.left == <span class="code-keyword">null</span> && node.right == <span class="code-keyword">null</span>) {
+            <span class="code-comment">// It's a leaf node - check if sum matches</span>
+            <span class="code-keyword">if</span> (remainingSum == node.val) {
+                <span class="code-comment">// Found a valid path! Save it</span>
+                result.add(<span class="code-keyword">new</span> ArrayList&lt;&gt;(currentPath));
+            }
+        } <span class="code-keyword">else</span> {
+            <span class="code-comment">// Not a leaf - explore children</span>
+            backtrack(node.left, remainingSum - node.val, currentPath, result);
+            backtrack(node.right, remainingSum - node.val, currentPath, result);
+        }
+        
+        <span class="code-comment">// STEP 3: BACKTRACK - Remove current node before returning</span>
+        currentPath.remove(currentPath.size() - <span class="code-string">1</span>);
+    }
+}
+
+<span class="code-comment">// Example usage:</span>
+<span class="code-keyword">public static void</span> <span class="code-function">main</span>(String[] args) {
+    Solution sol = <span class="code-keyword">new</span> Solution();
+    
+    <span class="code-comment">// Build tree:      5</span>
+    <span class="code-comment">//                /   \</span>
+    <span class="code-comment">//               4     8</span>
+    <span class="code-comment">//              /     / \</span>
+    <span class="code-comment">//             11    13  4</span>
+    <span class="code-comment">//            / \         \</span>
+    <span class="code-comment">//           7   2         1</span>
+    
+    Node root = <span class="code-keyword">new</span> Node(<span class="code-string">5</span>);
+    root.left = <span class="code-keyword">new</span> Node(<span class="code-string">4</span>);
+    root.right = <span class="code-keyword">new</span> Node(<span class="code-string">8</span>);
+    root.left.left = <span class="code-keyword">new</span> Node(<span class="code-string">11</span>);
+    root.left.left.left = <span class="code-keyword">new</span> Node(<span class="code-string">7</span>);
+    root.left.left.right = <span class="code-keyword">new</span> Node(<span class="code-string">2</span>);
+    root.right.left = <span class="code-keyword">new</span> Node(<span class="code-string">13</span>);
+    root.right.right = <span class="code-keyword">new</span> Node(<span class="code-string">4</span>);
+    root.right.right.right = <span class="code-keyword">new</span> Node(<span class="code-string">1</span>);
+    
+    List&lt;List&lt;Integer&gt;&gt; result = sol.pathSum(root, <span class="code-string">22</span>);
+    System.out.println(result);  <span class="code-comment">// Output: [[5, 4, 11, 2]]</span>
+}</pre>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Code Explanation:</h3>
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li><strong>Line 5-6:</strong> Initialize result list and current path</li>
+                        <li><strong>Line 17:</strong> Base case - null node, just return</li>
+                        <li><strong>Line 20:</strong> CHOOSE - Add current node to path</li>
+                        <li><strong>Line 23-27:</strong> If leaf node, check if sum matches target</li>
+                        <li><strong>Line 26:</strong> CRITICAL - Make a copy of currentPath before adding to result!</li>
+                        <li><strong>Line 29-31:</strong> If not leaf, recursively explore children</li>
+                        <li><strong>Line 35:</strong> BACKTRACK - Remove current node before returning</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h3>⚠️ Common Mistake - MUST Make a Copy!</h3>
+                    <div class="code-box" style="background: white; color: #1e293b; border: 2px solid #ef4444;">
+<pre>
+// WRONG:
+result.add(currentPath);  ❌
+
+// This adds a REFERENCE to currentPath
+// When we backtrack and modify currentPath, the result changes too!
+// Final result would be all empty arrays!
+
+// CORRECT:
+result.add(new ArrayList&lt;&gt;(currentPath));  ✅
+
+// This creates a NEW list with the same values
+// The copy stays intact even when we backtrack
+</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPLEXITY ANALYSIS -->
+            <div class="section">
+                <h2><span class="emoji">⚡</span> Complexity Analysis</h2>
+
+                <table>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Complexity</th>
+                        <th>Explanation</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Time</strong></td>
+                        <td>O(N²)</td>
+                        <td>Visit each node once (N), but copying paths takes O(N) time each</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Space</strong></td>
+                        <td>O(N)</td>
+                        <td>Recursion stack (H) + current path (N) = O(N)</td>
+                    </tr>
+                </table>
+
+                <div class="info-box" style="margin-top: 25px;">
+                    <h3>📊 Why O(N²) Time?</h3>
+                    <p style="font-size: 1.1em; margin-top: 15px; line-height: 1.9;">
+                        We visit N nodes → O(N)<br>
+                        But when we find a valid path, we copy it → O(N) per copy<br><br>
+                        <strong>Worst case:</strong> Every leaf is a valid path<br>
+                        In a complete binary tree with N nodes, there are ~N/2 leaves<br>
+                        Copying each path: O(N/2) × O(N) = O(N²)<br><br>
+                        <strong>Average case:</strong> Usually much better, closer to O(N)
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>📊 Space Breakdown:</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li><strong>Recursion stack:</strong> O(H) where H = height of tree</li>
+                        <li><strong>Current path:</strong> O(N) in worst case (all nodes on one path)</li>
+                        <li><strong>Result storage:</strong> Not counted in space complexity (it's the output)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- BACKTRACKING PATTERN -->
+            <div class="section">
+                <h2><span class="emoji">🎯</span> The Backtracking Pattern</h2>
+
+                <div class="success-box">
+                    <h3>✨ General Backtracking Template:</h3>
+                    <div class="code-box">
+<pre><span class="code-keyword">void</span> <span class="code-function">backtrack</span>(state, choices) {
+    <span class="code-comment">// BASE CASE</span>
+    <span class="code-keyword">if</span> (reached_goal(state)) {
+        result.add(<span class="code-keyword">copy</span>(state));  <span class="code-comment">// IMPORTANT: Make a copy!</span>
+        <span class="code-keyword">return</span>;
+    }
+    
+    <span class="code-comment">// EXPLORE all choices</span>
+    <span class="code-keyword">for</span> (choice : choices) {
+        <span class="code-comment">// 1. CHOOSE - Make a choice</span>
+        state.add(choice);
+        
+        <span class="code-comment">// 2. EXPLORE - Recursively explore</span>
+        backtrack(state, next_choices);
+        
+        <span class="code-comment">// 3. BACKTRACK - Undo the choice</span>
+        state.remove(choice);
+    }
+}</pre>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Applying to Path Sum:</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px; line-height: 2;">
+                        <li><strong>State:</strong> currentPath (list of nodes so far)</li>
+                        <li><strong>Choices:</strong> left child or right child</li>
+                        <li><strong>Goal:</strong> Reach a leaf with sum = target</li>
+                        <li><strong>Choose:</strong> Add current node to path</li>
+                        <li><strong>Explore:</strong> Recursively visit children</li>
+                        <li><strong>Backtrack:</strong> Remove current node from path</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- KEY TAKEAWAYS -->
+            <div class="section">
+                <h2><span class="emoji">✨</span> Key Takeaways</h2>
+
+                <div class="success-box">
+                    <h3>Remember These Forever:</h3>
+                    <ol style="font-size: 1.15em; line-height: 2; margin-top: 15px;">
+                        <li><strong>Backtracking = Choose, Explore, Undo</strong></li>
+                        <li><strong>Add node to path BEFORE recursion</strong></li>
+                        <li><strong>Remove node from path AFTER recursion (backtrack)</strong></li>
+                        <li><strong>Check sum only at leaf nodes</strong> (both children null)</li>
+                        <li><strong>MUST copy the path</strong> before adding to result</li>
+                        <li><strong>Subtract as you go:</strong> remainingSum - node.val</li>
+                        <li><strong>Use same list for all paths</strong> (memory efficient)</li>
+                        <li><strong>Time: O(N²)</strong> worst case, O(N) average</li>
+                        <li><strong>Space: O(N)</strong> for recursion + current path</li>
+                    </ol>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🧠 Memory Trick:</h3>
+                    <p style="font-size: 1.2em; line-height: 2; margin-top: 15px;">
+                        <strong>"Hiking with Breadcrumbs"</strong><br><br>
+                        Imagine hiking through a forest (tree):<br>
+                        • Drop a breadcrumb (add to path) when entering a trail<br>
+                        • If you reach a treasure (leaf with correct sum), mark the route!<br>
+                        • Pick up the breadcrumb (backtrack) when leaving that trail<br>
+                        • Try another path with fresh breadcrumbs<br><br>
+                        You use the <strong>SAME bag of breadcrumbs</strong> for all paths!
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>🎓 Interview Tips:</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li>Start by explaining the backtracking pattern</li>
+                        <li>Draw a small tree and trace through it step by step</li>
+                        <li>Emphasize the importance of making a copy when saving paths</li>
+                        <li>Mention that we only check sum at leaf nodes, not internal nodes</li>
+                        <li>Be ready to handle edge cases: empty tree, negative values</li>
+                        <li>Discuss the difference from Path Sum I (which just returns boolean)</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h3>⚠️ Common Pitfalls:</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li>❌ Forgetting to backtrack (remove node from path)</li>
+                        <li>❌ Not making a copy when adding path to result</li>
+                        <li>❌ Checking sum at non-leaf nodes</li>
+                        <li>❌ Checking if node.val == remainingSum instead of at leaves</li>
+                        <li>❌ Modifying the tree structure (never needed for this problem)</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

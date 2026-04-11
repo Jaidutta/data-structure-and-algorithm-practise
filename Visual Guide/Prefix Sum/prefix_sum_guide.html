@@ -1,0 +1,2695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Prefix Sum Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+        
+        h2 {
+            color: #764ba2;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        h3 {
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        .visual-box {
+            background: #f8f9ff;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .array-visual {
+            display: flex;
+            gap: 5px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .array-cell {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #667eea;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .array-index {
+            font-size: 0.7em;
+            color: #999;
+        }
+        
+        .array-value {
+            font-size: 1.2em;
+            color: #667eea;
+        }
+        
+        .highlight {
+            background: #ffd700 !important;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+        
+        .code-block pre {
+            margin: 0;
+        }
+        
+        .keyword { color: #ff79c6; }
+        .function { color: #50fa7b; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; }
+        .number { color: #bd93f9; }
+        
+        .pattern-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .pattern-card h3 {
+            color: white;
+            margin-top: 0;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box h4 {
+            color: #856404;
+            margin-top: 0;
+        }
+        
+        .tip-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .tip-box h4 {
+            color: #155724;
+            margin-top: 0;
+        }
+        
+        .problem-box {
+            background: #e7f3ff;
+            border: 2px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .problem-box h4 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        
+        .difficulty {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .easy { background: #d4edda; color: #155724; }
+        .medium { background: #fff3cd; color: #856404; }
+        .hard { background: #f8d7da; color: #721c24; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+        
+        .formula {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.1em;
+            border: 2px dashed #667eea;
+        }
+        
+        .step {
+            background: white;
+            border-left: 3px solid #667eea;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Complete Prefix Sum Guide</h1>
+        <p class="subtitle">Master all patterns, avoid common mistakes, and solve any prefix sum problem</p>
+        
+        <h2>📊 What is Prefix Sum?</h2>
+        <div class="visual-box">
+            <p><strong>Definition:</strong> A prefix sum (or cumulative sum) is a technique where we precompute the sum of all elements from the start of an array up to each index.</p>
+            
+            <p style="margin-top: 15px;"><strong>Original Array:</strong></p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">4</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=4</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            
+            <p><strong>Prefix Sum Array:</strong></p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">4</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">8</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">10</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=4</div>
+                    <div class="array-value">15</div>
+                </div>
+            </div>
+            
+            <div class="formula">
+                prefix[i] = arr[0] + arr[1] + ... + arr[i]
+            </div>
+        </div>
+        
+        <h2>🎯 When to Use Prefix Sum?</h2>
+        <div class="tip-box">
+            <h4>✅ Look for these keywords:</h4>
+            <ul>
+                <li><strong>"Sum of subarray"</strong> - Direct indication</li>
+                <li><strong>"Range sum queries"</strong> - Multiple queries on same array</li>
+                <li><strong>"Continuous subarray"</strong> - Contiguous elements</li>
+                <li><strong>"Multiple queries"</strong> - Preprocessing helps</li>
+                <li><strong>"Count subarrays with sum = K"</strong> - HashMap + Prefix</li>
+                <li><strong>"Equilibrium index"</strong> - Left sum = Right sum</li>
+                <li><strong>"Product of array except self"</strong> - Prefix product variant</li>
+            </ul>
+        </div>
+        
+        <div class="warning-box">
+            <h4>⚠️ Don't confuse with:</h4>
+            <ul>
+                <li><strong>Sliding Window:</strong> When you need EXACTLY k elements or min/max of fixed-size window</li>
+                <li><strong>Kadane's Algorithm:</strong> When finding MAXIMUM sum subarray (not sum = K)</li>
+                <li><strong>Two Pointers:</strong> When sorting is allowed and you need to find pairs</li>
+                <li><strong>Binary Search:</strong> When array is sorted and you search for elements</li>
+            </ul>
+        </div>
+        
+        <h2>🔍 All Prefix Sum Patterns</h2>
+        
+        <div style="background: #e7f3ff; padding: 20px; border-left: 5px solid #2196f3; border-radius: 5px; margin-bottom: 30px;">
+            <h4 style="color: #1976d2; margin-top: 0;">📋 Complete Pattern Coverage</h4>
+            <p>This guide covers <strong>8 comprehensive patterns</strong> that handle virtually every prefix sum problem you'll encounter:</p>
+            <ol style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Basic Range Sum Query</strong> - Foundation pattern</li>
+                <li><strong>Count Subarrays with Sum = K</strong> - HashMap technique</li>
+                <li><strong>2D Prefix Sum (Matrix)</strong> - Multi-dimensional extension</li>
+                <li><strong>Prefix Product</strong> - Multiplicative variant</li>
+                <li><strong>Running Sum with State</strong> - State transformation</li>
+                <li><strong>Difference Array</strong> - Range updates</li>
+                <li><strong>Prefix XOR</strong> - Bitwise operations</li>
+                <li><strong>Prefix Sum with Modulo</strong> - Divisibility problems</li>
+            </ol>
+            <p style="margin-top: 15px;">Master these patterns and you'll recognize prefix sum opportunities instantly!</p>
+        </div>
+        
+        <!-- Pattern 1 -->
+        <div class="pattern-card">
+            <h3>Pattern 1: Basic Range Sum Query</h3>
+            <p><strong>Problem:</strong> Given Q queries asking for sum from index L to R</p>
+            <p><strong>Key Insight:</strong> sum(L, R) = prefix[R] - prefix[L-1]</p>
+            <p><strong>Time:</strong> O(N) preprocessing + O(1) per query</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Why Use Prefix Sum for This Pattern?</h4>
+            <p><strong>The Problem Without Prefix Sum:</strong></p>
+            <p>If we have to answer Q range sum queries on an array, the naive approach would be:</p>
+            <div class="code-block"><pre><span class="comment">// For each query [L, R], loop through the range</span>
+<span class="keyword">for</span> (<span class="keyword">int</span> i = L; i <= R; i++) {
+    sum += arr[i];  <span class="comment">// O(N) per query</span>
+}
+<span class="comment">// Total: O(Q * N) - very slow for large Q!</span></pre></div>
+            
+            <p style="margin-top: 15px;"><strong>With 1000 queries on an array of 10,000 elements:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>❌ Naive: 1,000 × 10,000 = 10,000,000 operations</li>
+                <li>✅ Prefix Sum: 10,000 (build) + 1,000 (queries) = 11,000 operations</li>
+                <li>🚀 <strong>Speed up: ~909x faster!</strong></li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>The Key Realization:</strong></p>
+            <p>Instead of recalculating sums repeatedly, we <strong>precompute once</strong> and <strong>query instantly</strong>. This is the fundamental trade-off: spend O(N) time upfront to make every query O(1).</p>
+            
+            <p style="margin-top: 10px;"><strong>Mathematical Insight:</strong></p>
+            <p>The sum from L to R is just "total sum up to R" minus "total sum up to L-1":</p>
+            <div class="formula">sum(L, R) = sum(0, R) - sum(0, L-1)</div>
+            <p>Since we've already computed both prefix[R] and prefix[L-1], this subtraction takes O(1)!</p>
+        </div>
+        
+        <div class="visual-box">
+            <p><strong>Example:</strong> Find sum from index 2 to 4</p>
+            <p>Array: [3, 1, 4, 2, 5]</p>
+            <p>Prefix: [3, 4, 8, 10, 15]</p>
+            <p>Sum(2, 4) = prefix[4] - prefix[1] = 15 - 4 = <strong>11</strong></p>
+            <p>Verification: arr[2] + arr[3] + arr[4] = 4 + 2 + 5 = 11 ✓</p>
+        </div>
+        
+        <div class="code-block"><pre><span class="keyword">class</span> <span class="function">RangeSumQuery</span> {
+    <span class="keyword">private int</span>[] prefix;
+    
+    <span class="comment">// Constructor: O(N) time</span>
+    <span class="keyword">public</span> <span class="function">RangeSumQuery</span>(<span class="keyword">int</span>[] arr) {
+        prefix = <span class="keyword">new int</span>[arr.length];
+        prefix[<span class="number">0</span>] = arr[<span class="number">0</span>];
+        
+        <span class="comment">// Build prefix sum array</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < arr.length; i++) {
+            prefix[i] = prefix[i - <span class="number">1</span>] + arr[i];
+        }
+    }
+    
+    <span class="comment">// Query: O(1) time</span>
+    <span class="keyword">public int</span> <span class="function">rangeSum</span>(<span class="keyword">int</span> left, <span class="keyword">int</span> right) {
+        <span class="keyword">if</span> (left == <span class="number">0</span>) {
+            <span class="keyword">return</span> prefix[right];
+        }
+        <span class="keyword">return</span> prefix[right] - prefix[left - <span class="number">1</span>];
+    }
+}</pre></div>
+
+        <div class="visual-box">
+            <h4>📊 Step-by-Step Array Visualization:</h4>
+            
+            <p><strong>Input array:</strong> arr = [3, 1, 4, 2, 5]</p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">4</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=4</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Step 1:</strong> prefix[0] = arr[0] = 3</p>
+            <div class="array-visual">
+                <div class="array-cell highlight">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">?</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">?</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">?</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=4</div>
+                    <div class="array-value">?</div>
+                </div>
+            </div>
+            
+            <p><strong>Step 2:</strong> prefix[1] = prefix[0] + arr[1] = 3 + 1 = 4</p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">4</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">?</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">?</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=4</div>
+                    <div class="array-value">?</div>
+                </div>
+            </div>
+            
+            <p><strong>Step 3:</strong> prefix[2] = prefix[1] + arr[2] = 4 + 4 = 8</p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">4</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">8</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">?</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=4</div>
+                    <div class="array-value">?</div>
+                </div>
+            </div>
+            
+            <p><strong>Step 4:</strong> prefix[3] = prefix[2] + arr[3] = 8 + 2 = 10</p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">4</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">8</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">10</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=4</div>
+                    <div class="array-value">?</div>
+                </div>
+            </div>
+            
+            <p><strong>Step 5:</strong> prefix[4] = prefix[3] + arr[4] = 10 + 5 = 15</p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">4</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">8</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">10</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">i=4</div>
+                    <div class="array-value">15</div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 25px;"><strong>Query Example: rangeSum(2, 4)</strong></p>
+            <p>Sum from index 2 to 4 = prefix[4] - prefix[1] = 15 - 4 = <strong>11</strong></p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell" style="border: 3px solid #ff6b6b;">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">4</div>
+                </div>
+                <div class="array-cell" style="background: #c8e6c9;">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">4</div>
+                </div>
+                <div class="array-cell" style="background: #c8e6c9;">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell" style="background: #c8e6c9; border: 3px solid #4caf50;">
+                    <div class="array-index">i=4</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            <p style="font-size: 0.9em; color: #666;">🟢 Green = included in range, 🔴 Red border = subtract point</p>
+        </div>
+
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 1 <span class="difficulty easy">Easy</span></h4>
+            <ol>
+                <li><strong>Range Sum Query - Immutable (LC 303)</strong> - Direct application</li>
+                <li><strong>Find Pivot Index (LC 724)</strong> - Left sum = Right sum</li>
+                <li><strong>Subarray Sum Equals K (LC 560)</strong> - Count subarrays (use HashMap)</li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 2 -->
+        <div class="pattern-card">
+            <h3>Pattern 2: Count Subarrays with Sum = K (HashMap)</h3>
+            <p><strong>Problem:</strong> Count how many subarrays have sum exactly equal to K</p>
+            <p><strong>Key Insight:</strong> If prefix[j] - prefix[i] = K, then prefix[i] = prefix[j] - K</p>
+            <p><strong>Time:</strong> O(N), Space: O(N)</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Why Use Prefix Sum for This Pattern?</h4>
+            <p><strong>The Problem Without Prefix Sum:</strong></p>
+            <p>Finding all subarrays with sum = K naively requires checking every possible subarray:</p>
+            <div class="code-block"><pre><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < n; i++) {
+    <span class="keyword">int</span> sum = <span class="number">0</span>;
+    <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j < n; j++) {
+        sum += arr[j];
+        <span class="keyword">if</span> (sum == k) count++;
+    }
+}
+<span class="comment">// O(N²) - checks all N*(N+1)/2 subarrays</span></pre></div>
+            
+            <p style="margin-top: 15px;"><strong>For an array of 10,000 elements:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>❌ Naive: ~50,000,000 operations (N²)</li>
+                <li>✅ Prefix Sum + HashMap: ~10,000 operations (N)</li>
+                <li>🚀 <strong>Speed up: ~5000x faster!</strong></li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>The Brilliant Insight:</strong></p>
+            <p>A subarray from index i to j has sum K if:</p>
+            <div class="formula">prefix[j] - prefix[i-1] = K</div>
+            <p>Rearranging:</p>
+            <div class="formula">prefix[i-1] = prefix[j] - K</div>
+            
+            <p style="margin-top: 15px;"><strong>This transforms the problem!</strong></p>
+            <p>Instead of checking all subarrays, we ask: "As I build prefix sums, have I seen (currentSum - K) before?"</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                At each position j, we know prefix[j] (current cumulative sum)
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                We calculate what prefix[i-1] MUST be: (prefix[j] - K)
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                If we've seen that value before, it means we found valid subarray(s)!
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                HashMap tracks how many times each prefix sum appeared
+            </div>
+            
+            <p style="margin-top: 15px;"><strong>Why HashMap is Essential:</strong></p>
+            <p>Multiple positions can have the same prefix sum (especially with negative numbers or zeros). Each occurrence represents a different valid subarray ending at current position!</p>
+            
+            <p style="margin-top: 10px;"><strong>Example:</strong> arr = [1, -1, 1, -1, 1], k = 0</p>
+            <p>When we reach the end, prefix sum = 1. We look for (1 - 0) = 1 in our map. If the value 1 appeared 3 times before, we found 3 subarrays with sum = 0!</p>
+        </div>
+        
+        <div class="visual-box">
+            <p><strong>Why HashMap?</strong></p>
+            <div class="step">
+                <span class="step-number">1</span>
+                As we build prefix sum, we check: "Have I seen (currentSum - K) before?"
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                If yes, that means there's a subarray ending at current index with sum = K
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                Store frequency of each prefix sum in HashMap
+            </div>
+        </div>
+        
+        <div class="code-block"><pre><span class="keyword">public int</span> <span class="function">subarraySum</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> k) {
+    Map<Integer, Integer> map = <span class="keyword">new</span> HashMap<>();
+    <span class="keyword">int</span> count = <span class="number">0</span>;
+    <span class="keyword">int</span> sum = <span class="number">0</span>;
+    
+    <span class="comment">// Important: Initialize with sum 0 appearing once</span>
+    map.put(<span class="number">0</span>, <span class="number">1</span>);
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> num : arr) {
+        sum += num;  <span class="comment">// Current prefix sum</span>
+        
+        <span class="comment">// Check if (sum - k) exists in map</span>
+        <span class="keyword">if</span> (map.containsKey(sum - k)) {
+            count += map.get(sum - k);
+        }
+        
+        <span class="comment">// Add current sum to map</span>
+        map.put(sum, map.getOrDefault(sum, <span class="number">0</span>) + <span class="number">1</span>);
+    }
+    
+    <span class="keyword">return</span> count;
+}</pre></div>
+
+        <div class="visual-box">
+            <h4>📊 Step-by-Step Execution:</h4>
+            <p><strong>Example:</strong> arr = [1, 2, 3, -2, 5], k = 3</p>
+            
+            <p><strong>Initial State:</strong></p>
+            <div style="background: #fff; padding: 15px; border: 2px solid #667eea; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;"><strong>map:</strong> {0: 1}</p>
+                <p style="margin: 5px 0;"><strong>count:</strong> 0</p>
+                <p style="margin: 5px 0;"><strong>sum:</strong> 0</p>
+            </div>
+            
+            <p><strong>Iteration 1:</strong> num = 1</p>
+            <div class="array-visual">
+                <div class="array-cell highlight">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">-2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=4</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            <div style="background: #fff; padding: 15px; border: 2px solid #667eea; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;">sum = 0 + 1 = <strong>1</strong></p>
+                <p style="margin: 5px 0;">Looking for: sum - k = 1 - 3 = <strong>-2</strong> (not in map)</p>
+                <p style="margin: 5px 0;">count = <strong>0</strong></p>
+                <p style="margin: 5px 0;"><strong>map:</strong> {0: 1, 1: 1}</p>
+            </div>
+            
+            <p><strong>Iteration 2:</strong> num = 2</p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">-2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=4</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            <div style="background: #fff; padding: 15px; border: 2px solid #667eea; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;">sum = 1 + 2 = <strong>3</strong></p>
+                <p style="margin: 5px 0;">Looking for: sum - k = 3 - 3 = <strong>0</strong> ✓ (found! frequency = 1)</p>
+                <p style="margin: 5px 0;">count = 0 + 1 = <strong>1</strong> 🎯 <em>(subarray [1, 2] has sum 3)</em></p>
+                <p style="margin: 5px 0;"><strong>map:</strong> {0: 1, 1: 1, 3: 1}</p>
+            </div>
+            
+            <p><strong>Iteration 3:</strong> num = 3</p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">-2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=4</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            <div style="background: #fff; padding: 15px; border: 2px solid #667eea; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;">sum = 3 + 3 = <strong>6</strong></p>
+                <p style="margin: 5px 0;">Looking for: sum - k = 6 - 3 = <strong>3</strong> ✓ (found! frequency = 1)</p>
+                <p style="margin: 5px 0;">count = 1 + 1 = <strong>2</strong> 🎯 <em>(subarray [3] has sum 3)</em></p>
+                <p style="margin: 5px 0;"><strong>map:</strong> {0: 1, 1: 1, 3: 1, 6: 1}</p>
+            </div>
+            
+            <p><strong>Iteration 4:</strong> num = -2</p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">-2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=4</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            <div style="background: #fff; padding: 15px; border: 2px solid #667eea; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;">sum = 6 + (-2) = <strong>4</strong></p>
+                <p style="margin: 5px 0;">Looking for: sum - k = 4 - 3 = <strong>1</strong> ✓ (found! frequency = 1)</p>
+                <p style="margin: 5px 0;">count = 2 + 1 = <strong>3</strong> 🎯 <em>(subarray [2, 3, -2] has sum 3)</em></p>
+                <p style="margin: 5px 0;"><strong>map:</strong> {0: 1, 1: 1, 3: 1, 4: 1, 6: 1}</p>
+            </div>
+            
+            <p><strong>Iteration 5:</strong> num = 5</p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">-2</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">i=4</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            <div style="background: #fff; padding: 15px; border: 2px solid #667eea; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;">sum = 4 + 5 = <strong>9</strong></p>
+                <p style="margin: 5px 0;">Looking for: sum - k = 9 - 3 = <strong>6</strong> ✓ (found! frequency = 1)</p>
+                <p style="margin: 5px 0;">count = 3 + 1 = <strong>4</strong> 🎯 <em>(subarray [3, -2, 5] has sum 3)</em></p>
+                <p style="margin: 5px 0;"><strong>map:</strong> {0: 1, 1: 1, 3: 1, 4: 1, 6: 1, 9: 1}</p>
+            </div>
+            
+            <div style="background: #d4edda; padding: 20px; border-left: 5px solid #28a745; border-radius: 5px; margin-top: 20px;">
+                <h4 style="color: #155724; margin-top: 0;">✅ Final Result</h4>
+                <p style="margin: 5px 0;"><strong>Total count = 4</strong></p>
+                <p style="margin: 5px 0;">Found 4 subarrays with sum = 3:</p>
+                <ol style="margin-left: 20px;">
+                    <li>[1, 2] → indices 0-1</li>
+                    <li>[3] → index 2</li>
+                    <li>[2, 3, -2] → indices 1-3</li>
+                    <li>[3, -2, 5] → indices 2-4</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <h4>⚠️ Common Mistake in Pattern 2</h4>
+            <p><strong>Forgetting to initialize map.put(0, 1)</strong></p>
+            <p>Why needed? If the entire prefix sum equals K, we need to count it!</p>
+            <p>Example: arr = [3, 2], k = 5</p>
+            <p>When we reach index 1, sum = 5, and (sum - k) = 0. Without map.put(0, 1), we'd miss this subarray!</p>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 2 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Subarray Sum Equals K (LC 560)</strong> - Exact pattern</li>
+                <li><strong>Continuous Subarray Sum (LC 523)</strong> - Sum is multiple of K (modulo)</li>
+                <li><strong>Subarray Sums Divisible by K (LC 974)</strong> - Count with modulo</li>
+                <li><strong>Binary Subarrays With Sum (LC 930)</strong> - Binary array variant</li>
+                <li><strong>Count Number of Nice Subarrays (LC 1248)</strong> - Exactly K odd numbers</li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 3 -->
+        <div class="pattern-card">
+            <h3>Pattern 3: 2D Prefix Sum (Matrix)</h3>
+            <p><strong>Problem:</strong> Find sum of any rectangle in a 2D matrix</p>
+            <p><strong>Key Insight:</strong> Build 2D prefix sum, use inclusion-exclusion principle</p>
+            <p><strong>Time:</strong> O(M*N) preprocessing + O(1) per query</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Why Use Prefix Sum for This Pattern?</h4>
+            <p><strong>The Problem Without Prefix Sum:</strong></p>
+            <p>Finding sum of a rectangle from (r1,c1) to (r2,c2) requires nested loops:</p>
+            <div class="code-block"><pre><span class="keyword">int</span> sum = <span class="number">0</span>;
+<span class="keyword">for</span> (<span class="keyword">int</span> i = r1; i <= r2; i++) {
+    <span class="keyword">for</span> (<span class="keyword">int</span> j = c1; j <= c2; j++) {
+        sum += matrix[i][j];
+    }
+}
+<span class="comment">// O(M * N) per query - very slow!</span></pre></div>
+            
+            <p style="margin-top: 15px;"><strong>For a 1000×1000 matrix with 100 queries:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>❌ Naive (worst case): 100 × 1,000,000 = 100,000,000 operations</li>
+                <li>✅ 2D Prefix Sum: 1,000,000 (build) + 100 (queries) = 1,000,100 operations</li>
+                <li>🚀 <strong>Speed up: ~100x faster!</strong></li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>The 2D Extension:</strong></p>
+            <p>Just like 1D prefix sum lets us find range sums in O(1), 2D prefix sum lets us find rectangle sums in O(1)!</p>
+            
+            <p style="margin-top: 15px;"><strong>Building 2D Prefix Sum:</strong></p>
+            <p>For each cell (i,j), we want the sum of all cells from (0,0) to (i,j):</p>
+            <div class="formula">prefix[i][j] = sum of rectangle from (0,0) to (i,j)</div>
+            
+            <p style="margin-top: 10px;">To calculate this, we use:</p>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Add rectangle above:</strong> prefix[i-1][j]
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Add rectangle to left:</strong> prefix[i][j-1]
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Subtract overlap (counted twice):</strong> prefix[i-1][j-1]
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Add current cell:</strong> matrix[i][j]
+            </div>
+            
+            <p style="margin-top: 15px;"><strong>Querying Rectangle Sum:</strong></p>
+            <p>To find sum from (r1,c1) to (r2,c2), we use inclusion-exclusion:</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Start with entire rectangle to (r2,c2):</strong> prefix[r2][c2]
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Remove rectangle above r1:</strong> - prefix[r1-1][c2]
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Remove rectangle left of c1:</strong> - prefix[r2][c1-1]
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Add back corner (removed twice):</strong> + prefix[r1-1][c1-1]
+            </div>
+            
+            <p style="margin-top: 15px;"><strong>Why the Extra Row/Column?</strong></p>
+            <p>We use prefix[M+1][N+1] instead of prefix[M][N] to avoid boundary checks. When r1=0 or c1=0, we don't need special cases - the padded row/column (all zeros) handles it automatically!</p>
+            
+            <p style="margin-top: 10px;"><strong>Real-world Applications:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>🖼️ Image processing (sum of pixel values in regions)</li>
+                <li>🎮 Game development (terrain analysis, area effects)</li>
+                <li>📊 Data analytics (sum of sales in geographic regions)</li>
+                <li>🤖 Computer vision (integral images for feature detection)</li>
+            </ul>
+        </div>
+        
+        <div class="visual-box">
+            <p><strong>2D Prefix Sum Formula:</strong></p>
+            <div class="formula">
+                prefix[i][j] = prefix[i-1][j] + prefix[i][j-1] - prefix[i-1][j-1] + matrix[i][j]
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Range Sum Formula:</strong></p>
+            <div class="formula">
+                sum(r1,c1,r2,c2) = prefix[r2][c2] - prefix[r1-1][c2] - prefix[r2][c1-1] + prefix[r1-1][c1-1]
+            </div>
+        </div>
+        
+        <div class="code-block"><pre><span class="keyword">class</span> <span class="function">MatrixRangeSum</span> {
+    <span class="keyword">private int</span>[][] prefix;
+    
+    <span class="keyword">public</span> <span class="function">MatrixRangeSum</span>(<span class="keyword">int</span>[][] matrix) {
+        <span class="keyword">if</span> (matrix.length == <span class="number">0</span>) <span class="keyword">return</span>;
+        
+        <span class="keyword">int</span> m = matrix.length;
+        <span class="keyword">int</span> n = matrix[<span class="number">0</span>].length;
+        
+        <span class="comment">// Extra row and column to handle boundaries</span>
+        prefix = <span class="keyword">new int</span>[m + <span class="number">1</span>][n + <span class="number">1</span>];
+        
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i <= m; i++) {
+            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j <= n; j++) {
+                prefix[i][j] = prefix[i-<span class="number">1</span>][j] + prefix[i][j-<span class="number">1</span>] 
+                             - prefix[i-<span class="number">1</span>][j-<span class="number">1</span>] + matrix[i-<span class="number">1</span>][j-<span class="number">1</span>];
+            }
+        }
+    }
+    
+    <span class="keyword">public int</span> <span class="function">sumRegion</span>(<span class="keyword">int</span> r1, <span class="keyword">int</span> c1, <span class="keyword">int</span> r2, <span class="keyword">int</span> c2) {
+        <span class="comment">// Adjust for 1-indexed prefix array</span>
+        r1++; c1++; r2++; c2++;
+        
+        <span class="keyword">return</span> prefix[r2][c2] - prefix[r1-<span class="number">1</span>][c2] 
+               - prefix[r2][c1-<span class="number">1</span>] + prefix[r1-<span class="number">1</span>][c1-<span class="number">1</span>];
+    }
+}</pre></div>
+
+        <div class="visual-box">
+            <h4>📊 2D Prefix Sum Construction:</h4>
+            
+            <p><strong>Original Matrix:</strong></p>
+            <table style="width: auto; text-align: center; margin: 10px 0;">
+                <tr>
+                    <td style="padding: 10px; background: #e3f2fd; font-weight: bold;">3</td>
+                    <td style="padding: 10px; background: #e3f2fd; font-weight: bold;">0</td>
+                    <td style="padding: 10px; background: #e3f2fd; font-weight: bold;">1</td>
+                    <td style="padding: 10px; background: #e3f2fd; font-weight: bold;">4</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; background: #e3f2fd; font-weight: bold;">5</td>
+                    <td style="padding: 10px; background: #e3f2fd; font-weight: bold;">6</td>
+                    <td style="padding: 10px; background: #e3f2fd; font-weight: bold;">3</td>
+                    <td style="padding: 10px; background: #e3f2fd; font-weight: bold;">2</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; background: #e3f2fd; font-weight: bold;">1</td>
+                    <td style="padding: 10px; background: #e3f2fd; font-weight: bold;">2</td>
+                    <td style="padding: 10px; background: #e3f2fd; font-weight: bold;">0</td>
+                    <td style="padding: 10px; background: #e3f2fd; font-weight: bold;">1</td>
+                </tr>
+            </table>
+            
+            <p><strong>2D Prefix Sum Matrix (with extra row/column):</strong></p>
+            <table style="width: auto; text-align: center; margin: 10px 0;">
+                <tr>
+                    <td style="padding: 10px; background: #f0f0f0; color: #999;">0</td>
+                    <td style="padding: 10px; background: #f0f0f0; color: #999;">0</td>
+                    <td style="padding: 10px; background: #f0f0f0; color: #999;">0</td>
+                    <td style="padding: 10px; background: #f0f0f0; color: #999;">0</td>
+                    <td style="padding: 10px; background: #f0f0f0; color: #999;">0</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; background: #f0f0f0; color: #999;">0</td>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">3</td>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">3</td>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">4</td>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">8</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; background: #f0f0f0; color: #999;">0</td>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">8</td>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">14</td>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">18</td>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">24</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; background: #f0f0f0; color: #999;">0</td>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">9</td>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">17</td>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">21</td>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">28</td>
+                </tr>
+            </table>
+            <p style="font-size: 0.9em; color: #666;">Gray = padding row/column, Green = computed prefix sums</p>
+            
+            <p style="margin-top: 25px;"><strong>How prefix[2][2] = 14 is calculated:</strong></p>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Top:</strong> prefix[1][2] = 3
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Left:</strong> prefix[2][1] = 8
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Diagonal (subtract, counted twice):</strong> prefix[1][1] = 3
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Current:</strong> matrix[1][1] = 6
+            </div>
+            <div style="background: #fff; padding: 15px; border: 2px dashed #667eea; border-radius: 5px; margin: 15px 0; text-align: center; font-size: 1.1em;">
+                prefix[2][2] = 3 + 8 - 3 + 6 = <strong>14</strong>
+            </div>
+            
+            <p style="margin-top: 25px;"><strong>Query Example: Sum of rectangle (1,1) to (2,2)</strong></p>
+            <p>This rectangle in the original matrix:</p>
+            <table style="width: auto; text-align: center; margin: 10px 0;">
+                <tr>
+                    <td style="padding: 10px; background: #f0f0f0;">3</td>
+                    <td style="padding: 10px; background: #f0f0f0;">0</td>
+                    <td style="padding: 10px; background: #f0f0f0;">1</td>
+                    <td style="padding: 10px; background: #f0f0f0;">4</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; background: #f0f0f0;">5</td>
+                    <td style="padding: 10px; background: #fff59d; border: 3px solid #fbc02d; font-weight: bold;">6</td>
+                    <td style="padding: 10px; background: #fff59d; border: 3px solid #fbc02d; font-weight: bold;">3</td>
+                    <td style="padding: 10px; background: #f0f0f0;">2</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; background: #f0f0f0;">1</td>
+                    <td style="padding: 10px; background: #fff59d; border: 3px solid #fbc02d; font-weight: bold;">2</td>
+                    <td style="padding: 10px; background: #fff59d; border: 3px solid #fbc02d; font-weight: bold;">0</td>
+                    <td style="padding: 10px; background: #f0f0f0;">1</td>
+                </tr>
+            </table>
+            
+            <p><strong>Using the formula:</strong></p>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Total rectangle to (2,2):</strong> prefix[3][3] = 21
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Subtract top:</strong> prefix[0][3] = 0
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Subtract left:</strong> prefix[3][0] = 0
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Add back diagonal (subtracted twice):</strong> prefix[0][0] = 0
+            </div>
+            <div style="background: #fff; padding: 15px; border: 2px dashed #667eea; border-radius: 5px; margin: 15px 0; text-align: center; font-size: 1.1em;">
+                sum = 21 - 0 - 0 + 0 = <strong>21</strong> ❌ <em>(This is wrong! We want only the yellow area)</em>
+            </div>
+            
+            <p><strong>Correct calculation for region (1,1) to (2,2):</strong></p>
+            <p>Adjusting indices: r1=2, c1=2, r2=3, c2=3 (because 1-indexed)</p>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Total to bottom-right:</strong> prefix[3][3] = 21
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Subtract above rectangle:</strong> prefix[1][3] = 8
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Subtract left rectangle:</strong> prefix[3][1] = 9
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Add back overlap:</strong> prefix[1][1] = 3
+            </div>
+            <div style="background: #d4edda; padding: 15px; border: 2px solid #28a745; border-radius: 5px; margin: 15px 0; text-align: center; font-size: 1.1em;">
+                sum = 21 - 8 - 9 + 3 = <strong>11</strong> ✓
+            </div>
+            <p style="text-align: center;">Verification: 6 + 3 + 2 + 0 = 11 ✓</p>
+        </div>
+
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 3 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Range Sum Query 2D (LC 304)</strong> - Direct 2D prefix sum</li>
+                <li><strong>Count Square Submatrices with All Ones (LC 1277)</strong> - DP + prefix</li>
+                <li><strong>Matrix Block Sum (LC 1314)</strong> - Sum around each cell</li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 4 -->
+        <div class="pattern-card">
+            <h3>Pattern 4: Prefix Product (Product Variant)</h3>
+            <p><strong>Problem:</strong> Product of all elements except current</p>
+            <p><strong>Key Insight:</strong> Use prefix product from left and right</p>
+            <p><strong>Time:</strong> O(N), Space: O(1) excluding output</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Why Use Prefix Sum/Product for This Pattern?</h4>
+            <p><strong>The Problem Without Prefix Product:</strong></p>
+            <p>Computing product of all elements except current one naively:</p>
+            <div class="code-block"><pre><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < n; i++) {
+    <span class="keyword">int</span> product = <span class="number">1</span>;
+    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j < n; j++) {
+        <span class="keyword">if</span> (i != j) product *= arr[j];
+    }
+    result[i] = product;
+}
+<span class="comment">// O(N²) - multiply N-1 elements for each position</span></pre></div>
+            
+            <p style="margin-top: 15px;"><strong>For an array of 10,000 elements:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>❌ Naive: ~100,000,000 multiplications (N²)</li>
+                <li>✅ Prefix Product: ~30,000 multiplications (3N)</li>
+                <li>🚀 <strong>Speed up: ~3333x faster!</strong></li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>The Key Observation:</strong></p>
+            <p>For any index i, the "product except self" is:</p>
+            <div class="formula">result[i] = (product of all elements LEFT of i) × (product of all elements RIGHT of i)</div>
+            
+            <p style="margin-top: 15px;"><strong>Breaking It Down:</strong></p>
+            <p>Instead of multiplying all elements except one (which requires checking each time), we:</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>First pass (LEFT to RIGHT):</strong> Store product of everything to the LEFT
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Second pass (RIGHT to LEFT):</strong> Multiply by product of everything to the RIGHT
+            </div>
+            
+            <p style="margin-top: 15px;"><strong>Visual Example:</strong></p>
+            <p>Array: [2, 3, 4, 5]</p>
+            <p>For index 2 (value 4):</p>
+            <ul style="margin-left: 20px;">
+                <li>Left product: 2 × 3 = 6</li>
+                <li>Right product: 5 = 5</li>
+                <li>Result: 6 × 5 = 30 ✓ (which is 2 × 3 × 5)</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>Why Not Just Divide?</strong></p>
+            <p>You might think: "Calculate total product, then divide by current element"</p>
+            <div class="code-block"><pre><span class="comment">// Why this DOESN'T work:</span>
+<span class="keyword">int</span> totalProduct = <span class="number">1</span>;
+<span class="keyword">for</span> (<span class="keyword">int</span> num : arr) totalProduct *= num;
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < n; i++) {
+    result[i] = totalProduct / arr[i];  <span class="comment">// ❌ Problem!</span>
+}</pre></div>
+            
+            <p style="margin-top: 10px;"><strong>Issues with division approach:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>❌ <strong>Zeros:</strong> If arr[i] = 0, division fails (divide by zero)</li>
+                <li>❌ <strong>Problem constraint:</strong> Many problems explicitly say "no division allowed"</li>
+                <li>❌ <strong>Integer overflow:</strong> Total product might exceed max value</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>Space Optimization Trick:</strong></p>
+            <p>We don't need separate arrays for left and right products! We reuse the result array:</p>
+            <ul style="margin-left: 20px;">
+                <li>First pass: result[i] stores left product</li>
+                <li>Second pass: result[i] *= right product</li>
+                <li>Achieves O(1) extra space (output doesn't count)</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>This same pattern applies to:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Finding maximum from both sides (Trapping Rain Water)</li>
+                <li>Finding minimum from both sides</li>
+                <li>Any operation that needs "everything except current"</li>
+            </ul>
+        </div>
+        
+        <div class="code-block"><pre><span class="keyword">public int</span>[] <span class="function">productExceptSelf</span>(<span class="keyword">int</span>[] nums) {
+    <span class="keyword">int</span> n = nums.length;
+    <span class="keyword">int</span>[] result = <span class="keyword">new int</span>[n];
+    
+    <span class="comment">// Build prefix product from left</span>
+    result[<span class="number">0</span>] = <span class="number">1</span>;
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < n; i++) {
+        result[i] = result[i - <span class="number">1</span>] * nums[i - <span class="number">1</span>];
+    }
+    
+    <span class="comment">// Build prefix product from right and multiply</span>
+    <span class="keyword">int</span> rightProduct = <span class="number">1</span>;
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = n - <span class="number">1</span>; i >= <span class="number">0</span>; i--) {
+        result[i] *= rightProduct;
+        rightProduct *= nums[i];
+    }
+    
+    <span class="keyword">return</span> result;
+}</pre></div>
+
+        <div class="visual-box">
+            <h4>📊 Step-by-Step Execution:</h4>
+            <p><strong>Input:</strong> nums = [2, 3, 4, 5]</p>
+            
+            <p><strong>Goal:</strong> For each index, multiply all elements EXCEPT the current one</p>
+            
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">4</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 25px;"><strong>Phase 1: Left Prefix Products</strong></p>
+            <p>For each position, store product of all elements to its LEFT</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                result[0] = 1 (nothing to the left)
+            </div>
+            <div class="array-visual">
+                <div class="array-cell highlight">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">?</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">?</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">?</div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                result[1] = result[0] * nums[0] = 1 * 2 = 2
+            </div>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">?</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">?</div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                result[2] = result[1] * nums[1] = 2 * 3 = 6
+            </div>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">6</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">?</div>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">4</span>
+                result[3] = result[2] * nums[2] = 6 * 4 = 24
+            </div>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">6</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">24</div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 30px;"><strong>Phase 2: Right Prefix Products (and multiply)</strong></p>
+            <p>Going RIGHT to LEFT, multiply by product of all elements to the RIGHT</p>
+            
+            <div class="step">
+                <span class="step-number">5</span>
+                rightProduct = 1, i = 3<br>
+                result[3] = result[3] * rightProduct = 24 * 1 = 24<br>
+                rightProduct = rightProduct * nums[3] = 1 * 5 = 5
+            </div>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">6</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">24</div>
+                </div>
+            </div>
+            <p style="font-size: 0.9em; color: #666; margin-left: 20px;">🔵 rightProduct is now 5 (product of everything right of i=2)</p>
+            
+            <div class="step">
+                <span class="step-number">6</span>
+                rightProduct = 5, i = 2<br>
+                result[2] = result[2] * rightProduct = 6 * 5 = 30<br>
+                rightProduct = rightProduct * nums[2] = 5 * 4 = 20
+            </div>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">30</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">24</div>
+                </div>
+            </div>
+            <p style="font-size: 0.9em; color: #666; margin-left: 20px;">🔵 rightProduct is now 20 (product of everything right of i=1)</p>
+            
+            <div class="step">
+                <span class="step-number">7</span>
+                rightProduct = 20, i = 1<br>
+                result[1] = result[1] * rightProduct = 2 * 20 = 40<br>
+                rightProduct = rightProduct * nums[1] = 20 * 3 = 60
+            </div>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">40</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">30</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">24</div>
+                </div>
+            </div>
+            <p style="font-size: 0.9em; color: #666; margin-left: 20px;">🔵 rightProduct is now 60 (product of everything right of i=0)</p>
+            
+            <div class="step">
+                <span class="step-number">8</span>
+                rightProduct = 60, i = 0<br>
+                result[0] = result[0] * rightProduct = 1 * 60 = 60
+            </div>
+            <div class="array-visual">
+                <div class="array-cell highlight">
+                    <div class="array-index">i=0</div>
+                    <div class="array-value">60</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=1</div>
+                    <div class="array-value">40</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=2</div>
+                    <div class="array-value">30</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">i=3</div>
+                    <div class="array-value">24</div>
+                </div>
+            </div>
+            
+            <div style="background: #d4edda; padding: 20px; border-left: 5px solid #28a745; border-radius: 5px; margin-top: 25px;">
+                <h4 style="color: #155724; margin-top: 0;">✅ Final Result</h4>
+                <p style="margin: 5px 0;"><strong>result = [60, 40, 30, 24]</strong></p>
+                <p style="margin: 10px 0 5px 0;">Verification:</p>
+                <ul style="margin-left: 20px;">
+                    <li>result[0] = 3 * 4 * 5 = 60 ✓ (all except 2)</li>
+                    <li>result[1] = 2 * 4 * 5 = 40 ✓ (all except 3)</li>
+                    <li>result[2] = 2 * 3 * 5 = 30 ✓ (all except 4)</li>
+                    <li>result[3] = 2 * 3 * 4 = 24 ✓ (all except 5)</li>
+                </ul>
+            </div>
+            
+            <div style="background: #e7f3ff; padding: 15px; border-left: 5px solid #2196f3; border-radius: 5px; margin-top: 20px;">
+                <h4 style="color: #1976d2; margin-top: 0;">💡 Key Insight</h4>
+                <p>For each index i, the answer is:</p>
+                <p style="text-align: center; font-weight: bold; font-size: 1.1em; margin: 10px 0;">
+                    (Product of all left elements) × (Product of all right elements)
+                </p>
+                <p>We cleverly use the result array itself to store left products first, then multiply by right products in second pass!</p>
+            </div>
+        </div>
+
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 4 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Product of Array Except Self (LC 238)</strong> - Classic prefix product</li>
+                <li><strong>Trapping Rain Water (LC 42)</strong> - Prefix max from both sides</li>
+                <li><strong>Candy (LC 135)</strong> - Prefix from both directions</li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 5 -->
+        <div class="pattern-card">
+            <h3>Pattern 5: Running Sum with State</h3>
+            <p><strong>Problem:</strong> Track cumulative state (balance, score, etc.)</p>
+            <p><strong>Key Insight:</strong> Modify prefix sum to track specific state transitions</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Why Use Prefix Sum for This Pattern?</h4>
+            <p><strong>The Conceptual Shift:</strong></p>
+            <p>Prefix sum isn't just about numbers - it's about <strong>cumulative tracking of any state</strong>!</p>
+            
+            <p style="margin-top: 15px;"><strong>Traditional Prefix Sum:</strong></p>
+            <div class="formula">prefix[i] = prefix[i-1] + arr[i]</div>
+            <p>Tracks: cumulative sum of values</p>
+            
+            <p style="margin-top: 15px;"><strong>Generalized Prefix State:</strong></p>
+            <div class="formula">state[i] = f(state[i-1], arr[i])</div>
+            <p>Tracks: cumulative state based on any function f</p>
+            
+            <p style="margin-top: 20px;"><strong>Real-World Examples:</strong></p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Bank Balance Problem:</strong><br>
+                Track deposits (+) and withdrawals (-)<br>
+                State = running balance = previous balance + transaction
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Parentheses Matching:</strong><br>
+                '(' → +1, ')' → -1<br>
+                State = nesting depth = previous depth + current change
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Binary Array (0s and 1s):</strong><br>
+                Treat 0 as -1, keep 1 as +1<br>
+                State = 0 when equal number of 0s and 1s
+            </div>
+            
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Score Tracking:</strong><br>
+                Win (+1), Loss (-1), Draw (0)<br>
+                State = cumulative score
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>The Power of State Mapping:</strong></p>
+            <p>By mapping elements to +1/-1/0 or other values, we transform complex problems into prefix sum problems!</p>
+            
+            <p style="margin-top: 15px;"><strong>Example: Contiguous Array (LC 525)</strong></p>
+            <p><strong>Problem:</strong> Find longest subarray with equal 0s and 1s</p>
+            <p><strong>Trick:</strong> Convert 0 → -1, keep 1 → +1</p>
+            <div class="code-block"><pre>Original:  [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>]
+Converted: [<span class="number">-1</span>, <span class="number">1</span>, <span class="number">-1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">-1</span>]
+Prefix:    [<span class="number">-1</span>, <span class="number">0</span>, <span class="number">-1</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>]</pre></div>
+            
+            <p style="margin-top: 10px;">When prefix sum returns to same value, it means equal 0s and 1s in between!</p>
+            <ul style="margin-left: 20px;">
+                <li>Prefix = 0 at index 1 and index 3 → subarray [1,0,1] has equal 0s and 1s ✓</li>
+                <li>Prefix = 0 at index 1 and index 5 → subarray [1,0,1,1,0] has equal 0s and 1s ✓</li>
+            </ul>
+            
+            <p style="margin-top: 20px;"><strong>Why This Pattern Works:</strong></p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Transform problem:</strong> Map original values to increments/decrements
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Track cumulative state:</strong> Use prefix sum on transformed values
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Use HashMap:</strong> Store first occurrence of each state
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Find answer:</strong> When state repeats, you've found a valid range
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Common State Transformations:</strong></p>
+            <table style="margin-top: 10px;">
+                <tr>
+                    <th>Problem Type</th>
+                    <th>Transformation</th>
+                    <th>What State = 0 Means</th>
+                </tr>
+                <tr>
+                    <td>Equal 0s and 1s</td>
+                    <td>0 → -1, 1 → +1</td>
+                    <td>Same count of both</td>
+                </tr>
+                <tr>
+                    <td>Equal vowels/consonants</td>
+                    <td>vowel → +1, consonant → -1</td>
+                    <td>Equal counts</td>
+                </tr>
+                <tr>
+                    <td>Balanced parentheses</td>
+                    <td>'(' → +1, ')' → -1</td>
+                    <td>All matched</td>
+                </tr>
+                <tr>
+                    <td>Win/Loss balance</td>
+                    <td>win → +1, loss → -1</td>
+                    <td>Even record</td>
+                </tr>
+            </table>
+            
+            <p style="margin-top: 20px;"><strong>Key Insight:</strong></p>
+            <p>Prefix sum isn't just addition - it's about tracking <strong>how we got to the current state</strong>. If two positions have the same state, everything in between "canceled out" or "balanced"!</p>
+        </div>
+        
+        <div class="code-block"><pre><span class="comment">// Example: Check if parentheses are balanced</span>
+<span class="keyword">public boolean</span> <span class="function">isValid</span>(String s) {
+    <span class="keyword">int</span> balance = <span class="number">0</span>;
+    
+    <span class="keyword">for</span> (<span class="keyword">char</span> c : s.toCharArray()) {
+        <span class="keyword">if</span> (c == <span class="string">'('</span>) balance++;
+        <span class="keyword">else</span> balance--;
+        
+        <span class="comment">// Never go negative (more closing than opening)</span>
+        <span class="keyword">if</span> (balance < <span class="number">0</span>) <span class="keyword">return false</span>;
+    }
+    
+    <span class="keyword">return</span> balance == <span class="number">0</span>;
+}</pre></div>
+
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 5 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Contiguous Array (LC 525)</strong> - Count 0s and 1s equally</li>
+                <li><strong>Longest Well-Performing Interval (LC 1124)</strong> - More tiring than non-tiring days</li>
+                <li><strong>Maximum Score After Splitting String (LC 1422)</strong> - Running count</li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 6 -->
+        <div class="pattern-card">
+            <h3>Pattern 6: Difference Array (Range Updates)</h3>
+            <p><strong>Problem:</strong> Multiple range updates, then query final state</p>
+            <p><strong>Key Insight:</strong> Mark start (+val) and end+1 (-val), then prefix sum</p>
+            <p><strong>Time:</strong> O(N + Q) instead of O(N*Q)</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Why Use Prefix Sum for This Pattern?</h4>
+            <p><strong>The Problem Without Difference Array:</strong></p>
+            <p>When you have multiple range updates to apply to an array:</p>
+            <div class="code-block"><pre><span class="comment">// Naive approach: Update every element in range</span>
+<span class="keyword">for</span> (Update update : updates) {
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = update.start; i <= update.end; i++) {
+        arr[i] += update.value;
+    }
+}
+<span class="comment">// O(Q * N) where Q = number of updates, N = array size</span></pre></div>
+            
+            <p style="margin-top: 15px;"><strong>For 10,000 updates on array of 10,000:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>❌ Naive (worst case): 10,000 × 10,000 = 100,000,000 operations</li>
+                <li>✅ Difference Array: 20,000 (mark starts/ends) + 10,000 (prefix sum) = 30,000 operations</li>
+                <li>🚀 <strong>Speed up: ~3333x faster!</strong></li>
+            </ul>
+            
+            <p style="margin-top: 20px;"><strong>The Brilliant Trick:</strong></p>
+            <p>Instead of updating every element in a range, we only mark two positions:</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>At range START:</strong> Add +value (signals "increment starts here")
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>At range END+1:</strong> Add -value (signals "increment stops here")
+            </div>
+            
+            <p style="margin-top: 15px;"><strong>Think of it Like a Staircase:</strong></p>
+            <p>Imagine walking through the array, tracking "current height":</p>
+            <ul style="margin-left: 20px;">
+                <li>When you hit +value, you step UP by that amount</li>
+                <li>When you hit -value, you step DOWN by that amount</li>
+                <li>Your current height is the accumulated change = prefix sum!</li>
+            </ul>
+            
+            <p style="margin-top: 20px;"><strong>Visual Example:</strong></p>
+            <p>Add 3 to range [1, 3] in array [0, 0, 0, 0, 0]</p>
+            
+            <div class="code-block"><pre>Difference Array: [<span class="number">0</span>, <span class="number">+3</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">-3</span>, <span class="number">0</span>]
+                   ↓
+Apply Prefix Sum: [<span class="number">0</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">0</span>]
+                   
+Step-by-step walk:
+Index 0: height = 0
+Index 1: height = 0 + 3 = <span class="number">3</span> ⬆️ (stepped up)
+Index 2: height = 3 + 0 = <span class="number">3</span> ➡️ (plateau)
+Index 3: height = 3 + 0 = <span class="number">3</span> ➡️ (plateau)
+Index 4: height = 3 - 3 = <span class="number">0</span> ⬇️ (stepped down)
+Index 5: height = 0 + 0 = <span class="number">0</span> ➡️ (back to ground)</pre></div>
+            
+            <p style="margin-top: 20px;"><strong>Why Prefix Sum is Perfect Here:</strong></p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Compact representation:</strong> Instead of storing final values, we store just the changes
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Efficient updates:</strong> Each range update = just 2 array modifications (O(1))
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Batch processing:</strong> Apply ALL updates first, THEN compute final state once
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Reconstruction:</strong> Prefix sum "unfolds" the difference array into actual values
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>The Mathematical Connection:</strong></p>
+            <p>The difference array is the <strong>inverse</strong> of prefix sum:</p>
+            <div class="formula">prefix_sum(difference_array) = original_array</div>
+            <div class="formula">difference_array[i] = original[i] - original[i-1]</div>
+            
+            <p style="margin-top: 20px;"><strong>Real-World Applications:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>✈️ <strong>Flight bookings:</strong> Reserve seats for range of flights</li>
+                <li>🚗 <strong>Carpooling:</strong> Track passengers in car over route segments</li>
+                <li>📅 <strong>Calendar events:</strong> Mark busy times in schedule</li>
+                <li>🎮 <strong>Game buffs:</strong> Apply temporary stat boosts over time ranges</li>
+                <li>🏢 <strong>Resource allocation:</strong> Assign resources to time slots</li>
+            </ul>
+            
+            <p style="margin-top: 20px;"><strong>When to Use This Pattern:</strong></p>
+            <div class="warning-box">
+                <h4>Use Difference Array when:</h4>
+                <ul>
+                    <li>✅ You have MANY range updates</li>
+                    <li>✅ Updates come all at once (batch processing)</li>
+                    <li>✅ You need final state AFTER all updates</li>
+                    <li>✅ Ranges can overlap</li>
+                </ul>
+                
+                <h4 style="margin-top: 15px;">DON'T use when:</h4>
+                <ul>
+                    <li>❌ Need array state DURING updates (use Segment Tree instead)</li>
+                    <li>❌ Single update only (just update directly)</li>
+                    <li>❌ Need to query ranges while updating (use Fenwick Tree or Segment Tree)</li>
+                </ul>
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>The Key Insight:</strong></p>
+            <p>Prefix sum and difference array are two sides of the same coin:</p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Prefix Sum:</strong> Expands differences into cumulative values (integration)</li>
+                <li><strong>Difference Array:</strong> Compresses values into differences (differentiation)</li>
+            </ul>
+            <p>Together, they give us O(1) range updates and O(N) final reconstruction!</p>
+        </div>
+        
+        <div class="visual-box">
+            <p><strong>Example:</strong> Add 3 to range [1, 3]</p>
+            <p>Difference array technique:</p>
+            <div class="step">
+                <span class="step-number">1</span>
+                diff[1] += 3 (start of range)
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                diff[4] -= 3 (end+1 of range)
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                Apply prefix sum on diff to get final array
+            </div>
+        </div>
+        
+        <div class="code-block"><pre><span class="keyword">public int</span>[] <span class="function">rangeUpdate</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span>[][] updates) {
+    <span class="keyword">int</span> n = arr.length;
+    <span class="keyword">int</span>[] diff = <span class="keyword">new int</span>[n + <span class="number">1</span>];
+    
+    <span class="comment">// Apply all updates to difference array</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span>[] update : updates) {
+        <span class="keyword">int</span> start = update[<span class="number">0</span>];
+        <span class="keyword">int</span> end = update[<span class="number">1</span>];
+        <span class="keyword">int</span> val = update[<span class="number">2</span>];
+        
+        diff[start] += val;
+        diff[end + <span class="number">1</span>] -= val;
+    }
+    
+    <span class="comment">// Build result using prefix sum</span>
+    <span class="keyword">int</span>[] result = <span class="keyword">new int</span>[n];
+    result[<span class="number">0</span>] = arr[<span class="number">0</span>] + diff[<span class="number">0</span>];
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < n; i++) {
+        diff[i] += diff[i - <span class="number">1</span>];
+        result[i] = arr[i] + diff[i];
+    }
+    
+    <span class="keyword">return</span> result;
+}</pre></div>
+
+        <div class="visual-box">
+            <h4>📊 Difference Array Technique Visualization:</h4>
+            
+            <p><strong>Problem:</strong> Given arr = [0, 0, 0, 0, 0, 0] and multiple range updates:</p>
+            <ol>
+                <li>Add 3 to range [1, 3]</li>
+                <li>Add 5 to range [2, 5]</li>
+                <li>Add 2 to range [0, 2]</li>
+            </ol>
+            
+            <p style="margin-top: 25px;"><strong>Initial Arrays:</strong></p>
+            <p>Original:</p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">0</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">1</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">2</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">3</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">4</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">5</div>
+                    <div class="array-value">0</div>
+                </div>
+            </div>
+            
+            <p>Difference Array (size n+1):</p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">0</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">1</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">2</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">3</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">4</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">5</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell" style="background: #ffe0b2;">
+                    <div class="array-index">6</div>
+                    <div class="array-value">0</div>
+                </div>
+            </div>
+            <p style="font-size: 0.9em; color: #666;">Orange cell = extra space to handle boundary</p>
+            
+            <p style="margin-top: 30px;"><strong>Update 1: Add 3 to range [1, 3]</strong></p>
+            <div class="step">
+                <span class="step-number">1</span>
+                diff[1] += 3 (mark start of range)
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                diff[4] -= 3 (mark end+1 of range)
+            </div>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">0</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell" style="background: #c8e6c9;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">+3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">2</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">3</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell" style="background: #ffcdd2;">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">5</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell" style="background: #ffe0b2;">
+                    <div class="array-index">6</div>
+                    <div class="array-value">0</div>
+                </div>
+            </div>
+            <p style="font-size: 0.9em; color: #666;">🟢 Green = start, 🔴 Red = end+1</p>
+            
+            <p style="margin-top: 25px;"><strong>Update 2: Add 5 to range [2, 5]</strong></p>
+            <div class="step">
+                <span class="step-number">3</span>
+                diff[2] += 5
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                diff[6] -= 5
+            </div>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">0</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">1</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell" style="background: #c8e6c9;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">+5</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">3</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">5</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell" style="background: #ffcdd2;">
+                    <div class="array-index">6</div>
+                    <div class="array-value">-5</div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 25px;"><strong>Update 3: Add 2 to range [0, 2]</strong></p>
+            <div class="step">
+                <span class="step-number">5</span>
+                diff[0] += 2
+            </div>
+            <div class="step">
+                <span class="step-number">6</span>
+                diff[3] -= 2
+            </div>
+            <div class="array-visual">
+                <div class="array-cell" style="background: #c8e6c9;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">+2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">1</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">2</div>
+                    <div class="array-value">5</div>
+                </div>
+                <div class="array-cell" style="background: #ffcdd2;">
+                    <div class="array-index">3</div>
+                    <div class="array-value">-2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">5</div>
+                    <div class="array-value">0</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">6</div>
+                    <div class="array-value">-5</div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 30px;"><strong>Phase 2: Apply Prefix Sum to Difference Array</strong></p>
+            
+            <div class="step">
+                <span class="step-number">7</span>
+                Convert difference array into actual changes using prefix sum
+            </div>
+            
+            <table style="margin: 15px 0;">
+                <tr>
+                    <th>Index</th>
+                    <th>Diff Value</th>
+                    <th>Prefix Sum</th>
+                    <th>Original</th>
+                    <th>Final Result</th>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">0</td>
+                    <td style="text-align: center;">2</td>
+                    <td style="text-align: center; background: #c8e6c9;">2</td>
+                    <td style="text-align: center;">0</td>
+                    <td style="text-align: center; font-weight: bold;">2</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">1</td>
+                    <td style="text-align: center;">3</td>
+                    <td style="text-align: center; background: #c8e6c9;">5</td>
+                    <td style="text-align: center;">0</td>
+                    <td style="text-align: center; font-weight: bold;">5</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">2</td>
+                    <td style="text-align: center;">5</td>
+                    <td style="text-align: center; background: #c8e6c9;">10</td>
+                    <td style="text-align: center;">0</td>
+                    <td style="text-align: center; font-weight: bold;">10</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">3</td>
+                    <td style="text-align: center;">-2</td>
+                    <td style="text-align: center; background: #c8e6c9;">8</td>
+                    <td style="text-align: center;">0</td>
+                    <td style="text-align: center; font-weight: bold;">8</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">-3</td>
+                    <td style="text-align: center; background: #c8e6c9;">5</td>
+                    <td style="text-align: center;">0</td>
+                    <td style="text-align: center; font-weight: bold;">5</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">5</td>
+                    <td style="text-align: center;">0</td>
+                    <td style="text-align: center; background: #c8e6c9;">5</td>
+                    <td style="text-align: center;">0</td>
+                    <td style="text-align: center; font-weight: bold;">5</td>
+                </tr>
+            </table>
+            
+            <p><strong>Final Result Array:</strong></p>
+            <div class="array-visual">
+                <div class="array-cell" style="background: #c8e6c9;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell" style="background: #c8e6c9;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">5</div>
+                </div>
+                <div class="array-cell" style="background: #c8e6c9;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">10</div>
+                </div>
+                <div class="array-cell" style="background: #c8e6c9;">
+                    <div class="array-index">3</div>
+                    <div class="array-value">8</div>
+                </div>
+                <div class="array-cell" style="background: #c8e6c9;">
+                    <div class="array-index">4</div>
+                    <div class="array-value">5</div>
+                </div>
+                <div class="array-cell" style="background: #c8e6c9;">
+                    <div class="array-index">5</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            
+            <div style="background: #d4edda; padding: 20px; border-left: 5px solid #28a745; border-radius: 5px; margin-top: 25px;">
+                <h4 style="color: #155724; margin-top: 0;">✅ Verification</h4>
+                <p style="margin: 5px 0;"><strong>Index 0:</strong> 0 + 2 = 2 ✓ (from update 3)</p>
+                <p style="margin: 5px 0;"><strong>Index 1:</strong> 0 + 3 + 2 = 5 ✓ (from updates 1 and 3)</p>
+                <p style="margin: 5px 0;"><strong>Index 2:</strong> 0 + 3 + 5 + 2 = 10 ✓ (from all 3 updates)</p>
+                <p style="margin: 5px 0;"><strong>Index 3:</strong> 0 + 3 + 5 = 8 ✓ (from updates 1 and 2)</p>
+                <p style="margin: 5px 0;"><strong>Index 4:</strong> 0 + 5 = 5 ✓ (from update 2)</p>
+                <p style="margin: 5px 0;"><strong>Index 5:</strong> 0 + 5 = 5 ✓ (from update 2)</p>
+            </div>
+            
+            <div style="background: #e7f3ff; padding: 15px; border-left: 5px solid #2196f3; border-radius: 5px; margin-top: 20px;">
+                <h4 style="color: #1976d2; margin-top: 0;">💡 Why This Works</h4>
+                <p>Think of it like a staircase:</p>
+                <ul style="margin-left: 20px;">
+                    <li><strong>+val at start:</strong> "Step UP here"</li>
+                    <li><strong>-val at end+1:</strong> "Step DOWN here"</li>
+                    <li><strong>Prefix sum:</strong> Walks the staircase, tracking current height</li>
+                </ul>
+                <p style="margin-top: 10px;"><strong>Efficiency:</strong> O(N + Q) instead of O(N * Q) for naive approach!</p>
+            </div>
+        </div>
+
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 6 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Range Addition (LC 370)</strong> - Classic difference array</li>
+                <li><strong>Corporate Flight Bookings (LC 1109)</strong> - Seat reservations</li>
+                <li><strong>Car Pooling (LC 1094)</strong> - Passenger capacity</li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 7 -->
+        <div class="pattern-card">
+            <h3>Pattern 7: Prefix XOR</h3>
+            <p><strong>Problem:</strong> XOR of subarray, find pairs with XOR = K</p>
+            <p><strong>Key Insight:</strong> XOR has self-inverse property: A ⊕ A = 0</p>
+            <p><strong>Time:</strong> O(N), Space: O(N)</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Why Use Prefix XOR for This Pattern?</h4>
+            <p><strong>The XOR Property:</strong></p>
+            <p>XOR has a unique mathematical property that makes it perfect for prefix operations:</p>
+            <div class="formula">A ⊕ A = 0 (anything XOR itself = 0)</div>
+            <div class="formula">A ⊕ 0 = A (XOR with 0 = identity)</div>
+            <div class="formula">A ⊕ B = B ⊕ A (commutative)</div>
+            
+            <p style="margin-top: 15px;"><strong>Key Insight for Subarrays:</strong></p>
+            <p>If we have prefix XOR from 0 to j and from 0 to i-1:</p>
+            <div class="formula">XOR(i, j) = prefix[j] ⊕ prefix[i-1]</div>
+            
+            <p style="margin-top: 15px;"><strong>Why? Because:</strong></p>
+            <div class="step">
+                <span class="step-number">1</span>
+                prefix[j] = arr[0] ⊕ arr[1] ⊕ ... ⊕ arr[j]
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                prefix[i-1] = arr[0] ⊕ arr[1] ⊕ ... ⊕ arr[i-1]
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                prefix[j] ⊕ prefix[i-1] cancels out arr[0]...arr[i-1] (they XOR to 0!)
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                Left with: arr[i] ⊕ arr[i+1] ⊕ ... ⊕ arr[j] ✓
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Finding Subarrays with XOR = K:</strong></p>
+            <p>Similar to Pattern 2, but with XOR instead of sum:</p>
+            <p>If prefix[j] ⊕ prefix[i-1] = K, then:</p>
+            <div class="formula">prefix[i-1] = prefix[j] ⊕ K</div>
+            <p>So we look for (currentXOR ⊕ K) in our HashMap!</p>
+            
+            <p style="margin-top: 20px;"><strong>Real-World Applications:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>🔐 Cryptography (XOR encryption)</li>
+                <li>🎮 Game state XOR (Nim game, sprague-grundy)</li>
+                <li>💾 Error detection (parity bits)</li>
+                <li>🧮 Finding unique elements</li>
+            </ul>
+        </div>
+        
+        <div class="code-block"><pre><span class="keyword">public int</span> <span class="function">subarraysWithXOR</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> k) {
+    Map<Integer, Integer> map = <span class="keyword">new</span> HashMap<>();
+    <span class="keyword">int</span> count = <span class="number">0</span>;
+    <span class="keyword">int</span> xor = <span class="number">0</span>;
+    
+    map.put(<span class="number">0</span>, <span class="number">1</span>);  <span class="comment">// Important: XOR of empty subarray is 0</span>
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> num : arr) {
+        xor ^= num;  <span class="comment">// Current prefix XOR</span>
+        
+        <span class="comment">// Check if (xor ^ k) exists - means we found subarray with XOR = k</span>
+        <span class="keyword">int</span> target = xor ^ k;
+        <span class="keyword">if</span> (map.containsKey(target)) {
+            count += map.get(target);
+        }
+        
+        <span class="comment">// Add current XOR to map</span>
+        map.put(xor, map.getOrDefault(xor, <span class="number">0</span>) + <span class="number">1</span>);
+    }
+    
+    <span class="keyword">return</span> count;
+}</pre></div>
+
+        <div class="visual-box">
+            <h4>📊 Example: arr = [4, 2, 2, 6, 4], k = 6</h4>
+            
+            <p><strong>Step-by-step XOR accumulation:</strong></p>
+            <table style="margin: 15px 0;">
+                <tr>
+                    <th>Index</th>
+                    <th>Value</th>
+                    <th>Prefix XOR</th>
+                    <th>Looking for</th>
+                    <th>Found?</th>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">0</td>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">4 ⊕ 6 = 2</td>
+                    <td style="text-align: center;">❌</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">1</td>
+                    <td style="text-align: center;">2</td>
+                    <td style="text-align: center;">6</td>
+                    <td style="text-align: center;">6 ⊕ 6 = 0</td>
+                    <td style="text-align: center;">✅ count++</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">2</td>
+                    <td style="text-align: center;">2</td>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">4 ⊕ 6 = 2</td>
+                    <td style="text-align: center;">❌</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">3</td>
+                    <td style="text-align: center;">6</td>
+                    <td style="text-align: center;">2</td>
+                    <td style="text-align: center;">2 ⊕ 6 = 4</td>
+                    <td style="text-align: center;">✅ count += 2</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">6</td>
+                    <td style="text-align: center;">6 ⊕ 6 = 0</td>
+                    <td style="text-align: center;">✅ count++</td>
+                </tr>
+            </table>
+            
+            <p><strong>Total count = 4 subarrays with XOR = 6:</strong></p>
+            <ol>
+                <li>[4, 2] → 4 ⊕ 2 = 6 ✓</li>
+                <li>[2, 2, 6] → 2 ⊕ 2 ⊕ 6 = 6 ✓</li>
+                <li>[6] → 6 ✓</li>
+                <li>[2, 6, 4] → 2 ⊕ 6 ⊕ 4 = 6 ✓</li>
+            </ol>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 7 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Count Triplets That Can Form Two Arrays of Equal XOR (LC 1442)</strong></li>
+                <li><strong>Maximum XOR of Two Numbers in Array (LC 421)</strong></li>
+                <li><strong>Find XOR of Numbers in Range (GFG)</strong></li>
+                <li><strong>Subarray XOR Less Than K (Various platforms)</strong></li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 8 -->
+        <div class="pattern-card">
+            <h3>Pattern 8: Prefix Sum with Modulo (Divisibility)</h3>
+            <p><strong>Problem:</strong> Find subarrays divisible by K or with sum % K = 0</p>
+            <p><strong>Key Insight:</strong> Track prefix sum modulo K, use HashMap</p>
+            <p><strong>Time:</strong> O(N), Space: O(K)</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Why Use Prefix Sum with Modulo?</h4>
+            <p><strong>The Modulo Property:</strong></p>
+            <p>If we want subarrays where sum is divisible by K:</p>
+            <div class="formula">(prefix[j] - prefix[i-1]) % K = 0</div>
+            <p>This means:</p>
+            <div class="formula">prefix[j] % K = prefix[i-1] % K</div>
+            
+            <p style="margin-top: 15px;"><strong>Key Insight:</strong></p>
+            <p>If two positions have the SAME remainder when divided by K, the subarray between them is divisible by K!</p>
+            
+            <p style="margin-top: 20px;"><strong>Handling Negative Numbers:</strong></p>
+            <p>In many languages, modulo of negative numbers can be negative. We need to fix this:</p>
+            <div class="code-block"><pre><span class="comment">// Wrong: can give negative remainder</span>
+<span class="keyword">int</span> mod = sum % k;
+
+<span class="comment">// Correct: always gives positive remainder</span>
+<span class="keyword">int</span> mod = ((sum % k) + k) % k;</pre></div>
+            
+            <p style="margin-top: 20px;"><strong>Why This Matters:</strong></p>
+            <p>Example: sum = -7, k = 5</p>
+            <ul style="margin-left: 20px;">
+                <li>Wrong: -7 % 5 = -2 (in Java/C++)</li>
+                <li>Correct: ((-7 % 5) + 5) % 5 = (-2 + 5) % 5 = 3</li>
+            </ul>
+            <p>Both -2 and 3 represent the same equivalence class modulo 5, but we need consistent non-negative values for HashMap!</p>
+            
+            <p style="margin-top: 20px;"><strong>Real-World Applications:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>📅 Finding weeks (sum divisible by 7)</li>
+                <li>💰 Currency conversion (divisible by exchange rate)</li>
+                <li>📦 Packaging problems (items divisible by box size)</li>
+                <li>⏰ Time calculations (hours divisible by 24)</li>
+            </ul>
+        </div>
+        
+        <div class="code-block"><pre><span class="keyword">public int</span> <span class="function">subarraysDivByK</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> k) {
+    Map<Integer, Integer> map = <span class="keyword">new</span> HashMap<>();
+    <span class="keyword">int</span> count = <span class="number">0</span>;
+    <span class="keyword">int</span> sum = <span class="number">0</span>;
+    
+    map.put(<span class="number">0</span>, <span class="number">1</span>);  <span class="comment">// Remainder 0 seen once initially</span>
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> num : arr) {
+        sum += num;
+        
+        <span class="comment">// CRITICAL: Handle negative remainders</span>
+        <span class="keyword">int</span> mod = ((sum % k) + k) % k;
+        
+        <span class="comment">// If this remainder seen before, found valid subarrays</span>
+        <span class="keyword">if</span> (map.containsKey(mod)) {
+            count += map.get(mod);
+        }
+        
+        map.put(mod, map.getOrDefault(mod, <span class="number">0</span>) + <span class="number">1</span>);
+    }
+    
+    <span class="keyword">return</span> count;
+}</pre></div>
+
+        <div class="visual-box">
+            <h4>📊 Example: arr = [4, 5, 0, -2, -3, 1], k = 5</h4>
+            
+            <p><strong>Find all subarrays with sum divisible by 5:</strong></p>
+            <table style="margin: 15px 0;">
+                <tr>
+                    <th>Index</th>
+                    <th>Value</th>
+                    <th>Sum</th>
+                    <th>Sum % 5</th>
+                    <th>Count Update</th>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center;">-</td>
+                    <td style="text-align: center;">0</td>
+                    <td style="text-align: center; background: #c8e6c9;">0</td>
+                    <td style="text-align: center;">map[0] = 1</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">0</td>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">count += 0</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">1</td>
+                    <td style="text-align: center;">5</td>
+                    <td style="text-align: center;">9</td>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">count += 1 (found [5]!)</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">2</td>
+                    <td style="text-align: center;">0</td>
+                    <td style="text-align: center;">9</td>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">count += 2 (found 2 more!)</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">3</td>
+                    <td style="text-align: center;">-2</td>
+                    <td style="text-align: center;">7</td>
+                    <td style="text-align: center;">2</td>
+                    <td style="text-align: center;">count += 0</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">-3</td>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">count += 3 (found 3 more!)</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;">5</td>
+                    <td style="text-align: center;">1</td>
+                    <td style="text-align: center;">5</td>
+                    <td style="text-align: center; background: #c8e6c9;">0</td>
+                    <td style="text-align: center;">count += 1 (entire array!)</td>
+                </tr>
+            </table>
+            
+            <p><strong>Total = 7 subarrays divisible by 5</strong></p>
+            
+            <div style="background: #e7f3ff; padding: 15px; border-left: 5px solid #2196f3; border-radius: 5px; margin-top: 20px;">
+                <h4 style="color: #1976d2; margin-top: 0;">💡 Why Remainder 4 appeared 4 times?</h4>
+                <p>At indices 0, 1, 2, and 4, the prefix sum % 5 = 4.</p>
+                <p>This means there are C(4,2) = 6 subarrays between these positions with sum divisible by 5!</p>
+                <p>Plus the subarray from start with remainder 0 = 1 more.</p>
+                <p>Total = 6 + 1 = 7 ✓</p>
+            </div>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 8 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Subarray Sums Divisible by K (LC 974)</strong> - Exact pattern</li>
+                <li><strong>Continuous Subarray Sum (LC 523)</strong> - Sum is multiple of K</li>
+                <li><strong>Make Sum Divisible by P (LC 1590)</strong> - Remove smallest subarray</li>
+                <li><strong>Check if Array Pairs Are Divisible by K (LC 1497)</strong></li>
+            </ol>
+        </div>
+        
+        <h2>🚫 Common Mistakes</h2>
+        
+        <div class="warning-box">
+            <h4>Mistake 1: Array Index Out of Bounds</h4>
+            <p><strong>Problem:</strong> Accessing prefix[left - 1] when left = 0</p>
+            <p><strong>Solution:</strong> Always check if left == 0 before subtracting</p>
+            <div class="code-block"><pre><span class="comment">// Wrong</span>
+<span class="keyword">return</span> prefix[right] - prefix[left - <span class="number">1</span>];
+
+<span class="comment">// Correct</span>
+<span class="keyword">if</span> (left == <span class="number">0</span>) <span class="keyword">return</span> prefix[right];
+<span class="keyword">return</span> prefix[right] - prefix[left - <span class="number">1</span>];</pre></div>
+        </div>
+        
+        <div class="warning-box">
+            <h4>Mistake 2: Forgetting map.put(0, 1)</h4>
+            <p><strong>Problem:</strong> Missing subarrays that start from index 0</p>
+            <p><strong>Solution:</strong> Initialize HashMap with {0: 1} before loop</p>
+        </div>
+        
+        <div class="warning-box">
+            <h4>Mistake 3: Using Prefix Sum for Maximum Subarray</h4>
+            <p><strong>Problem:</strong> Trying to find max sum using prefix sum</p>
+            <p><strong>Why Wrong:</strong> Prefix sum finds sum = K, not maximum sum</p>
+            <p><strong>Correct Approach:</strong> Use Kadane's Algorithm for maximum sum</p>
+        </div>
+        
+        <div class="warning-box">
+            <h4>Mistake 4: Integer Overflow</h4>
+            <p><strong>Problem:</strong> Sum exceeds Integer.MAX_VALUE</p>
+            <p><strong>Solution:</strong> Use long instead of int for prefix array</p>
+            <div class="code-block"><pre><span class="keyword">long</span>[] prefix = <span class="keyword">new long</span>[n];  <span class="comment">// Not int[]</span></pre></div>
+        </div>
+        
+        <div class="warning-box">
+            <h4>Mistake 5: Modifying Original Array</h4>
+            <p><strong>Problem:</strong> Computing prefix sum in-place destroys original data</p>
+            <p><strong>Solution:</strong> Create separate prefix array or work backwards</p>
+        </div>
+        
+        <h2>🔄 Prefix Sum vs Similar Techniques</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Technique</th>
+                    <th>When to Use</th>
+                    <th>Time Complexity</th>
+                    <th>Key Difference</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Prefix Sum</strong></td>
+                    <td>Sum of subarray = K, multiple range queries</td>
+                    <td>O(N) + O(1) query</td>
+                    <td>Cumulative from start</td>
+                </tr>
+                <tr>
+                    <td><strong>Sliding Window</strong></td>
+                    <td>Fixed/variable window, min/max in window</td>
+                    <td>O(N)</td>
+                    <td>Maintains window state</td>
+                </tr>
+                <tr>
+                    <td><strong>Kadane's</strong></td>
+                    <td>MAXIMUM sum subarray</td>
+                    <td>O(N)</td>
+                    <td>Tracks best so far</td>
+                </tr>
+                <tr>
+                    <td><strong>Two Pointers</strong></td>
+                    <td>Sorted array, find pairs/triplets</td>
+                    <td>O(N) or O(N²)</td>
+                    <td>Moves from both ends</td>
+                </tr>
+                <tr>
+                    <td><strong>Segment Tree</strong></td>
+                    <td>Range queries + updates</td>
+                    <td>O(log N) query/update</td>
+                    <td>Tree structure</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2>🎓 Decision Tree: Which Technique?</h2>
+        
+        <div class="visual-box">
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Is it about subarray/range sum?</strong> → Consider Prefix Sum
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Are there multiple queries?</strong> → Definitely Prefix Sum
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Need exact sum = K?</strong> → Prefix Sum + HashMap
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Need MAXIMUM sum?</strong> → Kadane's Algorithm (NOT prefix sum)
+            </div>
+            <div class="step">
+                <span class="step-number">5</span>
+                <strong>Fixed window size?</strong> → Sliding Window (NOT prefix sum)
+            </div>
+            <div class="step">
+                <span class="step-number">6</span>
+                <strong>Need to update values?</strong> → Difference Array or Segment Tree
+            </div>
+        </div>
+        
+        <h2>💡 Pro Tips</h2>
+        
+        <div class="tip-box">
+            <h4>Tip 1: 1-indexed vs 0-indexed</h4>
+            <p>For 2D prefix sum, use size [m+1][n+1] to avoid boundary checks:</p>
+            <div class="code-block"><pre>prefix = <span class="keyword">new int</span>[m + <span class="number">1</span>][n + <span class="number">1</span>];  <span class="comment">// Extra row & column</span></pre></div>
+        </div>
+        
+        <div class="tip-box">
+            <h4>Tip 2: Space Optimization</h4>
+            <p>For "Product Except Self", use output array for left prefix to save space:</p>
+            <div class="code-block"><pre><span class="comment">// Don't create separate leftProduct array</span>
+<span class="comment">// Use result array itself for left products</span></pre></div>
+        </div>
+        
+        <div class="tip-box">
+            <h4>Tip 3: HashMap Keys</h4>
+            <p>In "Count subarrays" problems, store PREFIX SUM as key, not index!</p>
+            <div class="code-block"><pre>map.put(sum, frequency);  <span class="comment">// sum is key, not index</span></pre></div>
+        </div>
+        
+        <div class="tip-box">
+            <h4>Tip 4: Modulo Operations</h4>
+            <p>For "divisible by K" problems, handle negative remainders:</p>
+            <div class="code-block"><pre><span class="keyword">int</span> mod = ((sum % k) + k) % k;  <span class="comment">// Handles negatives</span></pre></div>
+        </div>
+        
+        <h2>📚 Complete Problem List (50+ Problems)</h2>
+        
+        <h3>Easy (10 problems)</h3>
+        <div class="problem-box">
+            <ol>
+                <li>Range Sum Query - Immutable (LC 303)</li>
+                <li>Find Pivot Index (LC 724)</li>
+                <li>Running Sum of 1d Array (LC 1480)</li>
+                <li>Left and Right Sum Differences (LC 2574)</li>
+                <li>Find the Middle Index in Array (LC 1991)</li>
+                <li>Number of Ways to Split Array (LC 2270)</li>
+                <li>Largest Positive Integer That Exists With Negative (LC 2441)</li>
+                <li>Check if All A's Appears Before B's (LC 2124)</li>
+                <li>Minimum Value to Get Positive Step Sum (LC 1413)</li>
+                <li>Find the Highest Altitude (LC 1732)</li>
+            </ol>
+        </div>
+        
+        <h3>Medium (30 problems)</h3>
+        <div class="problem-box">
+            <ol>
+                <li><strong>Subarray Sum Equals K (LC 560) ⭐</strong></li>
+                <li><strong>Product of Array Except Self (LC 238) ⭐</strong></li>
+                <li>Range Sum Query 2D (LC 304)</li>
+                <li>Continuous Subarray Sum (LC 523)</li>
+                <li>Subarray Sums Divisible by K (LC 974)</li>
+                <li>Contiguous Array (LC 525)</li>
+                <li>Binary Subarrays With Sum (LC 930)</li>
+                <li>Count Number of Nice Subarrays (LC 1248)</li>
+                <li>Corporate Flight Bookings (LC 1109)</li>
+                <li>Car Pooling (LC 1094)</li>
+                <li>Matrix Block Sum (LC 1314)</li>
+                <li>Range Addition (LC 370 - Premium)</li>
+                <li>Maximum Size Subarray Sum Equals k (LC 325 - Premium)</li>
+                <li>Longest Well-Performing Interval (LC 1124)</li>
+                <li>Ways to Split Array Into Three Subarrays (LC 1712)</li>
+                <li>Maximum Sum of Two Non-Overlapping Subarrays (LC 1031)</li>
+                <li>Number of Submatrices That Sum to Target (LC 1074)</li>
+                <li>K Radius Subarray Averages (LC 2090)</li>
+                <li>Find Two Non-overlapping Sub-arrays Sum to Target (LC 1477)</li>
+                <li>Maximum Sum of 3 Non-Overlapping Subarrays (LC 689)</li>
+                <li>Count Vowel Substrings of a String (LC 2062)</li>
+                <li>Longest Substring with At Most K Distinct Chars (LC 340 - Premium)</li>
+                <li>Max Consecutive Ones III (LC 1004)</li>
+                <li>Grumpy Bookstore Owner (LC 1052)</li>
+                <li>Shortest Subarray with Sum at Least K (LC 862)</li>
+                <li>Minimum Operations to Reduce X to Zero (LC 1658)</li>
+                <li>Maximize the Confusion of an Exam (LC 2024)</li>
+                <li>Number of Zero-Filled Subarrays (LC 2348)</li>
+                <li>Count Subarrays With Fixed Bounds (LC 2444)</li>
+                <li>Sum of Absolute Differences in Sorted Array (LC 1685)</li>
+            </ol>
+        </div>
+        
+        <h3>Hard (10 problems)</h3>
+        <div class="problem-box">
+            <ol>
+                <li>Max Sum of Rectangle No Larger Than K (LC 363)</li>
+                <li>Count Subarrays With Median K (LC 2488)</li>
+                <li>Substring with Concatenation of All Words (LC 30)</li>
+                <li>Minimum Window Substring (LC 76)</li>
+                <li>Subarrays with K Different Integers (LC 992)</li>
+                <li>Count of Range Sum (LC 327)</li>
+                <li>Maximum Sum of 3 Non-Overlapping Subarrays (LC 689)</li>
+                <li>Cherry Pickup II (LC 1463)</li>
+                <li>Constrained Subsequence Sum (LC 1425)</li>
+                <li>Trapping Rain Water II (LC 407)</li>
+            </ol>
+        </div>
+        
+        <h2>🎯 Quick Reference Cheat Sheet</h2>
+        
+        <div class="visual-box">
+            <h3>Core Formulas</h3>
+            <div class="formula">prefix[i] = prefix[i-1] + arr[i]</div>
+            <div class="formula">sum(L, R) = prefix[R] - prefix[L-1]</div>
+            <div class="formula">If prefix[j] - prefix[i] = K, then i = j - K</div>
+            <div class="formula">2D: prefix[i][j] = top + left - diagonal + current</div>
+        </div>
+        
+        <div class="visual-box">
+            <h3>Pattern Recognition</h3>
+            <p><strong>Use Prefix Sum when you see:</strong></p>
+            <ul>
+                <li>"Sum of subarray/range"</li>
+                <li>"Multiple queries"</li>
+                <li>"Count subarrays with sum = K"</li>
+                <li>"Continuous/contiguous elements"</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>DON'T use Prefix Sum for:</strong></p>
+            <ul>
+                <li>Finding MAXIMUM sum (use Kadane's)</li>
+                <li>Fixed-size windows (use Sliding Window)</li>
+                <li>Sorted pair finding (use Two Pointers)</li>
+            </ul>
+        </div>
+        
+        <div style="text-align: center; margin-top: 50px; padding: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px;">
+            <h2 style="color: white; margin: 0;">🎉 You're Ready!</h2>
+            <p style="margin: 10px 0 0 0;">Master these patterns and you'll recognize prefix sum problems instantly!</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,3164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedList - Ultimate Visual Guide</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: white;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .diagram-section {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .diagram-section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+
+        h3 {
+            color: #667eea;
+            margin: 15px 0 10px 0;
+            font-size: 1.2em;
+        }
+
+        .explanation {
+            background: #f8f9ff;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .diagram {
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .highlight-box {
+            background: #fff9c4;
+            border: 2px solid #fbc02d;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            line-height: 1.8;
+            font-size: 11px;
+            white-space: pre;
+        }
+
+        .code-keyword {
+            color: #0000ff;
+            font-weight: bold;
+        }
+
+        .code-comment {
+            color: #008000;
+            font-style: italic;
+        }
+
+        .code-number {
+            color: #098658;
+        }
+        
+        .code-string {
+            color: #a31515;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+
+        .pattern-box {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .intuition-box {
+            background: #fff3e0;
+            border: 2px solid #ff9800;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .recognition-box {
+            background: #f3e5f5;
+            border: 2px solid #9c27b0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .checklist {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .checklist-item {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .checklist-item:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .step-list {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        .step-list li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        strong {
+            color: #667eea;
+        }
+
+        /* Enhanced LinkedList Node with Memory Address */
+        .ll-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .ll-node {
+            display: inline-block;
+            border: 3px solid #667eea;
+            border-radius: 8px;
+            background: white;
+            position: relative;
+        }
+
+        .ll-node-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .ll-address {
+            font-size: 0.75em;
+            color: #666;
+            background: #fff3e0;
+            padding: 3px 8px;
+            border-radius: 3px;
+            margin-bottom: 5px;
+            font-family: monospace;
+            border: 1px solid #ff9800;
+        }
+
+        .ll-node-content {
+            display: flex;
+        }
+
+        .ll-node.highlight {
+            background: #fff9c4;
+            border-color: #fbc02d;
+            border-width: 4px;
+        }
+
+        .ll-node.removed {
+            opacity: 0.3;
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        .ll-data {
+            padding: 15px 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+            border-right: 2px solid #667eea;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .ll-next {
+            padding: 15px 20px;
+            font-family: monospace;
+            color: #ff9800;
+            font-weight: bold;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .ll-arrow {
+            font-size: 2em;
+            color: #667eea;
+            margin: 0 5px;
+        }
+
+        .ll-null {
+            padding: 15px 20px;
+            border: 3px solid #f44336;
+            border-radius: 8px;
+            background: #ffebee;
+            font-weight: bold;
+            color: #f44336;
+        }
+
+        .ll-pointer {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #9c27b0;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .ll-pointer.slow {
+            background: #2196f3;
+        }
+
+        .ll-pointer.fast {
+            background: #f44336;
+        }
+
+        .ll-pointer.prev {
+            background: #ff9800;
+        }
+
+        .ll-pointer.curr {
+            background: #9c27b0;
+        }
+
+        .ll-pointer.next-ptr {
+            background: #4caf50;
+        }
+
+        /* Memory diagram */
+        .memory-table {
+            margin: 20px 0;
+            font-family: monospace;
+        }
+
+        .memory-row {
+            display: flex;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+        }
+
+        .memory-addr {
+            background: #fff3e0;
+            padding: 10px;
+            width: 120px;
+            font-weight: bold;
+            border-right: 2px solid #ff9800;
+        }
+
+        .memory-content {
+            background: #f5f5f5;
+            padding: 10px;
+            flex: 1;
+        }
+
+        .code-visual {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .code-step {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-left: 4px solid #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 LinkedList - The Ultimate Visual Guide</h1>
+
+        <!-- Part 1: Complete LinkedList Fundamentals -->
+        <div class="diagram-section">
+            <h2>📚 Part 1: LinkedList Fundamentals</h2>
+            
+            <h3>What is a LinkedList?</h3>
+            <div class="explanation">
+                A <strong>LinkedList</strong> is a linear data structure where elements (nodes) are stored at <strong>non-contiguous memory locations</strong>. Each node contains:
+                <ul class="step-list">
+                    <li><strong>Data:</strong> The actual value stored</li>
+                    <li><strong>Next pointer:</strong> Memory address of the next node</li>
+                </ul>
+                Unlike arrays, LinkedLists don't need contiguous memory and can grow/shrink dynamically!
+            </div>
+
+            <div class="diagram">
+                <h3>Visual: LinkedList Structure with Memory Addresses</h3>
+                
+                <div style="margin: 20px 0;">
+                    <strong>Conceptual View:</strong>
+                    <div class="ll-visual">
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x1000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">10</div>
+                                    <div class="ll-next">0x2500</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x2500</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">20</div>
+                                    <div class="ll-next">0x3A00</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x3A00</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">30</div>
+                                    <div class="ll-next">NULL</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 10px;">
+                        Each box shows: <strong>Data</strong> | <strong>Next pointer (memory address)</strong><br>
+                        Orange boxes above show where each node lives in memory
+                    </p>
+                </div>
+
+                <div style="margin: 30px 0;">
+                    <strong>Memory Layout (RAM):</strong>
+                    <div class="memory-table">
+                        <div class="memory-row">
+                            <div class="memory-addr">Address</div>
+                            <div class="memory-content" style="font-weight: bold;">Content</div>
+                        </div>
+                        <div class="memory-row" style="background: #c8e6c9;">
+                            <div class="memory-addr">HEAD → 0x1000</div>
+                            <div class="memory-content">Points to first node</div>
+                        </div>
+                        <div class="memory-row">
+                            <div class="memory-addr">0x1000</div>
+                            <div class="memory-content">data: 10 | next: 0x2500</div>
+                        </div>
+                        <div class="memory-row" style="opacity: 0.3;">
+                            <div class="memory-addr">0x1500</div>
+                            <div class="memory-content">Other data / Unused</div>
+                        </div>
+                        <div class="memory-row">
+                            <div class="memory-addr">0x2500</div>
+                            <div class="memory-content">data: 20 | next: 0x3A00</div>
+                        </div>
+                        <div class="memory-row" style="opacity: 0.3;">
+                            <div class="memory-addr">0x3000</div>
+                            <div class="memory-content">Other data / Unused</div>
+                        </div>
+                        <div class="memory-row">
+                            <div class="memory-addr">0x3A00</div>
+                            <div class="memory-content">data: 30 | next: NULL</div>
+                        </div>
+                    </div>
+                    <div class="highlight-box" style="margin-top: 20px;">
+                        🎯 <strong>Key Observation:</strong> Nodes are NOT stored consecutively!<br>
+                        They're scattered in memory, connected by pointers.
+                    </div>
+                </div>
+            </div>
+
+            <h3>Node Structure - The Building Block</h3>
+            <div class="code-block"><span class="code-comment">// Node Class Definition</span>
+<span class="code-keyword">class</span> ListNode {
+    <span class="code-keyword">int</span> val;           <span class="code-comment">// Data stored in node</span>
+    ListNode next;     <span class="code-comment">// Pointer to next node (stores memory address)</span>
+    
+    <span class="code-comment">// Constructor</span>
+    <span class="code-keyword">public</span> ListNode(<span class="code-keyword">int</span> val) {
+        <span class="code-keyword">this</span>.val = val;
+        <span class="code-keyword">this</span>.next = <span class="code-keyword">null</span>;
+    }
+}
+
+<span class="code-comment">// Example: Creating nodes</span>
+ListNode node1 = <span class="code-keyword">new</span> ListNode(<span class="code-number">10</span>);  <span class="code-comment">// Creates node at address 0x1000</span>
+ListNode node2 = <span class="code-keyword">new</span> ListNode(<span class="code-number">20</span>);  <span class="code-comment">// Creates node at address 0x2500</span>
+ListNode node3 = <span class="code-keyword">new</span> ListNode(<span class="code-number">30</span>);  <span class="code-comment">// Creates node at address 0x3A00</span>
+
+<span class="code-comment">// Linking them together</span>
+node1.next = node2;  <span class="code-comment">// node1.next stores 0x2500</span>
+node2.next = node3;  <span class="code-comment">// node2.next stores 0x3A00</span>
+node3.next = <span class="code-keyword">null</span>;    <span class="code-comment">// End of list</span>
+
+ListNode head = node1;  <span class="code-comment">// head points to 0x1000</span></div>
+
+            <div class="diagram">
+                <h3>Visual: Code Execution with Memory Addresses</h3>
+                
+                <div class="code-visual">
+                    <div class="code-step">
+                        <strong>Step 1:</strong> <code>ListNode node1 = new ListNode(10);</code>
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-pointer curr">node1</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">10</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Created node at 0x1000 with data=10, next=null</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Step 2:</strong> <code>ListNode node2 = new ListNode(20);</code>
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">10</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2500</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-pointer curr">node2</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">20</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Created another node at 0x2500 (not adjacent to first!)</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Step 3:</strong> <code>node1.next = node2;</code>
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node" style="background: #fff9c4;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">10</div>
+                                        <div class="ll-next">0x2500</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2500</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">20</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Linked! node1.next now stores address 0x2500</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Why LinkedLists? Comparison with Arrays</h3>
+            <table>
+                <tr>
+                    <th>Operation</th>
+                    <th>Array</th>
+                    <th>LinkedList</th>
+                    <th>Why?</th>
+                </tr>
+                <tr>
+                    <td><strong>Access by index</strong></td>
+                    <td style="background: #c8e6c9;">O(1) ✓</td>
+                    <td style="background: #ffebee;">O(n) ✗</td>
+                    <td>Array: Direct jump to index<br>LL: Must traverse from head</td>
+                </tr>
+                <tr>
+                    <td><strong>Insert at beginning</strong></td>
+                    <td style="background: #ffebee;">O(n) ✗</td>
+                    <td style="background: #c8e6c9;">O(1) ✓</td>
+                    <td>Array: Shift all elements<br>LL: Just change head pointer</td>
+                </tr>
+                <tr>
+                    <td><strong>Insert at end</strong></td>
+                    <td style="background: #c8e6c9;">O(1)* ✓</td>
+                    <td style="background: #ffebee;">O(n) ✗</td>
+                    <td>Array: Append if space<br>LL: Must traverse to end</td>
+                </tr>
+                <tr>
+                    <td><strong>Delete</strong></td>
+                    <td style="background: #ffebee;">O(n) ✗</td>
+                    <td style="background: #c8e6c9;">O(1)* ✓</td>
+                    <td>Array: Shift elements<br>LL: Change pointers (if you have reference)</td>
+                </tr>
+                <tr>
+                    <td><strong>Memory</strong></td>
+                    <td style="background: #c8e6c9;">Contiguous</td>
+                    <td style="background: #fff9c4;">Scattered</td>
+                    <td>Array: One block<br>LL: Nodes anywhere in memory</td>
+                </tr>
+                <tr>
+                    <td><strong>Extra space</strong></td>
+                    <td style="background: #c8e6c9;">None</td>
+                    <td style="background: #ffebee;">Pointers</td>
+                    <td>LL needs extra space for next pointers</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box">
+                🎯 <strong>Use LinkedList when:</strong> Lots of insertions/deletions, unknown size, don't need random access<br>
+                🎯 <strong>Use Array when:</strong> Need random access, known size, mostly reading
+            </div>
+        </div>
+
+        <!-- Part 2: Basic Operations with Visual Code Execution -->
+        <div class="diagram-section">
+            <h2>🔧 Part 2: Basic LinkedList Operations</h2>
+
+            <h3>Operation 1: Insert at Beginning</h3>
+            <div class="explanation">
+                <strong>Goal:</strong> Add a new node before the current head<br>
+                <strong>Why O(1)?</strong> Just change pointers, no traversal needed!
+            </div>
+
+            <div class="diagram">
+                <h3>Visual: Insert 5 at beginning of 10→20→30</h3>
+                
+                <div style="margin: 20px 0;">
+                    <strong>Before:</strong> head points to 0x1000
+                    <div class="ll-visual">
+                        <div class="ll-node-container">
+                            <div class="ll-address">HEAD<br>0x1000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">10</div>
+                                    <div class="ll-next">0x2500</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x2500</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">20</div>
+                                    <div class="ll-next">0x3A00</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x3A00</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">30</div>
+                                    <div class="ll-next">null</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <strong>Step 1:</strong> Create new node at 0x0A00
+                    <div class="ll-visual">
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x0A00</div>
+                            <div class="ll-node" style="background: #fff9c4;">
+                                <div class="ll-pointer curr">newNode</div>
+                                <div class="ll-node-content">
+                                    <div class="ll-data">5</div>
+                                    <div class="ll-next">null</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <strong>Step 2:</strong> <code>newNode.next = head;</code>
+                    <div class="ll-visual">
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x0A00</div>
+                            <div class="ll-node" style="background: #fff9c4;">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">5</div>
+                                    <div class="ll-next">0x1000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x1000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">10</div>
+                                    <div class="ll-next">0x2500</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→...</span>
+                    </div>
+                    <p>New node now points to old head</p>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <strong>Step 3:</strong> <code>head = newNode;</code>
+                    <div class="ll-visual">
+                        <div class="ll-node-container">
+                            <div class="ll-address">HEAD<br>0x0A00</div>
+                            <div class="ll-node" style="background: #c8e6c9;">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">5</div>
+                                    <div class="ll-next">0x1000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x1000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">10</div>
+                                    <div class="ll-next">0x2500</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x2500</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">20</div>
+                                    <div class="ll-next">0x3A00</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x3A00</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">30</div>
+                                    <div class="ll-next">null</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 10px;">Done! List is now 5→10→20→30 ✅</p>
+                </div>
+            </div>
+
+            <div class="code-block"><span class="code-comment">// Insert at Beginning</span>
+<span class="code-keyword">public</span> ListNode insertAtBeginning(ListNode head, <span class="code-keyword">int</span> val) {
+    ListNode newNode = <span class="code-keyword">new</span> ListNode(val);  <span class="code-comment">// Create at 0x0A00</span>
+    newNode.next = head;                 <span class="code-comment">// Point to old head (0x1000)</span>
+    <span class="code-keyword">return</span> newNode;                        <span class="code-comment">// Return new head (0x0A00)</span>
+}
+
+<span class="code-comment">// Time: O(1), Space: O(1)</span></div>
+
+            <h3>Operation 2: Delete a Node</h3>
+            <div class="explanation">
+                <strong>Goal:</strong> Remove a node (e.g., remove node with value 20)<br>
+                <strong>Key Idea:</strong> Skip over the node by changing pointers
+            </div>
+
+            <div class="diagram">
+                <h3>Visual: Delete node with value 20 from 10→20→30</h3>
+                
+                <div style="margin: 20px 0;">
+                    <strong>Before:</strong> Find node before target
+                    <div class="ll-visual">
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x1000</div>
+                            <div class="ll-node" style="background: #fff9c4;">
+                                <div class="ll-pointer prev">prev</div>
+                                <div class="ll-node-content">
+                                    <div class="ll-data">10</div>
+                                    <div class="ll-next">0x2500</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x2500</div>
+                            <div class="ll-node" style="background: #ffebee;">
+                                <div class="ll-pointer curr">to delete</div>
+                                <div class="ll-node-content">
+                                    <div class="ll-data">20</div>
+                                    <div class="ll-next">0x3A00</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x3A00</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">30</div>
+                                    <div class="ll-next">null</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p>prev points to node BEFORE the one to delete</p>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <strong>Step:</strong> <code>prev.next = prev.next.next;</code> (Skip the node!)
+                    <div class="ll-visual">
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x1000</div>
+                            <div class="ll-node" style="background: #c8e6c9;">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">10</div>
+                                    <div class="ll-next">0x3A00</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow" style="font-size: 3em;">⤵</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x2500</div>
+                            <div class="ll-node removed">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">20</div>
+                                    <div class="ll-next">0x3A00</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x3A00</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">30</div>
+                                    <div class="ll-next">null</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 10px;">Node at 0x2500 is now unreachable! Garbage collected ✅<br>
+                    List is now 10→30</p>
+                </div>
+            </div>
+
+            <div class="code-block"><span class="code-comment">// Delete Node with Given Value</span>
+<span class="code-keyword">public</span> ListNode deleteNode(ListNode head, <span class="code-keyword">int</span> val) {
+    <span class="code-comment">// Special case: delete head</span>
+    <span class="code-keyword">if</span> (head != <span class="code-keyword">null</span> && head.val == val) {
+        <span class="code-keyword">return</span> head.next;  <span class="code-comment">// New head</span>
+    }
+    
+    ListNode curr = head;
+    <span class="code-keyword">while</span> (curr != <span class="code-keyword">null</span> && curr.next != <span class="code-keyword">null</span>) {
+        <span class="code-keyword">if</span> (curr.next.val == val) {
+            curr.next = curr.next.next;  <span class="code-comment">// Skip the node</span>
+            <span class="code-keyword">break</span>;
+        }
+        curr = curr.next;
+    }
+    
+    <span class="code-keyword">return</span> head;
+}
+
+<span class="code-comment">// Time: O(n), Space: O(1)</span></div>
+        </div>
+
+        <div class="diagram-section">
+            <h2>🎯 Quick Summary - LinkedList Basics</h2>
+            
+            <div class="success-box">
+                <strong>✅ You now understand:</strong>
+                <div class="checklist">
+                    <div class="checklist-item">What LinkedLists are and how they're stored in memory</div>
+                    <div class="checklist-item">How nodes connect via memory addresses (pointers)</div>
+                    <div class="checklist-item">Basic operations: Insert (O(1) at beginning), Delete (O(n) to find)</div>
+                    <div class="checklist-item">Difference from arrays (scattered vs contiguous)</div>
+                    <div class="checklist-item">How to visualize pointer manipulation</div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                🎓 <strong>Ready for patterns!</strong> Now that you understand the fundamentals,<br>
+                let's learn the 7 core patterns that solve 90%+ of LinkedList problems!
+            </div>
+        </div>
+
+        <!-- PATTERN 1: Fast & Slow Pointers -->
+        <div class="diagram-section">
+            <h2>🎯 PATTERN 1: Fast & Slow Pointers (Floyd's Tortoise & Hare)</h2>
+            
+            <div class="recognition-box">
+                <h3 style="color: #9c27b0; margin-top: 0;">🔍 How to Recognize This Pattern?</h3>
+                <div style="line-height: 1.8;">
+                    <strong>You should think "Fast & Slow Pointers" when you see:</strong><br><br>
+                    
+                    ✓ <strong>"Find the middle"</strong> of the list<br>
+                    ✓ <strong>"Detect a cycle"</strong> in the list<br>
+                    ✓ <strong>"Find the kth node from the end"</strong><br>
+                    ✓ <strong>"Check if palindrome"</strong> (needs middle + reverse)<br>
+                    ✓ <strong>"Find the start of a cycle"</strong><br>
+                    ✓ Any question where you need to <strong>find a position without counting</strong><br><br>
+                    
+                    <strong>Keywords to watch for:</strong><br>
+                    "cycle", "loop", "middle", "kth from end", "palindrome", "meet", "intersection"
+                </div>
+            </div>
+
+            <div class="intuition-box">
+                <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition - Why This Pattern Works</h3>
+                <div style="line-height: 1.8;">
+                    <strong>The Race Track Analogy:</strong><br><br>
+                    
+                    Imagine two runners on a circular track:<br>
+                    🐢 <strong>Slow runner:</strong> Moves 1 step per turn<br>
+                    🐇 <strong>Fast runner:</strong> Moves 2 steps per turn<br><br>
+                    
+                    <strong>Case 1: No cycle (linear track):</strong><br>
+                    • Fast reaches the end (null) first<br>
+                    • They never meet<br><br>
+                    
+                    <strong>Case 2: Cycle exists (circular track):</strong><br>
+                    • Fast enters cycle first<br>
+                    • Fast is now ahead of slow in the cycle<br>
+                    • Each iteration, fast gains 1 position on slow<br>
+                    • Eventually they MUST meet (like lapping on a track!)🏃<br><br>
+                    
+                    <strong>Finding Middle:</strong><br>
+                    • When fast reaches end (moved 2n steps)<br>
+                    • Slow has moved n steps → at middle!<br><br>
+                    
+                    <strong>Why it works:</strong> Fast moves twice as fast, so when fast is done, slow is halfway!
+                </div>
+            </div>
+
+            <h3>Sub-Pattern 1A: Detect Cycle</h3>
+            
+            <div class="pattern-box">
+                <h3 style="color: #2196f3; margin-top: 0;">📋 Why This Pattern Applies</h3>
+                <strong>Problem:</strong> Does a cycle exist in the list?<br>
+                <strong>Why Fast & Slow?</strong> If cycle exists, fast will eventually "lap" slow and they'll meet!<br>
+                <strong>Alternative approaches:</strong> HashSet (O(n) space) - But this is O(1) space!
+            </div>
+
+            <div class="diagram">
+                <h3>Visual Code Execution: Detect cycle in list with cycle</h3>
+                
+                <div style="margin: 30px 0;">
+                    <strong>Input List:</strong> 1→2→3→4→2 (4 points back to 2, creating cycle)
+                    <div class="ll-visual">
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x1000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">1</div>
+                                    <div class="ll-next">0x2000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x2000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">2</div>
+                                    <div class="ll-next">0x3000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x3000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">3</div>
+                                    <div class="ll-next">0x4000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x4000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">4</div>
+                                    <div class="ll-next">0x2000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow" style="color: #f44336;">↺ back to 0x2000</span>
+                    </div>
+                </div>
+
+                <div class="code-visual">
+                    <div class="code-step">
+                        <strong>Initial:</strong> <code>slow = head; fast = head;</code>
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node highlight">
+                                    <div class="ll-pointer slow">slow</div>
+                                    <div class="ll-pointer fast" style="top: -60px;">fast</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x3000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x3000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">0x4000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x4000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">4</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Both pointers start at head (address 0x1000)</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Iteration 1:</strong> <code>slow = slow.next; fast = fast.next.next;</code>
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node highlight">
+                                    <div class="ll-pointer slow">slow</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x3000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x3000</div>
+                                <div class="ll-node highlight">
+                                    <div class="ll-pointer fast">fast</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">0x4000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x4000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">4</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>slow moved 1 step → 0x2000 | fast moved 2 steps → 0x3000<br>
+                        slow ≠ fast → continue</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Iteration 2:</strong> <code>slow = slow.next; fast = fast.next.next;</code>
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node highlight">
+                                    <div class="ll-pointer fast">fast</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x3000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x3000</div>
+                                <div class="ll-node highlight">
+                                    <div class="ll-pointer slow">slow</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">0x4000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x4000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">4</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>slow → 0x3000 | fast → 0x4000 → 0x2000 (followed the cycle!)<br>
+                        slow ≠ fast → continue</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Iteration 3:</strong> <code>slow = slow.next; fast = fast.next.next;</code>
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x3000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x3000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">0x4000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x4000</div>
+                                <div class="ll-node" style="background: #c8e6c9; border-color: #4caf50; border-width: 5px;">
+                                    <div class="ll-pointer slow">slow</div>
+                                    <div class="ll-pointer fast" style="top: -60px;">fast</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">4</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="text-align: center; color: #4caf50; font-weight: bold; font-size: 1.2em;">
+                        slow == fast (both at 0x4000) ✅ CYCLE DETECTED!<br>
+                        return true;</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block"><span class="code-comment">// Pattern 1A: Detect Cycle</span>
+<span class="code-keyword">public boolean</span> hasCycle(ListNode head) {
+    <span class="code-keyword">if</span> (head == <span class="code-keyword">null</span>) <span class="code-keyword">return false</span>;
+    
+    ListNode slow = head;  <span class="code-comment">// Tortoise 🐢</span>
+    ListNode fast = head;  <span class="code-comment">// Hare 🐇</span>
+    
+    <span class="code-keyword">while</span> (fast != <span class="code-keyword">null</span> && fast.next != <span class="code-keyword">null</span>) {
+        slow = slow.next;         <span class="code-comment">// Move 1 step</span>
+        fast = fast.next.next;    <span class="code-comment">// Move 2 steps</span>
+        
+        <span class="code-keyword">if</span> (slow == fast) {
+            <span class="code-keyword">return true</span>;  <span class="code-comment">// They met - cycle exists!</span>
+        }
+    }
+    
+    <span class="code-keyword">return false</span>;  <span class="code-comment">// Fast reached end - no cycle</span>
+}
+
+<span class="code-comment">// Time: O(n) - Visit each node at most once</span>
+<span class="code-comment">// Space: O(1) - Only two pointers</span></div>
+
+            <h3>Sub-Pattern 1B: Find Middle Node</h3>
+            
+            <div class="pattern-box">
+                <h3 style="color: #2196f3; margin-top: 0;">📋 Why This Pattern Applies</h3>
+                <strong>Problem:</strong> Find the middle node<br>
+                <strong>Why Fast & Slow?</strong> When fast reaches end (2n steps), slow has moved n steps = middle!<br>
+                <strong>Alternative:</strong> Count length then traverse n/2 - But this needs 2 passes!
+            </div>
+
+            <div class="diagram">
+                <h3>Visual Code Execution: Find middle of 1→2→3→4→5</h3>
+                
+                <div class="code-visual">
+                    <div class="code-step">
+                        <strong>Initial:</strong> Both at head
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node highlight">
+                                    <div class="ll-pointer slow">slow</div>
+                                    <div class="ll-pointer fast" style="top: -60px;">fast</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x1100</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1100</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x1200</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1200</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">0x1300</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1300</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">4</div>
+                                        <div class="ll-next">0x1400</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1400</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">5</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>After Iteration 1:</strong>
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x1100</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1100</div>
+                                <div class="ll-node highlight">
+                                    <div class="ll-pointer slow">slow</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x1200</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1200</div>
+                                <div class="ll-node highlight">
+                                    <div class="ll-pointer fast">fast</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">0x1300</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1300</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">4</div>
+                                        <div class="ll-next">0x1400</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1400</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">5</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>slow at 0x1100, fast at 0x1200</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>After Iteration 2:</strong>
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x1100</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1100</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x1200</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1200</div>
+                                <div class="ll-node highlight">
+                                    <div class="ll-pointer slow">slow</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">0x1300</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1300</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">4</div>
+                                        <div class="ll-next">0x1400</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1400</div>
+                                <div class="ll-node highlight">
+                                    <div class="ll-pointer fast">fast</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">5</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>slow at 0x1200, fast at 0x1400<br>
+                        fast.next == null → Loop stops!</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Result:</strong> <code>return slow;</code>
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1200</div>
+                                <div class="ll-node" style="background: #c8e6c9; border-color: #4caf50; border-width: 5px;">
+                                    <div class="ll-pointer slow" style="background: #4caf50;">MIDDLE!</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">0x1300</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="text-align: center; color: #4caf50; font-weight: bold; font-size: 1.2em;">
+                        Middle node found! Value = 3, Address = 0x1200 ✅</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block"><span class="code-comment">// Pattern 1B: Find Middle Node</span>
+<span class="code-keyword">public</span> ListNode middleNode(ListNode head) {
+    ListNode slow = head;
+    ListNode fast = head;
+    
+    <span class="code-keyword">while</span> (fast != <span class="code-keyword">null</span> && fast.next != <span class="code-keyword">null</span>) {
+        slow = slow.next;         <span class="code-comment">// Move 1 step</span>
+        fast = fast.next.next;    <span class="code-comment">// Move 2 steps</span>
+    }
+    
+    <span class="code-keyword">return</span> slow;  <span class="code-comment">// When fast reaches end, slow is at middle</span>
+}
+
+<span class="code-comment">// Time: O(n), Space: O(1)</span>
+<span class="code-comment">// Note: For even-length lists, returns the SECOND middle node</span></div>
+
+            <div class="success-box">
+                <strong>✅ Practice Problems - Fast & Slow Pointers:</strong>
+                <ol class="step-list">
+                    <li><strong>Linked List Cycle</strong> (LeetCode 141) - Detect cycle</li>
+                    <li><strong>Linked List Cycle II</strong> (LeetCode 142) - Find cycle start</li>
+                    <li><strong>Middle of Linked List</strong> (LeetCode 876) - Find middle</li>
+                    <li><strong>Palindrome Linked List</strong> (LeetCode 234) - Find middle + reverse</li>
+                    <li><strong>Remove Nth Node From End</strong> (LeetCode 19) - Fast starts n ahead</li>
+                    <li><strong>Happy Number</strong> (LeetCode 202) - Cycle detection in numbers</li>
+                    <li><strong>Reorder List</strong> (LeetCode 143) - Find middle + reverse + merge</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- PATTERN 2: Reverse LinkedList -->
+        <div class="diagram-section">
+            <h2>🎯 PATTERN 2: Reverse LinkedList</h2>
+            
+            <div class="recognition-box">
+                <h3 style="color: #9c27b0; margin-top: 0;">🔍 How to Recognize This Pattern?</h3>
+                <div style="line-height: 1.8;">
+                    <strong>You should think "Reverse LinkedList" when you see:</strong><br><br>
+                    
+                    ✓ <strong>"Reverse the entire list"</strong><br>
+                    ✓ <strong>"Reverse between positions m and n"</strong><br>
+                    ✓ <strong>"Reverse in k-groups"</strong> (reverse every k nodes)<br>
+                    ✓ <strong>"Swap nodes in pairs"</strong><br>
+                    ✓ <strong>"Check if palindrome"</strong> (needs reverse of half)<br>
+                    ✓ <strong>"Reorder list"</strong> (L0→Ln→L1→Ln-1...)<br><br>
+                    
+                    <strong>Keywords to watch for:</strong><br>
+                    "reverse", "backward", "swap pairs", "palindrome", "reorder", "flip"
+                </div>
+            </div>
+
+            <div class="intuition-box">
+                <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition - Why This Pattern Works</h3>
+                <div style="line-height: 1.8;">
+                    <strong>The Core Challenge:</strong><br><br>
+                    
+                    To reverse 1→2→3→NULL into 3→2→1→NULL<br><br>
+                    
+                    🎯 <strong>What we're actually doing:</strong> <strong>Reversing the arrows!</strong><br>
+                    • Change 1→2 into 1←2<br>
+                    • Change 2→3 into 2←3<br>
+                    • Change 3→NULL into 3←NULL (wait, that becomes NULL←3)<br><br>
+                    
+                    <strong>The Problem:</strong><br>
+                    If we just do: <code>curr.next = prev</code> to reverse 1→2 to 1←2,<br>
+                    we LOSE access to node 3! 😱<br><br>
+                    
+                    <strong>The Solution: 3 Pointers!</strong><br>
+                    • <strong>prev:</strong> The node that curr should point to (what's behind)<br>
+                    • <strong>curr:</strong> Current node we're reversing<br>
+                    • <strong>next:</strong> Save the next node BEFORE we reverse!<br><br>
+                    
+                    <strong>Process (The Dance):</strong><br>
+                    1. Save next node: <code>next = curr.next</code><br>
+                    2. Reverse arrow: <code>curr.next = prev</code><br>
+                    3. Move prev forward: <code>prev = curr</code><br>
+                    4. Move curr forward: <code>curr = next</code><br>
+                    5. Repeat until curr is null<br>
+                    6. Return prev (new head!)
+                </div>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3; margin-top: 0;">📋 Why This Pattern Applies</h3>
+                <strong>Problem:</strong> Reverse 1→2→3→NULL to 3→2→1→NULL<br>
+                <strong>Why 3 Pointers?</strong> Need to track: where we came from (prev), where we are (curr), where we're going (next)<br>
+                <strong>Alternative:</strong> Use stack (O(n) space) or recursion (O(n) space) - But iterative is O(1) space!<br>
+                <strong>Key Insight:</strong> We're changing pointers, not moving data!
+            </div>
+
+            <div class="diagram">
+                <h3>Visual Code Execution: Reverse 1→2→3→NULL</h3>
+                
+                <div style="margin: 30px 0;">
+                    <strong>Original List:</strong>
+                    <div class="ll-visual">
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x1000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">1</div>
+                                    <div class="ll-next">0x2000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x2000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">2</div>
+                                    <div class="ll-next">0x3000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x3000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">3</div>
+                                    <div class="ll-next">null</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-visual">
+                    <div class="code-step">
+                        <strong>Initialize:</strong> <code>prev = null; curr = head;</code>
+                        <div class="ll-visual">
+                            <div style="padding: 15px; font-weight: bold; color: #ff9800; border: 2px solid #ff9800; border-radius: 5px;">
+                                prev<br>NULL
+                            </div>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node highlight">
+                                    <div class="ll-pointer curr">curr</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x3000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x3000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>prev = null, curr = 0x1000</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Iteration 1 - Step 1:</strong> <code>next = curr.next;</code> (Save next!)
+                        <div class="ll-visual">
+                            <div style="padding: 15px; font-weight: bold; color: #ff9800; border: 2px solid #ff9800; border-radius: 5px;">
+                                prev<br>NULL
+                            </div>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node highlight">
+                                    <div class="ll-pointer curr">curr</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node">
+                                    <div class="ll-pointer next-ptr">next</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x3000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x3000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Saved next = 0x2000 (so we don't lose it!)</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Iteration 1 - Step 2:</strong> <code>curr.next = prev;</code> (Reverse arrow!)
+                        <div class="ll-visual">
+                            <div style="padding: 15px; font-weight: bold; color: #ff9800; border: 2px solid #ff9800; border-radius: 5px;">
+                                prev<br>NULL
+                            </div>
+                            <span class="ll-arrow" style="color: #4caf50;">←</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span style="margin: 0 20px; color: #f44336; font-size: 2em;">✂️</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node">
+                                    <div class="ll-pointer next-ptr">next</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x3000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x3000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Reversed! 1 now points to null. Link to 2 broken (but saved in next)</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Iteration 1 - Step 3-4:</strong> <code>prev = curr; curr = next;</code> (Move forward)
+                        <div class="ll-visual">
+                            <div style="padding: 15px; font-weight: bold; color: #999; border: 2px solid #999; border-radius: 5px;">
+                                NULL
+                            </div>
+                            <span class="ll-arrow">←</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node">
+                                    <div class="ll-pointer prev">prev</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node highlight">
+                                    <div class="ll-pointer curr">curr</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x3000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x3000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Moved: prev = 0x1000, curr = 0x2000<br>Ready for next iteration!</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Iteration 2:</strong> Repeat for node 2
+                        <div class="ll-visual">
+                            <div style="padding: 15px; font-weight: bold; color: #999; border: 2px solid #999; border-radius: 5px;">
+                                NULL
+                            </div>
+                            <span class="ll-arrow">←</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow" style="color: #4caf50;">←</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-pointer prev">prev</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x1000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x3000</div>
+                                <div class="ll-node highlight">
+                                    <div class="ll-pointer curr">curr</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>After iteration 2: NULL←1←2, curr = 0x3000, prev = 0x2000</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Iteration 3:</strong> Reverse last node
+                        <div class="ll-visual">
+                            <div style="padding: 15px; font-weight: bold; color: #999; border: 2px solid #999; border-radius: 5px;">
+                                NULL
+                            </div>
+                            <span class="ll-arrow">←</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">←</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x1000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow" style="color: #4caf50;">←</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x3000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-pointer prev">prev</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>After iteration 3: NULL←1←2←3, curr = null<br>Loop exits! prev = 0x3000</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Result:</strong> <code>return prev;</code> (New head!)
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">HEAD<br>0x3000</div>
+                                <div class="ll-node" style="background: #c8e6c9; border-color: #4caf50; border-width: 5px;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x1000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="text-align: center; color: #4caf50; font-weight: bold; font-size: 1.2em;">
+                        Reversed! 3→2→1→NULL ✅<br>
+                        New head at 0x3000, old head (0x1000) is now tail!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block"><span class="code-comment">// Pattern 2: Reverse LinkedList - Iterative</span>
+<span class="code-keyword">public</span> ListNode reverseList(ListNode head) {
+    ListNode prev = <span class="code-keyword">null</span>;
+    ListNode curr = head;
+    
+    <span class="code-keyword">while</span> (curr != <span class="code-keyword">null</span>) {
+        ListNode next = curr.next;  <span class="code-comment">// Save next (don't lose it!)</span>
+        curr.next = prev;           <span class="code-comment">// Reverse the arrow</span>
+        prev = curr;                <span class="code-comment">// Move prev forward</span>
+        curr = next;                <span class="code-comment">// Move curr forward</span>
+    }
+    
+    <span class="code-keyword">return</span> prev;  <span class="code-comment">// New head!</span>
+}
+
+<span class="code-comment">// Time: O(n) - Visit each node once</span>
+<span class="code-comment">// Space: O(1) - Only 3 pointers</span></div>
+
+            <h3>Variation: Reverse Between Positions</h3>
+            
+            <div class="pattern-box">
+                <h3 style="color: #2196f3; margin-top: 0;">📋 Why This Pattern Applies</h3>
+                <strong>Problem:</strong> Reverse only nodes from position m to n<br>
+                <strong>Example:</strong> 1→2→3→4→5, m=2, n=4 → 1→4→3→2→5<br>
+                <strong>Why same pattern?</strong> Same 3-pointer reversal, but need to track connections to unchanged parts!<br>
+                <strong>Key additions:</strong> Track node before m, and connect after reversing
+            </div>
+
+            <div class="diagram">
+                <h3>Visual: Reverse between position 2 and 4 in 1→2→3→4→5</h3>
+                
+                <div style="margin: 20px 0;">
+                    <strong>Before:</strong> Identify the section to reverse
+                    <div class="ll-visual">
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x1000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">1</div>
+                                    <div class="ll-next">0x2000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x2000</div>
+                            <div class="ll-node" style="background: #fff9c4;">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">2</div>
+                                    <div class="ll-next">0x3000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x3000</div>
+                            <div class="ll-node" style="background: #fff9c4;">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">3</div>
+                                    <div class="ll-next">0x4000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x4000</div>
+                            <div class="ll-node" style="background: #fff9c4;">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">4</div>
+                                    <div class="ll-next">0x5000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x5000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">5</div>
+                                    <div class="ll-next">null</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p>Reverse the highlighted section (positions 2-4)</p>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <strong>After:</strong> Reversed section reconnected
+                    <div class="ll-visual">
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x1000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">1</div>
+                                    <div class="ll-next">0x4000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x4000</div>
+                            <div class="ll-node" style="background: #c8e6c9;">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">4</div>
+                                    <div class="ll-next">0x3000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x3000</div>
+                            <div class="ll-node" style="background: #c8e6c9;">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">3</div>
+                                    <div class="ll-next">0x2000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x2000</div>
+                            <div class="ll-node" style="background: #c8e6c9;">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">2</div>
+                                    <div class="ll-next">0x5000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x5000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">5</div>
+                                    <div class="ll-next">null</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: #4caf50; font-weight: bold;">
+                    Result: 1→4→3→2→5 ✅</p>
+                </div>
+            </div>
+
+            <div class="code-block"><span class="code-comment">// Variation: Reverse Between Positions m and n</span>
+<span class="code-keyword">public</span> ListNode reverseBetween(ListNode head, <span class="code-keyword">int</span> m, <span class="code-keyword">int</span> n) {
+    <span class="code-keyword">if</span> (head == <span class="code-keyword">null</span> || m == n) <span class="code-keyword">return</span> head;
+    
+    ListNode dummy = <span class="code-keyword">new</span> ListNode(<span class="code-number">0</span>);
+    dummy.next = head;
+    ListNode beforeM = dummy;
+    
+    <span class="code-comment">// Move to node before position m</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">1</span>; i < m; i++) {
+        beforeM = beforeM.next;
+    }
+    
+    <span class="code-comment">// Reverse from m to n</span>
+    ListNode prev = <span class="code-keyword">null</span>;
+    ListNode curr = beforeM.next;
+    ListNode tail = curr;  <span class="code-comment">// Will become tail of reversed section</span>
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = m; i <= n; i++) {
+        ListNode next = curr.next;
+        curr.next = prev;
+        prev = curr;
+        curr = next;
+    }
+    
+    <span class="code-comment">// Connect the pieces</span>
+    beforeM.next = prev;  <span class="code-comment">// Connect to new head of reversed section</span>
+    tail.next = curr;     <span class="code-comment">// Connect to rest of list</span>
+    
+    <span class="code-keyword">return</span> dummy.next;
+}
+
+<span class="code-comment">// Time: O(n), Space: O(1)</span></div>
+
+            <div class="success-box">
+                <strong>✅ Practice Problems - Reverse LinkedList:</strong>
+                <ol class="step-list">
+                    <li><strong>Reverse Linked List</strong> (LeetCode 206) - Basic reverse</li>
+                    <li><strong>Reverse Linked List II</strong> (LeetCode 92) - Reverse between positions</li>
+                    <li><strong>Reverse Nodes in k-Group</strong> (LeetCode 25) - Reverse in groups of k</li>
+                    <li><strong>Swap Nodes in Pairs</strong> (LeetCode 24) - Reverse every 2 nodes</li>
+                    <li><strong>Palindrome Linked List</strong> (LeetCode 234) - Find middle + reverse half</li>
+                    <li><strong>Reorder List</strong> (LeetCode 143) - Find middle + reverse + merge</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- PATTERN 3: Merge Sorted Lists -->
+        <div class="diagram-section">
+            <h2>🎯 PATTERN 3: Merge Sorted Lists</h2>
+            
+            <div class="recognition-box">
+                <h3 style="color: #9c27b0; margin-top: 0;">🔍 How to Recognize This Pattern?</h3>
+                <div style="line-height: 1.8;">
+                    <strong>You should think "Merge Lists" when you see:</strong><br><br>
+                    
+                    ✓ <strong>"Merge two sorted lists"</strong><br>
+                    ✓ <strong>"Merge k sorted lists"</strong><br>
+                    ✓ <strong>"Sort a linked list"</strong> (use merge sort!)<br>
+                    ✓ <strong>"Add two numbers"</strong> (represented as lists)<br>
+                    ✓ Problem involves <strong>combining multiple lists</strong><br><br>
+                    
+                    <strong>Keywords to watch for:</strong><br>
+                    "merge", "combine", "sort", "sorted lists", "add", "k lists"
+                </div>
+            </div>
+
+            <div class="intuition-box">
+                <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition - Why This Pattern Works</h3>
+                <div style="line-height: 1.8;">
+                    <strong>The Merge Sort Concept:</strong><br><br>
+                    
+                    Given two sorted lists:<br>
+                    List1: 1→3→5→NULL<br>
+                    List2: 2→4→6→NULL<br><br>
+                    
+                    🎯 <strong>Goal:</strong> Create merged sorted list: 1→2→3→4→5→6→NULL<br><br>
+                    
+                    <strong>The Process (The Zipper):</strong><br>
+                    1. Compare heads: 1 vs 2 → Pick 1 (smaller)<br>
+                    2. Attach 1 to result, move List1 forward<br>
+                    3. Compare: 3 vs 2 → Pick 2 (smaller)<br>
+                    4. Attach 2 to result, move List2 forward<br>
+                    5. Repeat until one list is empty<br>
+                    6. Attach remaining list<br><br>
+                    
+                    <strong>Key Insight:</strong> We don't create new nodes!<br>
+                    We just rearrange pointers → O(1) space (excluding output)<br><br>
+                    
+                    <strong>Why it works:</strong> Both lists are sorted, so we only need to compare current heads!
+                </div>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3; margin-top: 0;">📋 Why This Pattern Applies</h3>
+                <strong>Problem:</strong> Merge 1→4 and 2→3 into sorted list<br>
+                <strong>Why Merge Pattern?</strong> Both are sorted! Just compare and link!<br>
+                <strong>Alternative:</strong> Put all in array, sort, rebuild list - O(n log n) time and O(n) space<br>
+                <strong>This approach:</strong> O(n+m) time, O(1) space - Just pointer manipulation!
+            </div>
+
+            <div class="diagram">
+                <h3>Visual Code Execution: Merge 1→4 and 2→3</h3>
+                
+                <div style="margin: 30px 0;">
+                    <strong>Input Lists:</strong>
+                    <div style="margin: 10px 0;">
+                        <strong>List1:</strong>
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node">
+                                    <div class="ll-pointer" style="background: #2196f3;">l1</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x1400</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1400</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">4</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin: 10px 0;">
+                        <strong>List2:</strong>
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node">
+                                    <div class="ll-pointer" style="background: #f44336;">l2</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x2300</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2300</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-visual">
+                    <div class="code-step">
+                        <strong>Initialize:</strong> <code>dummy = new ListNode(0); curr = dummy;</code>
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x0000</div>
+                                <div class="ll-node" style="background: #e3f2fd; border-color: #2196f3;">
+                                    <div class="ll-pointer" style="background: #2196f3;">dummy/curr</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">0</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>Dummy node helps avoid edge cases!</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Iteration 1:</strong> Compare l1.val (1) vs l2.val (2) → Pick l1
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x0000</div>
+                                <div class="ll-node" style="background: #e3f2fd;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">0</div>
+                                        <div class="ll-next">0x1000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-pointer curr" style="background: #9c27b0;">curr</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x1400</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>curr.next = l1; curr = curr.next; l1 = l1.next;<br>
+                        Attached 1 from l1, moved l1 forward to 0x1400</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Iteration 2:</strong> Compare l1.val (4) vs l2.val (2) → Pick l2
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x0000</div>
+                                <div class="ll-node" style="background: #e3f2fd;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">0</div>
+                                        <div class="ll-next">0x1000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-pointer curr">curr</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x2300</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>2 < 4, so attached 2 from l2, moved l2 forward to 0x2300</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Iteration 3:</strong> Compare l1.val (4) vs l2.val (3) → Pick l2
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x0000</div>
+                                <div class="ll-node" style="background: #e3f2fd;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">0</div>
+                                        <div class="ll-next">0x1000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x2300</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2300</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-pointer curr">curr</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>3 < 4, attached 3, l2 is now null</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Finish:</strong> l2 is null, attach rest of l1
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x0000</div>
+                                <div class="ll-node" style="background: #e3f2fd;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">0</div>
+                                        <div class="ll-next">0x1000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x2300</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2300</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">0x1400</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1400</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">4</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>curr.next = l1; // Attach remaining</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Result:</strong> <code>return dummy.next;</code>
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">HEAD<br>0x1000</div>
+                                <div class="ll-node" style="background: #c8e6c9; border-color: #4caf50; border-width: 5px;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x2300</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2300</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">0x1400</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1400</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">4</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="text-align: center; color: #4caf50; font-weight: bold; font-size: 1.2em;">
+                        Merged! 1→2→3→4 ✅<br>
+                        No new nodes created - just rearranged pointers!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block"><span class="code-comment">// Pattern 3: Merge Two Sorted Lists</span>
+<span class="code-keyword">public</span> ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+    <span class="code-comment">// Dummy node simplifies edge cases</span>
+    ListNode dummy = <span class="code-keyword">new</span> ListNode(<span class="code-number">0</span>);
+    ListNode curr = dummy;
+    
+    <span class="code-keyword">while</span> (l1 != <span class="code-keyword">null</span> && l2 != <span class="code-keyword">null</span>) {
+        <span class="code-keyword">if</span> (l1.val < l2.val) {
+            curr.next = l1;  <span class="code-comment">// Attach l1 node</span>
+            l1 = l1.next;    <span class="code-comment">// Move l1 forward</span>
+        } <span class="code-keyword">else</span> {
+            curr.next = l2;  <span class="code-comment">// Attach l2 node</span>
+            l2 = l2.next;    <span class="code-comment">// Move l2 forward</span>
+        }
+        curr = curr.next;    <span class="code-comment">// Move curr forward</span>
+    }
+    
+    <span class="code-comment">// Attach remaining nodes (one list is empty)</span>
+    curr.next = (l1 != <span class="code-keyword">null</span>) ? l1 : l2;
+    
+    <span class="code-keyword">return</span> dummy.next;  <span class="code-comment">// Skip dummy node</span>
+}
+
+<span class="code-comment">// Time: O(n + m) - Visit each node once</span>
+<span class="code-comment">// Space: O(1) - Only pointers, no new nodes</span></div>
+
+            <div class="success-box">
+                <strong>✅ Practice Problems - Merge Lists:</strong>
+                <ol class="step-list">
+                    <li><strong>Merge Two Sorted Lists</strong> (LeetCode 21) - Basic merge</li>
+                    <li><strong>Merge k Sorted Lists</strong> (LeetCode 23) - Use min-heap or divide & conquer</li>
+                    <li><strong>Sort List</strong> (LeetCode 148) - Merge sort on linked list</li>
+                    <li><strong>Merge In Between Linked Lists</strong> (LeetCode 1669) - Merge at position</li>
+                    <li><strong>Add Two Numbers</strong> (LeetCode 2) - Merge-like with carry</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- PATTERN 4: Dummy Node Technique -->
+        <div class="diagram-section">
+            <h2>🎯 PATTERN 4: Dummy Node Technique</h2>
+            
+            <div class="recognition-box">
+                <h3 style="color: #9c27b0; margin-top: 0;">🔍 How to Recognize This Pattern?</h3>
+                <div style="line-height: 1.8;">
+                    <strong>You should think "Dummy Node" when you see:</strong><br><br>
+                    
+                    ✓ <strong>"Remove nodes"</strong> (especially first node)<br>
+                    ✓ <strong>"Delete elements"</strong> from list<br>
+                    ✓ <strong>"Partition list"</strong> into two parts<br>
+                    ✓ <strong>"Add/merge/build new list"</strong><br>
+                    ✓ Anytime <strong>head might change</strong> during operation<br>
+                    ✓ Need to handle <strong>edge case where head is affected</strong><br><br>
+                    
+                    <strong>Keywords to watch for:</strong><br>
+                    "remove", "delete", "partition", "split", "build", modifying head
+                </div>
+            </div>
+
+            <div class="intuition-box">
+                <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition - Why Dummy Nodes Are Magic</h3>
+                <div style="line-height: 1.8;">
+                    <strong>The Problem Without Dummy:</strong><br><br>
+                    
+                    When modifying a list, the HEAD can change!<br>
+                    Example: Remove first node → head = head.next (special case!)<br>
+                    Example: Remove all 1s from 1→2→1→3 → head changes!<br><br>
+                    
+                    🎯 <strong>The Magic Solution: Dummy Node!</strong><br><br>
+                    
+                    Create a fake node BEFORE the real head:<br>
+                    dummy(0) → 1 → 2 → 3<br><br>
+                    
+                    <strong>Benefits:</strong><br>
+                    1. Head becomes just another node (no special case!)<br>
+                    2. Always have a node before the one we're modifying<br>
+                    3. Can use same code for all nodes<br>
+                    4. Return dummy.next as final result<br><br>
+                    
+                    <strong>Think of it as:</strong> A handle to hold the list while we modify it!
+                </div>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3; margin-top: 0;">📋 Why This Pattern Applies</h3>
+                <strong>Problem:</strong> Remove all nodes with value 1<br>
+                <strong>Why Dummy?</strong> If first node is 1, we need to change head - but with dummy, it's just another removal!<br>
+                <strong>Alternative:</strong> Check if head needs removal separately, then loop - messy code!<br>
+                <strong>With dummy:</strong> Clean, uniform code for all nodes!
+            </div>
+
+            <div class="diagram">
+                <h3>Visual: Remove all 1s from 1→2→1→3 (WITH vs WITHOUT dummy)</h3>
+                
+                <div style="margin: 30px 0;">
+                    <strong>WITHOUT Dummy - Need special code:</strong>
+                    <div class="ll-visual">
+                        <div class="ll-node-container">
+                            <div class="ll-address">HEAD<br>0x1000</div>
+                            <div class="ll-node removed">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">1</div>
+                                    <div class="ll-next">0x2000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x2000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">2</div>
+                                    <div class="ll-next">0x3000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x3000</div>
+                            <div class="ll-node removed">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">1</div>
+                                    <div class="ll-next">0x4000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x4000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">3</div>
+                                    <div class="ll-next">null</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="color: #f44336; font-weight: bold;">Problem: First node is 1! Need special code:
+                    <code>if (head.val == 1) head = head.next;</code></p>
+                </div>
+
+                <div style="margin: 30px 0;">
+                    <strong>WITH Dummy - Uniform code:</strong>
+                    <div class="ll-visual">
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x0000</div>
+                            <div class="ll-node" style="background: #e3f2fd; border-color: #2196f3;">
+                                <div class="ll-pointer" style="background: #2196f3;">dummy</div>
+                                <div class="ll-node-content">
+                                    <div class="ll-data">0</div>
+                                    <div class="ll-next">0x1000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x1000</div>
+                            <div class="ll-node removed">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">1</div>
+                                    <div class="ll-next">0x2000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x2000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">2</div>
+                                    <div class="ll-next">0x3000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x3000</div>
+                            <div class="ll-node removed">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">1</div>
+                                    <div class="ll-next">0x4000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x4000</div>
+                            <div class="ll-node">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">3</div>
+                                    <div class="ll-next">null</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="color: #4caf50; font-weight: bold;">Dummy provides "previous" node for head! Same code handles everything!</p>
+                </div>
+
+                <div style="margin: 30px 0;">
+                    <strong>Result:</strong> return dummy.next
+                    <div class="ll-visual">
+                        <div class="ll-node-container">
+                            <div class="ll-address">HEAD<br>0x2000</div>
+                            <div class="ll-node" style="background: #c8e6c9; border-color: #4caf50; border-width: 5px;">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">2</div>
+                                    <div class="ll-next">0x4000</div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node-container">
+                            <div class="ll-address">0x4000</div>
+                            <div class="ll-node" style="background: #c8e6c9;">
+                                <div class="ll-node-content">
+                                    <div class="ll-data">3</div>
+                                    <div class="ll-next">null</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: #4caf50; font-weight: bold; font-size: 1.2em;">
+                    All 1s removed! 2→3 ✅</p>
+                </div>
+            </div>
+
+            <div class="code-block"><span class="code-comment">// Pattern 4: Dummy Node - Remove Elements</span>
+<span class="code-keyword">public</span> ListNode removeElements(ListNode head, <span class="code-keyword">int</span> val) {
+    ListNode dummy = <span class="code-keyword">new</span> ListNode(<span class="code-number">0</span>);
+    dummy.next = head;
+    ListNode curr = dummy;
+    
+    <span class="code-keyword">while</span> (curr.next != <span class="code-keyword">null</span>) {
+        <span class="code-keyword">if</span> (curr.next.val == val) {
+            curr.next = curr.next.next;  <span class="code-comment">// Skip the node</span>
+        } <span class="code-keyword">else</span> {
+            curr = curr.next;  <span class="code-comment">// Move forward</span>
+        }
+    }
+    
+    <span class="code-keyword">return</span> dummy.next;  <span class="code-comment">// New head (might be different!)</span>
+}
+
+<span class="code-comment">// Time: O(n), Space: O(1)</span></div>
+
+            <div class="success-box">
+                <strong>✅ Practice Problems - Dummy Node:</strong>
+                <ol class="step-list">
+                    <li><strong>Remove Linked List Elements</strong> (LeetCode 203) - Remove all occurrences</li>
+                    <li><strong>Add Two Numbers</strong> (LeetCode 2) - Build result list with dummy</li>
+                    <li><strong>Partition List</strong> (LeetCode 86) - Two dummy nodes for two lists</li>
+                    <li><strong>Remove Duplicates from Sorted List II</strong> (LeetCode 82) - Remove all duplicates</li>
+                    <li><strong>Delete Node in a Linked List</strong> (LeetCode 237) - Copy next node's value</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- PATTERN 5: In-Place Manipulation & PATTERN 6: Runner Technique Combined -->
+        <div class="diagram-section">
+            <h2>🎯 PATTERN 5 & 6: In-Place Manipulation + Runner Technique</h2>
+            
+            <div class="recognition-box">
+                <h3 style="color: #9c27b0; margin-top: 0;">🔍 How to Recognize These Patterns?</h3>
+                <div style="line-height: 1.8;">
+                    <strong>In-Place Manipulation when you see:</strong><br>
+                    ✓ <strong>"Reorder"</strong> the list<br>
+                    ✓ <strong>"Remove duplicates"</strong><br>
+                    ✓ <strong>"Odd/even"</strong> positions<br>
+                    ✓ <strong>"Partition"</strong> around value<br>
+                    ✓ Must modify <strong>without extra space</strong><br><br>
+                    
+                    <strong>Runner Technique when you see:</strong><br>
+                    ✓ <strong>"Remove nth from end"</strong><br>
+                    ✓ <strong>"Find intersection"</strong> of two lists<br>
+                    ✓ Need <strong>two pointers with offset</strong><br>
+                    ✓ <strong>"Rotate list"</strong> by k positions
+                </div>
+            </div>
+
+            <div class="intuition-box">
+                <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition</h3>
+                <div style="line-height: 1.8;">
+                    <strong>In-Place Manipulation:</strong><br>
+                    Change pointers without creating new nodes → O(1) space!<br>
+                    Example: Odd-Even → Collect odds, then evens, link together<br><br>
+                    
+                    <strong>Runner (Two Pointers with Offset):</strong><br>
+                    Start one pointer ahead by k steps<br>
+                    When leader reaches end, follower is k from end!<br><br>
+                    
+                    Example: Remove 2nd from end in 1→2→3→4→5<br>
+                    • Start fast 2 steps ahead<br>
+                    • Move both until fast reaches end<br>
+                    • Slow is now at node before target!
+                </div>
+            </div>
+
+            <div class="pattern-box">
+                <h3 style="color: #2196f3; margin-top: 0;">📋 Why These Patterns Apply</h3>
+                <strong>Remove Nth from End - Why Runner?</strong><br>
+                Don't know length! With 2 pointers offset by n, when first reaches end, second is at target!<br><br>
+                <strong>Odd-Even List - Why In-Place?</strong><br>
+                Could use array O(n) space - But can rearrange pointers O(1) space!
+            </div>
+
+            <div class="diagram">
+                <h3>Visual: Remove 2nd node from end in 1→2→3→4→5</h3>
+                
+                <div class="code-visual">
+                    <div class="code-step">
+                        <strong>Step 1:</strong> Move fast pointer 2 steps ahead
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node">
+                                    <div class="ll-pointer slow">slow</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x3000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x3000</div>
+                                <div class="ll-node">
+                                    <div class="ll-pointer fast">fast</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">0x4000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x4000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">4</div>
+                                        <div class="ll-next">0x5000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x5000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">5</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>fast is 2 nodes ahead of slow</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Step 2:</strong> Move both until fast reaches end
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x3000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x3000</div>
+                                <div class="ll-node highlight">
+                                    <div class="ll-pointer slow">slow</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">0x4000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x4000</div>
+                                <div class="ll-node removed">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">4</div>
+                                        <div class="ll-next">0x5000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x5000</div>
+                                <div class="ll-node">
+                                    <div class="ll-pointer fast">fast</div>
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">5</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>fast at end, slow is before node to remove!<br>
+                        slow.next is 2nd from end!</p>
+                    </div>
+
+                    <div class="code-step">
+                        <strong>Step 3:</strong> Remove: slow.next = slow.next.next
+                        <div class="ll-visual">
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x1000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">1</div>
+                                        <div class="ll-next">0x2000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x2000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">2</div>
+                                        <div class="ll-next">0x3000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x3000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">3</div>
+                                        <div class="ll-next">0x5000</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="ll-arrow" style="font-size: 3em;">⤵</span>
+                            <div class="ll-node-container">
+                                <div class="ll-address">0x5000</div>
+                                <div class="ll-node" style="background: #c8e6c9;">
+                                    <div class="ll-node-content">
+                                        <div class="ll-data">5</div>
+                                        <div class="ll-next">null</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="text-align: center; color: #4caf50; font-weight: bold; font-size: 1.2em;">
+                        Removed! 1→2→3→5 ✅<br>
+                        Node 4 (at 0x4000) is unreachable!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block"><span class="code-comment">// Pattern 6: Runner - Remove Nth From End</span>
+<span class="code-keyword">public</span> ListNode removeNthFromEnd(ListNode head, <span class="code-keyword">int</span> n) {
+    ListNode dummy = <span class="code-keyword">new</span> ListNode(<span class="code-number">0</span>);
+    dummy.next = head;
+    ListNode slow = dummy;
+    ListNode fast = dummy;
+    
+    <span class="code-comment">// Move fast n+1 steps ahead</span>
+    <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-number">0</span>; i <= n; i++) {
+        fast = fast.next;
+    }
+    
+    <span class="code-comment">// Move both until fast reaches end</span>
+    <span class="code-keyword">while</span> (fast != <span class="code-keyword">null</span>) {
+        slow = slow.next;
+        fast = fast.next;
+    }
+    
+    <span class="code-comment">// Remove the node</span>
+    slow.next = slow.next.next;
+    
+    <span class="code-keyword">return</span> dummy.next;
+}
+
+<span class="code-comment">// Time: O(n), Space: O(1)</span></div>
+
+            <div class="success-box">
+                <strong>✅ Practice Problems - In-Place & Runner:</strong>
+                <ol class="step-list">
+                    <li><strong>Remove Nth Node From End</strong> (LeetCode 19) - Runner technique</li>
+                    <li><strong>Odd Even Linked List</strong> (LeetCode 328) - In-place rearrange</li>
+                    <li><strong>Remove Duplicates from Sorted List</strong> (LeetCode 83) - In-place</li>
+                    <li><strong>Partition List</strong> (LeetCode 86) - In-place partition</li>
+                    <li><strong>Rotate List</strong> (LeetCode 61) - Runner to find kth from end</li>
+                    <li><strong>Intersection of Two Linked Lists</strong> (LeetCode 160) - Runner</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- PATTERN 7: Recursion -->
+        <div class="diagram-section">
+            <h2>🎯 PATTERN 7: Recursion</h2>
+            
+            <div class="recognition-box">
+                <h3 style="color: #9c27b0; margin-top: 0;">🔍 How to Recognize This Pattern?</h3>
+                <div style="line-height: 1.8;">
+                    <strong>You should think "Recursion" when you see:</strong><br><br>
+                    
+                    ✓ <strong>"Reverse"</strong> (can be done recursively)<br>
+                    ✓ <strong>"Merge"</strong> (recursive divide & conquer)<br>
+                    ✓ <strong>"Swap pairs"</strong><br>
+                    ✓ Problem has <strong>recursive structure</strong><br>
+                    ✓ Question says <strong>"try recursive solution"</strong><br>
+                    ✓ Need to process <strong>from the end backward</strong><br><br>
+                    
+                    <strong>Key insight:</strong> List IS recursive: head + (rest of list)
+                </div>
+            </div>
+
+            <div class="intuition-box">
+                <h3 style="color: #ff9800; margin-top: 0;">💡 The Intuition - Recursive Thinking</h3>
+                <div style="line-height: 1.8;">
+                    <strong>The Recursive View:</strong><br><br>
+                    
+                    A LinkedList is: <code>head → (smaller list)</code><br><br>
+                    
+                    Example: 1→2→3→NULL is:<br>
+                    • Node 1 + (2→3→NULL)<br>
+                    • Which is: Node 1 + (Node 2 + (3→NULL))<br>
+                    • Which is: Node 1 + (Node 2 + (Node 3 + NULL))<br><br>
+                    
+                    🎯 <strong>Recursive Pattern:</strong><br>
+                    1. Base case: If head is null (or head.next is null)<br>
+                    2. Recursive step: Do something with head<br>
+                    3. Recurse on rest: Call function on head.next<br>
+                    4. Combine results<br><br>
+                    
+                    <strong>Think from the END:</strong><br>
+                    Process last node first, then second-to-last, etc.<br>
+                    Trust recursion to handle "rest of list"!
+                </div>
+            </div>
+
+            <div class="diagram">
+                <h3>Visual: Recursive Reverse of 1→2→3</h3>
+                
+                <div style="margin: 20px 0;">
+                    <strong>Call Stack Visualization:</strong>
+                    <pre style="background: #f5f5f5; padding: 15px; border-radius: 5px; border-left: 4px solid #667eea;">
+reverse(1→2→3)
+  └─ reverse(2→3)          ← Recurse on rest
+       └─ reverse(3)       ← Base case! Return 3
+       
+<span style="color: #4caf50;">← Now unwinding stack:</span>
+       
+       reverse(2→3) returns newHead=3
+       • Make 3 point back to 2: head.next.next = head
+       • Break 2→3: head.next = null
+       • Result so far: 3→2
+       
+reverse(1→2→3) returns newHead=3
+  • Make 2 point back to 1: head.next.next = head
+  • Break 1→2: head.next = null
+  • Final: 3→2→1 ✅
+</pre>
+                </div>
+
+                <div style="margin: 20px 0;">
+                    <strong>Memory State During Unwinding:</strong>
+                    <div class="code-visual">
+                        <div class="code-step">
+                            <strong>Base case reached:</strong> reverse(3) returns 3
+                            <div class="ll-visual">
+                                <div class="ll-node-container">
+                                    <div class="ll-address">0x3000</div>
+                                    <div class="ll-node" style="background: #c8e6c9;">
+                                        <div class="ll-pointer" style="background: #4caf50;">newHead</div>
+                                        <div class="ll-node-content">
+                                            <div class="ll-data">3</div>
+                                            <div class="ll-next">null</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="code-step">
+                            <strong>Unwind to reverse(2→3):</strong>
+                            <div class="ll-visual">
+                                <div class="ll-node-container">
+                                    <div class="ll-address">0x2000</div>
+                                    <div class="ll-node">
+                                        <div class="ll-pointer" style="background: #9c27b0;">head</div>
+                                        <div class="ll-node-content">
+                                            <div class="ll-data">2</div>
+                                            <div class="ll-next">null</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="ll-arrow" style="color: #4caf50;">←</span>
+                                <div class="ll-node-container">
+                                    <div class="ll-address">0x3000</div>
+                                    <div class="ll-node" style="background: #c8e6c9;">
+                                        <div class="ll-pointer" style="background: #4caf50;">newHead</div>
+                                        <div class="ll-node-content">
+                                            <div class="ll-data">3</div>
+                                            <div class="ll-next">0x2000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>head.next.next = head; head.next = null;</p>
+                        </div>
+
+                        <div class="code-step">
+                            <strong>Final unwind to reverse(1→2→3):</strong>
+                            <div class="ll-visual">
+                                <div class="ll-node-container">
+                                    <div class="ll-address">0x1000</div>
+                                    <div class="ll-node" style="background: #c8e6c9;">
+                                        <div class="ll-node-content">
+                                            <div class="ll-data">1</div>
+                                            <div class="ll-next">null</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="ll-arrow">←</span>
+                                <div class="ll-node-container">
+                                    <div class="ll-address">0x2000</div>
+                                    <div class="ll-node" style="background: #c8e6c9;">
+                                        <div class="ll-node-content">
+                                            <div class="ll-data">2</div>
+                                            <div class="ll-next">0x1000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="ll-arrow">←</span>
+                                <div class="ll-node-container">
+                                    <div class="ll-address">0x3000</div>
+                                    <div class="ll-node" style="background: #c8e6c9; border-color: #4caf50; border-width: 5px;">
+                                        <div class="ll-pointer" style="background: #4caf50;">newHead</div>
+                                        <div class="ll-node-content">
+                                            <div class="ll-data">3</div>
+                                            <div class="ll-next">0x2000</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p style="text-align: center; color: #4caf50; font-weight: bold; font-size: 1.2em;">
+                            Reversed! 3→2→1 ✅</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="code-block"><span class="code-comment">// Pattern 7: Recursion - Reverse List</span>
+<span class="code-keyword">public</span> ListNode reverseList(ListNode head) {
+    <span class="code-comment">// Base case: empty or single node</span>
+    <span class="code-keyword">if</span> (head == <span class="code-keyword">null</span> || head.next == <span class="code-keyword">null</span>) {
+        <span class="code-keyword">return</span> head;
+    }
+    
+    <span class="code-comment">// Recursive step: reverse rest of list</span>
+    ListNode newHead = reverseList(head.next);
+    
+    <span class="comment">// Make next node point back to current</span>
+    head.next.next = head;
+    head.next = <span class="code-keyword">null</span>;
+    
+    <span class="code-keyword">return</span> newHead;  <span class="code-comment">// Same newHead throughout unwinding</span>
+}
+
+<span class="code-comment">// Time: O(n) - Visit each node</span>
+<span class="code-comment">// Space: O(n) - Recursion stack</span></div>
+
+            <div class="success-box">
+                <strong>✅ Practice Problems - Recursion:</strong>
+                <ol class="step-list">
+                    <li><strong>Reverse Linked List</strong> (LeetCode 206) - Recursive solution</li>
+                    <li><strong>Merge Two Sorted Lists</strong> (LeetCode 21) - Recursive merge</li>
+                    <li><strong>Swap Nodes in Pairs</strong> (LeetCode 24) - Recursive swapping</li>
+                    <li><strong>Palindrome Linked List</strong> (LeetCode 234) - Recursive check</li>
+                    <li><strong>Add Two Numbers II</strong> (LeetCode 445) - Recursive addition</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Final Summary -->
+        <div class="diagram-section">
+            <h2>🎓 Complete Pattern Summary</h2>
+            
+            <table>
+                <tr>
+                    <th>Pattern</th>
+                    <th>When to Use</th>
+                    <th>Key Technique</th>
+                    <th>Time/Space</th>
+                </tr>
+                <tr>
+                    <td><strong>1. Fast & Slow</strong></td>
+                    <td>Cycle, middle, kth from end</td>
+                    <td>slow.next; fast.next.next</td>
+                    <td>O(n) / O(1)</td>
+                </tr>
+                <tr>
+                    <td><strong>2. Reverse</strong></td>
+                    <td>Reverse list/portion</td>
+                    <td>prev, curr, next pointers</td>
+                    <td>O(n) / O(1)</td>
+                </tr>
+                <tr>
+                    <td><strong>3. Merge</strong></td>
+                    <td>Combine sorted lists</td>
+                    <td>Compare heads, link smaller</td>
+                    <td>O(n+m) / O(1)</td>
+                </tr>
+                <tr>
+                    <td><strong>4. Dummy Node</strong></td>
+                    <td>Head might change</td>
+                    <td>Create dummy before head</td>
+                    <td>Simplifies code</td>
+                </tr>
+                <tr>
+                    <td><strong>5. In-Place</strong></td>
+                    <td>Reorder, partition</td>
+                    <td>Pointer manipulation only</td>
+                    <td>O(n) / O(1)</td>
+                </tr>
+                <tr>
+                    <td><strong>6. Runner</strong></td>
+                    <td>Nth from end, offset</td>
+                    <td>Start pointers with gap</td>
+                    <td>O(n) / O(1)</td>
+                </tr>
+                <tr>
+                    <td><strong>7. Recursion</strong></td>
+                    <td>Divide & conquer</td>
+                    <td>Process from end backward</td>
+                    <td>O(n) / O(n)</td>
+                </tr>
+            </table>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                🎯 <strong>Master These 7 Patterns → Solve 90%+ of LinkedList Problems!</strong>
+            </div>
+
+            <div class="success-box" style="margin-top: 20px;">
+                <h3 style="color: #2e7d32;">✅ Final Checklist - You've Mastered LinkedLists When You Can:</h3>
+                <div class="checklist">
+                    <div class="checklist-item">Explain how nodes are stored in memory with addresses</div>
+                    <div class="checklist-item">Recognize all 7 patterns from problem description</div>
+                    <div class="checklist-item">Draw pointer diagrams before coding</div>
+                    <div class="checklist-item">Implement reverse both iteratively and recursively</div>
+                    <div class="checklist-item">Know when to use dummy nodes</div>
+                    <div class="checklist-item">Handle edge cases (null, single node, two nodes)</div>
+                    <div class="checklist-item">Explain time/space complexity of each pattern</div>
+                    <div class="checklist-item">Solved 5+ problems from each pattern</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 40px 0; padding: 30px; background: #f0f4ff; border-radius: 10px; border: 3px solid #667eea;">
+                <h2 style="color: #667eea; margin-bottom: 20px;">🎉 Congratulations!</h2>
+                <p style="font-size: 1.2em; line-height: 1.8;">
+                    You now have a <strong>complete visual guide</strong> to all LinkedList patterns!<br>
+                    <strong>35+ practice problems</strong> organized by pattern<br>
+                    <strong>Memory addresses</strong> throughout showing real storage<br>
+                    <strong>Step-by-step code execution</strong> for every pattern<br><br>
+                    
+                    Keep this guide handy and practice regularly!<br>
+                    You're on your way to LinkedList mastery! 🚀
+                </p>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

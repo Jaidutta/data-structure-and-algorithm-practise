@@ -1,0 +1,2405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Theory Fundamentals - Java Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #764ba2;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #764ba2;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #667eea;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .definition-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .graph-canvas {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin: 20px auto;
+            background: white;
+            display: block;
+        }
+
+        .canvas-container {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .canvas-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .code-block pre {
+            margin: 0;
+        }
+
+        .visual-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Graph Theory Fundamentals - Java Edition</h1>
+
+        <h2>1. Definition of a Graph with Visualization</h2>
+        <div class="definition-box">
+            <p><strong>Graph (G):</strong> A graph is a mathematical structure consisting of a set of vertices (also called nodes) and a set of edges that connect pairs of vertices.</p>
+            <p><strong>Formal Definition:</strong> G = (V, E) where:</p>
+            <ul style="margin-left: 30px; margin-top: 10px;">
+                <li><strong>V</strong> = {A, B, C, D} - Set of vertices/nodes</li>
+                <li><strong>E</strong> = {(A,B), (B,C), (C,D), (D,A)} - Set of edges connecting vertices</li>
+            </ul>
+        </div>
+
+        <div class="canvas-container">
+            <div class="canvas-title">Visual Representation of G = (V, E)</div>
+            <canvas id="definitionGraph" class="graph-canvas" width="600" height="400"></canvas>
+            <p style="margin-top: 10px; color: #666;">V = {A, B, C, D} | E = {(A,B), (B,C), (C,D), (D,A), (A,C)}</p>
+        </div>
+
+        <h2>2. Key Terminology with Visual Examples</h2>
+
+        <div class="visual-grid">
+            <div class="canvas-container">
+                <div class="canvas-title">Vertex (Node)</div>
+                <canvas id="vertexDemo" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">Each circle represents a vertex/node in the graph</p>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas-title">Edge (Connection)</div>
+                <canvas id="edgeDemo" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">Lines connecting vertices are edges</p>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas-title">Degree of a Vertex</div>
+                <canvas id="degreeDemo" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">Degree = number of edges connected to a vertex</p>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas-title">Adjacent Vertices</div>
+                <canvas id="adjacentDemo" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">Vertices connected by an edge are adjacent</p>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas-title">Path</div>
+                <canvas id="pathDemo" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">A sequence of vertices: A → B → C → D</p>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas-title">Cycle</div>
+                <canvas id="cycleDemo" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">A path that starts and ends at the same vertex</p>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas-title">Connected Graph</div>
+                <canvas id="connectedDemo" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">Path exists between every pair of vertices</p>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas-title">Disconnected Graph</div>
+                <canvas id="disconnectedDemo" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">Separate components with no connecting paths</p>
+            </div>
+        </div>
+
+        <h2>3. Types of Graphs - Visualized</h2>
+
+        <div class="visual-grid">
+            <div class="canvas-container">
+                <div class="canvas-title">Undirected Graph</div>
+                <canvas id="undirectedGraph" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">Edges have no direction (bidirectional)</p>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas-title">Directed Graph (Digraph)</div>
+                <canvas id="directedGraph" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">Edges have direction (arrows)</p>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas-title">Weighted Graph</div>
+                <canvas id="weightedGraph" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">Edges have associated weights/costs</p>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas-title">Complete Graph (K₄)</div>
+                <canvas id="completeGraph" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">Every vertex connected to every other vertex</p>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas-title">Tree</div>
+                <canvas id="treeGraph" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">Connected acyclic graph (no cycles)</p>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas-title">Bipartite Graph</div>
+                <canvas id="bipartiteGraph" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">Two sets with edges only between sets</p>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas-title">Cyclic Graph</div>
+                <canvas id="cyclicGraph" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">Contains at least one cycle</p>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas-title">DAG (Directed Acyclic Graph)</div>
+                <canvas id="dagGraph" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">Directed with no cycles</p>
+            </div>
+        </div>
+
+        <h2>4. Graph Representation Methods</h2>
+
+        <div class="visual-grid">
+            <div class="canvas-container">
+                <div class="canvas-title">Sample Graph</div>
+                <canvas id="representationGraph" class="graph-canvas" width="400" height="300"></canvas>
+            </div>
+
+            <div class="canvas-container">
+                <div class="canvas-title">Adjacency Matrix</div>
+                <canvas id="adjacencyMatrix" class="graph-canvas" width="400" height="300"></canvas>
+                <p style="margin-top: 10px; color: #666;">Matrix[i][j] = 1 if edge exists</p>
+            </div>
+        </div>
+
+        <h2>5. Java Code Examples</h2>
+
+        <h3>Basic Graph Class (Adjacency List)</h3>
+        
+        <div class="definition-box">
+            <h4 style="color: #667eea; margin-bottom: 10px;">Algorithm Explanation:</h4>
+            <p><strong>Data Structure:</strong> We use a HashMap where each key is a vertex (String) and each value is an ArrayList of adjacent vertices.</p>
+            
+            <p><strong>Adding a Vertex:</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>Check if the vertex already exists in the adjacency list</li>
+                <li>If not, create a new empty ArrayList for this vertex</li>
+            </ol>
+            
+            <p><strong>Adding an Edge (Undirected):</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>First ensure both vertices exist (add them if they don't)</li>
+                <li>Add vertex2 to vertex1's adjacency list</li>
+                <li>Add vertex1 to vertex2's adjacency list (since it's undirected)</li>
+            </ol>
+            
+            <p><strong>Removing an Edge:</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>Get the adjacency list for vertex1</li>
+                <li>Remove vertex2 from it</li>
+                <li>Get the adjacency list for vertex2</li>
+                <li>Remove vertex1 from it</li>
+            </ol>
+            
+            <p><strong>Removing a Vertex:</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>Loop through all adjacency lists and remove this vertex from each</li>
+                <li>Delete the vertex's own adjacency list from the map</li>
+            </ol>
+        </div>
+        
+        <div class="code-block">
+<pre>
+import java.util.*;
+
+/**
+ * Graph class using Adjacency List representation
+ * Each vertex stores a list of its adjacent vertices
+ */
+public class Graph {
+    // Map: vertex name -> list of adjacent vertices
+    private Map&lt;String, List&lt;String&gt;&gt; adjacencyList;
+    
+    /**
+     * Constructor - Initialize empty adjacency list
+     */
+    public Graph() {
+        this.adjacencyList = new HashMap&lt;&gt;();
+    }
+    
+    /**
+     * Add a vertex to the graph
+     * Uses putIfAbsent to avoid overwriting existing vertex
+     * @param vertex - the vertex to add
+     */
+    public void addVertex(String vertex) {
+        adjacencyList.putIfAbsent(vertex, new ArrayList&lt;&gt;());
+    }
+    
+    /**
+     * Add an undirected edge between two vertices
+     * The edge goes both ways: vertex1 &lt;-&gt; vertex2
+     * @param vertex1 - first vertex
+     * @param vertex2 - second vertex
+     */
+    public void addEdge(String vertex1, String vertex2) {
+        // Ensure both vertices exist in the graph
+        addVertex(vertex1);
+        addVertex(vertex2);
+        
+        // Add edge in both directions (undirected)
+        adjacencyList.get(vertex1).add(vertex2);
+        adjacencyList.get(vertex2).add(vertex1);
+    }
+    
+    /**
+     * Remove an undirected edge between two vertices
+     * @param vertex1 - first vertex
+     * @param vertex2 - second vertex
+     */
+    public void removeEdge(String vertex1, String vertex2) {
+        // Get adjacency lists for both vertices
+        List&lt;String&gt; v1List = adjacencyList.get(vertex1);
+        List&lt;String&gt; v2List = adjacencyList.get(vertex2);
+        
+        // Remove each vertex from the other's list
+        if (v1List != null) v1List.remove(vertex2);
+        if (v2List != null) v2List.remove(vertex1);
+    }
+    
+    /**
+     * Remove a vertex and all edges connected to it
+     * @param vertex - the vertex to remove
+     */
+    public void removeVertex(String vertex) {
+        // First, remove this vertex from all other vertices' adjacency lists
+        adjacencyList.values().forEach(list -&gt; list.remove(vertex));
+        
+        // Then remove the vertex's own entry from the map
+        adjacencyList.remove(vertex);
+    }
+    
+    /**
+     * Display the graph in adjacency list format
+     * Format: vertex -> neighbor1, neighbor2, ...
+     */
+    public void display() {
+        for (String vertex : adjacencyList.keySet()) {
+            System.out.print(vertex + " -&gt; ");
+            System.out.println(String.join(", ", adjacencyList.get(vertex)));
+        }
+    }
+    
+    /**
+     * Get all vertices in the graph
+     * @return Set of all vertex names
+     */
+    public Set&lt;String&gt; getVertices() {
+        return adjacencyList.keySet();
+    }
+    
+    /**
+     * Get all neighbors (adjacent vertices) of a given vertex
+     * @param vertex - the vertex whose neighbors we want
+     * @return List of neighbor vertices
+     */
+    public List&lt;String&gt; getNeighbors(String vertex) {
+        return adjacencyList.getOrDefault(vertex, new ArrayList&lt;&gt;());
+    }
+    
+    /**
+     * Check if an edge exists between two vertices
+     * @param vertex1 - first vertex
+     * @param vertex2 - second vertex
+     * @return true if edge exists, false otherwise
+     */
+    public boolean hasEdge(String vertex1, String vertex2) {
+        List&lt;String&gt; neighbors = adjacencyList.get(vertex1);
+        return neighbors != null && neighbors.contains(vertex2);
+    }
+    
+    /**
+     * Get the degree of a vertex (number of edges connected to it)
+     * @param vertex - the vertex whose degree we want
+     * @return degree of the vertex
+     */
+    public int getDegree(String vertex) {
+        List&lt;String&gt; neighbors = adjacencyList.get(vertex);
+        return neighbors != null ? neighbors.size() : 0;
+    }
+    
+    /**
+     * Main method - demonstrates graph operations
+     */
+    public static void main(String[] args) {
+        // Create a new graph
+        Graph graph = new Graph();
+        
+        // Add vertices to the graph
+        graph.addVertex("A");
+        graph.addVertex("B");
+        graph.addVertex("C");
+        graph.addVertex("D");
+        
+        // Add edges between vertices
+        graph.addEdge("A", "B");
+        graph.addEdge("A", "C");
+        graph.addEdge("B", "D");
+        graph.addEdge("C", "D");
+        
+        // Display the graph structure
+        graph.display();
+        
+        // Output:
+        // A -&gt; B, C
+        // B -&gt; A, D
+        // C -&gt; A, D
+        // D -&gt; B, C
+        
+        // Test various graph operations
+        System.out.println("Degree of A: " + graph.getDegree("A")); // 2
+        System.out.println("Neighbors of B: " + graph.getNeighbors("B")); // [A, D]
+        System.out.println("Has edge A-C: " + graph.hasEdge("A", "C")); // true
+    }
+}
+</pre>
+        </div>
+
+        <h3>Directed Graph Class</h3>
+        
+        <div class="definition-box">
+            <h4 style="color: #667eea; margin-bottom: 10px;">Algorithm Explanation:</h4>
+            <p><strong>Directed Edge:</strong> Unlike undirected graphs, we only add the edge in one direction (source → destination).</p>
+            
+            <p><strong>Path Detection Algorithm (DFS-based):</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>If current vertex equals destination, return true (path found)</li>
+                <li>If current vertex is already visited, return false (avoid cycles)</li>
+                <li>Mark current vertex as visited</li>
+                <li>For each neighbor of current vertex:
+                    <ul style="margin-left: 20px;">
+                        <li>Recursively check if there's a path from neighbor to destination</li>
+                        <li>If any path is found, return true</li>
+                    </ul>
+                </li>
+                <li>If no path found through any neighbor, return false</li>
+            </ol>
+            
+            <p><strong>Cycle Detection Algorithm (DFS with Recursion Stack):</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>Maintain two sets: visited (all seen vertices) and recursionStack (current path)</li>
+                <li>For each unvisited vertex, start DFS</li>
+                <li>In DFS:
+                    <ul style="margin-left: 20px;">
+                        <li>Mark vertex as visited and add to recursion stack</li>
+                        <li>For each neighbor:
+                            <ul style="margin-left: 20px;">
+                                <li>If neighbor not visited: recursively visit it</li>
+                                <li>If neighbor is in recursion stack: cycle detected! Return true</li>
+                            </ul>
+                        </li>
+                        <li>Remove vertex from recursion stack (backtrack)</li>
+                    </ul>
+                </li>
+                <li>If no cycle found in any DFS, return false</li>
+            </ol>
+            
+            <p><strong>In-Degree:</strong> Count how many edges point TO this vertex (count occurrences in all adjacency lists)</p>
+            <p><strong>Out-Degree:</strong> Count how many edges point FROM this vertex (size of its adjacency list)</p>
+        </div>
+        
+        <div class="code-block">
+<pre>
+import java.util.*;
+
+/**
+ * Directed Graph class
+ * Edges have direction: source -> destination
+ */
+public class DirectedGraph {
+    // Adjacency list: vertex -> list of vertices it points to
+    private Map&lt;String, List&lt;String&gt;&gt; adjacencyList;
+    
+    /**
+     * Constructor - Initialize empty directed graph
+     */
+    public DirectedGraph() {
+        this.adjacencyList = new HashMap&lt;&gt;();
+    }
+    
+    /**
+     * Add a vertex to the graph
+     * @param vertex - the vertex to add
+     */
+    public void addVertex(String vertex) {
+        adjacencyList.putIfAbsent(vertex, new ArrayList&lt;&gt;());
+    }
+    
+    /**
+     * Add a directed edge from source to destination
+     * Edge only goes one way: source -> destination
+     * @param source - starting vertex of the edge
+     * @param destination - ending vertex of the edge
+     */
+    public void addEdge(String source, String destination) {
+        // Ensure both vertices exist
+        addVertex(source);
+        addVertex(destination);
+        
+        // Add edge only in one direction
+        adjacencyList.get(source).add(destination);
+    }
+    
+    /**
+     * Remove a directed edge
+     * @param source - starting vertex
+     * @param destination - ending vertex
+     */
+    public void removeEdge(String source, String destination) {
+        List&lt;String&gt; neighbors = adjacencyList.get(source);
+        if (neighbors != null) {
+            neighbors.remove(destination);
+        }
+    }
+    
+    /**
+     * Calculate in-degree of a vertex
+     * In-degree = number of edges coming INTO this vertex
+     * @param vertex - the vertex to check
+     * @return in-degree count
+     */
+    public int getInDegree(String vertex) {
+        int count = 0;
+        // Count how many vertices have an edge to this vertex
+        for (List&lt;String&gt; neighbors : adjacencyList.values()) {
+            if (neighbors.contains(vertex)) {
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    /**
+     * Calculate out-degree of a vertex
+     * Out-degree = number of edges going OUT FROM this vertex
+     * @param vertex - the vertex to check
+     * @return out-degree count
+     */
+    public int getOutDegree(String vertex) {
+        List&lt;String&gt; neighbors = adjacencyList.get(vertex);
+        return neighbors != null ? neighbors.size() : 0;
+    }
+    
+    /**
+     * Check if there's a path from source to destination using DFS
+     * @param source - starting vertex
+     * @param destination - target vertex
+     * @return true if path exists, false otherwise
+     */
+    public boolean hasPath(String source, String destination) {
+        Set&lt;String&gt; visited = new HashSet&lt;&gt;();
+        return dfsPath(source, destination, visited);
+    }
+    
+    /**
+     * Helper method: DFS to find path
+     * @param current - current vertex in traversal
+     * @param destination - target vertex
+     * @param visited - set of already visited vertices
+     * @return true if path found
+     */
+    private boolean dfsPath(String current, String destination, Set&lt;String&gt; visited) {
+        // Base case: reached destination
+        if (current.equals(destination)) return true;
+        
+        // Base case: already visited (avoid infinite loops)
+        if (visited.contains(current)) return false;
+        
+        // Mark current as visited
+        visited.add(current);
+        
+        // Recursively check all neighbors
+        List&lt;String&gt; neighbors = adjacencyList.get(current);
+        if (neighbors != null) {
+            for (String neighbor : neighbors) {
+                if (dfsPath(neighbor, destination, visited)) {
+                    return true; // Path found through this neighbor
+                }
+            }
+        }
+        
+        return false; // No path found
+    }
+    
+    /**
+     * Detect if the graph contains a cycle
+     * Uses DFS with a recursion stack
+     * @return true if cycle exists, false otherwise
+     */
+    public boolean hasCycle() {
+        Set&lt;String&gt; visited = new HashSet&lt;&gt;();       // All visited vertices
+        Set&lt;String&gt; recursionStack = new HashSet&lt;&gt;(); // Current path vertices
+        
+        // Check each vertex (handles disconnected components)
+        for (String vertex : adjacencyList.keySet()) {
+            if (!visited.contains(vertex)) {
+                if (hasCycleDFS(vertex, visited, recursionStack)) {
+                    return true; // Cycle found
+                }
+            }
+        }
+        
+        return false; // No cycle in entire graph
+    }
+    
+    /**
+     * Helper method: DFS for cycle detection
+     * @param vertex - current vertex
+     * @param visited - all visited vertices
+     * @param recursionStack - vertices in current DFS path
+     * @return true if cycle detected
+     */
+    private boolean hasCycleDFS(String vertex, Set&lt;String&gt; visited, 
+                                Set&lt;String&gt; recursionStack) {
+        // Add to visited and current path
+        visited.add(vertex);
+        recursionStack.add(vertex);
+        
+        // Check all neighbors
+        List&lt;String&gt; neighbors = adjacencyList.get(vertex);
+        if (neighbors != null) {
+            for (String neighbor : neighbors) {
+                // If neighbor not visited, recurse
+                if (!visited.contains(neighbor)) {
+                    if (hasCycleDFS(neighbor, visited, recursionStack)) {
+                        return true; // Cycle found in recursion
+                    }
+                } 
+                // If neighbor is in current path, we have a cycle!
+                else if (recursionStack.contains(neighbor)) {
+                    return true; // Back edge detected = cycle
+                }
+            }
+        }
+        
+        // Remove from recursion stack (backtrack)
+        recursionStack.remove(vertex);
+        return false;
+    }
+    
+    /**
+     * Display the directed graph
+     */
+    public void display() {
+        for (String vertex : adjacencyList.keySet()) {
+            System.out.print(vertex + " -&gt; ");
+            System.out.println(String.join(", ", adjacencyList.get(vertex)));
+        }
+    }
+    
+    /**
+     * Main method - demonstrates directed graph operations
+     */
+    public static void main(String[] args) {
+        DirectedGraph digraph = new DirectedGraph();
+        
+        // Create a directed cycle: A -> B -> C -> D -> A
+        digraph.addEdge("A", "B");
+        digraph.addEdge("B", "C");
+        digraph.addEdge("C", "D");
+        digraph.addEdge("D", "A");
+        
+        // Display the graph
+        digraph.display();
+        
+        // Test various operations
+        System.out.println("Has path from A to C: " + digraph.hasPath("A", "C")); // true
+        System.out.println("Has cycle: " + digraph.hasCycle()); // true
+        System.out.println("In-degree of C: " + digraph.getInDegree("C")); // 1 (from B)
+        System.out.println("Out-degree of C: " + digraph.getOutDegree("C")); // 1 (to D)
+    }
+}
+</pre>
+        </div>
+
+        <h3>Weighted Graph Class</h3>
+        
+        <div class="definition-box">
+            <h4 style="color: #667eea; margin-bottom: 10px;">Algorithm Explanation:</h4>
+            <p><strong>Data Structure:</strong> Adjacency list where each entry contains Edge objects (destination vertex + weight).</p>
+            
+            <p><strong>Dijkstra's Shortest Path Algorithm:</strong></p>
+            <p>This algorithm finds the shortest path from a start vertex to all other vertices in a weighted graph with non-negative weights.</p>
+            
+            <ol style="margin-left: 30px;">
+                <li><strong>Initialize:</strong>
+                    <ul style="margin-left: 20px;">
+                        <li>Set distance to start vertex = 0</li>
+                        <li>Set distance to all other vertices = infinity</li>
+                        <li>Create a priority queue (min-heap) ordered by distance</li>
+                        <li>Add start vertex to priority queue</li>
+                    </ul>
+                </li>
+                <li><strong>Main Loop:</strong> While priority queue is not empty:
+                    <ul style="margin-left: 20px;">
+                        <li>Extract vertex with minimum distance (current)</li>
+                        <li>If already visited, skip it</li>
+                        <li>Mark current as visited</li>
+                        <li>For each neighbor of current:
+                            <ul style="margin-left: 20px;">
+                                <li>Calculate: newDistance = distance[current] + edge_weight</li>
+                                <li>If newDistance < distance[neighbor]:
+                                    <ul style="margin-left: 20px;">
+                                        <li>Update distance[neighbor] = newDistance</li>
+                                        <li>Add neighbor to priority queue with new distance</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><strong>Result:</strong> The distances map contains shortest distances from start to all vertices</li>
+            </ol>
+            
+            <p><strong>Why it works:</strong> By always processing the closest unvisited vertex, we guarantee that when we visit a vertex, we've found the shortest path to it.</p>
+            <p><strong>Time Complexity:</strong> O((V + E) log V) with priority queue</p>
+        </div>
+        
+        <div class="code-block">
+<pre>
+import java.util.*;
+
+/**
+ * Edge class to represent a weighted edge
+ * Stores destination vertex and weight
+ */
+class Edge {
+    String destination;  // Where the edge goes to
+    int weight;          // Cost/weight of the edge
+    
+    public Edge(String destination, int weight) {
+        this.destination = destination;
+        this.weight = weight;
+    }
+}
+
+/**
+ * Weighted Graph class
+ * Each edge has an associated weight/cost
+ */
+public class WeightedGraph {
+    // Adjacency list: vertex -> list of weighted edges
+    private Map&lt;String, List&lt;Edge&gt;&gt; adjacencyList;
+    
+    /**
+     * Constructor - Initialize empty weighted graph
+     */
+    public WeightedGraph() {
+        this.adjacencyList = new HashMap&lt;&gt;();
+    }
+    
+    /**
+     * Add a vertex to the graph
+     * @param vertex - the vertex to add
+     */
+    public void addVertex(String vertex) {
+        adjacencyList.putIfAbsent(vertex, new ArrayList&lt;&gt;());
+    }
+    
+    /**
+     * Add a weighted undirected edge between two vertices
+     * @param vertex1 - first vertex
+     * @param vertex2 - second vertex
+     * @param weight - weight/cost of the edge
+     */
+    public void addEdge(String vertex1, String vertex2, int weight) {
+        // Ensure both vertices exist
+        addVertex(vertex1);
+        addVertex(vertex2);
+        
+        // Add edge in both directions with same weight (undirected)
+        adjacencyList.get(vertex1).add(new Edge(vertex2, weight));
+        adjacencyList.get(vertex2).add(new Edge(vertex1, weight));
+    }
+    
+    /**
+     * Display the weighted graph
+     * Format: vertex -> neighbor1(weight1), neighbor2(weight2), ...
+     */
+    public void display() {
+        for (String vertex : adjacencyList.keySet()) {
+            System.out.print(vertex + " -&gt; ");
+            List&lt;String&gt; connections = new ArrayList&lt;&gt;();
+            for (Edge edge : adjacencyList.get(vertex)) {
+                connections.add(edge.destination + "(" + edge.weight + ")");
+            }
+            System.out.println(String.join(", ", connections));
+        }
+    }
+    
+    /**
+     * Dijkstra's Algorithm - Find shortest paths from start vertex to all others
+     * Only works with non-negative edge weights
+     * @param start - starting vertex
+     * @return Map of vertex -> shortest distance from start
+     */
+    public Map&lt;String, Integer&gt; dijkstra(String start) {
+        // Store shortest distances from start to each vertex
+        Map&lt;String, Integer&gt; distances = new HashMap&lt;&gt;();
+        
+        // Priority queue to process vertices by distance (min-heap)
+        PriorityQueue&lt;Node&gt; pq = new PriorityQueue&lt;&gt;(
+            Comparator.comparingInt(node -&gt; node.distance)
+        );
+        
+        // Track visited vertices
+        Set&lt;String&gt; visited = new HashSet&lt;&gt;();
+        
+        // Initialize: distance to start = 0, all others = infinity
+        for (String vertex : adjacencyList.keySet()) {
+            distances.put(vertex, Integer.MAX_VALUE);
+        }
+        distances.put(start, 0);
+        pq.offer(new Node(start, 0));
+        
+        // Main loop: process vertices in order of increasing distance
+        while (!pq.isEmpty()) {
+            Node current = pq.poll();
+            String currentVertex = current.vertex;
+            
+            // Skip if already processed
+            if (visited.contains(currentVertex)) continue;
+            visited.add(currentVertex);
+            
+            // Check all neighbors
+            List&lt;Edge&gt; neighbors = adjacencyList.get(currentVertex);
+            if (neighbors != null) {
+                for (Edge edge : neighbors) {
+                    if (!visited.contains(edge.destination)) {
+                        // Calculate new distance through current vertex
+                        int newDist = distances.get(currentVertex) + edge.weight;
+                        
+                        // Update if we found a shorter path
+                        if (newDist &lt; distances.get(edge.destination)) {
+                            distances.put(edge.destination, newDist);
+                            pq.offer(new Node(edge.destination, newDist));
+                        }
+                    }
+                }
+            }
+        }
+        
+        return distances;
+    }
+    
+    /**
+     * Helper class for Dijkstra's algorithm
+     * Represents a vertex with its current known distance
+     */
+    static class Node {
+        String vertex;
+        int distance;
+        
+        public Node(String vertex, int distance) {
+            this.vertex = vertex;
+            this.distance = distance;
+        }
+    }
+    
+    /**
+     * Main method - demonstrates weighted graph operations
+     */
+    public static void main(String[] args) {
+        WeightedGraph graph = new WeightedGraph();
+        
+        // Build a weighted graph
+        graph.addEdge("A", "B", 4);
+        graph.addEdge("A", "C", 2);
+        graph.addEdge("B", "E", 3);
+        graph.addEdge("C", "D", 2);
+        graph.addEdge("C", "F", 4);
+        graph.addEdge("D", "E", 3);
+        graph.addEdge("D", "F", 1);
+        graph.addEdge("E", "F", 1);
+        
+        // Display the graph
+        graph.display();
+        
+        // Find shortest paths from A to all other vertices
+        System.out.println("\nShortest distances from A:");
+        Map&lt;String, Integer&gt; distances = graph.dijkstra("A");
+        for (String vertex : distances.keySet()) {
+            System.out.println("A to " + vertex + ": " + distances.get(vertex));
+        }
+        // Example output: A to E: 7 (path: A->C->D->E)
+    }
+}
+</pre>
+        </div>
+
+        <h3>Graph Traversal: Depth-First Search (DFS)</h3>
+        
+        <div class="definition-box">
+            <h4 style="color: #667eea; margin-bottom: 10px;">Algorithm Explanation:</h4>
+            <p><strong>Depth-First Search (DFS):</strong> Explores as far as possible along each branch before backtracking.</p>
+            
+            <p><strong>DFS Recursive Algorithm:</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>Start at the given vertex</li>
+                <li>Mark current vertex as visited and add to result</li>
+                <li>For each unvisited neighbor of current vertex:
+                    <ul style="margin-left: 20px;">
+                        <li>Recursively call DFS on that neighbor</li>
+                    </ul>
+                </li>
+                <li>When no more unvisited neighbors, backtrack to previous vertex</li>
+            </ol>
+            
+            <p><strong>DFS Iterative Algorithm (using Stack):</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>Create an empty stack and push start vertex</li>
+                <li>Mark start vertex as visited</li>
+                <li>While stack is not empty:
+                    <ul style="margin-left: 20px;">
+                        <li>Pop vertex from stack and add to result</li>
+                        <li>For each unvisited neighbor:
+                            <ul style="margin-left: 20px;">
+                                <li>Mark neighbor as visited</li>
+                                <li>Push neighbor onto stack</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>Key Idea:</strong> Stack (LIFO) makes us go deep into one branch before exploring others.</p>
+            <p><strong>Time Complexity:</strong> O(V + E) where V = vertices, E = edges</p>
+            <p><strong>Space Complexity:</strong> O(V) for visited set and recursion/stack</p>
+            <p><strong>Use Cases:</strong> Cycle detection, pathfinding, topological sorting, maze solving</p>
+        </div>
+        
+        <div class="code-block">
+<pre>
+import java.util.*;
+
+/**
+ * Graph class with Depth-First Search (DFS) traversal
+ * DFS explores as far as possible along each branch before backtracking
+ */
+public class GraphDFS extends Graph {
+    
+    /**
+     * Depth-First Search - Recursive approach
+     * Explores graph by going deep into branches first
+     * @param start - starting vertex for traversal
+     * @return List of vertices in DFS order
+     */
+    public List&lt;String&gt; dfsRecursive(String start) {
+        List&lt;String&gt; result = new ArrayList&lt;&gt;();      // Store traversal order
+        Set&lt;String&gt; visited = new HashSet&lt;&gt;();        // Track visited vertices
+        dfsHelper(start, visited, result);
+        return result;
+    }
+    
+    /**
+     * Helper method for recursive DFS
+     * @param vertex - current vertex being processed
+     * @param visited - set of already visited vertices
+     * @param result - list accumulating the traversal order
+     */
+    private void dfsHelper(String vertex, Set&lt;String&gt; visited, List&lt;String&gt; result) {
+        // Base case: null vertex or already visited
+        if (vertex == null || visited.contains(vertex)) return;
+        
+        // Process current vertex
+        visited.add(vertex);    // Mark as visited
+        result.add(vertex);     // Add to result
+        
+        // Recursively visit all unvisited neighbors
+        List&lt;String&gt; neighbors = getNeighbors(vertex);
+        for (String neighbor : neighbors) {
+            if (!visited.contains(neighbor)) {
+                dfsHelper(neighbor, visited, result);
+            }
+        }
+    }
+    
+    /**
+     * Depth-First Search - Iterative approach using Stack
+     * Uses explicit stack instead of recursion call stack
+     * @param start - starting vertex for traversal
+     * @return List of vertices in DFS order
+     */
+    public List&lt;String&gt; dfsIterative(String start) {
+        List&lt;String&gt; result = new ArrayList&lt;&gt;();
+        Set&lt;String&gt; visited = new HashSet&lt;&gt;();
+        Stack&lt;String&gt; stack = new Stack&lt;&gt;();
+        
+        // Start with the initial vertex
+        stack.push(start);
+        visited.add(start);
+        
+        // Process vertices from stack (LIFO - Last In First Out)
+        while (!stack.isEmpty()) {
+            // Pop vertex from stack
+            String current = stack.pop();
+            result.add(current);
+            
+            // Push all unvisited neighbors onto stack
+            List&lt;String&gt; neighbors = getNeighbors(current);
+            for (String neighbor : neighbors) {
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);  // Mark as visited when adding to stack
+                    stack.push(neighbor);
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Main method - demonstrates DFS traversal
+     */
+    public static void main(String[] args) {
+        GraphDFS graph = new GraphDFS();
+        
+        // Build a sample graph
+        //      A --- B --- D
+        //      |     |     |
+        //      C --- E --- F
+        graph.addEdge("A", "B");
+        graph.addEdge("A", "C");
+        graph.addEdge("B", "D");
+        graph.addEdge("C", "E");
+        graph.addEdge("D", "E");
+        graph.addEdge("D", "F");
+        graph.addEdge("E", "F");
+        
+        // Test both DFS approaches
+        System.out.println("DFS Recursive: " + graph.dfsRecursive("A"));
+        // Example output: [A, B, D, E, C, F]
+        
+        System.out.println("DFS Iterative: " + graph.dfsIterative("A"));
+        // Example output: [A, C, E, F, D, B] (may differ due to stack order)
+        
+        // Note: Order may vary depending on how neighbors are stored
+        // Both are valid DFS traversals
+    }
+}
+</pre>
+        </div>
+
+        <h3>Graph Traversal: Breadth-First Search (BFS)</h3>
+        
+        <div class="definition-box">
+            <h4 style="color: #667eea; margin-bottom: 10px;">Algorithm Explanation:</h4>
+            <p><strong>Breadth-First Search (BFS):</strong> Explores all vertices at the current depth before moving to vertices at the next depth level.</p>
+            
+            <p><strong>BFS Algorithm (using Queue):</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>Create an empty queue and add start vertex</li>
+                <li>Mark start vertex as visited</li>
+                <li>While queue is not empty:
+                    <ul style="margin-left: 20px;">
+                        <li>Dequeue vertex from front (current)</li>
+                        <li>Add current to result</li>
+                        <li>For each unvisited neighbor of current:
+                            <ul style="margin-left: 20px;">
+                                <li>Mark neighbor as visited</li>
+                                <li>Enqueue neighbor</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>Shortest Path Algorithm (BFS-based for unweighted graphs):</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>Create a queue with start vertex and a map to track previous vertex in path</li>
+                <li>While queue is not empty:
+                    <ul style="margin-left: 20px;">
+                        <li>Dequeue current vertex</li>
+                        <li>If current equals destination:
+                            <ul style="margin-left: 20px;">
+                                <li>Reconstruct path by following previous pointers backward</li>
+                                <li>Reverse path and return it</li>
+                            </ul>
+                        </li>
+                        <li>For each unvisited neighbor:
+                            <ul style="margin-left: 20px;">
+                                <li>Mark as visited</li>
+                                <li>Set previous[neighbor] = current</li>
+                                <li>Enqueue neighbor</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>If destination never reached, return null (no path exists)</li>
+            </ol>
+            
+            <p><strong>Key Idea:</strong> Queue (FIFO) ensures we explore all neighbors at current level before going deeper.</p>
+            <p><strong>Time Complexity:</strong> O(V + E)</p>
+            <p><strong>Space Complexity:</strong> O(V) for queue and visited set</p>
+            <p><strong>Use Cases:</strong> Shortest path in unweighted graphs, level-order traversal, finding connected components</p>
+            <p><strong>Why BFS finds shortest path:</strong> Because it explores vertices in order of increasing distance from start.</p>
+        </div>
+        
+        <div class="code-block">
+<pre>
+import java.util.*;
+
+/**
+ * Graph class with Breadth-First Search (BFS) traversal
+ * BFS explores all vertices at current depth before moving to next depth
+ */
+public class GraphBFS extends Graph {
+    
+    /**
+     * Breadth-First Search - Level by level traversal
+     * Uses queue (FIFO) to process vertices
+     * @param start - starting vertex for traversal
+     * @return List of vertices in BFS order
+     */
+    public List&lt;String&gt; bfs(String start) {
+        List&lt;String&gt; result = new ArrayList&lt;&gt;();       // Store traversal order
+        Set&lt;String&gt; visited = new HashSet&lt;&gt;();         // Track visited vertices
+        Queue&lt;String&gt; queue = new LinkedList&lt;&gt;();      // FIFO queue for processing
+        
+        // Start with initial vertex
+        queue.offer(start);
+        visited.add(start);
+        
+        // Process vertices level by level
+        while (!queue.isEmpty()) {
+            // Get next vertex from front of queue
+            String current = queue.poll();
+            result.add(current);
+            
+            // Add all unvisited neighbors to queue
+            List&lt;String&gt; neighbors = getNeighbors(current);
+            for (String neighbor : neighbors) {
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);    // Mark as visited
+                    queue.offer(neighbor);     // Add to end of queue
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Find shortest path between two vertices using BFS
+     * BFS guarantees shortest path in unweighted graphs
+     * @param start - starting vertex
+     * @param end - destination vertex
+     * @return List representing path from start to end, or null if no path
+     */
+    public List&lt;String&gt; shortestPath(String start, String end) {
+        // Map to track how we reached each vertex
+        Map&lt;String, String&gt; previous = new HashMap&lt;&gt;();
+        Set&lt;String&gt; visited = new HashSet&lt;&gt;();
+        Queue&lt;String&gt; queue = new LinkedList&lt;&gt;();
+        
+        // Initialize with start vertex
+        queue.offer(start);
+        visited.add(start);
+        previous.put(start, null);  // Start has no previous vertex
+        
+        // BFS to find path
+        while (!queue.isEmpty()) {
+            String current = queue.poll();
+            
+            // Check if we reached destination
+            if (current.equals(end)) {
+                // Reconstruct path by following previous pointers backward
+                List&lt;String&gt; path = new ArrayList&lt;&gt;();
+                String vertex = end;
+                
+                // Trace back from end to start
+                while (vertex != null) {
+                    path.add(0, vertex);        // Add to front of list
+                    vertex = previous.get(vertex);
+                }
+                
+                return path;
+            }
+            
+            // Explore neighbors
+            List&lt;String&gt; neighbors = getNeighbors(current);
+            for (String neighbor : neighbors) {
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    previous.put(neighbor, current);  // Remember how we got here
+                    queue.offer(neighbor);
+                }
+            }
+        }
+        
+        return null; // No path exists from start to end
+    }
+    
+    /**
+     * Main method - demonstrates BFS traversal and shortest path
+     */
+    public static void main(String[] args) {
+        GraphBFS graph = new GraphBFS();
+        
+        // Build a sample graph
+        //      A --- B --- D
+        //      |     |     |
+        //      C --- E --- F
+        graph.addEdge("A", "B");
+        graph.addEdge("A", "C");
+        graph.addEdge("B", "D");
+        graph.addEdge("C", "E");
+        graph.addEdge("D", "E");
+        graph.addEdge("D", "F");
+        graph.addEdge("E", "F");
+        
+        // Test BFS traversal
+        System.out.println("BFS: " + graph.bfs("A"));
+        // Output: [A, B, C, D, E, F] - visits level by level
+        
+        // Test shortest path
+        System.out.println("Shortest path A to F: " + graph.shortestPath("A", "F"));
+        // Output: [A, B, D, F] or [A, C, E, F] - both are shortest paths
+        
+        // BFS guarantees this is a shortest path (minimum number of edges)
+    }
+}
+</pre>
+        </div>
+
+        <h3>Adjacency Matrix Representation</h3>
+        
+        <div class="definition-box">
+            <h4 style="color: #667eea; margin-bottom: 10px;">Algorithm Explanation:</h4>
+            <p><strong>Adjacency Matrix:</strong> A 2D array where matrix[i][j] represents the edge between vertex i and vertex j.</p>
+            
+            <p><strong>Structure:</strong></p>
+            <ul style="margin-left: 30px;">
+                <li>Create a 2D array of size V × V (where V is max number of vertices)</li>
+                <li>matrix[i][j] = 0 means no edge between vertex i and j</li>
+                <li>matrix[i][j] = 1 means edge exists (for unweighted graph)</li>
+                <li>matrix[i][j] = weight means weighted edge with that weight</li>
+                <li>For undirected graphs: matrix[i][j] = matrix[j][i]</li>
+            </ul>
+            
+            <p><strong>Adding a Vertex:</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>Assign the next available index to this vertex</li>
+                <li>Store mapping: vertex name ↔ index</li>
+            </ol>
+            
+            <p><strong>Adding an Edge (Undirected):</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>Get indices i and j for both vertices</li>
+                <li>Set matrix[i][j] = weight</li>
+                <li>Set matrix[j][i] = weight (for undirected)</li>
+            </ol>
+            
+            <p><strong>Checking if Edge Exists:</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>Get indices for both vertices</li>
+                <li>Return true if matrix[i][j] ≠ 0</li>
+            </ol>
+            
+            <p><strong>Finding Neighbors:</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>Get index i for the vertex</li>
+                <li>Loop through row i</li>
+                <li>For each j where matrix[i][j] ≠ 0, add vertex j to neighbors</li>
+            </ol>
+            
+            <p><strong>Pros:</strong> O(1) edge lookup, good for dense graphs</p>
+            <p><strong>Cons:</strong> O(V²) space even for sparse graphs, O(V) to get all neighbors</p>
+        </div>
+        
+        <div class="code-block">
+<pre>
+import java.util.*;
+
+/**
+ * Graph represented using Adjacency Matrix
+ * Uses 2D array where matrix[i][j] represents edge from vertex i to j
+ */
+public class GraphMatrix {
+    private int[][] matrix;                      // 2D array for edges
+    private Map&lt;String, Integer&gt; vertexMap;      // vertex name -> index
+    private Map&lt;Integer, String&gt; indexMap;       // index -> vertex name
+    private int numVertices;                     // maximum vertices
+    private int nextIndex;                       // next available index
+    
+    /**
+     * Constructor - Initialize matrix with max capacity
+     * @param maxVertices - maximum number of vertices
+     */
+    public GraphMatrix(int maxVertices) {
+        this.matrix = new int[maxVertices][maxVertices];
+        this.vertexMap = new HashMap&lt;&gt;();
+        this.indexMap = new HashMap&lt;&gt;();
+        this.numVertices = maxVertices;
+        this.nextIndex = 0;
+    }
+    
+    /**
+     * Add a vertex to the graph
+     * Assigns next available index to this vertex
+     * @param vertex - vertex name to add
+     */
+    public void addVertex(String vertex) {
+        // Only add if vertex doesn't exist and we have space
+        if (!vertexMap.containsKey(vertex) && nextIndex &lt; numVertices) {
+            vertexMap.put(vertex, nextIndex);      // name -> index
+            indexMap.put(nextIndex, vertex);       // index -> name
+            nextIndex++;
+        }
+    }
+    
+    /**
+     * Add an unweighted edge (weight = 1)
+     * @param vertex1 - first vertex
+     * @param vertex2 - second vertex
+     */
+    public void addEdge(String vertex1, String vertex2) {
+        addEdge(vertex1, vertex2, 1);
+    }
+    
+    /**
+     * Add a weighted edge between two vertices
+     * For undirected graph, sets both matrix[i][j] and matrix[j][i]
+     * @param vertex1 - first vertex
+     * @param vertex2 - second vertex
+     * @param weight - weight of the edge
+     */
+    public void addEdge(String vertex1, String vertex2, int weight) {
+        // Ensure both vertices exist
+        addVertex(vertex1);
+        addVertex(vertex2);
+        
+        // Get their indices
+        int i = vertexMap.get(vertex1);
+        int j = vertexMap.get(vertex2);
+        
+        // Set edge weight in matrix (undirected, so set both directions)
+        matrix[i][j] = weight;
+        matrix[j][i] = weight;
+    }
+    
+    /**
+     * Check if edge exists between two vertices
+     * @param vertex1 - first vertex
+     * @param vertex2 - second vertex
+     * @return true if edge exists (matrix value != 0)
+     */
+    public boolean hasEdge(String vertex1, String vertex2) {
+        Integer i = vertexMap.get(vertex1);
+        Integer j = vertexMap.get(vertex2);
+        
+        // Return false if either vertex doesn't exist
+        if (i == null || j == null) return false;
+        
+        // Edge exists if matrix value is non-zero
+        return matrix[i][j] != 0;
+    }
+    
+    /**
+     * Get all neighbors of a vertex
+     * Scans the row in matrix for non-zero values
+     * @param vertex - vertex to find neighbors for
+     * @return List of neighboring vertices
+     */
+    public List&lt;String&gt; getNeighbors(String vertex) {
+        List&lt;String&gt; neighbors = new ArrayList&lt;&gt;();
+        Integer i = vertexMap.get(vertex);
+        
+        if (i == null) return neighbors;
+        
+        // Check entire row for non-zero entries
+        for (int j = 0; j &lt; nextIndex; j++) {
+            if (matrix[i][j] != 0) {
+                neighbors.add(indexMap.get(j));
+            }
+        }
+        
+        return neighbors;
+    }
+    
+    /**
+     * Display the adjacency matrix
+     * Shows matrix with vertex labels
+     */
+    public void display() {
+        System.out.println("\nAdjacency Matrix:");
+        
+        // Print column headers
+        System.out.print("   ");
+        for (int i = 0; i &lt; nextIndex; i++) {
+            System.out.print(indexMap.get(i) + " ");
+        }
+        System.out.println();
+        
+        // Print each row with row label
+        for (int i = 0; i &lt; nextIndex; i++) {
+            System.out.print(indexMap.get(i) + "  ");
+            for (int j = 0; j &lt; nextIndex; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+    
+    /**
+     * Main method - demonstrates adjacency matrix operations
+     */
+    public static void main(String[] args) {
+        GraphMatrix graph = new GraphMatrix(5);
+        
+        // Add edges to build graph
+        graph.addEdge("A", "B");
+        graph.addEdge("A", "C");
+        graph.addEdge("B", "D");
+        graph.addEdge("C", "D");
+        
+        // Display the matrix
+        graph.display();
+        /* Output:
+           A B C D
+        A  0 1 1 0
+        B  1 0 0 1
+        C  1 0 0 1
+        D  0 1 1 0
+        */
+        
+        // Test operations
+        System.out.println("\nNeighbors of A: " + graph.getNeighbors("A"));  // [B, C]
+        System.out.println("Has edge A-C: " + graph.hasEdge("A", "C"));      // true
+        
+        // Pros: O(1) edge lookup, good for dense graphs
+        // Cons: O(V²) space, O(V) to find all neighbors
+    }
+}
+</pre>
+        </div>
+
+        <h3>Topological Sort (for DAG)</h3>
+        
+        <div class="definition-box">
+            <h4 style="color: #667eea; margin-bottom: 10px;">Algorithm Explanation:</h4>
+            <p><strong>Topological Sort:</strong> A linear ordering of vertices in a Directed Acyclic Graph (DAG) such that for every directed edge (u, v), vertex u comes before v in the ordering.</p>
+            
+            <p><strong>Applications:</strong> Course scheduling, build systems, task dependencies, compilation order</p>
+            
+            <p><strong>Method 1: DFS-based Topological Sort</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>Create an empty stack to store result</li>
+                <li>For each unvisited vertex in the graph:
+                    <ul style="margin-left: 20px;">
+                        <li>Call DFS starting from that vertex</li>
+                    </ul>
+                </li>
+                <li>In DFS for a vertex:
+                    <ul style="margin-left: 20px;">
+                        <li>Mark vertex as visited</li>
+                        <li>For each unvisited neighbor:
+                            <ul style="margin-left: 20px;">
+                                <li>Recursively call DFS on neighbor</li>
+                            </ul>
+                        </li>
+                        <li>After visiting all neighbors, push current vertex onto stack</li>
+                    </ul>
+                </li>
+                <li>Pop all vertices from stack to get topological order</li>
+            </ol>
+            
+            <p><strong>Method 2: Kahn's Algorithm (BFS-based)</strong></p>
+            <ol style="margin-left: 30px;">
+                <li>Calculate in-degree (number of incoming edges) for all vertices</li>
+                <li>Add all vertices with in-degree 0 to a queue</li>
+                <li>While queue is not empty:
+                    <ul style="margin-left: 20px;">
+                        <li>Dequeue a vertex and add it to result</li>
+                        <li>For each neighbor of this vertex:
+                            <ul style="margin-left: 20px;">
+                                <li>Decrease its in-degree by 1</li>
+                                <li>If in-degree becomes 0, add it to queue</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>Result list contains topological ordering</li>
+            </ol>
+            
+            <p><strong>Key Insight (DFS):</strong> A vertex is added to result only after all its descendants are processed.</p>
+            <p><strong>Key Insight (Kahn's):</strong> We can only process a vertex when all its dependencies are done.</p>
+            <p><strong>Time Complexity:</strong> O(V + E) for both methods</p>
+            <p><strong>Note:</strong> Only works on DAGs (Directed Acyclic Graphs). If graph has a cycle, topological sort is not possible.</p>
+        </div>
+        
+        <div class="code-block">
+<pre>
+import java.util.*;
+
+/**
+ * Topological Sort for Directed Acyclic Graphs (DAGs)
+ * Produces linear ordering where all edges go from left to right
+ */
+public class TopologicalSort {
+    private Map&lt;String, List&lt;String&gt;&gt; adjacencyList;
+    
+    /**
+     * Constructor - Initialize empty directed graph
+     */
+    public TopologicalSort() {
+        this.adjacencyList = new HashMap&lt;&gt;();
+    }
+    
+    /**
+     * Add a vertex to the graph
+     * @param vertex - vertex to add
+     */
+    public void addVertex(String vertex) {
+        adjacencyList.putIfAbsent(vertex, new ArrayList&lt;&gt;());
+    }
+    
+    /**
+     * Add a directed edge (dependency)
+     * @param source - prerequisite/dependency
+     * @param destination - dependent item
+     */
+    public void addEdge(String source, String destination) {
+        addVertex(source);
+        addVertex(destination);
+        adjacencyList.get(source).add(destination);
+    }
+    
+    /**
+     * Topological Sort using DFS approach
+     * Vertices are added to result in reverse finishing time
+     * @return List of vertices in topological order
+     */
+    public List&lt;String&gt; topologicalSort() {
+        Stack&lt;String&gt; stack = new Stack&lt;&gt;();    // Stack for reverse order
+        Set&lt;String&gt; visited = new HashSet&lt;&gt;();  // Track visited vertices
+        
+        // Process each unvisited vertex (handles disconnected components)
+        for (String vertex : adjacencyList.keySet()) {
+            if (!visited.contains(vertex)) {
+                topologicalSortDFS(vertex, visited, stack);
+            }
+        }
+        
+        // Pop all vertices from stack to get topological order
+        List&lt;String&gt; result = new ArrayList&lt;&gt;();
+        while (!stack.isEmpty()) {
+            result.add(stack.pop());
+        }
+        
+        return result;
+    }
+    
+    /**
+     * DFS helper for topological sort
+     * Pushes vertex onto stack AFTER visiting all descendants
+     * @param vertex - current vertex
+     * @param visited - set of visited vertices
+     * @param stack - stack to build reverse order
+     */
+    private void topologicalSortDFS(String vertex, Set&lt;String&gt; visited, 
+                                    Stack&lt;String&gt; stack) {
+        // Mark current vertex as visited
+        visited.add(vertex);
+        
+        // Recursively visit all unvisited neighbors first
+        List&lt;String&gt; neighbors = adjacencyList.get(vertex);
+        if (neighbors != null) {
+            for (String neighbor : neighbors) {
+                if (!visited.contains(neighbor)) {
+                    topologicalSortDFS(neighbor, visited, stack);
+                }
+            }
+        }
+        
+        // After visiting all descendants, push this vertex onto stack
+        // This ensures dependencies are processed before dependents
+        stack.push(vertex);
+    }
+    
+    /**
+     * Kahn's Algorithm for Topological Sort (BFS-based)
+     * Repeatedly removes vertices with no incoming edges
+     * @return List of vertices in topological order
+     */
+    public List&lt;String&gt; topologicalSortKahn() {
+        // Calculate in-degree (number of incoming edges) for each vertex
+        Map&lt;String, Integer&gt; inDegree = new HashMap&lt;&gt;();
+        
+        // Initialize all in-degrees to 0
+        for (String vertex : adjacencyList.keySet()) {
+            inDegree.put(vertex, 0);
+        }
+        
+        // Count incoming edges for each vertex
+        for (String vertex : adjacencyList.keySet()) {
+            for (String neighbor : adjacencyList.get(vertex)) {
+                inDegree.put(neighbor, inDegree.get(neighbor) + 1);
+            }
+        }
+        
+        // Queue for vertices with no dependencies (in-degree = 0)
+        Queue&lt;String&gt; queue = new LinkedList&lt;&gt;();
+        for (String vertex : inDegree.keySet()) {
+            if (inDegree.get(vertex) == 0) {
+                queue.offer(vertex);  // Can be processed immediately
+            }
+        }
+        
+        List&lt;String&gt; result = new ArrayList&lt;&gt;();
+        
+        // Process vertices with no remaining dependencies
+        while (!queue.isEmpty()) {
+            String current = queue.poll();
+            result.add(current);  // Add to topological order
+            
+            // "Remove" this vertex by decreasing in-degree of neighbors
+            List&lt;String&gt; neighbors = adjacencyList.get(current);
+            if (neighbors != null) {
+                for (String neighbor : neighbors) {
+                    // Decrease in-degree (one dependency resolved)
+                    inDegree.put(neighbor, inDegree.get(neighbor) - 1);
+                    
+                    // If all dependencies resolved, can process this vertex
+                    if (inDegree.get(neighbor) == 0) {
+                        queue.offer(neighbor);
+                    }
+                }
+            }
+        }
+        
+        // Note: If result.size() &lt; number of vertices, graph has a cycle
+        return result;
+    }
+    
+    /**
+     * Main method - demonstrates topological sort
+     */
+    public static void main(String[] args) {
+        TopologicalSort graph = new TopologicalSort();
+        
+        // Example: Course prerequisites
+        // Must take "Intro to CS" before "Data Structures"
+        // Must take "Data Structures" before "Algorithms"
+        // Must take "Discrete Math" before "Algorithms"
+        
+        graph.addEdge("Intro to CS", "Data Structures");
+        graph.addEdge("Data Structures", "Algorithms");
+        graph.addEdge("Intro to CS", "Discrete Math");
+        graph.addEdge("Discrete Math", "Algorithms");
+        
+        // Get valid course orderings
+        System.out.println("Topological Sort (DFS): " + graph.topologicalSort());
+        // Possible output: [Intro to CS, Discrete Math, Data Structures, Algorithms]
+        
+        System.out.println("Topological Sort (Kahn): " + graph.topologicalSortKahn());
+        // Possible output: [Intro to CS, Data Structures, Discrete Math, Algorithms]
+        
+        // Both orderings are valid - both respect all dependencies
+        // Note: Multiple valid orderings may exist
+    }
+}
+</pre>
+        </div>
+
+        <div class="note">
+            <strong>💡 Tips for Using These Java Code Examples:</strong>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>All code examples are complete and ready to compile and run</li>
+                <li>The Graph class uses an adjacency list (HashMap with ArrayLists), which is memory efficient for sparse graphs</li>
+                <li>The GraphMatrix class uses a 2D array for the adjacency matrix, which is faster for dense graphs</li>
+                <li>BFS is useful for finding shortest paths in unweighted graphs</li>
+                <li>DFS is useful for detecting cycles, topological sorting, and exploring all paths</li>
+                <li>Dijkstra's algorithm finds shortest paths in weighted graphs with non-negative weights</li>
+                <li>Topological sort works only on Directed Acyclic Graphs (DAGs)</li>
+                <li>Use generics (like &lt;String&gt;) to make graphs work with any data type</li>
+            </ul>
+        </div>
+
+        <h2>6. Common Graph Algorithms Summary</h2>
+        
+        <table>
+            <tr>
+                <th>Algorithm</th>
+                <th>Purpose</th>
+                <th>Time Complexity</th>
+            </tr>
+            <tr>
+                <td>BFS</td>
+                <td>Shortest path in unweighted graph, level-order traversal</td>
+                <td>O(V + E)</td>
+            </tr>
+            <tr>
+                <td>DFS</td>
+                <td>Cycle detection, path finding, topological sort</td>
+                <td>O(V + E)</td>
+            </tr>
+            <tr>
+                <td>Dijkstra's</td>
+                <td>Shortest path in weighted graph (non-negative)</td>
+                <td>O((V + E) log V)</td>
+            </tr>
+            <tr>
+                <td>Topological Sort</td>
+                <td>Linear ordering of vertices in DAG</td>
+                <td>O(V + E)</td>
+            </tr>
+            <tr>
+                <td>Kahn's Algorithm</td>
+                <td>Topological sort using BFS</td>
+                <td>O(V + E)</td>
+            </tr>
+        </table>
+
+    </div>
+
+    <script>
+        // JavaScript for canvas visualizations
+        function drawNode(ctx, x, y, label, color = '#667eea', highlighted = false) {
+            ctx.beginPath();
+            ctx.arc(x, y, 25, 0, 2 * Math.PI);
+            ctx.fillStyle = highlighted ? '#ff6b6b' : color;
+            ctx.fill();
+            ctx.strokeStyle = highlighted ? '#c92a2a' : '#333';
+            ctx.lineWidth = highlighted ? 3 : 2;
+            ctx.stroke();
+            
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(label, x, y);
+        }
+
+        function drawEdge(ctx, x1, y1, x2, y2, highlighted = false) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.strokeStyle = highlighted ? '#ff6b6b' : '#333';
+            ctx.lineWidth = highlighted ? 3 : 2;
+            ctx.stroke();
+        }
+
+        function drawArrow(ctx, x1, y1, x2, y2, highlighted = false) {
+            const angle = Math.atan2(y2 - y1, x2 - x1);
+            const headLength = 15;
+            
+            const dx = x2 - x1;
+            const dy = y2 - y1;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const ratio = (distance - 25) / distance;
+            const endX = x1 + dx * ratio;
+            const endY = y1 + dy * ratio;
+            
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(endX, endY);
+            ctx.strokeStyle = highlighted ? '#ff6b6b' : '#333';
+            ctx.lineWidth = highlighted ? 3 : 2;
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(endX, endY);
+            ctx.lineTo(
+                endX - headLength * Math.cos(angle - Math.PI / 6),
+                endY - headLength * Math.sin(angle - Math.PI / 6)
+            );
+            ctx.lineTo(
+                endX - headLength * Math.cos(angle + Math.PI / 6),
+                endY - headLength * Math.sin(angle + Math.PI / 6)
+            );
+            ctx.closePath();
+            ctx.fillStyle = highlighted ? '#ff6b6b' : '#333';
+            ctx.fill();
+        }
+
+        function drawWeight(ctx, x1, y1, x2, y2, weight) {
+            const midX = (x1 + x2) / 2;
+            const midY = (y1 + y2) / 2;
+            
+            ctx.fillStyle = 'white';
+            ctx.fillRect(midX - 15, midY - 12, 30, 24);
+            
+            ctx.fillStyle = '#d32f2f';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(weight, midX, midY);
+        }
+
+        function drawDegree(ctx, x, y, degree) {
+            ctx.fillStyle = '#1976d2';
+            ctx.font = 'bold 12px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText(`deg: ${degree}`, x + 35, y - 20);
+        }
+
+        // Definition Graph
+        function drawDefinitionGraph() {
+            const canvas = document.getElementById('definitionGraph');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 150, y: 200, label: 'A'},
+                {x: 300, y: 100, label: 'B'},
+                {x: 450, y: 200, label: 'C'},
+                {x: 300, y: 300, label: 'D'}
+            ];
+
+            const edges = [[0,1], [1,2], [2,3], [3,0], [0,2]];
+
+            edges.forEach(([i, j]) => {
+                drawEdge(ctx, nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+            });
+
+            nodes.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label);
+            });
+        }
+
+        // Vertex Demo
+        function drawVertexDemo() {
+            const canvas = document.getElementById('vertexDemo');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 100, y: 100, label: 'A'},
+                {x: 300, y: 100, label: 'B'},
+                {x: 200, y: 220, label: 'C'}
+            ];
+
+            nodes.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label, '#667eea', true);
+            });
+
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Three vertices in the graph', 200, 270);
+        }
+
+        // Edge Demo
+        function drawEdgeDemo() {
+            const canvas = document.getElementById('edgeDemo');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 100, y: 150, label: 'A'},
+                {x: 300, y: 150, label: 'B'}
+            ];
+
+            drawEdge(ctx, nodes[0].x, nodes[0].y, nodes[1].x, nodes[1].y, true);
+            
+            nodes.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label);
+            });
+
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Edge connecting A and B', 200, 220);
+        }
+
+        // Degree Demo
+        function drawDegreeDemo() {
+            const canvas = document.getElementById('degreeDemo');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 200, y: 150, label: 'A', degree: 3},
+                {x: 100, y: 100, label: 'B', degree: 1},
+                {x: 300, y: 100, label: 'C', degree: 1},
+                {x: 200, y: 50, label: 'D', degree: 1}
+            ];
+
+            const edges = [[0,1], [0,2], [0,3]];
+
+            edges.forEach(([i, j]) => {
+                drawEdge(ctx, nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+            });
+
+            nodes.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label, node.degree === 3 ? '#ff6b6b' : '#667eea');
+                drawDegree(ctx, node.x, node.y, node.degree);
+            });
+
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Vertex A has degree 3 (connected to 3 edges)', 200, 240);
+        }
+
+        // Adjacent Demo
+        function drawAdjacentDemo() {
+            const canvas = document.getElementById('adjacentDemo');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 120, y: 150, label: 'A'},
+                {x: 280, y: 150, label: 'B'},
+                {x: 200, y: 80, label: 'C'}
+            ];
+
+            drawEdge(ctx, nodes[0].x, nodes[0].y, nodes[1].x, nodes[1].y, true);
+            drawEdge(ctx, nodes[0].x, nodes[0].y, nodes[2].x, nodes[2].y);
+            drawEdge(ctx, nodes[1].x, nodes[1].y, nodes[2].x, nodes[2].y);
+            
+            drawNode(ctx, nodes[0].x, nodes[0].y, nodes[0].label, '#ff6b6b', true);
+            drawNode(ctx, nodes[1].x, nodes[1].y, nodes[1].label, '#ff6b6b', true);
+            drawNode(ctx, nodes[2].x, nodes[2].y, nodes[2].label);
+
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('A and B are adjacent (connected by edge)', 200, 230);
+        }
+
+        // Path Demo
+        function drawPathDemo() {
+            const canvas = document.getElementById('pathDemo');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 80, y: 150, label: 'A'},
+                {x: 160, y: 150, label: 'B'},
+                {x: 240, y: 150, label: 'C'},
+                {x: 320, y: 150, label: 'D'}
+            ];
+
+            const pathEdges = [[0,1], [1,2], [2,3]];
+            
+            pathEdges.forEach(([i, j]) => {
+                drawEdge(ctx, nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y, true);
+            });
+
+            nodes.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label, '#ff6b6b', true);
+            });
+
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Path: A → B → C → D', 200, 230);
+        }
+
+        // Cycle Demo
+        function drawCycleDemo() {
+            const canvas = document.getElementById('cycleDemo');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 200, y: 80, label: 'A'},
+                {x: 280, y: 150, label: 'B'},
+                {x: 200, y: 220, label: 'C'},
+                {x: 120, y: 150, label: 'D'}
+            ];
+
+            const edges = [[0,1], [1,2], [2,3], [3,0]];
+
+            edges.forEach(([i, j]) => {
+                drawEdge(ctx, nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y, true);
+            });
+
+            nodes.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label, '#ff6b6b', true);
+            });
+
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Cycle: A → B → C → D → A', 200, 270);
+        }
+
+        // Connected Demo
+        function drawConnectedDemo() {
+            const canvas = document.getElementById('connectedDemo');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 100, y: 100, label: 'A'},
+                {x: 300, y: 100, label: 'B'},
+                {x: 100, y: 200, label: 'C'},
+                {x: 300, y: 200, label: 'D'}
+            ];
+
+            const edges = [[0,1], [0,2], [1,3], [2,3]];
+
+            edges.forEach(([i, j]) => {
+                drawEdge(ctx, nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+            });
+
+            nodes.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label, '#2e7d32');
+            });
+
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('All vertices are connected', 200, 260);
+        }
+
+        // Disconnected Demo
+        function drawDisconnectedDemo() {
+            const canvas = document.getElementById('disconnectedDemo');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 100, y: 120, label: 'A'},
+                {x: 180, y: 120, label: 'B'},
+                {x: 280, y: 120, label: 'C'},
+                {x: 360, y: 120, label: 'D'}
+            ];
+
+            const edges = [[0,1], [2,3]];
+
+            edges.forEach(([i, j]) => {
+                drawEdge(ctx, nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+            });
+
+            nodes.forEach((node, i) => {
+                drawNode(ctx, node.x, node.y, node.label, i < 2 ? '#1976d2' : '#f57c00');
+            });
+
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Two separate components', 200, 220);
+        }
+
+        // Undirected Graph
+        function drawUndirected() {
+            const canvas = document.getElementById('undirectedGraph');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 120, y: 150, label: 'A'},
+                {x: 280, y: 150, label: 'B'},
+                {x: 200, y: 80, label: 'C'},
+                {x: 200, y: 220, label: 'D'}
+            ];
+
+            const edges = [[0,1], [0,2], [1,2], [1,3], [2,3]];
+
+            edges.forEach(([i, j]) => {
+                drawEdge(ctx, nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+            });
+
+            nodes.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label);
+            });
+        }
+
+        // Directed Graph
+        function drawDirected() {
+            const canvas = document.getElementById('directedGraph');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 120, y: 150, label: 'A'},
+                {x: 200, y: 80, label: 'B'},
+                {x: 280, y: 150, label: 'C'},
+                {x: 200, y: 220, label: 'D'}
+            ];
+
+            const edges = [[0,1], [1,2], [2,3], [3,0]];
+
+            edges.forEach(([i, j]) => {
+                drawArrow(ctx, nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+            });
+
+            nodes.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label, '#764ba2');
+            });
+        }
+
+        // Weighted Graph
+        function drawWeighted() {
+            const canvas = document.getElementById('weightedGraph');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 120, y: 150, label: 'A'},
+                {x: 280, y: 150, label: 'B'},
+                {x: 200, y: 80, label: 'C'},
+                {x: 200, y: 220, label: 'D'}
+            ];
+
+            const edges = [
+                {from: 0, to: 1, weight: 5},
+                {from: 0, to: 2, weight: 3},
+                {from: 1, to: 3, weight: 7},
+                {from: 2, to: 3, weight: 2}
+            ];
+
+            edges.forEach(edge => {
+                const x1 = nodes[edge.from].x;
+                const y1 = nodes[edge.from].y;
+                const x2 = nodes[edge.to].x;
+                const y2 = nodes[edge.to].y;
+                
+                drawEdge(ctx, x1, y1, x2, y2);
+                drawWeight(ctx, x1, y1, x2, y2, edge.weight);
+            });
+
+            nodes.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label, '#2e7d32');
+            });
+        }
+
+        // Complete Graph
+        function drawCompleteGraph() {
+            const canvas = document.getElementById('completeGraph');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 200, y: 80, label: 'A'},
+                {x: 280, y: 150, label: 'B'},
+                {x: 200, y: 220, label: 'C'},
+                {x: 120, y: 150, label: 'D'}
+            ];
+
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    drawEdge(ctx, nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+                }
+            }
+
+            nodes.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label, '#e91e63');
+            });
+        }
+
+        // Tree
+        function drawTree() {
+            const canvas = document.getElementById('treeGraph');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 200, y: 50, label: '1'},
+                {x: 140, y: 130, label: '2'},
+                {x: 260, y: 130, label: '3'},
+                {x: 100, y: 210, label: '4'},
+                {x: 180, y: 210, label: '5'},
+                {x: 220, y: 210, label: '6'},
+                {x: 300, y: 210, label: '7'}
+            ];
+
+            const edges = [[0,1], [0,2], [1,3], [1,4], [2,5], [2,6]];
+
+            edges.forEach(([i, j]) => {
+                drawEdge(ctx, nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+            });
+
+            nodes.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label, '#f57c00');
+            });
+        }
+
+        // Bipartite Graph
+        function drawBipartiteGraph() {
+            const canvas = document.getElementById('bipartiteGraph');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodesLeft = [
+                {x: 100, y: 80, label: 'A'},
+                {x: 100, y: 150, label: 'B'},
+                {x: 100, y: 220, label: 'C'}
+            ];
+
+            const nodesRight = [
+                {x: 300, y: 100, label: 'X'},
+                {x: 300, y: 180, label: 'Y'}
+            ];
+
+            const edges = [[0,3], [0,4], [1,3], [2,4]];
+
+            edges.forEach(([i, j]) => {
+                const n1 = i < 3 ? nodesLeft[i] : nodesRight[i-3];
+                const n2 = j < 3 ? nodesLeft[j] : nodesRight[j-3];
+                drawEdge(ctx, n1.x, n1.y, n2.x, n2.y);
+            });
+
+            nodesLeft.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label, '#1976d2');
+            });
+
+            nodesRight.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label, '#f57c00');
+            });
+        }
+
+        // Cyclic Graph
+        function drawCyclicGraph() {
+            const canvas = document.getElementById('cyclicGraph');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 200, y: 70, label: 'A'},
+                {x: 280, y: 140, label: 'B'},
+                {x: 200, y: 210, label: 'C'},
+                {x: 120, y: 140, label: 'D'}
+            ];
+
+            const edges = [[0,1], [1,2], [2,3], [3,0], [0,2]];
+
+            edges.forEach(([i, j]) => {
+                drawEdge(ctx, nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+            });
+
+            nodes.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label, '#9c27b0');
+            });
+        }
+
+        // DAG
+        function drawDAG() {
+            const canvas = document.getElementById('dagGraph');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 200, y: 50, label: 'A'},
+                {x: 140, y: 130, label: 'B'},
+                {x: 260, y: 130, label: 'C'},
+                {x: 200, y: 210, label: 'D'}
+            ];
+
+            const edges = [[0,1], [0,2], [1,3], [2,3]];
+
+            edges.forEach(([i, j]) => {
+                drawArrow(ctx, nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+            });
+
+            nodes.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label, '#00897b');
+            });
+        }
+
+        // Representation Graph
+        function drawRepresentationGraph() {
+            const canvas = document.getElementById('representationGraph');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const nodes = [
+                {x: 100, y: 100, label: 'A'},
+                {x: 300, y: 100, label: 'B'},
+                {x: 100, y: 200, label: 'C'},
+                {x: 300, y: 200, label: 'D'}
+            ];
+
+            const edges = [[0,1], [0,2], [1,3], [2,3]];
+
+            edges.forEach(([i, j]) => {
+                drawEdge(ctx, nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+            });
+
+            nodes.forEach(node => {
+                drawNode(ctx, node.x, node.y, node.label);
+            });
+        }
+
+        // Adjacency Matrix
+        function drawAdjacencyMatrix() {
+            const canvas = document.getElementById('adjacencyMatrix');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const labels = ['A', 'B', 'C', 'D'];
+            const matrix = [
+                [0, 1, 1, 0],
+                [1, 0, 0, 1],
+                [1, 0, 0, 1],
+                [0, 1, 1, 0]
+            ];
+
+            const cellSize = 50;
+            const startX = 100;
+            const startY = 50;
+
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            labels.forEach((label, i) => {
+                ctx.fillText(label, startX - 30, startY + i * cellSize + cellSize / 2);
+                ctx.fillText(label, startX + i * cellSize + cellSize / 2, startY - 20);
+            });
+
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    const x = startX + j * cellSize;
+                    const y = startY + i * cellSize;
+
+                    ctx.fillStyle = matrix[i][j] === 1 ? '#a5d6a7' : '#ffcdd2';
+                    ctx.fillRect(x, y, cellSize, cellSize);
+
+                    ctx.strokeStyle = '#333';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(x, y, cellSize, cellSize);
+
+                    ctx.fillStyle = '#333';
+                    ctx.font = 'bold 18px Arial';
+                    ctx.fillText(matrix[i][j], x + cellSize / 2, y + cellSize / 2);
+                }
+            }
+        }
+
+        // Initialize all visualizations
+        drawDefinitionGraph();
+        drawVertexDemo();
+        drawEdgeDemo();
+        drawDegreeDemo();
+        drawAdjacentDemo();
+        drawPathDemo();
+        drawCycleDemo();
+        drawConnectedDemo();
+        drawDisconnectedDemo();
+        drawUndirected();
+        drawDirected();
+        drawWeighted();
+        drawCompleteGraph();
+        drawTree();
+        drawBipartiteGraph();
+        drawCyclicGraph();
+        drawDAG();
+        drawRepresentationGraph();
+        drawAdjacencyMatrix();
+    </script>
+</body>
+</html>

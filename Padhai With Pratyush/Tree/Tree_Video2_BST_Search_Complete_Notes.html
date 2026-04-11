@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video 2: BST Search - Complete Visual Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.7;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 60px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 45px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            color: #1e293b;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h3 {
+            color: #334155;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        h4 {
+            color: #475569;
+            font-size: 1.4em;
+            margin: 25px 0 15px 0;
+        }
+
+        .problem-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 15px;
+            padding: 35px;
+            margin: 25px 0;
+            border-left: 8px solid #f59e0b;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+        }
+
+        .tree-visual {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .tree-box {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            line-height: 2.5;
+            display: inline-block;
+            text-align: left;
+        }
+
+        .visual-tree-step {
+            background: white;
+            border: 3px solid #3b82f6;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .tree-animation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .decision-box {
+            background: #f1f5f9;
+            border-left: 5px solid #64748b;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .code-box {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            line-height: 1.9;
+            font-size: 1em;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-keyword {
+            color: #c084fc;
+        }
+
+        .code-function {
+            color: #60a5fa;
+        }
+
+        .code-string {
+            color: #34d399;
+        }
+
+        .code-comment {
+            color: #94a3b8;
+        }
+
+        .output-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 3px solid #10b981;
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #065f46;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 6px solid #3b82f6;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 6px solid #f59e0b;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 6px solid #10b981;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+            border-left: 6px solid #ef4444;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 15px;
+        }
+
+        li {
+            margin: 12px 0;
+            line-height: 1.8;
+        }
+
+        strong {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .emoji {
+            font-size: 1.3em;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .comparison-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid;
+        }
+
+        .eliminated {
+            text-decoration: line-through;
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Binary Search Tree (BST) Search</h1>
+            <p style="font-size: 1.3em; margin-top: 15px;">O(log N) Efficient Search Algorithm</p>
+            <p style="font-size: 1.1em; margin-top: 10px; opacity: 0.9;">How to find a value in a BST in logarithmic time</p>
+        </header>
+
+        <div class="content">
+
+            <!-- PROBLEM STATEMENT -->
+            <div class="section">
+                <h2><span class="emoji">📋</span> Problem Statement</h2>
+                
+                <div class="problem-box">
+                    <h3 style="margin-top: 0;">What We Need to Solve:</h3>
+                    <p style="font-size: 1.2em; margin: 20px 0;">
+                        Given a <strong>Binary Search Tree (BST)</strong> and a <strong>target value</strong>, 
+                        find and return the node containing that value. If the value doesn't exist, return null.
+                    </p>
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
+                        <p style="font-size: 1.15em; margin-bottom: 15px;"><strong>Example:</strong></p>
+                        <p>BST: [10, 5, 15, 3, 7, 12, 18]</p>
+                        <p>Target: 12</p>
+                        <p style="color: #10b981; font-weight: 600; margin-top: 10px;">Return: Node with value 12</p>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>🎯 What is a Binary Search Tree (BST)?</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px;">
+                        A BST is a binary tree with a special property:
+                    </p>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li><strong>Left child</strong> is ALWAYS <strong>smaller</strong> than parent</li>
+                        <li><strong>Right child</strong> is ALWAYS <strong>larger</strong> than parent</li>
+                        <li>This property applies to <strong>every node</strong> in the tree</li>
+                    </ul>
+                </div>
+
+                <div class="tree-visual">
+                    <h3>🌳 Example BST</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.2em; line-height: 2.8;">
+                    ┌─────┐
+                    │ 10  │  ← Root
+                    └──┬──┘
+          ┌────────────┴────────────┐
+       ┌──┴──┐                   ┌──┴──┐
+       │  5  │                   │ 15  │
+       └──┬──┘                   └──┬──┘
+     ┌────┴────┐              ┌────┴────┐
+  ┌──┴──┐   ┌──┴──┐        ┌──┴──┐   ┌──┴──┐
+  │  3  │   │  7  │        │ 12  │   │ 18  │
+  └─────┘   └─────┘        └─────┘   └─────┘
+
+<span style="background: #dbeafe; padding: 5px 10px; border-radius: 5px;">BST Property: All LEFT < Parent < All RIGHT</span>
+</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THE ALGORITHM INTUITION -->
+            <div class="section">
+                <h2><span class="emoji">💡</span> Algorithm Intuition</h2>
+
+                <div class="highlight-box">
+                    <h3>🎯 Key Insight: It's Like Binary Search in a Sorted Array!</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px; line-height: 1.9;">
+                        When you search in a sorted array, you compare with the middle element:
+                    </p>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li>If target < middle → Search LEFT half (eliminate right half)</li>
+                        <li>If target > middle → Search RIGHT half (eliminate left half)</li>
+                        <li>If target == middle → Found it!</li>
+                    </ul>
+                    <p style="font-size: 1.15em; margin-top: 20px; font-weight: 600; color: #667eea;">
+                        BST search works EXACTLY the same way!
+                    </p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div style="background: white; padding: 25px; border-radius: 12px; border-top: 5px solid #3b82f6;">
+                        <h4 style="color: #3b82f6;">Binary Search (Array)</h4>
+                        <div class="code-box" style="font-size: 0.9em;">
+<pre>Array: [3, 5, 7, 10, 12, 15, 18]
+Target: 12
+
+Step 1: Middle = 10
+  12 > 10 → Go RIGHT
+  
+Step 2: Middle = 15
+  12 < 15 → Go LEFT
+  
+Step 3: Found 12!</pre>
+                        </div>
+                    </div>
+
+                    <div style="background: white; padding: 25px; border-radius: 12px; border-top: 5px solid #10b981;">
+                        <h4 style="color: #10b981;">BST Search (Tree)</h4>
+                        <div class="code-box" style="font-size: 0.9em;">
+<pre>Tree: Same values
+Target: 12
+
+Step 1: Root = 10
+  12 > 10 → Go RIGHT
+  
+Step 2: Node = 15
+  12 < 15 → Go LEFT
+  
+Step 3: Found 12!</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h3>✨ The Power of BST Search:</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px;">
+                        At each step, we <strong>eliminate HALF the tree</strong> by making a single comparison!
+                    </p>
+                    <p style="margin-top: 10px; font-size: 1.1em;">
+                        This is why BST search is <strong>O(log N)</strong> - same as binary search!
+                    </p>
+                </div>
+            </div>
+
+            <!-- STEP BY STEP EXECUTION -->
+            <div class="section">
+                <h2><span class="emoji">🔄</span> Step-by-Step Execution</h2>
+
+                <div class="info-box">
+                    <p style="font-size: 1.2em; font-weight: 600;">
+                        Let's search for <span style="color: #ef4444;">target = 12</span> in our BST
+                    </p>
+                </div>
+
+                <!-- Step 1 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 1</div>
+                    <div class="tree-animation">
+                        <div class="tree-box">
+<pre>
+              <span style="background: #f59e0b; color: white; padding: 8px 15px; border-radius: 50%; font-weight: bold;">10</span> ← Current node
+              / \
+             5   15
+            / \  / \
+           3  7 12 18
+</pre>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div style="text-align: left; max-width: 400px;">
+                            <div class="decision-box">
+                                <strong>Compare:</strong> target (12) vs root (10)<br>
+                                <strong>Result:</strong> 12 > 10<br>
+                                <strong>Decision:</strong> Go RIGHT<br>
+                                <strong>Why:</strong> Target is larger, so it MUST be in right subtree
+                            </div>
+                            <div style="background: #fee2e2; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                                <p style="font-weight: 600;">❌ Eliminated:</p>
+                                <p>Entire LEFT subtree (5, 3, 7)</p>
+                                <p style="font-size: 0.95em; margin-top: 5px;">We'll never look at these nodes!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 2</div>
+                    <div class="tree-animation">
+                        <div class="tree-box">
+<pre>
+               10
+              / \
+          <span class="eliminated">5</span>   <span style="background: #f59e0b; color: white; padding: 8px 15px; border-radius: 50%; font-weight: bold;">15</span> ← Current node
+         <span class="eliminated">/ \</span>  / \
+        <span class="eliminated">3  7</span> 12 18
+</pre>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div style="text-align: left; max-width: 400px;">
+                            <div class="decision-box">
+                                <strong>Compare:</strong> target (12) vs current (15)<br>
+                                <strong>Result:</strong> 12 < 15<br>
+                                <strong>Decision:</strong> Go LEFT<br>
+                                <strong>Why:</strong> Target is smaller, so it MUST be in left subtree
+                            </div>
+                            <div style="background: #fee2e2; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                                <p style="font-weight: 600;">❌ Eliminated:</p>
+                                <p>Right child (18)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 3</div>
+                    <div class="tree-animation">
+                        <div class="tree-box">
+<pre>
+               10
+              / \
+          <span class="eliminated">5</span>   15
+         <span class="eliminated">/ \</span>  / \
+        <span class="eliminated">3  7</span> <span style="background: #10b981; color: white; padding: 8px 15px; border-radius: 50%; font-weight: bold;">12</span> <span class="eliminated">18</span> ← FOUND!
+</pre>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div style="text-align: left; max-width: 400px;">
+                            <div class="decision-box" style="background: #d1fae5; border-left-color: #10b981;">
+                                <strong>Compare:</strong> target (12) vs current (12)<br>
+                                <strong>Result:</strong> 12 == 12<br>
+                                <strong>Decision:</strong> FOUND! Return this node<br>
+                            </div>
+                            <div class="output-box" style="margin-top: 15px; font-size: 1.2em;">
+                                ✅ SUCCESS! Returned node with value 12
+                            </div>
+                            <p style="margin-top: 15px; font-weight: 600; color: #667eea;">
+                                Total comparisons: 3 (out of 7 nodes)<br>
+                                Nodes visited: 3 (43% of tree)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEARCH FOR NON-EXISTENT VALUE -->
+            <div class="section">
+                <h2><span class="emoji">❌</span> What If Value Doesn't Exist?</h2>
+
+                <div class="warning-box">
+                    <h3>Example: Searching for 6 (doesn't exist)</h3>
+                </div>
+
+                <!-- Not Found Step 1 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 1</div>
+                    <div class="tree-animation">
+                        <div class="tree-box">
+<pre>
+              <span style="background: #f59e0b; color: white; padding: 8px 15px; border-radius: 50%;">10</span>
+              / \
+             5   15
+            / \  / \
+           3  7 12 18
+</pre>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div style="text-align: left;">
+                            <p><strong>Compare:</strong> 6 < 10 → Go LEFT</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Not Found Step 2 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 2</div>
+                    <div class="tree-animation">
+                        <div class="tree-box">
+<pre>
+               10
+              / \
+             <span style="background: #f59e0b; color: white; padding: 8px 15px; border-radius: 50%;">5</span>  <span class="eliminated">15</span>
+            / \ <span class="eliminated">/ \</span>
+           3  7 <span class="eliminated">12 18</span>
+</pre>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div style="text-align: left;">
+                            <p><strong>Compare:</strong> 6 > 5 → Go RIGHT</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Not Found Step 3 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 3</div>
+                    <div class="tree-animation">
+                        <div class="tree-box">
+<pre>
+               10
+              / \
+             5  <span class="eliminated">15</span>
+            / \ <span class="eliminated">/ \</span>
+           <span class="eliminated">3</span>  <span style="background: #f59e0b; color: white; padding: 8px 15px; border-radius: 50%;">7</span> <span class="eliminated">12 18</span>
+</pre>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div style="text-align: left;">
+                            <p><strong>Compare:</strong> 6 < 7 → Go LEFT</p>
+                            <p style="margin-top: 10px;"><strong>But...</strong> Left child is NULL!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Not Found Final -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 4</div>
+                    <div class="tree-animation">
+                        <div class="tree-box">
+<pre>
+               10
+              / \
+             5  <span class="eliminated">15</span>
+            / \ <span class="eliminated">/ \</span>
+           <span class="eliminated">3</span>  7 <span class="eliminated">12 18</span>
+          <span style="background: #ef4444; color: white; padding: 5px 10px; border-radius: 5px;">NULL</span> ← Current = null
+</pre>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div style="text-align: left;">
+                            <div class="decision-box" style="background: #fee2e2; border-left-color: #ef4444;">
+                                <strong>Node is NULL</strong><br>
+                                <strong>Meaning:</strong> Value doesn't exist in BST<br>
+                                <strong>Return:</strong> null
+                            </div>
+                            <div class="output-box" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-color: #ef4444; color: #991b1b; margin-top: 15px;">
+                                ❌ Value 6 not found - Return null
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JAVA CODE -->
+            <div class="section">
+                <h2><span class="emoji">💻</span> Java Implementation</h2>
+
+                <div class="code-box">
+<pre><span class="code-keyword">class</span> <span class="code-function">Node</span> {
+    <span class="code-keyword">int</span> data;
+    Node left, right;
+    
+    <span class="code-function">Node</span>(<span class="code-keyword">int</span> data) {
+        <span class="code-keyword">this</span>.data = data;
+        <span class="code-keyword">this</span>.left = <span class="code-keyword">this</span>.right = <span class="code-keyword">null</span>;
+    }
+}
+
+<span class="code-keyword">class</span> <span class="code-function">BSTSearch</span> {
+    
+    <span class="code-comment">// Recursive approach</span>
+    <span class="code-keyword">Node</span> <span class="code-function">searchBST</span>(Node root, <span class="code-keyword">int</span> target) {
+        <span class="code-comment">// BASE CASE 1: Empty tree or not found</span>
+        <span class="code-keyword">if</span> (root == <span class="code-keyword">null</span>) <span class="code-keyword">return</span> <span class="code-keyword">null</span>;
+        
+        <span class="code-comment">// BASE CASE 2: Found the target!</span>
+        <span class="code-keyword">if</span> (root.data == target) <span class="code-keyword">return</span> root;
+        
+        <span class="code-comment">// RECURSIVE CASE: Target is smaller → Go LEFT</span>
+        <span class="code-keyword">if</span> (target < root.data) {
+            <span class="code-keyword">return</span> searchBST(root.left, target);
+        }
+        
+        <span class="code-comment">// RECURSIVE CASE: Target is larger → Go RIGHT</span>
+        <span class="code-keyword">return</span> searchBST(root.right, target);
+    }
+    
+    <span class="code-comment">// Iterative approach (more efficient - no recursion stack)</span>
+    <span class="code-keyword">Node</span> <span class="code-function">searchBSTIterative</span>(Node root, <span class="code-keyword">int</span> target) {
+        Node current = root;
+        
+        <span class="code-keyword">while</span> (current != <span class="code-keyword">null</span>) {
+            <span class="code-keyword">if</span> (current.data == target) {
+                <span class="code-keyword">return</span> current;  <span class="code-comment">// Found!</span>
+            } <span class="code-keyword">else if</span> (target < current.data) {
+                current = current.left;   <span class="code-comment">// Go left</span>
+            } <span class="code-keyword">else</span> {
+                current = current.right;  <span class="code-comment">// Go right</span>
+            }
+        }
+        
+        <span class="code-keyword">return</span> <span class="code-keyword">null</span>;  <span class="code-comment">// Not found</span>
+    }
+    
+    <span class="code-keyword">public static void</span> <span class="code-function">main</span>(String[] args) {
+        BSTSearch bst = <span class="code-keyword">new</span> BSTSearch();
+        
+        <span class="code-comment">// Build BST:      10</span>
+        <span class="code-comment">//                /  \</span>
+        <span class="code-comment">//               5    15</span>
+        <span class="code-comment">//              / \   / \</span>
+        <span class="code-comment">//             3  7  12 18</span>
+        
+        Node root = <span class="code-keyword">new</span> Node(<span class="code-string">10</span>);
+        root.left = <span class="code-keyword">new</span> Node(<span class="code-string">5</span>);
+        root.right = <span class="code-keyword">new</span> Node(<span class="code-string">15</span>);
+        root.left.left = <span class="code-keyword">new</span> Node(<span class="code-string">3</span>);
+        root.left.right = <span class="code-keyword">new</span> Node(<span class="code-string">7</span>);
+        root.right.left = <span class="code-keyword">new</span> Node(<span class="code-string">12</span>);
+        root.right.right = <span class="code-keyword">new</span> Node(<span class="code-string">18</span>);
+        
+        <span class="code-comment">// Test searches</span>
+        Node result1 = bst.searchBST(root, <span class="code-string">12</span>);
+        System.out.println(result1 != <span class="code-keyword">null</span> ? <span class="code-string">"Found: "</span> + result1.data : <span class="code-string">"Not found"</span>);
+        <span class="code-comment">// Output: Found: 12</span>
+        
+        Node result2 = bst.searchBST(root, <span class="code-string">6</span>);
+        System.out.println(result2 != <span class="code-keyword">null</span> ? <span class="code-string">"Found: "</span> + result2.data : <span class="code-string">"Not found"</span>);
+        <span class="code-comment">// Output: Not found</span>
+    }
+}</pre>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Code Explanation:</h3>
+                    <ul style="font-size: 1.1em;">
+                        <li><strong>Base Case 1:</strong> <code>if (root == null)</code> - Reached end without finding, return null</li>
+                        <li><strong>Base Case 2:</strong> <code>if (root.data == target)</code> - Found it! Return this node</li>
+                        <li><strong>Recursive Case 1:</strong> <code>if (target < root.data)</code> - Go LEFT, eliminate right subtree</li>
+                        <li><strong>Recursive Case 2:</strong> <code>else</code> - Go RIGHT, eliminate left subtree</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- COMPLEXITY ANALYSIS -->
+            <div class="section">
+                <h2><span class="emoji">⚡</span> Complexity Analysis</h2>
+
+                <table>
+                    <tr>
+                        <th>Case</th>
+                        <th>Time Complexity</th>
+                        <th>Space Complexity</th>
+                        <th>Explanation</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Best Case</strong></td>
+                        <td>O(1)</td>
+                        <td>O(1)</td>
+                        <td>Target is at root - found immediately</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Average Case</strong></td>
+                        <td>O(log N)</td>
+                        <td>O(log N) recursive<br>O(1) iterative</td>
+                        <td>Balanced tree - eliminate half at each step</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Worst Case</strong></td>
+                        <td>O(N)</td>
+                        <td>O(N) recursive<br>O(1) iterative</td>
+                        <td>Skewed tree (becomes linked list)</td>
+                    </tr>
+                </table>
+
+                <div class="info-box" style="margin-top: 25px;">
+                    <h3>📊 Why O(log N) for Balanced Tree?</h3>
+                    <p style="font-size: 1.1em; margin-top: 15px; line-height: 1.9;">
+                        At each step, we eliminate HALF the remaining tree:<br>
+                        • Start: N nodes<br>
+                        • After step 1: N/2 nodes remain<br>
+                        • After step 2: N/4 nodes remain<br>
+                        • After step 3: N/8 nodes remain<br>
+                        • ...<br>
+                        • After k steps: N/(2^k) nodes remain<br><br>
+                        When N/(2^k) = 1, we've found the target.<br>
+                        Solving: k = log₂(N) ✅
+                    </p>
+                </div>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card" style="border-top-color: #10b981;">
+                        <h4 style="color: #10b981;">✅ Balanced BST</h4>
+                        <div class="tree-box" style="font-size: 0.9em;">
+<pre>
+       10
+      /  \
+     5    15
+    / \   / \
+   3  7  12 18
+
+Height: 3
+Nodes: 7
+Search: O(log 7) = O(3)
+</pre>
+                        </div>
+                    </div>
+
+                    <div class="comparison-card" style="border-top-color: #ef4444;">
+                        <h4 style="color: #ef4444;">❌ Skewed BST</h4>
+                        <div class="tree-box" style="font-size: 0.9em;">
+<pre>
+3
+ \
+  5
+   \
+    7
+     \
+     10
+      \
+      12
+
+Height: 6
+Nodes: 6
+Search: O(6) = O(N)
+</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPARISON WITH LINEAR SEARCH -->
+            <div class="section">
+                <h2><span class="emoji">🏆</span> BST Search vs Linear Search</h2>
+
+                <table>
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Linear Search (Array)</th>
+                        <th>BST Search</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Time (Worst)</strong></td>
+                        <td>O(N)</td>
+                        <td>O(log N) for balanced tree</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Nodes Checked</strong></td>
+                        <td>All N nodes</td>
+                        <td>Only log N nodes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Example (1000 nodes)</strong></td>
+                        <td>Check up to 1000 nodes</td>
+                        <td>Check only ~10 nodes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Example (1,000,000 nodes)</strong></td>
+                        <td>Check up to 1,000,000 nodes</td>
+                        <td>Check only ~20 nodes</td>
+                    </tr>
+                </table>
+
+                <div class="success-box">
+                    <h3>💪 The Power of BST:</h3>
+                    <p style="font-size: 1.2em; margin-top: 15px;">
+                        For 1 million nodes:<br>
+                        • Linear search: Up to 1,000,000 comparisons<br>
+                        • BST search: Only ~20 comparisons<br>
+                        <strong style="color: #10b981;">That's 50,000x faster! 🚀</strong>
+                    </p>
+                </div>
+            </div>
+
+            <!-- KEY TAKEAWAYS -->
+            <div class="section">
+                <h2><span class="emoji">✨</span> Key Takeaways</h2>
+
+                <div class="success-box">
+                    <h3>Remember These Forever:</h3>
+                    <ol style="font-size: 1.15em; line-height: 2; margin-top: 15px;">
+                        <li><strong>BST Property:</strong> Left < Parent < Right (for every node)</li>
+                        <li><strong>Search Strategy:</strong> Compare with current, go left if smaller, right if larger</li>
+                        <li><strong>Base Cases:</strong> Found (return node) or null (not found)</li>
+                        <li><strong>Efficiency:</strong> O(log N) for balanced tree - eliminate half each step</li>
+                        <li><strong>Like Binary Search:</strong> Same principle, just on a tree structure</li>
+                        <li><strong>Two Implementations:</strong> Recursive (simpler) or Iterative (no stack space)</li>
+                        <li><strong>Worst Case:</strong> O(N) for skewed tree (becomes linked list)</li>
+                        <li><strong>Returns:</strong> The node itself (not just true/false)</li>
+                    </ol>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🧠 Quick Memory Aid:</h3>
+                    <p style="font-size: 1.2em; line-height: 2; margin-top: 15px;">
+                        <strong>"Binary Search on a Tree"</strong><br>
+                        • Smaller? Go LEFT 👈<br>
+                        • Larger? Go RIGHT 👉<br>
+                        • Equal? FOUND! ✅<br>
+                        • NULL? NOT FOUND! ❌
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

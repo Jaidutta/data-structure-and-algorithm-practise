@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stack Pattern - Interactive Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --bg-code: #0d1117;
+            --accent-orange: #ff6b35;
+            --accent-purple: #9b5de5;
+            --accent-blue: #00bbf9;
+            --accent-green: #00f5d4;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --border-color: rgba(255, 107, 53, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Code Pro', monospace;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Striped background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 107, 53, 0.02) 2px,
+                    rgba(255, 107, 53, 0.02) 4px
+                );
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 80px;
+            border-bottom: 3px solid var(--accent-orange);
+            padding-bottom: 40px;
+        }
+
+        h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 6rem;
+            font-weight: 400;
+            color: var(--accent-orange);
+            margin-bottom: 20px;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 0;
+            padding: 50px;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-orange), var(--accent-purple));
+        }
+
+        h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            color: var(--accent-orange);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            margin: 40px 0 20px 0;
+            color: var(--accent-blue);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+
+        /* Stack visualization */
+        .stack-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            margin: 40px auto;
+            width: fit-content;
+        }
+
+        .stack-item {
+            width: 200px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple));
+            border: 3px solid var(--accent-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .stack-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 0 30px var(--accent-orange);
+        }
+
+        .stack-item .label {
+            position: absolute;
+            right: -80px;
+            font-size: 0.9rem;
+            color: var(--accent-green);
+        }
+
+        .stack-base {
+            width: 220px;
+            height: 10px;
+            background: var(--accent-blue);
+            margin-top: -3px;
+        }
+
+        .stack-arrow {
+            font-size: 2rem;
+            color: var(--accent-green);
+            margin: 10px 0;
+        }
+
+        /* Stage boxes */
+        .stage-box {
+            background: var(--bg-dark);
+            border: 2px solid var(--accent-purple);
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .stage-title {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--accent-orange);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .stage-info {
+            background: var(--bg-card);
+            padding: 15px;
+            margin-top: 20px;
+            border-left: 4px solid var(--accent-green);
+            font-weight: 600;
+            line-height: 1.8;
+        }
+
+        /* Array visualization */
+        .array-visual {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .array-cell {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.4rem;
+            border: 3px solid var(--accent-blue);
+            background: var(--bg-card);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .array-cell .index {
+            position: absolute;
+            top: -25px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .array-cell .value {
+            font-size: 1.4rem;
+            color: var(--accent-green);
+        }
+
+        .array-cell.highlight {
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple));
+            border-color: var(--accent-orange);
+            transform: scale(1.1);
+            color: #000;
+        }
+
+        .array-cell.in-stack {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 20px var(--accent-green);
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--bg-code);
+            padding: 30px;
+            overflow-x: auto;
+            margin: 30px 0;
+            border: 2px solid var(--accent-purple);
+            border-left: 5px solid var(--accent-orange);
+        }
+
+        pre {
+            margin: 0;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        code {
+            color: var(--text-primary);
+        }
+
+        .keyword { color: #ff6b35; }
+        .type { color: #00bbf9; }
+        .function { color: #00f5d4; }
+        .comment { color: #6c757d; font-style: italic; }
+        .string { color: #ffd93d; }
+        .number { color: #9b5de5; }
+
+        /* Highlight boxes */
+        .highlight-box {
+            background: var(--bg-dark);
+            border: 3px solid var(--accent-orange);
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .highlight-box strong {
+            color: var(--accent-orange);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Pattern indicators */
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .pattern-card {
+            background: var(--bg-dark);
+            padding: 30px;
+            border: 2px solid var(--accent-purple);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pattern-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-orange), var(--accent-purple));
+        }
+
+        .pattern-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-orange);
+            box-shadow: 0 10px 40px rgba(255, 107, 53, 0.3);
+        }
+
+        .pattern-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .pattern-title {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--accent-orange);
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        /* Two column layout for comparison */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+        }
+
+        .column {
+            background: var(--bg-dark);
+            padding: 25px;
+            border: 2px solid var(--accent-blue);
+        }
+
+        .column h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--accent-orange);
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        /* Stack operation visualization */
+        .operation-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            padding: 30px;
+            background: var(--bg-dark);
+            border: 2px dashed var(--accent-green);
+        }
+
+        .op-label {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--accent-orange);
+            letter-spacing: 3px;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            color: var(--text-secondary);
+        }
+
+        li {
+            margin: 12px 0;
+            padding-left: 10px;
+        }
+
+        li strong {
+            color: var(--accent-green);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3.5rem;
+            }
+
+            .section {
+                padding: 30px;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .array-cell {
+                width: 55px;
+                height: 55px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Stack</h1>
+            <p class="subtitle">Last In, First Out (LIFO)</p>
+        </header>
+
+        <!-- Pattern Recognition -->
+        <section class="section">
+            <h2>🎯 When to Use Stack</h2>
+            
+            <div class="highlight-box">
+                <strong>Core Philosophy:</strong> "Most Recent Kept Item"
+                <p style="margin-top: 15px; color: var(--text-primary);">
+                    Use a Stack when you process items sequentially and need to access the <strong>most recent valid item</strong> that hasn't been discarded yet.
+                </p>
+            </div>
+
+            <h3>Key Indicators</h3>
+            <div class="pattern-grid">
+                <div class="pattern-card">
+                    <div class="pattern-icon">🔄</div>
+                    <div class="pattern-title">LIFO Requirement</div>
+                    <p>Last In, First Out property needed. The most recent item must be processed first.</p>
+                </div>
+                
+                <div class="pattern-card">
+                    <div class="pattern-icon">🔗</div>
+                    <div class="pattern-title">Matching/Canceling</div>
+                    <p>Matching brackets, canceling adjacent duplicates, or cleaning data based on conditions.</p>
+                </div>
+                
+                <div class="pattern-card">
+                    <div class="pattern-icon">📊</div>
+                    <div class="pattern-title">Next/Previous Element</div>
+                    <p>"Next Greater," "Previous Smaller," "Next Warmer" - need to look back at recent elements.</p>
+                </div>
+                
+                <div class="pattern-card">
+                    <div class="pattern-icon">↩️</div>
+                    <div class="pattern-title">Reversal</div>
+                    <p>Any logic requiring reversal of data (e.g., string reversal).</p>
+                </div>
+            </div>
+
+            <h3>The Universal Template</h3>
+            <div class="highlight-box">
+                <p style="color: var(--text-primary); font-size: 1.1rem; line-height: 2;">
+                    For every item, make three decisions:<br><br>
+                    <strong style="color: var(--accent-orange);">1. When to POP?</strong> Should we discard the top element(s)?<br>
+                    <strong style="color: var(--accent-purple);">2. When to PUSH?</strong> Should the current item be added?<br>
+                    <strong style="color: var(--accent-green);">3. Result?</strong> Calculate the answer based on stack's state.
+                </p>
+            </div>
+        </section>
+
+        <!-- Stack Basics -->
+        <section class="section">
+            <h2>📚 Stack Basics</h2>
+            
+            <div class="two-column">
+                <div class="column">
+                    <h4>What is a Stack?</h4>
+                    <p>A Stack is like a <strong style="color: var(--accent-orange);">Box</strong> or <strong style="color: var(--accent-orange);">Pile</strong> with only one opening at the top.</p>
+                    <ul style="margin-top: 20px;">
+                        <li><strong>PUSH:</strong> Add item to top</li>
+                        <li><strong>POP:</strong> Remove item from top</li>
+                        <li><strong>PEEK/TOP:</strong> View top item without removing</li>
+                    </ul>
+                </div>
+                
+                <div class="column">
+                    <h4>Visual Representation</h4>
+                    <div class="stack-visual">
+                        <div class="stack-item">C <span class="label">← TOP</span></div>
+                        <div class="stack-item">B</div>
+                        <div class="stack-item">A</div>
+                        <div class="stack-base"></div>
+                    </div>
+                    <p style="text-align: center; margin-top: 20px;">
+                        <strong style="color: var(--accent-green);">PUSH 'C' → POP removes 'C'</strong>
+                    </p>
+                </div>
+            </div>
+
+            <h3>Types of Stacks</h3>
+            <ol style="font-size: 1.1rem; line-height: 2;">
+                <li><strong>Simple Stack:</strong> Standard storage, no special ordering</li>
+                <li><strong>Monotonic Stack:</strong> Maintains elements in increasing or decreasing order</li>
+                <li><strong>Greedy Stack:</strong> Maintains order based on specific problem conditions/priority</li>
+            </ol>
+        </section>
+
+        <!-- Problem 1: Remove Adjacent Duplicates -->
+        <section class="section">
+            <h2>Problem 1: Remove Adjacent Duplicates</h2>
+            
+            <div class="highlight-box">
+                <strong>Problem:</strong> Given a string like "abbaca", remove adjacent duplicates in pairs. Repeat until no duplicates remain.
+                <br><br>
+                <strong>LeetCode:</strong> #1047
+            </div>
+
+            <h3>🔍 Why Simple Loop Fails</h3>
+            <p style="font-size: 1.1rem; color: var(--text-primary);">
+                A simple i vs i-1 check fails because <strong style="color: var(--accent-orange);">removing items creates new adjacencies</strong> (holes close up).
+                You need to track the <strong style="color: var(--accent-green);">"last item remaining"</strong> after deletions.
+            </p>
+
+            <h3>🎯 The Stack Solution</h3>
+            <p style="font-size: 1.1rem; color: var(--text-primary);">
+                Stack acts like a <strong style="color: var(--accent-orange);">"pocket"</strong> - you hold items, but if a new item matches the one at the top, you throw both away!
+            </p>
+
+            <h3>📊 Step-by-Step Visualization: "abbaca"</h3>
+            
+            <!-- Stage 1 -->
+            <div class="stage-box">
+                <div class="stage-title">Step 1: Read 'a'</div>
+                <div class="array-visual">
+                    <div class="array-cell highlight">
+                        <span class="index">0</span>
+                        <span class="value">a</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">1</span>
+                        <span class="value">b</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">2</span>
+                        <span class="value">b</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">3</span>
+                        <span class="value">a</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">4</span>
+                        <span class="value">c</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">5</span>
+                        <span class="value">a</span>
+                    </div>
+                </div>
+                <div class="operation-visual">
+                    <div class="stack-visual">
+                        <div class="stack-item">a</div>
+                        <div class="stack-base"></div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="op-label">PUSH</div>
+                        <p style="color: var(--text-secondary); margin-top: 10px;">Stack empty → Push 'a'</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 2 -->
+            <div class="stage-box">
+                <div class="stage-title">Step 2: Read 'b'</div>
+                <div class="array-visual">
+                    <div class="array-cell in-stack">
+                        <span class="index">0</span>
+                        <span class="value">a</span>
+                    </div>
+                    <div class="array-cell highlight">
+                        <span class="index">1</span>
+                        <span class="value">b</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">2</span>
+                        <span class="value">b</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">3</span>
+                        <span class="value">a</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">4</span>
+                        <span class="value">c</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">5</span>
+                        <span class="value">a</span>
+                    </div>
+                </div>
+                <div class="operation-visual">
+                    <div class="stack-visual">
+                        <div class="stack-item">b</div>
+                        <div class="stack-item">a</div>
+                        <div class="stack-base"></div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="op-label">PUSH</div>
+                        <p style="color: var(--text-secondary); margin-top: 10px;">'b' ≠ 'a' → Push 'b'</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 3 -->
+            <div class="stage-box">
+                <div class="stage-title">Step 3: Read 'b' (MATCH!)</div>
+                <div class="array-visual">
+                    <div class="array-cell in-stack">
+                        <span class="index">0</span>
+                        <span class="value">a</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">1</span>
+                        <span class="value" style="text-decoration: line-through; color: #6c757d;">b</span>
+                    </div>
+                    <div class="array-cell highlight">
+                        <span class="index">2</span>
+                        <span class="value">b</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">3</span>
+                        <span class="value">a</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">4</span>
+                        <span class="value">c</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">5</span>
+                        <span class="value">a</span>
+                    </div>
+                </div>
+                <div class="operation-visual">
+                    <div class="stack-visual">
+                        <div class="stack-item">a</div>
+                        <div class="stack-base"></div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="op-label" style="color: var(--accent-green);">POP</div>
+                        <p style="color: var(--text-secondary); margin-top: 10px;">'b' = 'b' at top → Remove pair!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 4 -->
+            <div class="stage-box">
+                <div class="stage-title">Step 4: Read 'a' (MATCH AGAIN!)</div>
+                <div class="array-visual">
+                    <div class="array-cell">
+                        <span class="index">0</span>
+                        <span class="value" style="text-decoration: line-through; color: #6c757d;">a</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">1</span>
+                        <span class="value" style="text-decoration: line-through; color: #6c757d;">b</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">2</span>
+                        <span class="value" style="text-decoration: line-through; color: #6c757d;">b</span>
+                    </div>
+                    <div class="array-cell highlight">
+                        <span class="index">3</span>
+                        <span class="value">a</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">4</span>
+                        <span class="value">c</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">5</span>
+                        <span class="value">a</span>
+                    </div>
+                </div>
+                <div class="operation-visual">
+                    <div class="stack-visual">
+                        <div class="stack-base"></div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="op-label" style="color: var(--accent-green);">POP</div>
+                        <p style="color: var(--text-secondary); margin-top: 10px;">'a' = 'a' at top → Remove pair!</p>
+                        <p style="color: var(--accent-orange); margin-top: 10px;"><strong>Stack now EMPTY!</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 5 -->
+            <div class="stage-box">
+                <div class="stage-title">Step 5: Read 'c'</div>
+                <div class="array-visual">
+                    <div class="array-cell">
+                        <span class="index">0</span>
+                        <span class="value" style="text-decoration: line-through; color: #6c757d;">a</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">1</span>
+                        <span class="value" style="text-decoration: line-through; color: #6c757d;">b</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">2</span>
+                        <span class="value" style="text-decoration: line-through; color: #6c757d;">b</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">3</span>
+                        <span class="value" style="text-decoration: line-through; color: #6c757d;">a</span>
+                    </div>
+                    <div class="array-cell highlight">
+                        <span class="index">4</span>
+                        <span class="value">c</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">5</span>
+                        <span class="value">a</span>
+                    </div>
+                </div>
+                <div class="operation-visual">
+                    <div class="stack-visual">
+                        <div class="stack-item">c</div>
+                        <div class="stack-base"></div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="op-label">PUSH</div>
+                        <p style="color: var(--text-secondary); margin-top: 10px;">Stack empty → Push 'c'</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 6 -->
+            <div class="stage-box">
+                <div class="stage-title">Step 6: Read 'a' (FINAL)</div>
+                <div class="array-visual">
+                    <div class="array-cell">
+                        <span class="index">0</span>
+                        <span class="value" style="text-decoration: line-through; color: #6c757d;">a</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">1</span>
+                        <span class="value" style="text-decoration: line-through; color: #6c757d;">b</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">2</span>
+                        <span class="value" style="text-decoration: line-through; color: #6c757d;">b</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">3</span>
+                        <span class="value" style="text-decoration: line-through; color: #6c757d;">a</span>
+                    </div>
+                    <div class="array-cell in-stack">
+                        <span class="index">4</span>
+                        <span class="value">c</span>
+                    </div>
+                    <div class="array-cell highlight">
+                        <span class="index">5</span>
+                        <span class="value">a</span>
+                    </div>
+                </div>
+                <div class="operation-visual">
+                    <div class="stack-visual">
+                        <div class="stack-item">a</div>
+                        <div class="stack-item">c</div>
+                        <div class="stack-base"></div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div class="op-label">PUSH</div>
+                        <p style="color: var(--text-secondary); margin-top: 10px;">'a' ≠ 'c' → Push 'a'</p>
+                        <p style="color: var(--accent-green); margin-top: 15px; font-size: 1.2rem;"><strong>✓ RESULT: Reverse stack → "ca"</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>💻 Java Code</h3>
+            <div class="code-block">
+                <pre><code><span class="comment">/**
+ * Remove All Adjacent Duplicates
+ * LeetCode 1047
+ * 
+ * Time: O(n) - single pass through string
+ * Space: O(n) - stack storage
+ */</span>
+<span class="keyword">public</span> <span class="type">String</span> <span class="function">removeDuplicates</span>(<span class="type">String</span> s) {
+    <span class="comment">// Stack acts as the "pocket" to hold valid characters</span>
+    <span class="type">Stack&lt;Character&gt;</span> st = <span class="keyword">new</span> Stack&lt;&gt;();
+    
+    <span class="keyword">for</span> (<span class="type">char</span> c : s.toCharArray()) {
+        <span class="comment">// If stack not empty AND top matches current → Remove pair</span>
+        <span class="keyword">if</span> (!st.isEmpty() && st.peek() == c) {
+            st.pop(); <span class="comment">// Discard both</span>
+        } <span class="keyword">else</span> {
+            <span class="comment">// Otherwise, push current character</span>
+            st.push(c);
+        }
+    }
+    
+    <span class="comment">// Reconstruct string from stack (LIFO comes out reversed)</span>
+    <span class="type">StringBuilder</span> sb = <span class="keyword">new</span> StringBuilder();
+    <span class="keyword">while</span> (!st.isEmpty()) {
+        sb.append(st.pop());
+    }
+    <span class="keyword">return</span> sb.reverse().toString();
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- Problem 2: Valid Parentheses -->
+        <section class="section">
+            <h2>Problem 2: Valid Parentheses</h2>
+            
+            <div class="highlight-box">
+                <strong>Problem:</strong> Validate if brackets () [] {} are correctly matched and nested.
+                <br><br>
+                <strong>LeetCode:</strong> #20
+            </div>
+
+            <h3>🔍 How It Works</h3>
+            <p style="font-size: 1.1rem; color: var(--text-primary); line-height: 2;">
+                This mimics how compilers work:<br><br>
+                <strong style="color: var(--accent-orange);">1. Opening Brackets:</strong> Always PUSH to stack (store for later matching)<br>
+                <strong style="color: var(--accent-purple);">2. Closing Brackets:</strong> Must match the <strong>Most Recent</strong> opening bracket (Stack Top)<br>
+                <strong style="color: var(--accent-green);">3. End:</strong> Stack must be EMPTY (no unmatched brackets)
+            </p>
+
+            <h3>📊 Example: "({[]})"</h3>
+            
+            <div class="stage-box">
+                <div class="stage-title">Step-by-Step Process</div>
+                <div style="background: var(--bg-dark); padding: 20px; font-family: monospace; line-height: 2;">
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--accent-orange);">Step 1:</strong> Read '(' → PUSH<br>
+                        Stack: <span style="color: var(--accent-green);">[(]</span>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--accent-orange);">Step 2:</strong> Read '{' → PUSH<br>
+                        Stack: <span style="color: var(--accent-green);">[( {]</span>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--accent-orange);">Step 3:</strong> Read '[' → PUSH<br>
+                        Stack: <span style="color: var(--accent-green);">[( { []</span>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--accent-purple);">Step 4:</strong> Read ']' → Matches '[' at top? <strong style="color: var(--accent-green);">YES → POP</strong><br>
+                        Stack: <span style="color: var(--accent-green);">[( {]</span>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--accent-purple);">Step 5:</strong> Read '}' → Matches '{' at top? <strong style="color: var(--accent-green);">YES → POP</strong><br>
+                        Stack: <span style="color: var(--accent-green);">[(]</span>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--accent-purple);">Step 6:</strong> Read ')' → Matches '(' at top? <strong style="color: var(--accent-green);">YES → POP</strong><br>
+                        Stack: <span style="color: var(--accent-green);">[]</span> (EMPTY!)
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background: var(--bg-card); border-left: 4px solid var(--accent-green);">
+                        <strong style="color: var(--accent-green); font-size: 1.2rem;">✓ VALID!</strong> Stack is empty at the end.
+                    </div>
+                </div>
+            </div>
+
+            <h3>❌ Invalid Example: "([)]"</h3>
+            <div class="stage-box">
+                <div style="background: var(--bg-dark); padding: 20px; font-family: monospace; line-height: 2;">
+                    <div style="margin-bottom: 15px;">
+                        Step 1-3: Push '(', '[', read ')'<br>
+                        Stack at Step 3: <span style="color: var(--accent-green);">[(, []</span>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--accent-purple);">Step 4:</strong> Read ')' → Top is '[' not '('<br>
+                        <strong style="color: #dc3545;">✗ MISMATCH!</strong>
+                    </div>
+                </div>
+            </div>
+
+            <h3>💻 Java Code</h3>
+            <div class="code-block">
+                <pre><code><span class="comment">/**
+ * Valid Parentheses
+ * LeetCode 20
+ * 
+ * Time: O(n), Space: O(n)
+ */</span>
+<span class="keyword">public</span> <span class="type">boolean</span> <span class="function">isValid</span>(<span class="type">String</span> s) {
+    <span class="type">Stack&lt;Character&gt;</span> st = <span class="keyword">new</span> Stack&lt;&gt;();
+    
+    <span class="keyword">for</span> (<span class="type">char</span> c : s.toCharArray()) {
+        <span class="comment">// Opening brackets: Always PUSH</span>
+        <span class="keyword">if</span> (c == <span class="string">'('</span> || c == <span class="string">'{'</span> || c == <span class="string">'['</span>) {
+            st.push(c);
+        } 
+        <span class="comment">// Closing brackets: Check for match</span>
+        <span class="keyword">else</span> {
+            <span class="comment">// If stack empty → no opening bracket to match</span>
+            <span class="keyword">if</span> (st.isEmpty()) <span class="keyword">return false</span>;
+            
+            <span class="type">char</span> top = st.peek();
+            
+            <span class="comment">// Check if top matches current closing bracket</span>
+            <span class="keyword">if</span> ((c == <span class="string">')'</span> && top == <span class="string">'('</span>) || 
+                (c == <span class="string">'}'</span> && top == <span class="string">'{'</span>) || 
+                (c == <span class="string">']'</span> && top == <span class="string">'['</span>)) {
+                st.pop(); <span class="comment">// Valid match → remove pair</span>
+            } <span class="keyword">else</span> {
+                <span class="keyword">return false</span>; <span class="comment">// Mismatch!</span>
+            }
+        }
+    }
+    
+    <span class="comment">// Valid only if all brackets matched (stack empty)</span>
+    <span class="keyword">return</span> st.isEmpty();
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- Continue with more problems... -->
+        
+        <!-- Problem 3: Daily Temperatures -->
+        <section class="section">
+            <h2>Problem 3: Daily Temperatures</h2>
+            
+            <div class="highlight-box">
+                <strong>Problem:</strong> For an array of temperatures, find how many days you must wait for a warmer temperature.
+                <br><br>
+                <strong>LeetCode:</strong> #739
+            </div>
+
+            <h3>🔍 Algorithm Explained</h3>
+            <p style="font-size: 1.1rem; color: var(--text-primary); line-height: 2;">
+                This is a <strong style="color: var(--accent-orange);">"Next Greater Element"</strong> problem with a twist: we need the <strong>distance</strong>, not the value.<br><br>
+                <strong style="color: var(--accent-green);">Key Trick:</strong> Store <strong>INDICES</strong> in the stack (not values)!<br>
+                This allows us to calculate: <code>current_index - stack_top_index</code>
+            </p>
+
+            <h3>🎯 The Strategy</h3>
+            <div class="two-column">
+                <div class="column">
+                    <h4>Why Process Backwards?</h4>
+                    <p>We're looking for the "Next" warmer day → start from the end and work backwards.</p>
+                </div>
+                <div class="column">
+                    <h4>When to Pop?</h4>
+                    <p>Pop days that are colder or equal (they're "useless" - blocked by current day).</p>
+                </div>
+            </div>
+
+            <h3>📊 Example: [73, 74, 75, 71, 69, 72, 76, 73]</h3>
+
+            <div class="stage-box">
+                <div class="stage-title">Step 1: Start from end (index 7, temp=73)</div>
+                <div class="array-visual">
+                    <div class="array-cell">
+                        <span class="index">0</span>
+                        <span class="value">73</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">1</span>
+                        <span class="value">74</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">2</span>
+                        <span class="value">75</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">3</span>
+                        <span class="value">71</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">4</span>
+                        <span class="value">69</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">5</span>
+                        <span class="value">72</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">6</span>
+                        <span class="value">76</span>
+                    </div>
+                    <div class="array-cell highlight">
+                        <span class="index">7</span>
+                        <span class="value">73</span>
+                    </div>
+                </div>
+                <div class="stage-info">
+                    Stack empty → No warmer day ahead → result[7] = 0<br>
+                    Push index 7 to stack<br>
+                    Stack: <strong style="color: var(--accent-green);">[7]</strong>
+                </div>
+            </div>
+
+            <div class="stage-box">
+                <div class="stage-title">Step 2: Index 6 (temp=76)</div>
+                <div class="array-visual">
+                    <div class="array-cell">
+                        <span class="index">0</span>
+                        <span class="value">73</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">1</span>
+                        <span class="value">74</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">2</span>
+                        <span class="value">75</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">3</span>
+                        <span class="value">71</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">4</span>
+                        <span class="value">69</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">5</span>
+                        <span class="value">72</span>
+                    </div>
+                    <div class="array-cell highlight">
+                        <span class="index">6</span>
+                        <span class="value">76</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">7</span>
+                        <span class="value">73</span>
+                    </div>
+                </div>
+                <div class="stage-info">
+                    Stack top = 7 (temp 73) ≤ 76 → <strong style="color: var(--accent-orange);">POP!</strong> (useless day)<br>
+                    Stack now empty → No warmer day → result[6] = 0<br>
+                    Push index 6<br>
+                    Stack: <strong style="color: var(--accent-green);">[6]</strong>
+                </div>
+            </div>
+
+            <div class="stage-box">
+                <div class="stage-title">Step 3: Index 5 (temp=72)</div>
+                <div class="array-visual">
+                    <div class="array-cell">
+                        <span class="index">0</span>
+                        <span class="value">73</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">1</span>
+                        <span class="value">74</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">2</span>
+                        <span class="value">75</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">3</span>
+                        <span class="value">71</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">4</span>
+                        <span class="value">69</span>
+                    </div>
+                    <div class="array-cell highlight">
+                        <span class="index">5</span>
+                        <span class="value">72</span>
+                    </div>
+                    <div class="array-cell in-stack">
+                        <span class="index">6</span>
+                        <span class="value">76</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">7</span>
+                        <span class="value">73</span>
+                    </div>
+                </div>
+                <div class="stage-info">
+                    Stack top = 6 (temp 76) > 72 → <strong style="color: var(--accent-green);">Found warmer day!</strong><br>
+                    Distance = 6 - 5 = <strong>1</strong> → result[5] = 1<br>
+                    Push index 5<br>
+                    Stack: <strong style="color: var(--accent-green);">[6, 5]</strong>
+                </div>
+            </div>
+
+            <div class="stage-info" style="margin-top: 30px; background: var(--bg-card); padding: 20px; border-left: 4px solid var(--accent-orange);">
+                <strong style="color: var(--accent-orange); font-size: 1.2rem;">Final Result:</strong><br>
+                [1, 1, 4, 2, 1, 1, 0, 0]
+            </div>
+
+            <h3>💻 Java Code</h3>
+            <div class="code-block">
+                <pre><code><span class="comment">/**
+ * Daily Temperatures
+ * LeetCode 739
+ * 
+ * Pattern: Next Greater Element (with distance)
+ * Key: Store INDICES in stack
+ * 
+ * Time: O(n), Space: O(n)
+ */</span>
+<span class="keyword">public</span> <span class="type">int</span>[] <span class="function">dailyTemperatures</span>(<span class="type">int</span>[] temperatures) {
+    <span class="type">int</span> n = temperatures.length;
+    <span class="type">int</span>[] res = <span class="keyword">new</span> <span class="type">int</span>[n]; <span class="comment">// Default 0</span>
+    <span class="type">Stack&lt;Integer&gt;</span> st = <span class="keyword">new</span> Stack&lt;&gt;(); <span class="comment">// Stores INDICES</span>
+    
+    <span class="comment">// Iterate backwards (Next Greater pattern)</span>
+    <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i >= <span class="number">0</span>; i--) {
+        <span class="comment">// Pop useless days (colder or equal temperature)</span>
+        <span class="keyword">while</span> (!st.isEmpty() && temperatures[st.peek()] <= temperatures[i]) {
+            st.pop();
+        }
+        
+        <span class="comment">// If stack not empty, top is next warmer day</span>
+        <span class="keyword">if</span> (!st.isEmpty()) {
+            res[i] = st.peek() - i; <span class="comment">// Calculate distance</span>
+        } <span class="keyword">else</span> {
+            res[i] = <span class="number">0</span>; <span class="comment">// No warmer day found</span>
+        }
+        
+        <span class="comment">// Push current index</span>
+        st.push(i);
+    }
+    
+    <span class="keyword">return</span> res;
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- Problem 4: Next Greater Element II (Circular) -->
+        <section class="section">
+            <h2>Problem 4: Next Greater Element II (Circular)</h2>
+            
+            <div class="highlight-box">
+                <strong>Problem:</strong> Find Next Greater Element in a circular array (last element connects to first).
+                <br><br>
+                <strong>LeetCode:</strong> #503
+            </div>
+
+            <h3>🔍 The Challenge</h3>
+            <p style="font-size: 1.1rem; color: var(--text-primary); line-height: 2;">
+                In a circular array, the <strong style="color: var(--accent-orange);">last element</strong> needs to "see" the beginning elements.<br><br>
+                Example: <code>[1, 2, 1]</code> is actually: <code>...1, 2, 1, 1, 2, 1...</code> (infinite loop)
+            </p>
+
+            <h3>🎯 The Solution: Pre-loading</h3>
+            <div class="highlight-box">
+                <strong>Key Trick:</strong>
+                <p style="margin-top: 15px; color: var(--text-primary);">
+                    <strong style="color: var(--accent-green);">BEFORE</strong> processing the array normally (backwards),<br>
+                    <strong style="color: var(--accent-orange);">PRE-LOAD</strong> the stack with elements from index n-2 down to 0.<br><br>
+                    This gives the last elements a "chance" to see the beginning elements!
+                </p>
+            </div>
+
+            <h3>📊 Example: [1, 2, 3, 4, 3]</h3>
+
+            <div class="stage-box">
+                <div class="stage-title">Pre-loading Phase: Push indices 3→0</div>
+                <div class="array-visual">
+                    <div class="array-cell" style="border-color: var(--accent-purple);">
+                        <span class="index">0</span>
+                        <span class="value">1</span>
+                    </div>
+                    <div class="array-cell" style="border-color: var(--accent-purple);">
+                        <span class="index">1</span>
+                        <span class="value">2</span>
+                    </div>
+                    <div class="array-cell" style="border-color: var(--accent-purple);">
+                        <span class="index">2</span>
+                        <span class="value">3</span>
+                    </div>
+                    <div class="array-cell" style="border-color: var(--accent-purple);">
+                        <span class="index">3</span>
+                        <span class="value">4</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">4</span>
+                        <span class="value">3</span>
+                    </div>
+                </div>
+                <div class="stage-info">
+                    Pre-load stack with VALUES from indices 3, 2, 1, 0<br>
+                    Stack after pre-loading: <strong style="color: var(--accent-purple);">[1, 2, 3, 4]</strong><br>
+                    (Bottom to Top)
+                </div>
+            </div>
+
+            <div class="stage-box">
+                <div class="stage-title">Processing: Index 4 (value=3)</div>
+                <div class="array-visual">
+                    <div class="array-cell">
+                        <span class="index">0</span>
+                        <span class="value">1</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">1</span>
+                        <span class="value">2</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">2</span>
+                        <span class="value">3</span>
+                    </div>
+                    <div class="array-cell in-stack">
+                        <span class="index">3</span>
+                        <span class="value">4</span>
+                    </div>
+                    <div class="array-cell highlight">
+                        <span class="index">4</span>
+                        <span class="value">3</span>
+                    </div>
+                </div>
+                <div class="stage-info">
+                    Pop elements ≤ 3: Pop 3, 2, 1<br>
+                    Top = 4 > 3 → <strong style="color: var(--accent-green);">Found! result[4] = 4</strong><br>
+                    Push 3<br>
+                    Stack: <strong style="color: var(--accent-green);">[4, 3]</strong>
+                </div>
+            </div>
+
+            <div class="stage-box">
+                <div class="stage-title">Processing: Index 3 (value=4)</div>
+                <div class="array-visual">
+                    <div class="array-cell">
+                        <span class="index">0</span>
+                        <span class="value">1</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">1</span>
+                        <span class="value">2</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">2</span>
+                        <span class="value">3</span>
+                    </div>
+                    <div class="array-cell highlight">
+                        <span class="index">3</span>
+                        <span class="value">4</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">4</span>
+                        <span class="value">3</span>
+                    </div>
+                </div>
+                <div class="stage-info">
+                    Pop elements ≤ 4: Pop 3, 4<br>
+                    Stack empty → <strong style="color: var(--accent-orange);">No greater element → result[3] = -1</strong><br>
+                    Push 4<br>
+                    Stack: <strong style="color: var(--accent-green);">[4]</strong>
+                </div>
+            </div>
+
+            <h3>💻 Java Code</h3>
+            <div class="code-block">
+                <pre><code><span class="comment">/**
+ * Next Greater Element II (Circular Array)
+ * LeetCode 503
+ * 
+ * Pattern: Next Greater with Pre-loading
+ * Key: Pre-fill stack with elements n-2 to 0
+ * 
+ * Time: O(n), Space: O(n)
+ */</span>
+<span class="keyword">public</span> <span class="type">int</span>[] <span class="function">nextGreaterElements</span>(<span class="type">int</span>[] nums) {
+    <span class="type">int</span> n = nums.length;
+    <span class="type">int</span>[] res = <span class="keyword">new</span> <span class="type">int</span>[n];
+    <span class="type">Stack&lt;Integer&gt;</span> st = <span class="keyword">new</span> Stack&lt;&gt;();
+    
+    <span class="comment">// STEP 1: Pre-load stack with elements n-2 down to 0</span>
+    <span class="comment">// This simulates the circular nature for last elements</span>
+    <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">2</span>; i >= <span class="number">0</span>; i--) {
+        st.push(nums[i]);
+    }
+    
+    <span class="comment">// STEP 2: Standard Next Greater Logic (Right to Left)</span>
+    <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i >= <span class="number">0</span>; i--) {
+        <span class="comment">// Pop smaller or equal elements</span>
+        <span class="keyword">while</span> (!st.isEmpty() && st.peek() <= nums[i]) {
+            st.pop();
+        }
+        
+        <span class="comment">// If empty, no greater element found</span>
+        <span class="keyword">if</span> (st.isEmpty()) {
+            res[i] = <span class="number">-1</span>;
+        } <span class="keyword">else</span> {
+            res[i] = st.peek();
+        }
+        
+        <span class="comment">// Push current element</span>
+        st.push(nums[i]);
+    }
+    
+    <span class="keyword">return</span> res;
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- Problem 5: Remove Duplicates K Times -->
+        <section class="section">
+            <h2>Problem 5: Remove Adjacent Duplicates K Times</h2>
+            
+            <div class="highlight-box">
+                <strong>Problem:</strong> Remove duplicates only when they appear K times consecutively.
+                <br><br>
+                <strong>LeetCode:</strong> #1209
+                <br><br>
+                <strong>Example:</strong> "deeedbbcccbdaa", K=3 → "aa"
+            </div>
+
+            <h3>🔍 Why Simple Approach Fails</h3>
+            <p style="font-size: 1.1rem; color: var(--text-primary); line-height: 2;">
+                You can't just check against top because you need to <strong style="color: var(--accent-orange);">COUNT</strong> occurrences.<br>
+                If K=3, need to track: Is this the 1st, 2nd, or 3rd occurrence?
+            </p>
+
+            <h3>🎯 The Solution: Store Pairs</h3>
+            <div class="highlight-box">
+                <strong>Key Trick:</strong>
+                <p style="margin-top: 15px; color: var(--text-primary);">
+                    Store <code>(Character, Count)</code> pairs in the stack!<br><br>
+                    • If incoming char <strong>≠</strong> top char → Push <code>(char, 1)</code><br>
+                    • If incoming char <strong>=</strong> top char → Increment count<br>
+                    • If count reaches K → <strong style="color: var(--accent-orange);">POP</strong> (explosion! remove K items)
+                </p>
+            </div>
+
+            <h3>📊 Example: "deeedbbcccbdaa", K=3</h3>
+
+            <div class="stage-box">
+                <div class="stage-title">Steps 1-3: Read 'd', 'e', 'e'</div>
+                <div style="background: var(--bg-dark); padding: 20px; font-family: monospace; line-height: 2;">
+                    Read 'd' → Push (d, 1)<br>
+                    Read 'e' → Push (e, 1)<br>
+                    Read 'e' → Match! Increment → (e, 2)<br>
+                    <br>
+                    Stack: <strong style="color: var(--accent-green);">[(d,1), (e,2)]</strong>
+                </div>
+            </div>
+
+            <div class="stage-box">
+                <div class="stage-title">Step 4: Read 'e' (K=3 reached!)</div>
+                <div style="background: var(--bg-dark); padding: 20px; font-family: monospace; line-height: 2;">
+                    Read 'e' → Match top (e,2)! Increment → (e, 3)<br>
+                    <strong style="color: var(--accent-orange);">Count = K → EXPLOSION! POP (e,3)</strong><br>
+                    <br>
+                    Stack: <strong style="color: var(--accent-green);">[(d,1)]</strong><br>
+                    (All 3 e's removed at once!)
+                </div>
+            </div>
+
+            <div class="stage-box">
+                <div class="stage-title">Steps 5-7: Read 'd', 'b', 'b'</div>
+                <div style="background: var(--bg-dark); padding: 20px; font-family: monospace; line-height: 2;">
+                    Read 'd' → Match (d,1)! Increment → (d, 2)<br>
+                    Read 'b' → New char → Push (b, 1)<br>
+                    Read 'b' → Match! Increment → (b, 2)<br>
+                    <br>
+                    Stack: <strong style="color: var(--accent-green);">[(d,2), (b,2)]</strong>
+                </div>
+            </div>
+
+            <div class="stage-box">
+                <div class="stage-title">Steps 8-10: Read 'c', 'c', 'c' (EXPLOSION!)</div>
+                <div style="background: var(--bg-dark); padding: 20px; font-family: monospace; line-height: 2;">
+                    Read 'c' → Push (c, 1)<br>
+                    Read 'c' → Increment → (c, 2)<br>
+                    Read 'c' → Increment → (c, 3) → <strong style="color: var(--accent-orange);">POP!</strong><br>
+                    <br>
+                    Stack: <strong style="color: var(--accent-green);">[(d,2), (b,2)]</strong>
+                </div>
+            </div>
+
+            <div class="stage-info" style="margin-top: 30px; background: var(--bg-card); padding: 20px; border-left: 4px solid var(--accent-green);">
+                <strong>Continuing this process...</strong><br>
+                Final Stack: <strong style="color: var(--accent-green);">[(a,2)]</strong><br>
+                Result: <strong style="color: var(--accent-orange);">"aa"</strong>
+            </div>
+
+            <h3>💻 Java Code</h3>
+            <div class="code-block">
+                <pre><code><span class="comment">/**
+ * Remove All Adjacent Duplicates in String II
+ * LeetCode 1209
+ * 
+ * Pattern: Stack with Pair (Character, Count)
+ * 
+ * Time: O(n), Space: O(n)
+ */</span>
+ 
+<span class="comment">// Helper class to store (char, count) pairs</span>
+<span class="keyword">class</span> <span class="type">Pair</span> {
+    <span class="type">char</span> character;
+    <span class="type">int</span> count;
+    
+    <span class="type">Pair</span>(<span class="type">char</span> c, <span class="type">int</span> count) {
+        <span class="keyword">this</span>.character = c;
+        <span class="keyword">this</span>.count = count;
+    }
+}
+
+<span class="keyword">public</span> <span class="type">String</span> <span class="function">removeDuplicates</span>(<span class="type">String</span> s, <span class="type">int</span> k) {
+    <span class="type">Stack&lt;Pair&gt;</span> st = <span class="keyword">new</span> Stack&lt;&gt;();
+    
+    <span class="keyword">for</span> (<span class="type">char</span> c : s.toCharArray()) {
+        <span class="comment">// Case 1: Stack not empty AND matches top</span>
+        <span class="keyword">if</span> (!st.isEmpty() && st.peek().character == c) {
+            <span class="comment">// Increment count of top element</span>
+            st.peek().count++;
+            
+            <span class="comment">// If count reaches k → EXPLOSION! Remove pair</span>
+            <span class="keyword">if</span> (st.peek().count == k) {
+                st.pop();
+            }
+        } 
+        <span class="comment">// Case 2: Stack empty OR mismatch → Push new Pair</span>
+        <span class="keyword">else</span> {
+            st.push(<span class="keyword">new</span> Pair(c, <span class="number">1</span>)); <span class="comment">// Count starts at 1</span>
+        }
+    }
+    
+    <span class="comment">// Reconstruct string from stack</span>
+    <span class="type">StringBuilder</span> sb = <span class="keyword">new</span> StringBuilder();
+    <span class="keyword">for</span> (Pair p : st) {
+        <span class="comment">// Append character 'count' times</span>
+        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i < p.count; i++) {
+            sb.append(p.character);
+        }
+    }
+    
+    <span class="keyword">return</span> sb.toString();
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- Problem 6: Monotonic Stack - Previous Greater -->
+        <section class="section">
+            <h2>Problem 6: Monotonic Stack Pattern</h2>
+            
+            <div class="highlight-box">
+                <strong>Concept:</strong> Find the Previous/Next Greater/Smaller element for every element in an array.
+                <br><br>
+                <strong>The "Stone" Analogy:</strong> Elements are stones. Find the nearest stone that meets a criteria.
+            </div>
+
+            <h3>🎯 The Universal Algorithm</h3>
+            <div class="two-column">
+                <div class="column">
+                    <h4>4 Steps</h4>
+                    <ol style="line-height: 2;">
+                        <li><strong>Iterate:</strong> Move through array</li>
+                        <li><strong>Clean Up:</strong> Pop "bad" stones (elements that can't be answer)</li>
+                        <li><strong>Record:</strong> Top of stack = answer</li>
+                        <li><strong>Push:</strong> Current element for future</li>
+                    </ol>
+                </div>
+                <div class="column">
+                    <h4>4 Variations</h4>
+                    <ul style="line-height: 2;">
+                        <li><strong>Previous Greater:</strong> Loop 0→N, Pop smaller</li>
+                        <li><strong>Previous Smaller:</strong> Loop 0→N, Pop greater</li>
+                        <li><strong>Next Greater:</strong> Loop N-1→0, Pop smaller</li>
+                        <li><strong>Next Smaller:</strong> Loop N-1→0, Pop greater</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>📊 Example: Previous Greater Element</h3>
+            <p style="font-size: 1.1rem;">Array: [2, 1, 5, 6, 2, 3]</p>
+
+            <div class="stage-box">
+                <div class="stage-title">Step 1: i=0, value=2</div>
+                <div class="array-visual">
+                    <div class="array-cell highlight">
+                        <span class="index">0</span>
+                        <span class="value">2</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">1</span>
+                        <span class="value">1</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">2</span>
+                        <span class="value">5</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">3</span>
+                        <span class="value">6</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">4</span>
+                        <span class="value">2</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">5</span>
+                        <span class="value">3</span>
+                    </div>
+                </div>
+                <div class="stage-info">
+                    First element → No previous → result[0] = -1<br>
+                    Push 2<br>
+                    Stack: <strong style="color: var(--accent-green);">[2]</strong>
+                </div>
+            </div>
+
+            <div class="stage-box">
+                <div class="stage-title">Step 2: i=1, value=1</div>
+                <div class="array-visual">
+                    <div class="array-cell in-stack">
+                        <span class="index">0</span>
+                        <span class="value">2</span>
+                    </div>
+                    <div class="array-cell highlight">
+                        <span class="index">1</span>
+                        <span class="value">1</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">2</span>
+                        <span class="value">5</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">3</span>
+                        <span class="value">6</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">4</span>
+                        <span class="value">2</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">5</span>
+                        <span class="value">3</span>
+                    </div>
+                </div>
+                <div class="stage-info">
+                    Top = 2 > 1 → <strong style="color: var(--accent-green);">Found! result[1] = 2</strong><br>
+                    Push 1<br>
+                    Stack: <strong style="color: var(--accent-green);">[2, 1]</strong>
+                </div>
+            </div>
+
+            <div class="stage-box">
+                <div class="stage-title">Step 3: i=2, value=5</div>
+                <div class="array-visual">
+                    <div class="array-cell">
+                        <span class="index">0</span>
+                        <span class="value">2</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">1</span>
+                        <span class="value">1</span>
+                    </div>
+                    <div class="array-cell highlight">
+                        <span class="index">2</span>
+                        <span class="value">5</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">3</span>
+                        <span class="value">6</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">4</span>
+                        <span class="value">2</span>
+                    </div>
+                    <div class="array-cell">
+                        <span class="index">5</span>
+                        <span class="value">3</span>
+                    </div>
+                </div>
+                <div class="stage-info">
+                    <strong style="color: var(--accent-orange);">Clean up:</strong> Pop while top ≤ 5<br>
+                    Pop 1 (useless), Pop 2 (useless)<br>
+                    Stack empty → result[2] = -1<br>
+                    Push 5<br>
+                    Stack: <strong style="color: var(--accent-green);">[5]</strong>
+                </div>
+            </div>
+
+            <div class="stage-info" style="margin-top: 30px; background: var(--bg-card); padding: 20px; border-left: 4px solid var(--accent-orange);">
+                <strong>Continuing...</strong><br>
+                Final Result: <strong style="color: var(--accent-orange);">[-1, 2, -1, -1, 6, 6]</strong>
+            </div>
+
+            <h3>💻 Java Code</h3>
+            <div class="code-block">
+                <pre><code><span class="comment">/**
+ * Previous Greater Element
+ * 
+ * Pattern: Monotonic Stack (Decreasing)
+ * Direction: Left to Right (0 → N)
+ * Pop: Elements smaller or equal
+ * 
+ * Time: O(n), Space: O(n)
+ */</span>
+<span class="keyword">public</span> <span class="type">int</span>[] <span class="function">previousGreaterElement</span>(<span class="type">int</span>[] arr) {
+    <span class="type">int</span> n = arr.length;
+    <span class="type">int</span>[] res = <span class="keyword">new</span> <span class="type">int</span>[n];
+    <span class="type">Stack&lt;Integer&gt;</span> st = <span class="keyword">new</span> Stack&lt;&gt;();
+    
+    <span class="comment">// First element has no previous greater</span>
+    res[<span class="number">0</span>] = <span class="number">-1</span>;
+    st.push(arr[<span class="number">0</span>]);
+    
+    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i < n; i++) {
+        <span class="comment">// CLEAN UP: Pop useless elements (smaller or equal)</span>
+        <span class="comment">// Why useless? They can't be the answer for current</span>
+        <span class="comment">// or future elements because current blocks them</span>
+        <span class="keyword">while</span> (!st.isEmpty() && st.peek() <= arr[i]) {
+            st.pop();
+        }
+        
+        <span class="comment">// RECORD: If empty, no greater found. Else top is answer.</span>
+        res[i] = st.isEmpty() ? <span class="number">-1</span> : st.peek();
+        
+        <span class="comment">// PUSH: Current element for future elements</span>
+        st.push(arr[i]);
+    }
+    
+    <span class="keyword">return</span> res;
+}</code></pre>
+            </div>
+
+            <h3>🎨 The 4 Variations Reference</h3>
+            <div class="code-block">
+                <pre><code><span class="comment">// Previous Greater: Loop LEFT→RIGHT, Pop SMALLER
+for (int i = 0; i < n; i++) {
+    while (!st.empty() && st.peek() <= arr[i]) st.pop();
+    res[i] = st.empty() ? -1 : st.peek();
+    st.push(arr[i]);
+}
+
+// Previous Smaller: Loop LEFT→RIGHT, Pop GREATER  
+for (int i = 0; i < n; i++) {
+    while (!st.empty() && st.peek() >= arr[i]) st.pop();
+    res[i] = st.empty() ? -1 : st.peek();
+    st.push(arr[i]);
+}
+
+// Next Greater: Loop RIGHT→LEFT, Pop SMALLER
+for (int i = n-1; i >= 0; i--) {
+    while (!st.empty() && st.peek() <= arr[i]) st.pop();
+    res[i] = st.empty() ? -1 : st.peek();
+    st.push(arr[i]);
+}
+
+// Next Smaller: Loop RIGHT→LEFT, Pop GREATER
+for (int i = n-1; i >= 0; i--) {
+    while (!st.empty() && st.peek() >= arr[i]) st.pop();
+    res[i] = st.empty() ? -1 : st.peek();
+    st.push(arr[i]);
+}</span></code></pre>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>📝 Summary</h2>
+            
+            <div class="highlight-box">
+                <strong>The Key Question:</strong>
+                <p style="margin-top: 15px; color: var(--text-primary); font-size: 1.1rem;">
+                    "Do I need to process items and look back at the <strong style="color: var(--accent-orange);">most recently processed valid item</strong>?"
+                </p>
+            </div>
+
+            <p style="font-size: 1.1rem; margin-top: 30px;">If YES, use a Stack:</p>
+            <ul style="font-size: 1.05rem; line-height: 2; margin-top: 20px;">
+                <li>In <strong>Strings:</strong> Retrieve last valid character after deletions</li>
+                <li>In <strong>Parentheses:</strong> Retrieve last unclosed opening bracket</li>
+                <li>In <strong>Next Greater:</strong> Retrieve nearest candidate not "blocked" by larger number</li>
+                <li>In <strong>Reversal:</strong> LIFO naturally reverses order</li>
+            </ul>
+
+            <h3>Pattern Comparison Table</h3>
+            <div class="code-block">
+                <pre style="font-size: 0.9rem;">┌──────────────────────┬───────────────┬────────────┬──────────────┐
+│ Problem Type         │ Store in Stack│ Direction  │ Pop When     │
+├──────────────────────┼───────────────┼────────────┼──────────────┤
+│ Remove Duplicates    │ Characters    │ L→R        │ Match        │
+│ Valid Parentheses    │ Open Brackets │ L→R        │ Match Close  │
+│ Daily Temperatures   │ Indices       │ R→L        │ ≤ Current    │
+│ Next Greater (Circ)  │ Values        │ R→L + Pre  │ ≤ Current    │
+│ Remove K Duplicates  │ (Char,Count)  │ L→R        │ Count = K    │
+│ Previous Greater     │ Values        │ L→R        │ ≤ Current    │
+└──────────────────────┴───────────────┴────────────┴──────────────┘</pre>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>

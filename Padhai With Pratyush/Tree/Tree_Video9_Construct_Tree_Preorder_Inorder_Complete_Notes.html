@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video 9: Construct Tree from Preorder & Inorder - Complete Visual Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.7;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 60px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 45px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            color: #1e293b;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h3 {
+            color: #334155;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        h4 {
+            color: #475569;
+            font-size: 1.4em;
+            margin: 25px 0 15px 0;
+        }
+
+        .problem-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 15px;
+            padding: 35px;
+            margin: 25px 0;
+            border-left: 8px solid #f59e0b;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+        }
+
+        .tree-visual {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .tree-box {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            line-height: 2.5;
+            display: inline-block;
+            text-align: left;
+        }
+
+        .visual-tree-step {
+            background: white;
+            border: 3px solid #3b82f6;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .array-visual {
+            background: #f1f5f9;
+            border: 3px solid #64748b;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .array-box {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .array-item {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .array-item.root {
+            background: #f59e0b;
+            color: white;
+            border-color: #f59e0b;
+            transform: scale(1.1);
+        }
+
+        .array-item.left {
+            background: #dbeafe;
+            border-color: #3b82f6;
+        }
+
+        .array-item.right {
+            background: #fecaca;
+            border-color: #ef4444;
+        }
+
+        .array-item.divider {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+            font-size: 1.2em;
+        }
+
+        .code-box {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            line-height: 1.9;
+            font-size: 1em;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-keyword {
+            color: #c084fc;
+        }
+
+        .code-function {
+            color: #60a5fa;
+        }
+
+        .code-string {
+            color: #34d399;
+        }
+
+        .code-comment {
+            color: #94a3b8;
+        }
+
+        .output-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 3px solid #10b981;
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #065f46;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 6px solid #3b82f6;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 6px solid #f59e0b;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 6px solid #10b981;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+            border-left: 6px solid #ef4444;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 15px;
+        }
+
+        li {
+            margin: 12px 0;
+            line-height: 1.8;
+        }
+
+        strong {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .emoji {
+            font-size: 1.3em;
+        }
+
+        .tree-animation {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #667eea;
+            font-weight: bold;
+            align-self: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏗️ Construct Tree from Traversals</h1>
+            <p style="font-size: 1.3em; margin-top: 15px;">Building Binary Tree from Preorder & Inorder</p>
+            <p style="font-size: 1.1em; margin-top: 10px; opacity: 0.9;">Understanding the recursive construction pattern</p>
+        </header>
+
+        <div class="content">
+
+            <!-- PROBLEM STATEMENT -->
+            <div class="section">
+                <h2><span class="emoji">📋</span> Problem Statement</h2>
+                
+                <div class="problem-box">
+                    <h3 style="margin-top: 0;">What We Need to Build:</h3>
+                    <p style="font-size: 1.2em; margin: 20px 0;">
+                        Given two arrays representing the <strong>preorder</strong> and <strong>inorder</strong> traversals of a binary tree, 
+                        <strong>reconstruct the original tree</strong>.
+                    </p>
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
+                        <p style="font-size: 1.15em; margin-bottom: 15px;"><strong>Example:</strong></p>
+                        <p style="margin: 10px 0;"><strong>Preorder:</strong> [3, 9, 20, 15, 7]</p>
+                        <p style="margin: 10px 0;"><strong>Inorder:</strong> [9, 3, 15, 20, 7]</p>
+                        <p style="margin: 20px 0; font-size: 1.1em;"><strong>Reconstructed Tree:</strong></p>
+                        <div class="tree-box" style="margin: 20px auto; text-align: center;">
+<pre>
+       3
+      / \
+     9   20
+        /  \
+       15   7
+</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>🎯 Key Assumptions:</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li><strong>No duplicates:</strong> All values in the tree are unique</li>
+                        <li><strong>Valid input:</strong> Arrays represent valid preorder and inorder of same tree</li>
+                        <li><strong>Same length:</strong> Both arrays have the same number of elements</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TRAVERSAL REVIEW -->
+            <div class="section">
+                <h2><span class="emoji">📚</span> Traversal Review</h2>
+
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">Quick Reminder:</h3>
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
+                        <div style="margin: 20px 0;">
+                            <h4 style="color: #ef4444; margin: 0;">Preorder (Node → Left → Right):</h4>
+                            <p style="margin: 10px 0; font-size: 1.1em;">
+                                • Visit the <strong>root first</strong>, then left subtree, then right subtree<br>
+                                • <strong>First element is always the root!</strong>
+                            </p>
+                        </div>
+                        <div style="margin: 20px 0;">
+                            <h4 style="color: #3b82f6; margin: 0;">Inorder (Left → Node → Right):</h4>
+                            <p style="margin: 10px 0; font-size: 1.1em;">
+                                • Visit left subtree first, then <strong>root</strong>, then right subtree<br>
+                                • <strong>Root divides the array into left and right subtrees!</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tree-visual">
+                    <h3>Example Tree with Traversals:</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.15em;">
+Tree:        3
+            / \
+           9   20
+              /  \
+             15   7
+
+<span style="color: #ef4444; font-weight: 600;">Preorder:</span>  [3, 9, 20, 15, 7]
+              ↑  ↑   ↑   ↑   ↑
+            Root L  Root L   R  (of right subtree)
+
+<span style="color: #3b82f6; font-weight: 600;">Inorder:</span>   [9, 3, 15, 20, 7]
+              ↑  ↑   ↑   ↑   ↑
+              L Root L  Root R  (of right subtree)
+</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THE KEY INSIGHT -->
+            <div class="section">
+                <h2><span class="emoji">💡</span> The Key Insight</h2>
+
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">🔑 Two Critical Properties:</h3>
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
+                        <div style="background: #fecaca; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                            <h4 style="color: #ef4444; margin-top: 0;">Property 1: Preorder First Element</h4>
+                            <p style="font-size: 1.15em; margin-top: 10px;">
+                                The <strong>first element of preorder</strong> is <strong>ALWAYS the root</strong> of the (sub)tree!
+                            </p>
+                        </div>
+
+                        <div style="background: #dbeafe; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                            <h4 style="color: #3b82f6; margin-top: 0;">Property 2: Inorder Root Position</h4>
+                            <p style="font-size: 1.15em; margin-top: 10px;">
+                                Once we find the root in inorder array, it <strong>divides</strong> the array:<br>
+                                • Everything to the <strong>left</strong> = left subtree<br>
+                                • Everything to the <strong>right</strong> = right subtree
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="array-visual">
+                    <h3 style="margin-bottom: 20px;">Visual Breakdown:</h3>
+                    <p style="font-weight: 600; margin-bottom: 10px;">Preorder: [3, 9, 20, 15, 7]</p>
+                    <div class="array-box">
+                        <div class="array-item root">3</div>
+                        <div class="array-item">9</div>
+                        <div class="array-item">20</div>
+                        <div class="array-item">15</div>
+                        <div class="array-item">7</div>
+                    </div>
+                    <p style="margin-top: 10px; color: #ef4444; font-weight: 600;">First element (3) is the ROOT!</p>
+
+                    <p style="font-weight: 600; margin: 30px 0 10px 0;">Inorder: [9, 3, 15, 20, 7]</p>
+                    <div class="array-box">
+                        <div class="array-item left">9</div>
+                        <div class="array-item divider">3</div>
+                        <div class="array-item right">15</div>
+                        <div class="array-item right">20</div>
+                        <div class="array-item right">7</div>
+                    </div>
+                    <p style="margin-top: 10px; color: #3b82f6; font-weight: 600;">
+                        Root (3) divides: Left [9] | Right [15, 20, 7]
+                    </p>
+                </div>
+
+                <div class="success-box">
+                    <h3>✨ The Algorithm Strategy:</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px; line-height: 1.9;">
+                        1. Take first element from preorder → This is the <strong>root</strong><br>
+                        2. Find root in inorder array → This gives us the <strong>boundary</strong><br>
+                        3. Split inorder into left and right parts<br>
+                        4. Split preorder into left and right parts (using same sizes)<br>
+                        5. <strong>Recursively</strong> build left and right subtrees<br>
+                        6. Return the root node with attached subtrees
+                    </p>
+                </div>
+            </div>
+
+            <!-- STEP BY STEP EXECUTION -->
+            <div class="section">
+                <h2><span class="emoji">🔄</span> Step-by-Step Execution</h2>
+
+                <div class="info-box">
+                    <p style="font-size: 1.2em; font-weight: 600;">
+                        Building tree from:<br>
+                        Preorder: [3, 9, 20, 15, 7]<br>
+                        Inorder: [9, 3, 15, 20, 7]
+                    </p>
+                </div>
+
+                <!-- Step 1 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 1: Build Root</div>
+                    <div class="array-visual">
+                        <p style="font-weight: 600; margin-bottom: 15px;">Current Arrays:</p>
+                        <p style="margin: 8px 0;">Preorder: [<span style="color: #ef4444; font-weight: 600;">3</span>, 9, 20, 15, 7]</p>
+                        <p style="margin: 8px 0;">Inorder:  [9, <span style="color: #3b82f6; font-weight: 600;">3</span>, 15, 20, 7]</p>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                            <p style="margin: 10px 0;"><strong>Action 1:</strong> First element of preorder = <span style="color: #ef4444;">3</span> → Create node with value 3</p>
+                            <p style="margin: 10px 0;"><strong>Action 2:</strong> Find 3 in inorder → Index = 1</p>
+                            <p style="margin: 10px 0;"><strong>Action 3:</strong> Split inorder:</p>
+                            <p style="margin: 10px 0; padding-left: 20px;">• Left: [9] (indices 0 to 0)</p>
+                            <p style="margin: 10px 0; padding-left: 20px;">• Right: [15, 20, 7] (indices 2 to 4)</p>
+                            <p style="margin: 10px 0;"><strong>Action 4:</strong> Split preorder (skip first, use same sizes):</p>
+                            <p style="margin: 10px 0; padding-left: 20px;">• Left: [9] (1 element)</p>
+                            <p style="margin: 10px 0; padding-left: 20px;">• Right: [20, 15, 7] (3 elements)</p>
+                        </div>
+
+                        <div class="tree-box" style="margin-top: 20px; text-align: center;">
+<pre>
+       <span style="background: #f59e0b; color: white; padding: 8px 15px; border-radius: 50%;">3</span> ← Created root
+      / \
+     ?   ?  ← Will build these recursively
+</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 2: Build Left Subtree of 3</div>
+                    <div class="array-visual">
+                        <p style="font-weight: 600; margin-bottom: 15px;">Recursive Call for Left:</p>
+                        <p style="margin: 8px 0;">Preorder: [<span style="color: #ef4444; font-weight: 600;">9</span>]</p>
+                        <p style="margin: 8px 0;">Inorder:  [<span style="color: #3b82f6; font-weight: 600;">9</span>]</p>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                            <p style="margin: 10px 0;"><strong>Action 1:</strong> First element = <span style="color: #ef4444;">9</span> → Create node with value 9</p>
+                            <p style="margin: 10px 0;"><strong>Action 2:</strong> Find 9 in inorder → Index = 0</p>
+                            <p style="margin: 10px 0;"><strong>Action 3:</strong> Left part = [] (empty), Right part = [] (empty)</p>
+                            <p style="margin: 10px 0;"><strong>Result:</strong> Node 9 is a LEAF (no children)</p>
+                        </div>
+
+                        <div class="tree-box" style="margin-top: 20px; text-align: center;">
+<pre>
+       3
+      / \
+    <span style="background: #10b981; color: white; padding: 8px 15px; border-radius: 50%;">9</span>   ?  ← Created left child (leaf)
+</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 3: Build Right Subtree of 3</div>
+                    <div class="array-visual">
+                        <p style="font-weight: 600; margin-bottom: 15px;">Recursive Call for Right:</p>
+                        <p style="margin: 8px 0;">Preorder: [<span style="color: #ef4444; font-weight: 600;">20</span>, 15, 7]</p>
+                        <p style="margin: 8px 0;">Inorder:  [15, <span style="color: #3b82f6; font-weight: 600;">20</span>, 7]</p>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                            <p style="margin: 10px 0;"><strong>Action 1:</strong> First element = <span style="color: #ef4444;">20</span> → Create node with value 20</p>
+                            <p style="margin: 10px 0;"><strong>Action 2:</strong> Find 20 in inorder → Index = 1</p>
+                            <p style="margin: 10px 0;"><strong>Action 3:</strong> Split inorder:</p>
+                            <p style="margin: 10px 0; padding-left: 20px;">• Left: [15] (index 0)</p>
+                            <p style="margin: 10px 0; padding-left: 20px;">• Right: [7] (index 2)</p>
+                            <p style="margin: 10px 0;"><strong>Action 4:</strong> Split preorder:</p>
+                            <p style="margin: 10px 0; padding-left: 20px;">• Left: [15] (1 element)</p>
+                            <p style="margin: 10px 0; padding-left: 20px;">• Right: [7] (1 element)</p>
+                        </div>
+
+                        <div class="tree-box" style="margin-top: 20px; text-align: center;">
+<pre>
+       3
+      / \
+     9  <span style="background: #f59e0b; color: white; padding: 8px 15px; border-radius: 50%;">20</span>  ← Created right child
+        / \
+       ?   ?  ← Will build these
+</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 4: Build Left Subtree of 20</div>
+                    <div class="array-visual">
+                        <p style="font-weight: 600; margin-bottom: 15px;">Recursive Call:</p>
+                        <p style="margin: 8px 0;">Preorder: [<span style="color: #ef4444; font-weight: 600;">15</span>]</p>
+                        <p style="margin: 8px 0;">Inorder:  [<span style="color: #3b82f6; font-weight: 600;">15</span>]</p>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                            <p style="margin: 10px 0;"><strong>Result:</strong> Node 15 is a LEAF</p>
+                        </div>
+
+                        <div class="tree-box" style="margin-top: 20px; text-align: center;">
+<pre>
+       3
+      / \
+     9   20
+        /  \
+      <span style="background: #10b981; color: white; padding: 8px 15px; border-radius: 50%;">15</span>   ?
+</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 5: Build Right Subtree of 20</div>
+                    <div class="array-visual">
+                        <p style="font-weight: 600; margin-bottom: 15px;">Recursive Call:</p>
+                        <p style="margin: 8px 0;">Preorder: [<span style="color: #ef4444; font-weight: 600;">7</span>]</p>
+                        <p style="margin: 8px 0;">Inorder:  [<span style="color: #3b82f6; font-weight: 600;">7</span>]</p>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                            <p style="margin: 10px 0;"><strong>Result:</strong> Node 7 is a LEAF</p>
+                        </div>
+
+                        <div class="tree-box" style="margin-top: 20px; text-align: center;">
+<pre>
+       <span style="color: #10b981;">3</span>
+      / \
+     <span style="color: #10b981;">9</span>  <span style="color: #10b981;">20</span>
+        /  \
+      <span style="color: #10b981;">15</span>   <span style="background: #10b981; color: white; padding: 8px 15px; border-radius: 50%;">7</span> ← Complete!
+</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="output-box" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; font-size: 1.5em;">
+                    ✅ Tree Successfully Constructed!
+                </div>
+            </div>
+
+            <!-- JAVA CODE -->
+            <div class="section">
+                <h2><span class="emoji">💻</span> Java Implementation</h2>
+
+                <div class="code-box">
+<pre><span class="code-keyword">import</span> java.util.*;
+
+<span class="code-keyword">class</span> <span class="code-function">Solution</span> {
+    <span class="code-comment">// HashMap for O(1) lookup of root index in inorder</span>
+    Map&lt;Integer, Integer&gt; inorderMap = <span class="code-keyword">new</span> HashMap&lt;&gt;();
+    <span class="code-keyword">int</span> preorderIndex = <span class="code-string">0</span>;  <span class="code-comment">// Tracks current position in preorder</span>
+    
+    <span class="code-keyword">public</span> Node <span class="code-function">buildTree</span>(<span class="code-keyword">int</span>[] preorder, <span class="code-keyword">int</span>[] inorder) {
+        <span class="code-comment">// Build hashmap for O(1) index lookup</span>
+        <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-string">0</span>; i &lt; inorder.length; i++) {
+            inorderMap.put(inorder[i], i);
+        }
+        
+        <span class="code-keyword">return</span> buildTreeHelper(preorder, <span class="code-string">0</span>, inorder.length - <span class="code-string">1</span>);
+    }
+    
+    <span class="code-keyword">private</span> Node <span class="code-function">buildTreeHelper</span>(<span class="code-keyword">int</span>[] preorder, <span class="code-keyword">int</span> inStart, <span class="code-keyword">int</span> inEnd) {
+        <span class="code-comment">// BASE CASE: No elements to construct tree</span>
+        <span class="code-keyword">if</span> (inStart > inEnd) <span class="code-keyword">return</span> <span class="code-keyword">null</span>;
+        
+        <span class="code-comment">// STEP 1: Pick current element from preorder as root</span>
+        <span class="code-keyword">int</span> rootValue = preorder[preorderIndex++];
+        Node root = <span class="code-keyword">new</span> Node(rootValue);
+        
+        <span class="code-comment">// STEP 2: Find root position in inorder (O(1) with hashmap)</span>
+        <span class="code-keyword">int</span> inorderIndex = inorderMap.get(rootValue);
+        
+        <span class="code-comment">// STEP 3: Build left subtree (elements before root in inorder)</span>
+        root.left = buildTreeHelper(preorder, inStart, inorderIndex - <span class="code-string">1</span>);
+        
+        <span class="code-comment">// STEP 4: Build right subtree (elements after root in inorder)</span>
+        root.right = buildTreeHelper(preorder, inorderIndex + <span class="code-string">1</span>, inEnd);
+        
+        <span class="code-keyword">return</span> root;
+    }
+}
+
+<span class="code-comment">// Alternative: Passing array slices (less efficient but clearer)</span>
+<span class="code-keyword">class</span> <span class="code-function">Solution2</span> {
+    <span class="code-keyword">public</span> Node <span class="code-function">buildTree</span>(<span class="code-keyword">int</span>[] preorder, <span class="code-keyword">int</span>[] inorder) {
+        <span class="code-keyword">if</span> (preorder.length == <span class="code-string">0</span>) <span class="code-keyword">return</span> <span class="code-keyword">null</span>;
+        
+        <span class="code-comment">// Root is first element of preorder</span>
+        <span class="code-keyword">int</span> rootValue = preorder[<span class="code-string">0</span>];
+        Node root = <span class="code-keyword">new</span> Node(rootValue);
+        
+        <span class="code-comment">// Find root in inorder</span>
+        <span class="code-keyword">int</span> rootIndex = <span class="code-string">0</span>;
+        <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-string">0</span>; i &lt; inorder.length; i++) {
+            <span class="code-keyword">if</span> (inorder[i] == rootValue) {
+                rootIndex = i;
+                <span class="code-keyword">break</span>;
+            }
+        }
+        
+        <span class="code-comment">// Split arrays</span>
+        <span class="code-keyword">int</span>[] leftInorder = Arrays.copyOfRange(inorder, <span class="code-string">0</span>, rootIndex);
+        <span class="code-keyword">int</span>[] rightInorder = Arrays.copyOfRange(inorder, rootIndex + <span class="code-string">1</span>, inorder.length);
+        
+        <span class="code-keyword">int</span>[] leftPreorder = Arrays.copyOfRange(preorder, <span class="code-string">1</span>, <span class="code-string">1</span> + leftInorder.length);
+        <span class="code-keyword">int</span>[] rightPreorder = Arrays.copyOfRange(preorder, <span class="code-string">1</span> + leftInorder.length, preorder.length);
+        
+        <span class="code-comment">// Recursively build subtrees</span>
+        root.left = buildTree(leftPreorder, leftInorder);
+        root.right = buildTree(rightPreorder, rightInorder);
+        
+        <span class="code-keyword">return</span> root;
+    }
+}
+
+<span class="code-comment">// Example usage:</span>
+<span class="code-keyword">public static void</span> <span class="code-function">main</span>(String[] args) {
+    Solution sol = <span class="code-keyword">new</span> Solution();
+    
+    <span class="code-keyword">int</span>[] preorder = {<span class="code-string">3</span>, <span class="code-string">9</span>, <span class="code-string">20</span>, <span class="code-string">15</span>, <span class="code-string">7</span>};
+    <span class="code-keyword">int</span>[] inorder = {<span class="code-string">9</span>, <span class="code-string">3</span>, <span class="code-string">15</span>, <span class="code-string">20</span>, <span class="code-string">7</span>};
+    
+    Node root = sol.buildTree(preorder, inorder);
+    
+    <span class="code-comment">// Verify by printing inorder of constructed tree</span>
+    printInorder(root);  <span class="code-comment">// Should output: 9 3 15 20 7</span>
+}
+
+<span class="code-keyword">static void</span> <span class="code-function">printInorder</span>(Node node) {
+    <span class="code-keyword">if</span> (node == <span class="code-keyword">null</span>) <span class="code-keyword">return</span>;
+    printInorder(node.left);
+    System.out.print(node.val + <span class="code-string">" "</span>);
+    printInorder(node.right);
+}</pre>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Code Explanation (Optimized Version):</h3>
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li><strong>Line 5:</strong> HashMap for O(1) lookup of index in inorder</li>
+                        <li><strong>Line 6:</strong> Global preorderIndex to track current position</li>
+                        <li><strong>Lines 10-12:</strong> Pre-populate hashmap with inorder indices</li>
+                        <li><strong>Line 18:</strong> Base case - invalid range means no tree</li>
+                        <li><strong>Line 21:</strong> Take next element from preorder, increment index</li>
+                        <li><strong>Line 25:</strong> Find root position in inorder (O(1) with hashmap)</li>
+                        <li><strong>Line 28:</strong> Build left subtree with elements before root in inorder</li>
+                        <li><strong>Line 31:</strong> Build right subtree with elements after root in inorder</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>💡 Why Use HashMap?</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px; line-height: 1.9;">
+                        <strong>Without HashMap:</strong> We'd need to search for root in inorder each time → O(N) per call<br>
+                        <strong>With HashMap:</strong> Pre-store all indices → O(1) lookup per call<br><br>
+                        <strong>Impact on complexity:</strong><br>
+                        • Without: O(N²) overall<br>
+                        • With: O(N) overall ✅
+                    </p>
+                </div>
+            </div>
+
+            <!-- COMPLEXITY ANALYSIS -->
+            <div class="section">
+                <h2><span class="emoji">⚡</span> Complexity Analysis</h2>
+
+                <table>
+                    <tr>
+                        <th>Approach</th>
+                        <th>Time Complexity</th>
+                        <th>Space Complexity</th>
+                        <th>Notes</th>
+                    </tr>
+                    <tr>
+                        <td><strong>With HashMap</strong></td>
+                        <td>O(N)</td>
+                        <td>O(N)</td>
+                        <td>Optimal solution - visit each node once</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Without HashMap</strong></td>
+                        <td>O(N²)</td>
+                        <td>O(N)</td>
+                        <td>Searching for root takes O(N) each time</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Array Slicing</strong></td>
+                        <td>O(N²)</td>
+                        <td>O(N²)</td>
+                        <td>Creating subarrays is expensive</td>
+                    </tr>
+                </table>
+
+                <div class="info-box" style="margin-top: 25px;">
+                    <h3>📊 Time Complexity Breakdown (Optimal):</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li><strong>Building HashMap:</strong> O(N) - one pass through inorder</li>
+                        <li><strong>Recursive Calls:</strong> O(N) - each node processed exactly once</li>
+                        <li><strong>Finding Root:</strong> O(1) per call - hashmap lookup</li>
+                        <li><strong>Total:</strong> O(N) + O(N) = O(N)</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>📊 Space Complexity Breakdown:</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li><strong>HashMap:</strong> O(N) - stores all inorder indices</li>
+                        <li><strong>Recursion Stack:</strong> O(H) where H = height</li>
+                        <li><strong>Worst Case (Skewed):</strong> O(N)</li>
+                        <li><strong>Best Case (Balanced):</strong> O(log N) recursion + O(N) map = O(N)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- IMPORTANT EDGE CASES -->
+            <div class="section">
+                <h2><span class="emoji">⚠️</span> Important Edge Cases</h2>
+
+                <div class="warning-box">
+                    <h3>Edge Case 1: Empty Tree</h3>
+                    <div class="code-box" style="background: white; color: #1e293b; border: 2px solid #ef4444;">
+<pre>
+Preorder: []
+Inorder: []
+
+Result: null (empty tree)
+
+Handled by: if (inStart > inEnd) return null;
+</pre>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h3>Edge Case 2: Single Node</h3>
+                    <div class="code-box" style="background: white; color: #1e293b; border: 2px solid #ef4444;">
+<pre>
+Preorder: [1]
+Inorder: [1]
+
+Result:  1  (single node, no children)
+
+Handled by: Base case returns null for left and right
+</pre>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h3>Edge Case 3: Left Skewed Tree</h3>
+                    <div class="code-box" style="background: white; color: #1e293b; border: 2px solid #ef4444;">
+<pre>
+Tree:    3
+        /
+       2
+      /
+     1
+
+Preorder: [3, 2, 1]
+Inorder:  [1, 2, 3]
+
+Works fine! Right subtree is always empty.
+</pre>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h3>Edge Case 4: Right Skewed Tree</h3>
+                    <div class="code-box" style="background: white; color: #1e293b; border: 2px solid #ef4444;">
+<pre>
+Tree:  1
+        \
+         2
+          \
+           3
+
+Preorder: [1, 2, 3]
+Inorder:  [1, 2, 3]
+
+Works fine! Left subtree is always empty.
+</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KEY TAKEAWAYS -->
+            <div class="section">
+                <h2><span class="emoji">✨</span> Key Takeaways</h2>
+
+                <div class="success-box">
+                    <h3>Remember These Forever:</h3>
+                    <ol style="font-size: 1.15em; line-height: 2; margin-top: 15px;">
+                        <li><strong>Preorder first = root</strong> (always!)</li>
+                        <li><strong>Inorder divides into left and right</strong> at root position</li>
+                        <li><strong>Use HashMap for O(1) lookup</strong> of root index in inorder</li>
+                        <li><strong>Track preorder position globally</strong> or pass indices</li>
+                        <li><strong>Recursive pattern:</strong> Build root → Build left → Build right</li>
+                        <li><strong>Base case:</strong> inStart > inEnd means empty subtree</li>
+                        <li><strong>Time: O(N)</strong> with hashmap optimization</li>
+                        <li><strong>Space: O(N)</strong> for hashmap + recursion</li>
+                        <li><strong>No duplicates assumed</strong> (critical for hashmap to work)</li>
+                    </ol>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🧠 Memory Trick:</h3>
+                    <p style="font-size: 1.2em; line-height: 2; margin-top: 15px;">
+                        <strong>"Pre-FIRST, In-DIVIDE"</strong><br><br>
+                        • <strong>PRE</strong>order: First element is the root<br>
+                        • <strong>IN</strong>order: Root divides left and right<br><br>
+                        Together they give us everything we need to rebuild the tree!
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>🎯 Quick Algorithm Summary:</h3>
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
+                        <div class="code-box" style="font-size: 1.05em;">
+<pre>
+buildTree(preorder, inorder):
+    1. Take first element from preorder → ROOT
+    2. Find ROOT in inorder → INDEX
+    3. Everything left of INDEX in inorder → LEFT subtree
+    4. Everything right of INDEX in inorder → RIGHT subtree
+    5. Recursively build left and right subtrees
+    6. Attach subtrees to root and return
+</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h3>🎓 Interview Tips:</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li>Start by explaining the two key properties of traversals</li>
+                        <li>Draw a small example and trace through it step by step</li>
+                        <li>Mention the HashMap optimization upfront (shows you know it)</li>
+                        <li>Handle edge cases explicitly (empty, single node)</li>
+                        <li>Be ready to explain why we can't use just preorder or just inorder alone</li>
+                        <li>Know the similar problem: Construct from Inorder + Postorder</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>🔄 Related Problems:</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li><strong>Inorder + Postorder:</strong> Last element of postorder is root</li>
+                        <li><strong>Preorder + Postorder:</strong> Cannot uniquely determine tree (needs additional info)</li>
+                        <li><strong>Level Order:</strong> Can build tree from level order if we mark nulls</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- CONGRATULATIONS -->
+            <div class="section" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white;">
+                <h2 style="color: white; border-bottom-color: white;"><span class="emoji">🎉</span> Congratulations!</h2>
+                
+                <div style="background: rgba(255, 255, 255, 0.2); padding: 40px; border-radius: 15px; margin-top: 30px;">
+                    <h3 style="color: white; text-align: center; font-size: 2em;">
+                        You've Completed All 9 Tree/BST Videos! 🏆
+                    </h3>
+                    <p style="font-size: 1.3em; text-align: center; margin-top: 30px; line-height: 2;">
+                        You've mastered:<br>
+                        ✅ Tree Traversals (Inorder, Preorder, Postorder)<br>
+                        ✅ BST Search<br>
+                        ✅ Level Order & Zigzag<br>
+                        ✅ LCA in Binary Tree & BST<br>
+                        ✅ Validate & Recover BST<br>
+                        ✅ Diameter of Binary Tree<br>
+                        ✅ Path Sum II (Backtracking)<br>
+                        ✅ Construct Tree from Traversals<br>
+                    </p>
+                    <h3 style="color: white; text-align: center; margin-top: 40px; font-size: 1.8em;">
+                        You're ready to tackle tree problems in interviews! 🚀
+                    </h3>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

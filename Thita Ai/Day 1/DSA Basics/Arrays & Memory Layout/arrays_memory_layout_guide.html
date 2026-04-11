@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrays & Memory Layout - Foundational Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@400;600;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wood: #8b5a3c;
+            --wood-dark: #5d3922;
+            --wood-light: #d4a574;
+            --shelf: #e8d5c4;
+            --book-1: #e63946;
+            --book-2: #457b9d;
+            --book-3: #2a9d8f;
+            --book-4: #f4a261;
+            --book-5: #8338ec;
+            --paper: #faf9f6;
+            --ink: #2b2d42;
+            --highlight: #ffc857;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Darker Grotesque', sans-serif;
+            background: linear-gradient(135deg, #f5e6d3 0%, #e8d5c4 100%);
+            color: var(--ink);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        /* Header with bookshelf aesthetic */
+        header {
+            background: linear-gradient(180deg, var(--wood) 0%, var(--wood-dark) 100%);
+            border-radius: 20px 20px 0 0;
+            padding: 60px 50px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--wood-light),
+                var(--wood-light) 10px,
+                var(--wood-dark) 10px,
+                var(--wood-dark) 20px
+            );
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--paper);
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.6rem;
+            color: var(--wood-light);
+            font-weight: 600;
+        }
+
+        /* Section styling */
+        .section {
+            background: var(--paper);
+            border-radius: 16px;
+            padding: 45px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-left: 6px solid var(--wood);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--wood-dark);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h2::before {
+            content: '📚';
+            font-size: 2rem;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--wood);
+            margin: 35px 0 18px;
+        }
+
+        /* Info cards */
+        .card {
+            border-radius: 14px;
+            padding: 28px 32px;
+            margin: 25px 0;
+            border: 3px solid;
+            position: relative;
+        }
+
+        .card::before {
+            content: attr(data-icon);
+            position: absolute;
+            top: -18px;
+            left: 25px;
+            background: var(--paper);
+            padding: 0 12px;
+            font-size: 1.8rem;
+        }
+
+        .card.concept {
+            background: #e8f4f8;
+            border-color: var(--book-2);
+        }
+
+        .card.key {
+            background: #fff4e6;
+            border-color: var(--book-4);
+        }
+
+        .card.warning {
+            background: #ffe5e5;
+            border-color: var(--book-1);
+        }
+
+        .card.success {
+            background: #e8f8f5;
+            border-color: var(--book-3);
+        }
+
+        /* Bookshelf visualization */
+        .bookshelf {
+            background: linear-gradient(180deg, #c9a57b 0%, #a6825e 100%);
+            border-radius: 12px;
+            padding: 30px 25px;
+            margin: 30px 0;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.2), 0 8px 20px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .bookshelf::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 12px;
+            background: var(--wood-dark);
+            border-radius: 0 0 12px 12px;
+        }
+
+        .shelf-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: flex-end;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 5px solid var(--wood-dark);
+        }
+
+        .book {
+            width: 65px;
+            height: 140px;
+            border-radius: 4px 4px 0 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            position: relative;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .book:hover {
+            transform: translateY(-10px);
+        }
+
+        .book::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+        }
+
+        .book .index-label {
+            position: absolute;
+            bottom: -22px;
+            font-size: 0.7rem;
+            color: var(--ink);
+            font-weight: 600;
+            background: var(--highlight);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .book-1 { background: linear-gradient(135deg, var(--book-1) 0%, #c62838 100%); }
+        .book-2 { background: linear-gradient(135deg, var(--book-2) 0%, #2f5f7a 100%); }
+        .book-3 { background: linear-gradient(135deg, var(--book-3) 0%, #1f766a 100%); }
+        .book-4 { background: linear-gradient(135deg, var(--book-4) 0%, #d67d3e 100%); }
+        .book-5 { background: linear-gradient(135deg, var(--book-5) 0%, #6928b8 100%); }
+
+        /* Array visualization */
+        .array-visual {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+
+        .array-box {
+            width: 70px;
+            height: 70px;
+            border: 4px solid var(--wood-dark);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: white;
+            position: relative;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.15);
+        }
+
+        .array-box .idx {
+            position: absolute;
+            top: -24px;
+            font-size: 0.75rem;
+            color: var(--wood);
+            font-weight: 700;
+            background: var(--highlight);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .array-box.active {
+            background: var(--highlight);
+            transform: scale(1.1);
+            border-color: var(--book-1);
+        }
+
+        /* Step boxes */
+        .step-container {
+            display: grid;
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .step-box {
+            border: 3px solid var(--shelf);
+            border-radius: 14px;
+            padding: 28px;
+            background: #fdfbf7;
+            transition: all 0.3s ease;
+        }
+
+        .step-box:hover {
+            border-color: var(--wood);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .step-num {
+            display: inline-flex;
+            width: 38px;
+            height: 38px;
+            background: var(--wood);
+            color: white;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        /* Comparison grid */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .compare-card {
+            border-radius: 14px;
+            padding: 30px;
+            border: 4px solid;
+        }
+
+        .compare-card.fast {
+            background: #e8f8f5;
+            border-color: var(--book-3);
+        }
+
+        .compare-card.slow {
+            background: #ffe5e5;
+            border-color: var(--book-1);
+        }
+
+        .compare-card h4 {
+            margin-bottom: 18px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        /* Code block */
+        .code-block {
+            background: #2b2d42;
+            color: #f8f8f2;
+            border-radius: 12px;
+            padding: 28px;
+            margin: 28px 0;
+            overflow-x: auto;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.9;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .kw { color: #ff79c6; }
+        .fn { color: #50fa7b; }
+        .str { color: #f1fa8c; }
+        .num { color: #bd93f9; }
+        .cm { color: #6272a4; font-style: italic; }
+
+        /* Subpattern cards */
+        .subpattern-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .subpattern-card {
+            background: white;
+            border: 3px solid var(--shelf);
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .subpattern-card:hover {
+            border-color: var(--wood);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .subpattern-card h4 {
+            color: var(--wood-dark);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .subpattern-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: var(--wood-dark);
+            color: white;
+            padding: 18px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        td {
+            padding: 16px 18px;
+            border-bottom: 1px solid var(--shelf);
+        }
+
+        tr:hover {
+            background: #faf9f6;
+        }
+
+        /* Highlight box */
+        .highlight-box {
+            background: var(--highlight);
+            border: 4px solid var(--wood-dark);
+            border-radius: 14px;
+            padding: 30px 35px;
+            margin: 30px 0;
+            box-shadow: 0 6px 20px rgba(255,200,87,0.3);
+        }
+
+        .highlight-box p {
+            font-size: 1.2rem;
+            font-weight: 600;
+            line-height: 2;
+        }
+
+        /* List styling */
+        ul, ol {
+            margin: 20px 0 20px 30px;
+        }
+
+        li {
+            font-size: 1.1rem;
+            line-height: 2;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.8rem; }
+            h2 { font-size: 2rem; }
+            .compare-grid { grid-template-columns: 1fr; }
+            .book { width: 55px; height: 120px; font-size: 1.5rem; }
+            .array-box { width: 60px; height: 60px; font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <h1>Arrays & Memory Layout</h1>
+        <p class="subtitle">Foundational Pattern Theory for Beginners</p>
+    </header>
+
+    <!-- PATTERN OVERVIEW -->
+    <div class="section">
+        <h2>Pattern Overview</h2>
+        
+        <p style="font-size: 1.15rem; line-height: 2; margin-bottom: 25px;">
+            Imagine your favorite bookshelf at home. Each shelf holds a row of books, neatly lined up side by side. 
+            You know exactly where each book is — if someone asks for the third book, you can quickly count from 
+            the left and hand it over. <strong>Arrays in programming work in a very similar way:</strong> they are 
+            like shelves that store items (numbers, words, or objects) in a fixed order, making it easy to find, add, 
+            or change what's inside.
+        </p>
+
+        <div class="bookshelf">
+            <div class="shelf-row">
+                <div class="book book-1">
+                    A
+                    <div class="index-label">index 0</div>
+                </div>
+                <div class="book book-2">
+                    B
+                    <div class="index-label">index 1</div>
+                </div>
+                <div class="book book-3">
+                    C
+                    <div class="index-label">index 2</div>
+                </div>
+                <div class="book book-4">
+                    D
+                    <div class="index-label">index 3</div>
+                </div>
+                <div class="book book-5">
+                    E
+                    <div class="index-label">index 4</div>
+                </div>
+            </div>
+            <p style="text-align: center; color: var(--wood-dark); font-weight: 700; margin-top: 35px; font-size: 1.1rem;">
+                Just like books on a shelf, arrays store items in order with numbered positions (indices)
+            </p>
+        </div>
+
+        <div class="highlight-box">
+            <p>
+                <strong>Arrays & Memory Layout</strong> is one of the most fundamental patterns in programming and data structures. 
+                At its core, this pattern is about organizing data in a way that is predictable, efficient, and easy to access. 
+                Just as you can quickly find a book on your shelf by its position, computers can quickly find a piece of data 
+                in an array by its <strong>index</strong> (its position in the row).
+            </p>
+        </div>
+
+        <div class="card concept" data-icon="💡">
+            <h3 style="margin-top: 0;">Why Master This Pattern?</h3>
+            <ul style="font-size: 1.05rem; line-height: 2.2;">
+                <li>It's a <strong>basic building block</strong> that unlocks countless possibilities</li>
+                <li>Shows up everywhere: from storing high scores in a game, to tracking daily temperatures, or managing a to-do list app</li>
+                <li>Teaches you how computers organize and access information</li>
+                <li>Helps you understand efficiency (why some operations are faster than others)</li>
+                <li>Prepares you for more complex data structures like lists, stacks, and queues</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- FOUNDATIONAL UNDERSTANDING -->
+    <div class="section">
+        <h2>Foundational Understanding</h2>
+
+        <h3>What is an Array?</h3>
+        <p style="font-size: 1.1rem; line-height: 2; margin-bottom: 20px;">
+            An array is a collection of items, stored in a specific order, all in one place. 
+            Think of it as a <strong>row of boxes</strong>, each holding a value — like a row of lockers, each with a number.
+        </p>
+
+        <div class="array-visual">
+            <div class="array-box">
+                <div class="idx">0</div>
+                10
+            </div>
+            <div class="array-box">
+                <div class="idx">1</div>
+                20
+            </div>
+            <div class="array-box">
+                <div class="idx">2</div>
+                30
+            </div>
+            <div class="array-box">
+                <div class="idx">3</div>
+                40
+            </div>
+            <div class="array-box">
+                <div class="idx">4</div>
+                50
+            </div>
+        </div>
+
+        <div class="card key" data-icon="🔑">
+            <h4>Key Points About Arrays:</h4>
+            <ul style="font-size: 1.05rem; line-height: 2.2; margin-top: 12px;">
+                <li>Each box (or locker) has a unique number called an <strong>index</strong></li>
+                <li>In most programming languages, counting starts at <strong>0</strong>, so the first item is at index 0, the second at index 1, and so on</li>
+                <li>All items are the same type (all numbers, all words, etc.)</li>
+                <li>The size is often fixed — you decide how many items when you create the array</li>
+            </ul>
+        </div>
+
+        <h3>How Does Memory Layout Work?</h3>
+        <p style="font-size: 1.1rem; line-height: 2; margin: 20px 0;">
+            Computers store arrays in a <strong>contiguous block of memory</strong>. This means all the items are placed 
+            side by side, like books on a shelf. Because of this, finding the item at a specific index is very fast — 
+            the computer can "jump" straight to the right spot.
+        </p>
+
+        <div class="compare-grid">
+            <div class="compare-card fast">
+                <h4 style="color: var(--book-3);">✅ Fast Operations</h4>
+                <ul style="font-size: 1.05rem; line-height: 2;">
+                    <li><strong>Access by index:</strong> O(1) — instant!</li>
+                    <li><strong>Update by index:</strong> O(1) — instant!</li>
+                    <li><strong>Traverse all items:</strong> O(n) — linear</li>
+                </ul>
+                <p style="margin-top: 15px; font-size: 0.95rem; line-height: 1.8;">
+                    Because items are side-by-side in memory, accessing any specific position is lightning-fast.
+                </p>
+            </div>
+
+            <div class="compare-card slow">
+                <h4 style="color: var(--book-1);">⚠️ Slower Operations</h4>
+                <ul style="font-size: 1.05rem; line-height: 2;">
+                    <li><strong>Insert in middle:</strong> O(n) — must shift items</li>
+                    <li><strong>Delete in middle:</strong> O(n) — must shift items</li>
+                    <li><strong>Search unsorted:</strong> O(n) — check each item</li>
+                </ul>
+                <p style="margin-top: 15px; font-size: 0.95rem; line-height: 1.8;">
+                    Adding or removing items in the middle requires moving other items to maintain order.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- THE 6 SUBPATTERNS -->
+    <div class="section">
+        <h2>The 6 Core Subpatterns</h2>
+
+        <p style="font-size: 1.15rem; line-height: 2; margin-bottom: 30px;">
+            Mastering arrays means understanding these six fundamental operations. Each builds on the previous, 
+            guiding you from basic storage to sophisticated problem-solving.
+        </p>
+
+        <div class="subpattern-grid">
+            <div class="subpattern-card">
+                <span class="icon">🏗️</span>
+                <h4>1. Array Memory Allocation</h4>
+                <p style="font-size: 1.05rem; line-height: 1.9;">
+                    <strong>Foundation:</strong> How arrays are created and stored in memory. Arrays need a block of 
+                    memory big enough to hold all their items. This is why arrays often have a fixed size.
+                </p>
+                <p style="margin-top: 12px; font-size: 0.95rem; color: var(--wood);">
+                    <strong>When to use:</strong> Whenever you need to store a known number of items together.
+                </p>
+            </div>
+
+            <div class="subpattern-card">
+                <span class="icon">🔍</span>
+                <h4>2. Indexing and Traversal</h4>
+                <p style="font-size: 1.05rem; line-height: 1.9;">
+                    <strong>Core Skill:</strong> Accessing and moving through array items. Indexing allows you to 
+                    "jump" directly to any item, while traversal lets you process every item in turn.
+                </p>
+                <p style="margin-top: 12px; font-size: 0.95rem; color: var(--wood);">
+                    <strong>When to use:</strong> Anytime you need to read, update, or process items.
+                </p>
+            </div>
+
+            <div class="subpattern-card">
+                <span class="icon">➕</span>
+                <h4>3. Insertion & Deletion</h4>
+                <p style="font-size: 1.05rem; line-height: 1.9;">
+                    <strong>Building Complexity:</strong> Changing array contents. Because arrays are tightly packed, 
+                    inserting or deleting items often means shifting others to keep everything in order.
+                </p>
+                <p style="margin-top: 12px; font-size: 0.95rem; color: var(--wood);">
+                    <strong>When to use:</strong> When you need to add or remove items, especially in the middle.
+                </p>
+            </div>
+
+            <div class="subpattern-card">
+                <span class="icon">🔄</span>
+                <h4>4. Array Reversal & Rotation</h4>
+                <p style="font-size: 1.05rem; line-height: 1.9;">
+                    <strong>Manipulation Techniques:</strong> Rearranging arrays. Reversal flips the order, while 
+                    rotation moves items around in a circular fashion.
+                </p>
+                <p style="margin-top: 12px; font-size: 0.95rem; color: var(--wood);">
+                    <strong>When to use:</strong> When you need items in reverse order, or to "rotate" data.
+                </p>
+            </div>
+
+            <div class="subpattern-card">
+                <span class="icon">📊</span>
+                <h4>5. Prefix and Suffix Techniques</h4>
+                <p style="font-size: 1.05rem; line-height: 1.9;">
+                    <strong>Problem-Solving Tools:</strong> Working with running totals or segments. Prefix sums allow 
+                    you to quickly calculate totals for any section from the start.
+                </p>
+                <p style="margin-top: 12px; font-size: 0.95rem; color: var(--wood);">
+                    <strong>When to use:</strong> Questions like "What's the sum of the first X items?"
+                </p>
+            </div>
+
+            <div class="subpattern-card">
+                <span class="icon">🪟</span>
+                <h4>6. Sliding Window Basics</h4>
+                <p style="font-size: 1.05rem; line-height: 1.9;">
+                    <strong>Advanced Application:</strong> Stepping stone toward sophisticated algorithms. By moving a 
+                    "window" across the array, you efficiently analyze sections.
+                </p>
+                <p style="margin-top: 12px; font-size: 0.95rem; color: var(--wood);">
+                    <strong>When to use:</strong> Process every possible sub-section of a certain size.
+                </p>
+            </div>
+        </div>
+
+        <div class="card success" data-icon="🎯" style="margin-top: 35px;">
+            <h3 style="margin-top: 0;">Mental Map: Building Block by Block</h3>
+            <ol style="font-size: 1.05rem; line-height: 2.2; margin-top: 15px;">
+                <li><strong>Start with memory allocation:</strong> Understand how arrays are created</li>
+                <li><strong>Move to indexing and traversal:</strong> Learn to access and process items</li>
+                <li><strong>Add insertion & deletion:</strong> Manipulate the contents</li>
+                <li><strong>Practice reversal & rotation:</strong> Rearrange the array</li>
+                <li><strong>Apply prefix/suffix and sliding window:</strong> Tackle complex, real-world problems</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- EXAMPLES -->
+    <div class="section">
+        <h2>Visual Examples</h2>
+
+        <h3>Example 1: Accessing by Index</h3>
+        <p style="margin-bottom: 20px; font-size: 1.05rem;">
+            Accessing arr[2] — the computer knows exactly where to find it!
+        </p>
+
+        <div class="array-visual">
+            <div class="array-box">
+                <div class="idx">0</div>
+                5
+            </div>
+            <div class="array-box">
+                <div class="idx">1</div>
+                12
+            </div>
+            <div class="array-box active">
+                <div class="idx">2</div>
+                7
+            </div>
+            <div class="array-box">
+                <div class="idx">3</div>
+                19
+            </div>
+            <div class="array-box">
+                <div class="idx">4</div>
+                3
+            </div>
+        </div>
+
+        <p style="text-align: center; margin-top: 15px; font-size: 1.05rem; color: var(--wood); font-weight: 700;">
+            Result: arr[2] = 7 — Instant access in O(1) time!
+        </p>
+
+        <h3 style="margin-top: 50px;">Example 2: Traversing the Array</h3>
+        <p style="margin-bottom: 20px; font-size: 1.05rem;">
+            Looping through every item to calculate the sum:
+        </p>
+
+        <div class="code-block"><pre><span class="cm">// Traverse the array and sum all elements</span>
+<span class="kw">int</span>[] arr = {<span class="num">5</span>, <span class="num">12</span>, <span class="num">7</span>, <span class="num">19</span>, <span class="num">3</span>};
+<span class="kw">int</span> sum = <span class="num">0</span>;
+
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i < arr.length; i++) {
+    sum += arr[i];  <span class="cm">// Add each element to sum</span>
+}
+
+System.out.println(<span class="str">"Total sum: "</span> + sum);  <span class="cm">// Output: 46</span></pre></div>
+
+        <div class="card concept" data-icon="💡">
+            <p style="font-size: 1.05rem; line-height: 2;">
+                <strong>Time Complexity:</strong> O(n) — we touch each element once<br>
+                <strong>Why it's efficient:</strong> Arrays store items side-by-side in memory, so looping is fast
+            </p>
+        </div>
+
+        <h3 style="margin-top: 50px;">Example 3: Inserting in the Middle</h3>
+        <p style="margin-bottom: 20px; font-size: 1.05rem;">
+            Inserting value 99 at index 2 — notice how items shift right:
+        </p>
+
+        <div class="step-container">
+            <div class="step-box">
+                <p><span class="step-num">1</span><strong>Before insertion:</strong></p>
+                <div class="array-visual">
+                    <div class="array-box"><div class="idx">0</div>5</div>
+                    <div class="array-box"><div class="idx">1</div>12</div>
+                    <div class="array-box"><div class="idx">2</div>7</div>
+                    <div class="array-box"><div class="idx">3</div>19</div>
+                    <div class="array-box"><div class="idx">4</div>3</div>
+                </div>
+            </div>
+
+            <div class="step-box">
+                <p><span class="step-num">2</span><strong>Shift items right to make space:</strong></p>
+                <div class="array-visual">
+                    <div class="array-box"><div class="idx">0</div>5</div>
+                    <div class="array-box"><div class="idx">1</div>12</div>
+                    <div class="array-box active"><div class="idx">2</div>_</div>
+                    <div class="array-box"><div class="idx">3</div>7</div>
+                    <div class="array-box"><div class="idx">4</div>19</div>
+                    <div class="array-box"><div class="idx">5</div>3</div>
+                </div>
+            </div>
+
+            <div class="step-box">
+                <p><span class="step-num">3</span><strong>Insert 99 at index 2:</strong></p>
+                <div class="array-visual">
+                    <div class="array-box"><div class="idx">0</div>5</div>
+                    <div class="array-box"><div class="idx">1</div>12</div>
+                    <div class="array-box active"><div class="idx">2</div>99</div>
+                    <div class="array-box"><div class="idx">3</div>7</div>
+                    <div class="array-box"><div class="idx">4</div>19</div>
+                    <div class="array-box"><div class="idx">5</div>3</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card warning" data-icon="⚠️">
+            <p style="font-size: 1.05rem; line-height: 2;">
+                <strong>Time Complexity:</strong> O(n) — in the worst case, we shift all n elements<br>
+                <strong>Why it's slower:</strong> Arrays are tightly packed, so we must move items to maintain order
+            </p>
+        </div>
+    </div>
+
+    <!-- PATTERN RECOGNITION -->
+    <div class="section">
+        <h2>Pattern Recognition</h2>
+
+        <p style="font-size: 1.15rem; line-height: 2; margin-bottom: 25px;">
+            How do you know when to use the Arrays & Memory Layout pattern? Look for these signals:
+        </p>
+
+        <div class="card key" data-icon="🎯">
+            <h3 style="margin-top: 0;">Key Characteristics</h3>
+            <ul style="font-size: 1.05rem; line-height: 2.2; margin-top: 15px;">
+                <li><strong>Ordered Collection:</strong> The problem involves a list or sequence where order matters</li>
+                <li><strong>Fixed or Known Size:</strong> You know how many items you need to store</li>
+                <li><strong>Direct Access Needed:</strong> You need to quickly access or update items by position (index)</li>
+                <li><strong>Batch Processing:</strong> You need to process every item in a group, often in order</li>
+            </ul>
+        </div>
+
+        <h3>Common Beginner Scenarios</h3>
+        <ul style="font-size: 1.05rem; line-height: 2.2;">
+            <li>Storing a list of numbers, names, or objects (like grades, scores, or inventory)</li>
+            <li>Finding the largest or smallest item in a collection</li>
+            <li>Reversing the order of a list</li>
+            <li>Calculating the sum or average of values</li>
+            <li>Shifting or rotating items (like rotating a queue or schedule)</li>
+            <li>Checking for duplicates or counting occurrences</li>
+        </ul>
+
+        <div class="highlight-box">
+            <p>
+                <strong>Simple Framework for Identification:</strong><br>
+                ✓ Is the data organized in a specific order?<br>
+                ✓ Do I need to access or update items by their position?<br>
+                ✓ Is the number of items known or fixed?<br>
+                ✓ Do I need to process every item, or sections of items, in order?<br><br>
+                If you answer "yes" to most of these, arrays are a good fit!
+            </p>
+        </div>
+    </div>
+
+    <!-- LEARNING STRATEGY -->
+    <div class="section">
+        <h2>Learning Strategy</h2>
+
+        <h3>Step-by-Step Learning Path</h3>
+        <div class="step-container">
+            <div class="step-box">
+                <p><span class="step-num">1</span><strong>Grasp the Basics</strong></p>
+                <p style="margin-top: 12px; font-size: 1.05rem; line-height: 1.9;">
+                    Start by understanding what arrays are and how they store data. 
+                    Visualize arrays as rows of boxes or lockers.
+                </p>
+            </div>
+
+            <div class="step-box">
+                <p><span class="step-num">2</span><strong>Practice Indexing and Traversal</strong></p>
+                <p style="margin-top: 12px; font-size: 1.05rem; line-height: 1.9;">
+                    Get comfortable accessing items by their index. 
+                    Practice moving through arrays from start to end.
+                </p>
+            </div>
+
+            <div class="step-box">
+                <p><span class="step-num">3</span><strong>Explore Manipulation</strong></p>
+                <p style="margin-top: 12px; font-size: 1.05rem; line-height: 1.9;">
+                    Learn how to insert, delete, reverse, and rotate items. 
+                    Notice how these operations affect the rest of the array.
+                </p>
+            </div>
+
+            <div class="step-box">
+                <p><span class="step-num">4</span><strong>Apply Problem-Solving Techniques</strong></p>
+                <p style="margin-top: 12px; font-size: 1.05rem; line-height: 1.9;">
+                    Use prefix/suffix and sliding window methods to solve simple problems. 
+                    Try real-world scenarios, like calculating running totals or finding maximum values.
+                </p>
+            </div>
+        </div>
+
+        <div class="card success" data-icon="✅">
+            <h3 style="margin-top: 0;">Building Good Habits</h3>
+            <ul style="font-size: 1.05rem; line-height: 2.2; margin-top: 15px;">
+                <li><strong>Practice Regularly:</strong> The more you work with arrays, the more natural they become</li>
+                <li><strong>Visualize Operations:</strong> Draw arrays on paper and trace how items move during each operation</li>
+                <li><strong>Explain Out Loud:</strong> Teaching the concept helps solidify your understanding</li>
+                <li><strong>Check Your Work:</strong> After each operation, verify the array's contents</li>
+                <li><strong>Reflect on Efficiency:</strong> Think about how many steps your solution takes</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- COMMON MISTAKES -->
+    <div class="section">
+        <h2>Common Beginner Mistakes</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Mistake</th>
+                    <th>Why It Happens</th>
+                    <th>How to Avoid</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Off-by-One Errors</strong></td>
+                    <td>Forgetting that arrays start at index 0, not 1</td>
+                    <td>Always remember: first item is arr[0], last item is arr[length-1]</td>
+                </tr>
+                <tr>
+                    <td><strong>Array Out of Bounds</strong></td>
+                    <td>Trying to access index that doesn't exist</td>
+                    <td>Check: 0 ≤ index < array.length before accessing</td>
+                </tr>
+                <tr>
+                    <td><strong>Forgetting to Shift Items</strong></td>
+                    <td>Inserting/deleting without moving other items</td>
+                    <td>Remember: arrays are packed tight — you must shift!</td>
+                </tr>
+                <tr>
+                    <td><strong>Overcomplicating Solutions</strong></td>
+                    <td>Using advanced techniques before mastering basics</td>
+                    <td>Start simple: access, traverse, then build complexity</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- FOOTER -->
+    <div style="text-align: center; margin-top: 60px; padding: 40px; background: linear-gradient(135deg, var(--wood) 0%, var(--wood-dark) 100%); border-radius: 16px; color: white;">
+        <h2 style="color: white; margin-bottom: 18px;">🎉 You're Building a Strong Foundation!</h2>
+        <p style="font-size: 1.15rem; line-height: 1.9;">
+            By mastering <strong>Arrays & Memory Layout</strong> and the six key subpatterns, you're building 
+            a strong foundation for all of programming. These skills will serve you well in coding interviews, 
+            real-world projects, and as stepping stones to more advanced data structures and algorithms.<br><br>
+            <strong>Remember:</strong> Every complex program starts with simple, well-organized data — 
+            just like every well-kept room starts with a tidy bookshelf!
+        </p>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video 3: Level Order & Zigzag Traversal - Complete Visual Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.7;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 60px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 45px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            color: #1e293b;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h3 {
+            color: #334155;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        h4 {
+            color: #475569;
+            font-size: 1.4em;
+            margin: 25px 0 15px 0;
+        }
+
+        .problem-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 15px;
+            padding: 35px;
+            margin: 25px 0;
+            border-left: 8px solid #f59e0b;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+        }
+
+        .tree-visual {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .tree-box {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            line-height: 2.5;
+            display: inline-block;
+            text-align: left;
+        }
+
+        .visual-tree-step {
+            background: white;
+            border: 3px solid #3b82f6;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .queue-visual {
+            background: #f1f5f9;
+            border: 3px solid #64748b;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .queue-box {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .queue-item {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .queue-item.highlight {
+            background: #f59e0b;
+            color: white;
+            border-color: #f59e0b;
+        }
+
+        .code-box {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            line-height: 1.9;
+            font-size: 1em;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-keyword {
+            color: #c084fc;
+        }
+
+        .code-function {
+            color: #60a5fa;
+        }
+
+        .code-string {
+            color: #34d399;
+        }
+
+        .code-comment {
+            color: #94a3b8;
+        }
+
+        .output-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 3px solid #10b981;
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #065f46;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 6px solid #3b82f6;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 6px solid #f59e0b;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 6px solid #10b981;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 15px;
+        }
+
+        li {
+            margin: 12px 0;
+            line-height: 1.8;
+        }
+
+        strong {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .emoji {
+            font-size: 1.3em;
+        }
+
+        .level-box {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .level-header {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .zigzag-arrow {
+            font-size: 2em;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌊 Level Order & Zigzag Traversal</h1>
+            <p style="font-size: 1.3em; margin-top: 15px;">Breadth-First Search (BFS) on Trees</p>
+            <p style="font-size: 1.1em; margin-top: 10px; opacity: 0.9;">Visit nodes level by level using a Queue</p>
+        </header>
+
+        <div class="content">
+
+            <!-- PROBLEM STATEMENT -->
+            <div class="section">
+                <h2><span class="emoji">📋</span> Problem Statement</h2>
+                
+                <div class="problem-box">
+                    <h3 style="margin-top: 0;">What We Need to Solve:</h3>
+                    <p style="font-size: 1.2em; margin: 20px 0;">
+                        Given a Binary Tree, visit nodes <strong>level by level</strong> (horizontally) instead of following branches vertically.
+                    </p>
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
+                        <p style="font-size: 1.15em; margin-bottom: 15px;"><strong>Two Variations:</strong></p>
+                        <ol>
+                            <li><strong>Level Order:</strong> Visit each level Left → Right</li>
+                            <li><strong>Zigzag:</strong> Alternate direction each level (L→R, then R→L, then L→R...)</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="tree-visual">
+                    <h3>🌳 Example Tree</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.2em; line-height: 2.8;">
+                    ┌─────┐
+                    │  1  │  ← Level 0 (L0)
+                    └──┬──┘
+          ┌────────────┴────────────┐
+       ┌──┴──┐                   ┌──┴──┐
+       │  2  │                   │  3  │  ← Level 1 (L1)
+       └──┬──┘                   └──┬──┘
+     ┌────┴────┐              ┌────┴────┐
+  ┌──┴──┐   ┌──┴──┐        ┌──┴──┐   ┌──┴──┐
+  │  4  │   │  5  │        │  6  │   │  7  │  ← Level 2 (L2)
+  └─────┘   └─────┘        └─────┘   └─────┘
+</pre>
+                    </div>
+                    <div style="margin-top: 30px;">
+                        <div class="level-box">
+                            <div class="level-header">Level Order Output:</div>
+                            <p style="font-size: 1.2em; font-family: monospace;">
+                                [[1], [2, 3], [4, 5, 6, 7]]
+                            </p>
+                        </div>
+                        <div class="level-box">
+                            <div class="level-header">Zigzag Output:</div>
+                            <p style="font-size: 1.2em; font-family: monospace;">
+                                [[1], [3, 2], [4, 5, 6, 7]]
+                            </p>
+                            <p style="margin-top: 10px; color: #667eea; font-weight: 600;">
+                                Note: L1 is reversed (3, 2 instead of 2, 3)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THE QUEUE CONCEPT -->
+            <div class="section">
+                <h2><span class="emoji">📦</span> The Queue Concept (FIFO)</h2>
+
+                <div class="info-box">
+                    <h3>🎯 What is a Queue?</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px; line-height: 1.9;">
+                        A Queue is a <strong>First-In-First-Out (FIFO)</strong> data structure, like a line at a coffee shop:
+                    </p>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li>First person in line gets served first</li>
+                        <li><strong>add()</strong> - Join the back of the line</li>
+                        <li><strong>poll()</strong> - Remove from the front of the line</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎬 Queue Visualization:</h3>
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
+                        <p style="font-weight: 600; margin-bottom: 15px;">Initial: Queue = [1, 2, 3]</p>
+                        <div class="queue-box">
+                            <div style="background: #fee2e2; padding: 10px 20px; border-radius: 6px; font-weight: 600;">
+                                FRONT →
+                            </div>
+                            <div class="queue-item">1</div>
+                            <div class="queue-item">2</div>
+                            <div class="queue-item">3</div>
+                            <div style="background: #d1fae5; padding: 10px 20px; border-radius: 6px; font-weight: 600;">
+                                ← BACK
+                            </div>
+                        </div>
+
+                        <p style="font-weight: 600; margin: 25px 0 15px 0;">After poll(): Queue = [2, 3]</p>
+                        <div class="queue-box">
+                            <div style="background: #fee2e2; padding: 10px 20px; border-radius: 6px; font-weight: 600;">
+                                FRONT →
+                            </div>
+                            <div class="queue-item">2</div>
+                            <div class="queue-item">3</div>
+                            <div style="background: #d1fae5; padding: 10px 20px; border-radius: 6px; font-weight: 600;">
+                                ← BACK
+                            </div>
+                        </div>
+                        <p style="margin-top: 10px; color: #667eea;">Removed 1 (it was at the front)</p>
+
+                        <p style="font-weight: 600; margin: 25px 0 15px 0;">After add(4): Queue = [2, 3, 4]</p>
+                        <div class="queue-box">
+                            <div style="background: #fee2e2; padding: 10px 20px; border-radius: 6px; font-weight: 600;">
+                                FRONT →
+                            </div>
+                            <div class="queue-item">2</div>
+                            <div class="queue-item">3</div>
+                            <div class="queue-item highlight">4</div>
+                            <div style="background: #d1fae5; padding: 10px 20px; border-radius: 6px; font-weight: 600;">
+                                ← BACK
+                            </div>
+                        </div>
+                        <p style="margin-top: 10px; color: #667eea;">Added 4 to the back</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LEVEL ORDER ALGORITHM -->
+            <div class="section">
+                <h2><span class="emoji">🔄</span> Level Order Algorithm Explained</h2>
+
+                <div class="info-box">
+                    <h3>🎯 The Strategy:</h3>
+                    <ol style="font-size: 1.15em; margin-top: 15px; line-height: 2;">
+                        <li>Start with root in queue</li>
+                        <li>While queue is not empty:
+                            <ul style="margin-top: 10px;">
+                                <li>Count how many nodes in queue (<strong>size</strong>)</li>
+                                <li>Process exactly that many nodes (one level)</li>
+                                <li>Add each node's children to queue (for next level)</li>
+                            </ul>
+                        </li>
+                        <li>Repeat until queue is empty</li>
+                    </ol>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>💡 The KEY Insight: The "size" Variable</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px; line-height: 1.9;">
+                        <strong>Why do we need size?</strong><br><br>
+                        The queue contains nodes from CURRENT level AND NEXT level mixed together.<br>
+                        <strong>size</strong> tells us exactly how many nodes belong to the CURRENT level.<br><br>
+                        We process exactly <strong>size</strong> nodes, then move to the next level.
+                    </p>
+                </div>
+            </div>
+
+            <!-- STEP BY STEP EXECUTION -->
+            <div class="section">
+                <h2><span class="emoji">🎬</span> Level Order - Step-by-Step Execution</h2>
+
+                <!-- Step 1 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 1: Initialize</div>
+                    <div class="tree-box">
+<pre>
+       <span style="background: #f59e0b; color: white; padding: 8px 15px; border-radius: 50%;">1</span>
+      / \
+     2   3
+    / \ / \
+   4  5 6  7
+</pre>
+                    </div>
+                    <div class="queue-visual">
+                        <p style="font-weight: 600; margin-bottom: 10px;">Queue:</p>
+                        <div class="queue-box">
+                            <div class="queue-item highlight">1</div>
+                        </div>
+                        <p style="margin-top: 15px;"><strong>size = 1</strong> (1 node in current level)</p>
+                        <p><strong>Action:</strong> Poll 1, add its children (2, 3)</p>
+                    </div>
+                    <div class="output-box" style="font-size: 1.1em;">
+                        Level 0: [1]
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 2: Process Level 1</div>
+                    <div class="tree-box">
+<pre>
+       1
+      / \
+    <span style="background: #f59e0b; color: white; padding: 8px 15px; border-radius: 50%;">2</span>  <span style="background: #f59e0b; color: white; padding: 8px 15px; border-radius: 50%;">3</span>
+    / \ / \
+   4  5 6  7
+</pre>
+                    </div>
+                    <div class="queue-visual">
+                        <p style="font-weight: 600; margin-bottom: 10px;">Queue:</p>
+                        <div class="queue-box">
+                            <div class="queue-item highlight">2</div>
+                            <div class="queue-item highlight">3</div>
+                        </div>
+                        <p style="margin-top: 15px;"><strong>size = 2</strong> (2 nodes in current level)</p>
+                        <p><strong>Action:</strong> Poll 2, add children (4, 5). Poll 3, add children (6, 7)</p>
+                    </div>
+                    <div class="output-box" style="font-size: 1.1em;">
+                        Level 1: [2, 3]
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 3: Process Level 2</div>
+                    <div class="tree-box">
+<pre>
+       1
+      / \
+     2   3
+    / \ / \
+   <span style="background: #f59e0b; color: white; padding: 5px 10px; border-radius: 50%;">4</span> <span style="background: #f59e0b; color: white; padding: 5px 10px; border-radius: 50%;">5</span> <span style="background: #f59e0b; color: white; padding: 5px 10px; border-radius: 50%;">6</span> <span style="background: #f59e0b; color: white; padding: 5px 10px; border-radius: 50%;">7</span>
+</pre>
+                    </div>
+                    <div class="queue-visual">
+                        <p style="font-weight: 600; margin-bottom: 10px;">Queue:</p>
+                        <div class="queue-box">
+                            <div class="queue-item highlight">4</div>
+                            <div class="queue-item highlight">5</div>
+                            <div class="queue-item highlight">6</div>
+                            <div class="queue-item highlight">7</div>
+                        </div>
+                        <p style="margin-top: 15px;"><strong>size = 4</strong> (4 nodes in current level)</p>
+                        <p><strong>Action:</strong> Poll all 4 (they're all leaves, no children to add)</p>
+                    </div>
+                    <div class="output-box" style="font-size: 1.1em;">
+                        Level 2: [4, 5, 6, 7]
+                    </div>
+                </div>
+
+                <!-- Final -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Final Result</div>
+                    <div class="queue-visual">
+                        <p style="font-weight: 600; margin-bottom: 10px;">Queue is now empty!</p>
+                    </div>
+                    <div class="output-box" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; font-size: 1.4em;">
+                        ✅ Final Output: [[1], [2, 3], [4, 5, 6, 7]]
+                    </div>
+                </div>
+            </div>
+
+            <!-- ZIGZAG EXPLANATION -->
+            <div class="section">
+                <h2><span class="emoji">⚡</span> Zigzag Traversal Explained</h2>
+
+                <div class="info-box">
+                    <h3>🎯 The Zigzag Pattern:</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px; line-height: 1.9;">
+                        Instead of always going Left → Right, we <strong>alternate direction each level</strong>:
+                    </p>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li><strong>Level 0:</strong> Left → Right (normal)</li>
+                        <li><strong>Level 1:</strong> Right → Left (reversed!)</li>
+                        <li><strong>Level 2:</strong> Left → Right (normal)</li>
+                        <li><strong>Level 3:</strong> Right → Left (reversed!)</li>
+                        <li>And so on...</li>
+                    </ul>
+                </div>
+
+                <div class="tree-visual">
+                    <h3>📊 Visual Comparison</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.1em;">
+           1
+          / \
+         2   3         L0: [1]         (L→R)
+        / \ / \        L1: [2, 3]      (L→R)
+       4  5 6  7       L2: [4,5,6,7]   (L→R)
+
+<span style="color: #667eea; font-size: 1.1em;">LEVEL ORDER:</span>  [[1], [2,3], [4,5,6,7]]
+
+<span class="zigzag-arrow">↓ VS ↓</span>
+
+           1
+          / \
+         2   3         L0: [1]         (L→R)
+        / \ / \        L1: [3, 2]      (R→L) ← REVERSED!
+       4  5 6  7       L2: [4,5,6,7]   (L→R)
+
+<span style="color: #ef4444; font-size: 1.1em;">ZIGZAG:</span>     [[1], [3,2], [4,5,6,7]]
+</pre>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>💡 How to Implement Zigzag:</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px;">
+                        <strong>Method 1:</strong> Use a boolean flag <code>leftToRight</code>
+                    </p>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li>Start with <code>leftToRight = true</code></li>
+                        <li>If <code>leftToRight</code>, fill array from index 0 → size-1 (normal)</li>
+                        <li>If NOT <code>leftToRight</code>, fill array from index size-1 → 0 (reversed)</li>
+                        <li>After each level, flip the flag: <code>leftToRight = !leftToRight</code></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- JAVA CODE -->
+            <div class="section">
+                <h2><span class="emoji">💻</span> Java Implementation</h2>
+
+                <h3>Level Order Traversal:</h3>
+                <div class="code-box">
+<pre><span class="code-keyword">import</span> java.util.*;
+
+<span class="code-keyword">class</span> <span class="code-function">Solution</span> {
+    <span class="code-keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="code-function">levelOrder</span>(Node root) {
+        List&lt;List&lt;Integer&gt;&gt; result = <span class="code-keyword">new</span> ArrayList&lt;&gt;();
+        <span class="code-keyword">if</span> (root == <span class="code-keyword">null</span>) <span class="code-keyword">return</span> result;
+        
+        Queue&lt;Node&gt; queue = <span class="code-keyword">new</span> LinkedList&lt;&gt;();
+        queue.add(root);  <span class="code-comment">// Start with root</span>
+        
+        <span class="code-keyword">while</span> (!queue.isEmpty()) {
+            <span class="code-keyword">int</span> size = queue.size();  <span class="code-comment">// CRITICAL: nodes in current level</span>
+            List&lt;Integer&gt; currentLevel = <span class="code-keyword">new</span> ArrayList&lt;&gt;();
+            
+            <span class="code-comment">// Process exactly 'size' nodes (one complete level)</span>
+            <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-string">0</span>; i &lt; size; i++) {
+                Node current = queue.poll();  <span class="code-comment">// Remove from front</span>
+                currentLevel.add(current.data);
+                
+                <span class="code-comment">// Add children to queue (for next level)</span>
+                <span class="code-keyword">if</span> (current.left != <span class="code-keyword">null</span>) {
+                    queue.add(current.left);
+                }
+                <span class="code-keyword">if</span> (current.right != <span class="code-keyword">null</span>) {
+                    queue.add(current.right);
+                }
+            }
+            
+            result.add(currentLevel);
+        }
+        
+        <span class="code-keyword">return</span> result;
+    }
+}</pre>
+                </div>
+
+                <h3 style="margin-top: 40px;">Zigzag Traversal:</h3>
+                <div class="code-box">
+<pre><span class="code-keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="code-function">zigzagLevelOrder</span>(Node root) {
+    List&lt;List&lt;Integer&gt;&gt; result = <span class="code-keyword">new</span> ArrayList&lt;&gt;();
+    <span class="code-keyword">if</span> (root == <span class="code-keyword">null</span>) <span class="code-keyword">return</span> result;
+    
+    Queue&lt;Node&gt; queue = <span class="code-keyword">new</span> LinkedList&lt;&gt;();
+    queue.add(root);
+    <span class="code-keyword">boolean</span> leftToRight = <span class="code-keyword">true</span>;  <span class="code-comment">// Direction flag</span>
+    
+    <span class="code-keyword">while</span> (!queue.isEmpty()) {
+        <span class="code-keyword">int</span> size = queue.size();
+        Integer[] level = <span class="code-keyword">new</span> Integer[size];  <span class="code-comment">// Use array for zigzag</span>
+        
+        <span class="code-keyword">for</span> (<span class="code-keyword">int</span> i = <span class="code-string">0</span>; i &lt; size; i++) {
+            Node current = queue.poll();
+            
+            <span class="code-comment">// KEY LOGIC: Decide index based on direction</span>
+            <span class="code-keyword">int</span> index = leftToRight ? i : (size - <span class="code-string">1</span> - i);
+            level[index] = current.data;
+            
+            <span class="code-comment">// Add children (same as level order)</span>
+            <span class="code-keyword">if</span> (current.left != <span class="code-keyword">null</span>) queue.add(current.left);
+            <span class="code-keyword">if</span> (current.right != <span class="code-keyword">null</span>) queue.add(current.right);
+        }
+        
+        result.add(Arrays.asList(level));
+        leftToRight = !leftToRight;  <span class="code-comment">// Flip direction for next level</span>
+    }
+    
+    <span class="code-keyword">return</span> result;
+}</pre>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Zigzag Index Logic Explained:</h3>
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 15px;">
+                        <p style="font-size: 1.1em; margin-bottom: 15px;"><strong>For level with size = 4:</strong></p>
+                        <div class="code-box" style="font-size: 0.95em;">
+<pre>LEFT-TO-RIGHT (leftToRight = true):
+  i=0 → index = 0  → level[0] = node
+  i=1 → index = 1  → level[1] = node
+  i=2 → index = 2  → level[2] = node
+  i=3 → index = 3  → level[3] = node
+  Result: [node0, node1, node2, node3]
+
+RIGHT-TO-LEFT (leftToRight = false):
+  i=0 → index = 3  → level[3] = node
+  i=1 → index = 2  → level[2] = node
+  i=2 → index = 1  → level[1] = node
+  i=3 → index = 0  → level[0] = node
+  Result: [node3, node2, node1, node0] ← REVERSED!</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPLEXITY ANALYSIS -->
+            <div class="section">
+                <h2><span class="emoji">⚡</span> Complexity Analysis</h2>
+
+                <table>
+                    <tr>
+                        <th>Algorithm</th>
+                        <th>Time Complexity</th>
+                        <th>Space Complexity</th>
+                        <th>Explanation</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Level Order</strong></td>
+                        <td>O(N)</td>
+                        <td>O(W)</td>
+                        <td>Visit each node once; W = max width of tree (max nodes in queue)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Zigzag</strong></td>
+                        <td>O(N)</td>
+                        <td>O(W)</td>
+                        <td>Same as level order; direction doesn't affect complexity</td>
+                    </tr>
+                </table>
+
+                <div class="info-box" style="margin-top: 25px;">
+                    <h3>📊 Understanding Space Complexity O(W):</h3>
+                    <p style="font-size: 1.1em; margin-top: 15px; line-height: 1.9;">
+                        <strong>W = Maximum width of tree</strong> (max nodes at any level)<br><br>
+                        <strong>Best case:</strong> Skewed tree → W = 1<br>
+                        <strong>Worst case:</strong> Perfect binary tree → W = N/2 (last level)<br>
+                        <strong>Average case:</strong> Balanced tree → W = N/2
+                    </p>
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        <div class="tree-box">
+<pre>
+Perfect Binary Tree (7 nodes):
+       1
+      / \
+     2   3        W at L0 = 1
+    / \ / \       W at L1 = 2
+   4  5 6  7      W at L2 = 4 ← Maximum
+
+Max W = 4 (which is 7/2 rounded up)
+Space = O(4) = O(N/2) = O(N)
+</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USE CASES -->
+            <div class="section">
+                <h2><span class="emoji">🎯</span> Real-World Use Cases</h2>
+
+                <div class="success-box">
+                    <h3>When to Use Level Order Traversal:</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li><strong>Find shortest path in unweighted tree</strong> (BFS guarantees shortest)</li>
+                        <li><strong>Print tree level by level</strong> (each level on new line)</li>
+                        <li><strong>Find level of a node</strong> (which generation)</li>
+                        <li><strong>Check if tree is complete</strong> (no gaps before leaves)</li>
+                        <li><strong>Serialize/deserialize tree</strong> (save to file)</li>
+                        <li><strong>Connect nodes at same level</strong> (right pointers)</li>
+                        <li><strong>Find cousins</strong> (nodes at same level, different parents)</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>When to Use Zigzag:</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li><strong>Display tree in a zigzag pattern</strong> (aesthetic UI)</li>
+                        <li><strong>Spiral order traversal</strong> (specific interview question)</li>
+                        <li><strong>Alternative representation</strong> for visualization</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- KEY TAKEAWAYS -->
+            <div class="section">
+                <h2><span class="emoji">✨</span> Key Takeaways</h2>
+
+                <div class="success-box">
+                    <h3>Remember These Forever:</h3>
+                    <ol style="font-size: 1.15em; line-height: 2; margin-top: 15px;">
+                        <li><strong>Use a Queue (FIFO)</strong> - First in, first out</li>
+                        <li><strong>The "size" variable is KEY</strong> - tells us nodes in current level</li>
+                        <li><strong>Process exactly size nodes</strong> per level</li>
+                        <li><strong>Add children while processing</strong> - they're for next level</li>
+                        <li><strong>Time: O(N)</strong> - visit every node once</li>
+                        <li><strong>Space: O(W)</strong> - width of tree (max nodes in queue)</li>
+                        <li><strong>Zigzag uses boolean flag</strong> - flip direction each level</li>
+                        <li><strong>Zigzag index formula:</strong> leftToRight ? i : (size - 1 - i)</li>
+                        <li><strong>BFS vs DFS:</strong> Level order is BFS (breadth-first search)</li>
+                    </ol>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🧠 Quick Memory Aid:</h3>
+                    <p style="font-size: 1.2em; line-height: 2; margin-top: 15px;">
+                        <strong>"Generation by Generation"</strong><br>
+                        • Grandparents (Level 0)<br>
+                        • Parents (Level 1)<br>
+                        • Children (Level 2)<br>
+                        • Grandchildren (Level 3)<br><br>
+                        <strong>Queue ensures FIFO:</strong> Older generation leaves before younger enters!
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>🔑 The Most Important Line:</h3>
+                    <div class="code-box" style="font-size: 1.1em;">
+<pre><span class="code-keyword">int</span> size = queue.size();</pre>
+                    </div>
+                    <p style="margin-top: 15px; font-size: 1.15em;">
+                        Without this, you can't separate levels!<br>
+                        This ONE line makes level-order traversal work.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

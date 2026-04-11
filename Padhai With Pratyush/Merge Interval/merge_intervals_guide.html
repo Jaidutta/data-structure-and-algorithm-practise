@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merge Intervals - Complete Master Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6; color: #333;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px; margin: 0 auto; background: white;
+            border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 50px;
+        }
+        h1 {
+            color: #f5576c; text-align: center; font-size: 3em;
+            margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .subtitle {
+            text-align: center; color: #666; font-size: 1.3em; margin-bottom: 50px;
+        }
+        h2 {
+            color: #f093fb; margin-top: 50px; margin-bottom: 25px;
+            padding-bottom: 15px; border-bottom: 4px solid #f5576c; font-size: 2.2em;
+        }
+        h3 { color: #f5576c; margin-top: 30px; margin-bottom: 15px; font-size: 1.6em; }
+        h4 { color: #f093fb; margin-top: 20px; margin-bottom: 10px; font-size: 1.3em; }
+        .toc {
+            background: #fff9c4; padding: 30px; border-radius: 15px;
+            margin-bottom: 40px; border-left: 5px solid #f5576c;
+        }
+        .toc h2 { margin-top: 0; border: none; }
+        .toc ul { list-style: none; }
+        .toc li { margin: 10px 0; }
+        .toc a {
+            color: #333; text-decoration: none; font-size: 1.1em;
+            transition: all 0.3s; display: inline-block;
+            padding: 5px 10px; border-radius: 5px;
+        }
+        .toc a:hover { background: #f5576c; color: white; }
+        .highlight-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white; padding: 30px; border-radius: 15px; margin: 30px 0;
+        }
+        .highlight-box h3 { color: white; margin-top: 0; }
+        .info-box {
+            background: #e3f2fd; border-left: 5px solid #2196f3;
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+        .success-box {
+            background: #e8f5e9; border-left: 5px solid #4caf50;
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+        .warning-box {
+            background: #fff3e0; border-left: 5px solid #ff9800;
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+        .danger-box {
+            background: #ffebee; border-left: 5px solid #f44336;
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+        .visual-diagram {
+            background: #f5f5f5; border: 2px solid #f5576c; border-radius: 10px;
+            padding: 30px; margin: 25px 0; font-family: 'Courier New', monospace;
+            font-size: 1em; line-height: 1.8; overflow-x: auto;
+        }
+        .code-block {
+            background: #263238; color: #aed581; padding: 25px;
+            border-radius: 10px; margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.05em; line-height: 1.8; overflow-x: auto;
+        }
+        .code-block pre { margin: 0; color: inherit; }
+        .keyword { color: #c792ea; font-weight: bold; }
+        .comment { color: #80cbc4; font-style: italic; }
+        .string { color: #c3e88d; }
+        .number { color: #f78c6c; }
+        .method { color: #82aaff; }
+        table {
+            width: 100%; border-collapse: collapse; margin: 25px 0;
+        }
+        th {
+            background: #f5576c; color: white; padding: 15px;
+            text-align: left; font-weight: bold;
+        }
+        td { padding: 12px 15px; border-bottom: 1px solid #ddd; }
+        tr:nth-child(even) { background: #f5f5f5; }
+        .pattern-card {
+            background: #f9f9f9; border: 3px solid #f5576c;
+            border-radius: 15px; padding: 30px; margin: 30px 0;
+        }
+        .analogy-box {
+            background: #fff9e6; border: 3px solid #ffc107;
+            border-radius: 15px; padding: 25px; margin: 25px 0;
+        }
+        .step-box {
+            background: white; border: 2px solid #2196f3;
+            border-radius: 10px; padding: 20px; margin: 15px 0;
+        }
+        .step-number {
+            display: inline-block; background: #2196f3; color: white;
+            padding: 5px 15px; border-radius: 20px;
+            font-weight: bold; margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📅 Merge Intervals Master Guide</h1>
+        <p class="subtitle">Master Time Ranges and Resource Allocation with Visual Explanations</p>
+        
+        <!-- TABLE OF CONTENTS -->
+        <div class="toc">
+            <h2>📋 Table of Contents</h2>
+            <ul>
+                <li><a href="#what-is">1. What are Merge Intervals?</a></li>
+                <li><a href="#when-to-use">2. When to Use This Pattern</a></li>
+                <li><a href="#sorting">3. Why Sorting is CRITICAL</a></li>
+                <li><a href="#variations">4. The Four Key Variations</a></li>
+                <li><a href="#merge">5. Problem 1: Merge Intervals (The Shirt Shop)</a></li>
+                <li><a href="#insert">6. Problem 2: Insert Interval (New Shipment)</a></li>
+                <li><a href="#intersection">7. Problem 3: Interval Intersections (Meeting Time)</a></li>
+                <li><a href="#meeting-rooms">8. Problem 4: Minimum Meeting Rooms (Hotel Manager)</a></li>
+                <li><a href="#overlap-check">9. Problem 5: Check for Overlaps</a></li>
+                <li><a href="#summary">10. Quick Reference Summary</a></li>
+            </ul>
+        </div>
+
+        <!-- SECTION 1: WHAT IS -->
+        <section id="what-is">
+            <h2>1. What are Merge Intervals? 🤔</h2>
+            
+            <div class="highlight-box">
+                <h3>Simple Definition:</h3>
+                <p style="font-size: 1.2em; line-height: 1.8;">
+                    Merge Intervals is a pattern for working with <strong>time ranges</strong> or 
+                    <strong>number ranges</strong> represented as pairs [start, end]. The core technique 
+                    involves <strong>sorting by start time</strong> and then processing overlaps systematically.
+                </p>
+            </div>
+
+            <h3>What is an Interval?</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>📊 UNDERSTANDING INTERVALS</strong>
+
+An interval is a pair: [start, end]
+
+<strong>Visual Representation:</strong>
+
+Interval [2, 5]:
+  0   1   2   3   4   5   6   7
+  ────●━━━━━━━━━━━●────────────
+      ↑           ↑
+     Start       End
+     
+<strong>Key Properties:</strong>
+• start ≤ end (always)
+• Represents a continuous range
+• Can be time (hours), prices ($), positions, etc.
+
+<strong>Examples:</strong>
+• Meeting time: [9:00 AM, 10:30 AM]
+• Price range: [$10, $15]
+• Train platform: [arrival, departure]
+</pre>
+            </div>
+
+            <h3>The Core Problem:</h3>
+            <div class="info-box">
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    Given multiple intervals, we need to:<br>
+                    ✓ <strong>Merge</strong> overlapping intervals<br>
+                    ✓ <strong>Insert</strong> new intervals while maintaining order<br>
+                    ✓ <strong>Find intersections</strong> between two sets<br>
+                    ✓ <strong>Count</strong> maximum concurrent intervals<br>
+                </p>
+            </div>
+        </section>
+
+
+        <!-- SECTION 2: WHEN TO USE -->
+        <section id="when-to-use">
+            <h2>2. When to Use This Pattern 🎯</h2>
+            
+            <div class="highlight-box">
+                <h3>Recognition Keywords:</h3>
+                <p style="font-size: 1.2em; line-height: 2;">
+                    Look for: <strong>"intervals"</strong>, <strong>"ranges"</strong>, <strong>"overlapping"</strong>,<br>
+                    <strong>"merge"</strong>, <strong>"conflict"</strong>, <strong>"schedule"</strong>, <strong>"meeting rooms"</strong>
+                </p>
+            </div>
+
+            <h3>Decision Checklist:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Criterion</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Data Format</strong></td>
+                        <td>Input is pairs of [start, end]</td>
+                        <td>[[1,3], [2,6], [8,10]]</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Overlapping Concern</strong></td>
+                        <td>Problem mentions overlap/conflict</td>
+                        <td>"merge overlapping meetings"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Time/Range Management</strong></td>
+                        <td>Scheduling or resource allocation</td>
+                        <td>"minimum conference rooms needed"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. Sorting Matters</strong></td>
+                        <td>Order affects the solution</td>
+                        <td>Always sort by start time first!</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Common Problem Types:</h3>
+            <div class="info-box">
+                <ul style="line-height: 2; margin-left: 20px; font-size: 1.1em;">
+                    <li>✓ Merge overlapping time slots</li>
+                    <li>✓ Insert new interval into sorted list</li>
+                    <li>✓ Find common availability between schedules</li>
+                    <li>✓ Calculate minimum resources needed (rooms, platforms)</li>
+                    <li>✓ Check if intervals conflict</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SECTION 3: WHY SORTING -->
+        <section id="sorting">
+            <h2>3. Why Sorting is CRITICAL ⚠️</h2>
+            
+            <div class="danger-box">
+                <h3 style="color: #f44336; margin-top: 0;">🚨 Rule #1: ALWAYS SORT BY START TIME FIRST!</h3>
+                <p style="font-size: 1.1em;">
+                    Without sorting, you cannot efficiently detect overlaps or process intervals in order.
+                </p>
+            </div>
+
+            <h3>Visual Proof - Why Sorting Matters:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>❌ WITHOUT SORTING (CHAOS)</strong>
+
+Intervals: [[6,8], [1,3], [2,6], [8,10]]
+
+Timeline:
+  0   1   2   3   4   5   6   7   8   9   10
+  ────●━━━●───────────────────────────────────  [1,3]
+  ────────────────────────●━━━━━━━●───────────  [6,8]
+  ────────●━━━━━━━━━━━━━━━●───────────────────  [2,6]
+  ────────────────────────────────●━━━━━━━●───  [8,10]
+
+Question: Do [1,3] and [2,6] overlap?
+Answer: Can't tell without checking every pair! O(n²) comparisons!
+
+<strong>✅ WITH SORTING (ORGANIZED)</strong>
+
+After sort: [[1,3], [2,6], [6,8], [8,10]]
+
+Timeline:
+  0   1   2   3   4   5   6   7   8   9   10
+  ────●━━━●───────────────────────────────────  [1,3]
+  ────────●━━━━━━━━━━━━━━━●───────────────────  [2,6]
+  ────────────────────────●━━━━━━━●───────────  [6,8]
+  ────────────────────────────────●━━━━━━━●───  [8,10]
+
+Question: Do [1,3] and [2,6] overlap?
+Answer: YES! Just check if end₁ ≥ start₂
+        3 ≥ 2 → TRUE ✅
+
+<strong>KEY INSIGHT:</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+After sorting by start time:
+• You only need to compare consecutive intervals
+• Overlaps are detected in O(n) time (single pass)
+• No need to check every pair!
+</pre>
+            </div>
+
+            <h3>The Overlap Check Formula:</h3>
+            <div class="success-box">
+                <h4>After sorting by start time:</h4>
+                <div style="font-size: 1.2em; text-align: center; margin: 20px 0; font-family: 'Courier New', monospace;">
+                    <strong>end₁ ≥ start₂ → OVERLAP</strong>
+                </div>
+                <p style="text-align: center; font-size: 1.1em;">
+                    If the first interval's end time is ≥ the second interval's start time,<br>
+                    they overlap!
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 4: VARIATIONS -->
+        <section id="variations">
+            <h2>4. The Four Key Variations 🎨</h2>
+            
+            <div class="visual-diagram">
+<pre>
+<strong>📋 MERGE INTERVALS PATTERN FAMILY</strong>
+
+┌─────────────────────────────────────────────────────────┐
+│                CORE OPERATION                            │
+│            Sort by Start Time First!                     │
+└─────────────────────────────────────────────────────────┘
+                        ↓
+        ┌───────────────┴───────────────┐
+        ↓                               ↓
+┏━━━━━━━━━━━━━━━━┓           ┏━━━━━━━━━━━━━━━━┓
+┃  VARIATION 1    ┃           ┃  VARIATION 2    ┃
+┃  Merge Intervals┃           ┃  Insert Interval┃
+┗━━━━━━━━━━━━━━━━┛           ┗━━━━━━━━━━━━━━━━┛
+Combine overlapping          Add new + merge
+Single list                  Maintain sorted order
+        ↓                               ↓
+┏━━━━━━━━━━━━━━━━┓           ┏━━━━━━━━━━━━━━━━┓
+┃  VARIATION 3    ┃           ┃  VARIATION 4    ┃
+┃  Intersection   ┃           ┃  Meeting Rooms  ┃
+┗━━━━━━━━━━━━━━━━┛           ┗━━━━━━━━━━━━━━━━┛
+Find common parts            Count max concurrent
+Two lists (2 pointers)       Separate start/end arrays
+</pre>
+            </div>
+
+            <h3>Variation Comparison:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Variation</th>
+                        <th>Input</th>
+                        <th>Output</th>
+                        <th>Technique</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Merge</strong></td>
+                        <td>One list</td>
+                        <td>Non-overlapping list</td>
+                        <td>Sort + scan + merge</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Insert</strong></td>
+                        <td>Sorted list + new interval</td>
+                        <td>Updated sorted list</td>
+                        <td>Insert + merge</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Intersection</strong></td>
+                        <td>Two sorted lists</td>
+                        <td>Common intervals</td>
+                        <td>Two pointers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. Meeting Rooms</strong></td>
+                        <td>One list</td>
+                        <td>Count (integer)</td>
+                        <td>Separate + sort + scan</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+        <!-- SECTION 5: MERGE INTERVALS (SHIRT SHOP) -->
+        <section id="merge">
+            <h2>5. Problem 1: Merge Intervals 👕</h2>
+            
+            <div class="pattern-card">
+                <h3 style="color: #f5576c; margin-top: 0;">Problem Statement - LeetCode 56</h3>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    Given an array of <code>intervals</code> where <code>intervals[i] = [start_i, end_i]</code>, 
+                    merge all overlapping intervals, and return an array of the non-overlapping intervals 
+                    that cover all the intervals in the input.
+                </p>
+                <div class="code-block">
+<pre>
+<strong>Example 1:</strong>
+Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+Explanation: [1,3] and [2,6] overlap → merge to [1,6]
+
+<strong>Example 2:</strong>
+Input: intervals = [[1,4],[4,5]]
+Output: [[1,5]]
+Explanation: [1,4] and [4,5] touch at 4 → merge to [1,5]
+</pre>
+                </div>
+            </div>
+
+            <div class="analogy-box">
+                <h3 style="color: #ff6f00; margin-top: 0;">🏪 The Shirt Shop Analogy</h3>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    You own a shirt shop with messy price categories. A $13 shirt fits in BOTH 
+                    "$10-$15" AND "$12-$16" categories. Customers are confused! You need to 
+                    <strong>clean up and merge overlapping price ranges</strong> so each shirt 
+                    belongs to exactly ONE category.
+                </p>
+            </div>
+
+            <h3>Visual Step-by-Step Walkthrough:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>🔍 DETAILED TRACE: Merging Intervals</strong>
+
+Input: [[1,3], [2,6], [8,10], [15,18]]
+
+<strong>STEP 1: SORT BY START TIME</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Already sorted in this case!
+
+<strong>STEP 2: INITIALIZE WITH FIRST INTERVAL</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+currentStart = 1
+currentEnd = 3
+
+Timeline:
+  0   1   2   3   4   5   6   7   8   9   10
+  ────●━━━●───────────────────────────────────
+      1   3  ← Current interval
+
+<strong>STEP 3: PROCESS [2,6]</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Check: currentEnd (3) >= nextStart (2)?
+       3 >= 2? YES ✅ → OVERLAP!
+
+Merge Logic:
+  currentStart = min(1, 2) = 1  (start stays same - already sorted!)
+  currentEnd = max(3, 6) = 6    (extend to furthest end)
+
+Timeline:
+  0   1   2   3   4   5   6   7   8   9   10
+  ────●━━━━━━━━━━━━━━━●─────────────────────── [1,6] merged
+      1               6
+
+<strong>STEP 4: PROCESS [8,10]</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Check: currentEnd (6) >= nextStart (8)?
+       6 >= 8? NO ❌ → NO OVERLAP!
+
+Action:
+  1. Add current [1,6] to result
+  2. Start new interval:
+     currentStart = 8
+     currentEnd = 10
+
+Timeline:
+  0   1   2   3   4   5   6   7   8   9   10
+  ────●━━━━━━━━━━━━━━━●─────────────────────── [1,6] → result
+                              ●━━━━━━━●─────── [8,10] current
+                              8      10
+
+<strong>STEP 5: PROCESS [15,18]</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Check: currentEnd (10) >= nextStart (15)?
+       10 >= 15? NO ❌ → NO OVERLAP!
+
+Action:
+  1. Add current [8,10] to result
+  2. Start new interval:
+     currentStart = 15
+     currentEnd = 18
+
+Timeline (extended):
+  ... 8   9   10  11  12  13  14  15  16  17  18
+  ────────●━━━━━━━●───────────────────────────────── [8,10] → result
+                              ●━━━━━━━━━━━━━━●───── [15,18] current
+                              15             18
+
+<strong>STEP 6: END OF ARRAY</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Add final interval [15,18] to result
+
+<strong>✅ FINAL RESULT: [[1,6], [8,10], [15,18]]</strong>
+</pre>
+            </div>
+
+            <h3>The Merge Logic - Detailed:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>🎯 UNDERSTANDING THE OVERLAP CHECK</strong>
+
+Given two sorted intervals: [s1, e1] and [s2, e2]
+(Where s1 ≤ s2 because we sorted by start)
+
+<strong>Scenario A: OVERLAP</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  [s1 -------- e1]
+       [s2 ----------- e2]
+       
+  Condition: e1 >= s2
+  Action: Merge!
+  Result: [s1, max(e1, e2)]
+
+<strong>Scenario B: NO OVERLAP</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  [s1 ---- e1]
+                    [s2 ---- e2]
+                    
+  Condition: e1 < s2
+  Action: Save current, start new
+  Result: Two separate intervals
+
+<strong>Edge Case: TOUCHING (Considered Overlap)</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  [s1 ---- e1]
+              [s2 ---- e2]
+              
+  If e1 == s2, they touch → Merge!
+  Example: [1,4] and [4,5] → [1,5]
+</pre>
+            </div>
+
+            <h3>Complete Java Implementation:</h3>
+            <div class="code-block">
+<pre>
+<span class="keyword">import</span> java.util.*;
+
+<span class="keyword">public class</span> <span class="method">MergeIntervals</span> {
+    <span class="keyword">public int</span>[][] <span class="method">merge</span>(<span class="keyword">int</span>[][] intervals) {
+        <span class="comment">// Handle empty input</span>
+        <span class="keyword">if</span> (intervals.length == <span class="number">0</span>) <span class="keyword">return new int</span>[<span class="number">0</span>][<span class="number">0</span>];
+        
+        <span class="comment">// STEP 1: Sort by start time (CRITICAL!)</span>
+        Arrays.<span class="method">sort</span>(intervals, (a, b) -> Integer.<span class="method">compare</span>(a[<span class="number">0</span>], b[<span class="number">0</span>]));
+        
+        <span class="comment">// Result list to store merged intervals</span>
+        List&lt;<span class="keyword">int</span>[]&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+        
+        <span class="comment">// STEP 2: Initialize with first interval</span>
+        <span class="keyword">int</span> currentStart = intervals[<span class="number">0</span>][<span class="number">0</span>];
+        <span class="keyword">int</span> currentEnd = intervals[<span class="number">0</span>][<span class="number">1</span>];
+        
+        <span class="comment">// STEP 3: Process each interval</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; intervals.length; i++) {
+            <span class="keyword">int</span> nextStart = intervals[i][<span class="number">0</span>];
+            <span class="keyword">int</span> nextEnd = intervals[i][<span class="number">1</span>];
+            
+            <span class="comment">// Check for overlap</span>
+            <span class="keyword">if</span> (currentEnd &gt;= nextStart) {
+                <span class="comment">// OVERLAP: Merge by extending currentEnd</span>
+                <span class="comment">// Start stays the same (already sorted)</span>
+                <span class="comment">// End becomes the maximum of both ends</span>
+                currentEnd = Math.<span class="method">max</span>(currentEnd, nextEnd);
+            } <span class="keyword">else</span> {
+                <span class="comment">// NO OVERLAP: Save current and start new</span>
+                result.<span class="method">add</span>(<span class="keyword">new int</span>[]{currentStart, currentEnd});
+                currentStart = nextStart;
+                currentEnd = nextEnd;
+            }
+        }
+        
+        <span class="comment">// STEP 4: Don't forget to add the last interval!</span>
+        result.<span class="method">add</span>(<span class="keyword">new int</span>[]{currentStart, currentEnd});
+        
+        <span class="comment">// Convert list to array</span>
+        <span class="keyword">return</span> result.<span class="method">toArray</span>(<span class="keyword">new int</span>[result.<span class="method">size</span>()][]);
+    }
+}
+
+<span class="comment">// Time Complexity: O(n log n) - dominated by sorting</span>
+<span class="comment">// Space Complexity: O(n) - for the result list</span>
+</pre>
+            </div>
+
+            <div class="success-box">
+                <h4>💡 Key Takeaways:</h4>
+                <ul style="line-height: 2; margin-left: 20px;">
+                    <li>✓ <strong>Always sort first</strong> by start time</li>
+                    <li>✓ Overlap check: <code>currentEnd >= nextStart</code></li>
+                    <li>✓ When merging: extend end to <code>max(end1, end2)</code></li>
+                    <li>✓ When no overlap: save current, start new</li>
+                    <li>✓ Don't forget to add the final interval!</li>
+                </ul>
+            </div>
+        </section>
+
+
+
+        <!-- SECTION 5.5: MULTIPLE EXAMPLES FOR MERGE -->
+        <section id="merge-multiple-examples">
+            <h3>📚 Multiple Complete Examples - Understanding All Scenarios</h3>
+            
+            <h4>Example 2: Nested Intervals (One Contains Others)</h4>
+            <div class="visual-diagram">
+<pre>
+<strong>🔍 SCENARIO: Intervals Inside a Large Interval</strong>
+
+Input: [[1,10], [2,3], [4,5], [6,7]]
+
+<strong>Timeline Visualization:</strong>
+  0   1   2   3   4   5   6   7   8   9   10  11
+  ────●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━●─────  [1,10] ← BIG OUTER
+  ────────●━━●────────────────────────────────  [2,3]
+  ────────────────●━━●────────────────────────  [4,5]
+  ────────────────────────●━━●────────────────  [6,7]
+
+<strong>Step-by-Step Merge Process:</strong>
+
+╔═══════════════════════════════════════════════════════╗
+║ START: Initialize with [1,10]                         ║
+╠═══════════════════════════════════════════════════════╣
+║  currentStart = 1                                     ║
+║  currentEnd = 10                                      ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ PROCESS [2,3]                                         ║
+╠═══════════════════════════════════════════════════════╣
+║  Check: currentEnd (10) >= nextStart (2)?             ║
+║  10 >= 2? YES ✅ → OVERLAP                            ║
+║                                                        ║
+║  Merge: currentEnd = max(10, 3) = 10                  ║
+║  (No change - [2,3] already inside [1,10]!)           ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ PROCESS [4,5]                                         ║
+╠═══════════════════════════════════════════════════════╣
+║  Check: currentEnd (10) >= nextStart (4)?             ║
+║  10 >= 4? YES ✅ → OVERLAP                            ║
+║                                                        ║
+║  Merge: currentEnd = max(10, 5) = 10                  ║
+║  (Still no change - [4,5] inside too!)                ║
+╚═══════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════╗
+║ PROCESS [6,7]                                         ║
+╠═══════════════════════════════════════════════════════╣
+║  Check: currentEnd (10) >= nextStart (6)?             ║
+║  10 >= 6? YES ✅ → OVERLAP                            ║
+║                                                        ║
+║  Merge: currentEnd = max(10, 7) = 10                  ║
+║  (Still no change!)                                   ║
+╚═══════════════════════════════════════════════════════╝
+
+<strong>✅ FINAL RESULT: [[1,10]]</strong>
+
+<strong>💡 KEY INSIGHT:</strong>
+When one interval completely contains others, they all merge
+into the largest outer interval. The inner intervals get 
+"absorbed" without changing the boundaries!
+</pre>
+            </div>
+
+            <h4>Example 3: No Overlaps (All Separate)</h4>
+            <div class="visual-diagram">
+<pre>
+<strong>🔍 SCENARIO: Gaps Between All Intervals</strong>
+
+Input: [[1,2], [3,4], [5,6], [7,8]]
+
+<strong>Timeline Visualization:</strong>
+  0   1   2   3   4   5   6   7   8   9
+  ────●━━●───────────────────────────────  [1,2]
+  ────────────●━━●───────────────────────  [3,4] (gap: 2-3)
+  ────────────────────●━━●───────────────  [5,6] (gap: 4-5)
+  ────────────────────────────●━━●───────  [7,8] (gap: 6-7)
+       ↑   ↑       ↑   ↑
+      No touching anywhere!
+
+<strong>Process:</strong>
+
+[1,2] → [3,4]: Check 2 >= 3? NO ❌
+  Save [1,2], start new with [3,4]
+
+[3,4] → [5,6]: Check 4 >= 5? NO ❌
+  Save [3,4], start new with [5,6]
+
+[5,6] → [7,8]: Check 6 >= 7? NO ❌
+  Save [5,6], start new with [7,8]
+
+End: Save [7,8]
+
+<strong>✅ RESULT: [[1,2], [3,4], [5,6], [7,8]]</strong>
+No merging at all - output equals input!
+</pre>
+            </div>
+
+            <h4>Example 4: Chain Reaction (Everything Merges)</h4>
+            <div class="visual-diagram">
+<pre>
+<strong>🔍 SCENARIO: Domino Effect Merging</strong>
+
+Input: [[1,4], [3,6], [5,8], [7,10]]
+
+<strong>Timeline Visualization:</strong>
+  0   1   2   3   4   5   6   7   8   9   10  11
+  ────●━━━━━━━━━━━●──────────────────────────  [1,4]
+  ────────────●━━━━━━━━━━━●──────────────────  [3,6]
+  ────────────────────●━━━━━━━━━━━●──────────  [5,8]
+  ────────────────────────────●━━━━━━━━━━●──  [7,10]
+              ↑       ↑       ↑
+         Each overlaps the next!
+
+<strong>Chain Reaction Process:</strong>
+
+Start: [1,4]
+  ●━━━━━━━━━━━●
+
+Merge [3,6]:
+  4 >= 3? YES → [1, max(4,6)] = [1,6]
+  ●━━━━━━━━━━━━━━━━━━━━━●
+
+Merge [5,8]:
+  6 >= 5? YES → [1, max(6,8)] = [1,8]
+  ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━●
+
+Merge [7,10]:
+  8 >= 7? YES → [1, max(8,10)] = [1,10]
+  ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━●
+
+<strong>✅ RESULT: [[1,10]]</strong>
+
+<strong>💡 KEY INSIGHT:</strong>
+When each interval overlaps with the next, they create a
+chain reaction that merges EVERYTHING into one big interval!
+</pre>
+            </div>
+
+            <h4>Example 5: Mixed Scenario (Some Merge, Some Don't)</h4>
+            <div class="visual-diagram">
+<pre>
+<strong>🔍 SCENARIO: Multiple Groups</strong>
+
+Input: [[1,3], [2,6], [8,10], [9,12], [15,18]]
+
+<strong>Timeline Visualization:</strong>
+  0   1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18
+  ────●━━━●──────────────────────────────────────────────────────────────────  [1,3]
+  ────────●━━━━━━━━━━━━━━━●─────────────────────────────────────────────────  [2,6]
+  ←─────────GROUP 1────────→     Gap!
+  ──────────────────────────────────●━━━━━━━●────────────────────────────────  [8,10]
+  ──────────────────────────────────────●━━━━━━━━━━━●────────────────────────  [9,12]
+                                    ←───GROUP 2──→    Gap!
+  ────────────────────────────────────────────────────────────●━━━━━━━━━━━●──  [15,18]
+                                                              ←─GROUP 3─→
+
+<strong>Process:</strong>
+
+Group 1:
+  [1,3] + [2,6] → Check 3 >= 2? YES → Merge to [1,6]
+
+[1,6] → [8,10]: Check 6 >= 8? NO → Save [1,6], new [8,10]
+
+Group 2:
+  [8,10] + [9,12] → Check 10 >= 9? YES → Merge to [8,12]
+
+[8,12] → [15,18]: Check 12 >= 15? NO → Save [8,12], new [15,18]
+
+Group 3:
+  [15,18] → Last one, save it
+
+<strong>✅ RESULT: [[1,6], [8,12], [15,18]]</strong>
+
+<strong>💡 KEY INSIGHT:</strong>
+Real problems often have GROUPS of overlapping intervals
+with gaps between groups. Each group merges independently!
+</pre>
+            </div>
+        </section>
+
+        <!-- EDGE CASES AND COMMON MISTAKES -->
+        <section id="edge-cases-detailed">
+            <h2>⚠️ Edge Cases, Tricky Scenarios & Common Mistakes</h2>
+            
+            <div class="edge-case-box">
+                <h3>Edge Case 1: Touching Intervals (CRITICAL!)</h3>
+                <div class="visual-diagram">
+<pre>
+<strong>🎯 THE TOUCHING QUESTION</strong>
+
+Input: [[1,4], [4,5]]
+
+Question: Do [1,4] and [4,5] overlap?
+
+<strong>Visual:</strong>
+  0   1   2   3   4   5   6
+  ────●━━━━━━━━━━━●──────────  [1,4]
+  ────────────────●━━●────────  [4,5]
+                  ↑
+              Touch at 4!
+
+<strong>The Math:</strong>
+Check: end₁ (4) >= start₂ (4)?
+       4 >= 4? 
+       YES ✅
+
+<strong>Decision:</strong> THEY OVERLAP (by definition)!
+Result: Merge to [1,5]
+
+<strong>⚠️ CRITICAL MISTAKE TO AVOID:</strong>
+❌ WRONG: if (end₁ > start₂)  // Misses touching!
+✅ RIGHT: if (end₁ >= start₂) // Catches touching!
+
+<strong>Why ">=" matters:</strong>
+In interval problems, touching = overlapping.
+If you use >, you'll miss intervals that share a boundary!
+</pre>
+                </div>
+            </div>
+
+            <div class="edge-case-box">
+                <h3>Edge Case 2: Single Interval</h3>
+                <div class="visual-diagram">
+<pre>
+Input: [[5,10]]
+
+<strong>Process:</strong>
+- Initialize with [5,10]
+- No more intervals to process
+- Add [5,10] to result
+
+Output: [[5,10]]
+
+<strong>Edge case handling in code:</strong>
+if (intervals.length == 0) return new int[0][0];
+// Always check for empty input!
+</pre>
+                </div>
+            </div>
+
+            <div class="edge-case-box">
+                <h3>Edge Case 3: Identical Intervals</h3>
+                <div class="visual-diagram">
+<pre>
+Input: [[1,3], [1,3], [1,3]]
+
+<strong>Visual:</strong>
+All three are EXACTLY the same:
+  ●━━━━━━●
+  ●━━━━━━●
+  ●━━━━━━●
+
+Process:
+[1,3] + [1,3]: 3 >= 1? YES → [1, max(3,3)] = [1,3]
+[1,3] + [1,3]: 3 >= 1? YES → [1, max(3,3)] = [1,3]
+
+Output: [[1,3]]
+
+All duplicates merge into one!
+</pre>
+                </div>
+            </div>
+
+            <div class="edge-case-box">
+                <h3>Edge Case 4: Reverse Sorted (Unsorted Input)</h3>
+                <div class="visual-diagram">
+<pre>
+Input: [[8,10], [2,6], [1,3]]  ← NOT sorted!
+
+<strong>Step 1: MUST SORT FIRST!</strong>
+After sort: [[1,3], [2,6], [8,10]]
+
+<strong>Why sorting matters:</strong>
+Without sort:
+  [8,10] → [2,6]: Check 10 >= 2? YES
+  But [2,6] comes BEFORE [8,10] on timeline!
+  ❌ Logic breaks!
+
+With sort:
+  [1,3] → [2,6]: Check 3 >= 2? YES ✅ Correct!
+  [1,6] → [8,10]: Check 6 >= 8? NO ✅ Correct!
+
+<strong>⚠️ ALWAYS SORT FIRST!</strong>
+Arrays.sort(intervals, (a,b) -> Integer.compare(a[0], b[0]));
+</pre>
+                </div>
+            </div>
+
+            <h3>🐛 Top 10 Common Mistakes</h3>
+            <div class="danger-box">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mistake</th>
+                            <th>Why It's Wrong</th>
+                            <th>Correct Approach</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1. Not sorting</strong></td>
+                            <td>O(n²) comparisons needed!</td>
+                            <td>Always sort by start first</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. Using > instead of >=</strong></td>
+                            <td>Misses touching intervals</td>
+                            <td>Use >= to catch boundaries</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3. Forgetting last interval</strong></td>
+                            <td>Last merge gets lost!</td>
+                            <td>Add final interval after loop</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4. Comparing wrong indices</strong></td>
+                            <td>Comparing start to start</td>
+                            <td>Compare end₁ to start₂</td>
+                        </tr>
+                        <tr>
+                            <td><strong>5. Not using Math.max</strong></td>
+                            <td>Missing the true endpoint</td>
+                            <td>end = max(end₁, end₂)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>6. Creating new intervals unnecessarily</strong></td>
+                            <td>Wastes memory</td>
+                            <td>Update currentEnd in place</td>
+                        </tr>
+                        <tr>
+                            <td><strong>7. Not handling empty array</strong></td>
+                            <td>NullPointerException!</td>
+                            <td>Check length at start</td>
+                        </tr>
+                        <tr>
+                            <td><strong>8. Wrong loop starting point</strong></td>
+                            <td>Starting at i=0 causes issues</td>
+                            <td>Initialize with [0], loop from i=1</td>
+                        </tr>
+                        <tr>
+                            <td><strong>9. Modifying original array</strong></td>
+                            <td>Input should not change</td>
+                            <td>Create result list</td>
+                        </tr>
+                        <tr>
+                            <td><strong>10. Off-by-one errors</strong></td>
+                            <td>Missing elements or array bounds</td>
+                            <td>Careful with i < length</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+
+        <!-- SECTION 6: INSERT INTERVAL -->
+        <section id="insert">
+            <h2>6. Problem 2: Insert Interval 📦</h2>
+            
+            <div class="pattern-card">
+                <h3 style="color: #f5576c; margin-top: 0;">Problem Statement - LeetCode 57</h3>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    You are given an array of non-overlapping intervals <code>intervals</code> sorted by start time,
+                    and a <code>newInterval</code>. Insert the new interval and merge if necessary.
+                </p>
+            </div>
+
+            <div class="analogy-box">
+                <h3 style="color: #ff6f00; margin-top: 0;">📦 The New Shipment Analogy</h3>
+                <p style="font-size: 1.1em;">
+                    Your shirt shop has perfectly organized shelves. A new shipment arrives with 
+                    price range [$4-$8]. You need to squeeze it in and merge with any touching categories!
+                </p>
+            </div>
+
+            <h3>Visual Walkthrough:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>📦 INSERT AND MERGE PROCESS</strong>
+
+Existing: [[1,2], [3,5], [6,7], [8,10], [12,16]]
+New:      [4,8]
+
+<strong>Phase 1: LEFT SAFE ZONE (Before overlap)</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[1,2] ends at 2, new starts at 4 → NO OVERLAP
+Add [1,2] to result ✅
+
+Timeline:
+  0   1   2   3   4   5   6   7   8   9   10
+  ────●━━━●───────────────────────────────────
+      [1,2] → Safe, added to result
+
+<strong>Phase 2: MERGE ZONE (The "Blob")</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[3,5] overlaps with [4,8]? YES (5 >= 4)
+  Merge: [min(3,4), max(5,8)] = [3,8]
+
+[6,7] overlaps with [3,8]? YES (8 >= 6)
+  Extend: [3, max(8,7)] = [3,8]
+
+[8,10] overlaps with [3,8]? YES (8 >= 8, touching!)
+  Extend: [3, max(8,10)] = [3,10]
+
+Timeline:
+  0   1   2   3   4   5   6   7   8   9   10
+  ────●━━━●───●━━━━━━━━━━━━━━━━━━━━━●─────────
+      [1,2]   [3────────────────────10] merged blob
+
+<strong>Phase 3: RIGHT SAFE ZONE (After blob)</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[12,16] starts at 12, blob ends at 10 → NO OVERLAP
+Add [3,10] and [12,16] to result ✅
+
+<strong>✅ RESULT: [[1,2], [3,10], [12,16]]</strong>
+</pre>
+            </div>
+
+            <h3>Complete Java Code:</h3>
+            <div class="code-block">
+<pre>
+<span class="keyword">public int</span>[][] <span class="method">insert</span>(<span class="keyword">int</span>[][] intervals, <span class="keyword">int</span>[] newInterval) {
+    List&lt;<span class="keyword">int</span>[]&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    <span class="keyword">int</span> i = <span class="number">0</span>, n = intervals.length;
+    
+    <span class="comment">// Phase 1: Add all intervals BEFORE new interval (no overlap)</span>
+    <span class="keyword">while</span> (i &lt; n && intervals[i][<span class="number">1</span>] &lt; newInterval[<span class="number">0</span>]) {
+        result.<span class="method">add</span>(intervals[i]);
+        i++;
+    }
+    
+    <span class="comment">// Phase 2: Merge all overlapping intervals</span>
+    <span class="keyword">while</span> (i &lt; n && intervals[i][<span class="number">0</span>] &lt;= newInterval[<span class="number">1</span>]) {
+        newInterval[<span class="number">0</span>] = Math.<span class="method">min</span>(newInterval[<span class="number">0</span>], intervals[i][<span class="number">0</span>]);
+        newInterval[<span class="number">1</span>] = Math.<span class="method">max</span>(newInterval[<span class="number">1</span>], intervals[i][<span class="number">1</span>]);
+        i++;
+    }
+    result.<span class="method">add</span>(newInterval);
+    
+    <span class="comment">// Phase 3: Add remaining intervals AFTER merged blob</span>
+    <span class="keyword">while</span> (i &lt; n) {
+        result.<span class="method">add</span>(intervals[i]);
+        i++;
+    }
+    
+    <span class="keyword">return</span> result.<span class="method">toArray</span>(<span class="keyword">new int</span>[result.<span class="method">size</span>()][]);
+}
+</pre>
+            </div>
+        </section>
+
+
+        <!-- ENHANCED INSERT INTERVAL EXAMPLES -->
+        <section id="insert-enhanced">
+            <h3>📦 Insert Interval - Additional Scenarios</h3>
+            
+            <h4>Scenario 1: New Interval at the Beginning</h4>
+            <div class="visual-diagram">
+<pre>
+<strong>Input:</strong> intervals = [[5,7], [9,11]], newInterval = [1,3]
+
+<strong>Timeline:</strong>
+  0   1   2   3   4   5   6   7   8   9   10  11
+  ────●━━━●───────────────────────────────────────  [1,3] NEW
+  ────────────────────●━━●────────────────────────  [5,7]
+  ────────────────────────────────●━━━━━●─────────  [9,11]
+
+<strong>Phase Analysis:</strong>
+
+Phase 1 (Before): None! newInterval comes first
+Phase 2 (Merge): Check [5,7]
+  - Does 3 >= 5? NO
+  - newInterval doesn't touch anything
+Phase 3 (After): Add [5,7] and [9,11]
+
+<strong>✅ Result: [[1,3], [5,7], [9,11]]</strong>
+</pre>
+            </div>
+
+            <h4>Scenario 2: New Interval at the End</h4>
+            <div class="visual-diagram">
+<pre>
+<strong>Input:</strong> intervals = [[1,2], [3,5]], newInterval = [7,9]
+
+<strong>Timeline:</strong>
+  0   1   2   3   4   5   6   7   8   9   10
+  ────●━━●───────────────────────────────────  [1,2]
+  ────────────●━━━━━━●───────────────────────  [3,5]
+  ────────────────────────────●━━━●──────────  [7,9] NEW
+
+<strong>Phase Analysis:</strong>
+
+Phase 1 (Before): [1,2] and [3,5] both end before 7
+Phase 2 (Merge): None! No overlaps with newInterval
+Phase 3 (After): Just add newInterval [7,9]
+
+<strong>✅ Result: [[1,2], [3,5], [7,9]]</strong>
+</pre>
+            </div>
+
+            <h4>Scenario 3: New Interval Swallows Everything!</h4>
+            <div class="visual-diagram">
+<pre>
+<strong>Input:</strong> intervals = [[2,3], [4,5], [6,7]], newInterval = [1,10]
+
+<strong>Timeline:</strong>
+  0   1   2   3   4   5   6   7   8   9   10  11
+  ────────●━●─────────────────────────────────────  [2,3]
+  ────────────────●━●─────────────────────────────  [4,5]
+  ────────────────────────●━●─────────────────────  [6,7]
+  ────●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━●──────────  [1,10] HUGE NEW
+
+<strong>The Blob Process:</strong>
+
+Start with [1,10]
+
+Check [2,3]: 10 >= 2? YES
+  Merge: [min(1,2), max(10,3)] = [1,10] (absorbed!)
+
+Check [4,5]: 10 >= 4? YES  
+  Merge: [1, max(10,5)] = [1,10] (absorbed!)
+
+Check [6,7]: 10 >= 6? YES
+  Merge: [1, max(10,7)] = [1,10] (absorbed!)
+
+<strong>✅ Result: [[1,10]]</strong>
+
+New interval is so large it absorbs EVERYTHING!
+</pre>
+            </div>
+        </section>
+
+        <!-- ENHANCED INTERSECTION EXAMPLES -->
+        <section id="intersection-enhanced">
+            <h3>🤝 Interval Intersections - Additional Scenarios</h3>
+            
+            <h4>Scenario 1: No Intersections At All</h4>
+            <div class="visual-diagram">
+<pre>
+<strong>Input:</strong>
+List A: [[1,3], [5,7]]
+List B: [[8,10], [12,14]]
+
+<strong>Timeline:</strong>
+  0   1   2   3   4   5   6   7   8   9   10  11  12  13  14
+  ────●━━━●───────────────────────────────────────────────  A[0]
+  ────────────────●━━━●───────────────────────────────────  A[1]
+  ────────────────────────────●━━━━━●─────────────────────  B[0]
+  ────────────────────────────────────────────●━━━━━●─────  B[1]
+
+<strong>Process:</strong>
+
+i=0, j=0: A[0]=[1,3], B[0]=[8,10]
+  start = max(1,8) = 8
+  end = min(3,10) = 3
+  Is 8 <= 3? NO ❌ No intersection!
+  A[0] ends first (3 < 10) → i++
+
+i=1, j=0: A[1]=[5,7], B[0]=[8,10]
+  start = max(5,8) = 8
+  end = min(7,10) = 7
+  Is 8 <= 7? NO ❌ No intersection!
+  A[1] ends first (7 < 10) → i++
+
+i=2: Out of bounds for A, stop.
+
+<strong>✅ Result: []</strong> (empty - no common time!)
+</pre>
+            </div>
+
+            <h4>Scenario 2: Multiple Intersections</h4>
+            <div class="visual-diagram">
+<pre>
+<strong>Input:</strong>
+List A: [[1,5], [8,12]]
+List B: [[3,7], [10,14]]
+
+<strong>Timeline:</strong>
+  0   1   2   3   4   5   6   7   8   9   10  11  12  13  14
+  ────●━━━━━━━━━━━●──────────────────────────────────────  A[0]
+  ────────────●━━━━━━━━━━━●──────────────────────────────  B[0]
+                        ←─[3,5]─→ Intersection #1
+  ────────────────────────────────●━━━━━━━━━━━●──────────  A[1]
+  ────────────────────────────────────────●━━━━━━━━━●────  B[1]
+                                          ←─[10,12]─→ Intersection #2
+
+<strong>Process:</strong>
+
+i=0, j=0: A[0]=[1,5], B[0]=[3,7]
+  start = max(1,3) = 3
+  end = min(5,7) = 5
+  Is 3 <= 5? YES ✅ → Add [3,5]
+  A ends first (5 < 7) → i++
+
+i=1, j=0: A[1]=[8,12], B[0]=[3,7]
+  start = max(8,3) = 8
+  end = min(12,7) = 7
+  Is 8 <= 7? NO ❌
+  B ends first (7 < 12) → j++
+
+i=1, j=1: A[1]=[8,12], B[1]=[10,14]
+  start = max(8,10) = 10
+  end = min(12,14) = 12
+  Is 10 <= 12? YES ✅ → Add [10,12]
+  A ends first (12 < 14) → i++
+
+<strong>✅ Result: [[3,5], [10,12]]</strong>
+</pre>
+            </div>
+
+            <h4>Scenario 3: One List is Subset of Other</h4>
+            <div class="visual-diagram">
+<pre>
+<strong>Input:</strong>
+List A: [[1,10]]  ← ONE BIG INTERVAL
+List B: [[2,3], [4,5], [6,7]]  ← Multiple small ones
+
+<strong>Timeline:</strong>
+  0   1   2   3   4   5   6   7   8   9   10
+  ────●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━●────  A[0] contains all!
+  ────────●━●─────────────────────────────  B[0]
+  ────────────────●━●─────────────────────  B[1]
+  ────────────────────────●━●─────────────  B[2]
+
+<strong>Process:</strong>
+
+i=0, j=0: A[0]=[1,10], B[0]=[2,3]
+  Intersection: [max(1,2), min(10,3)] = [2,3] ✅
+  B ends first → j++
+
+i=0, j=1: A[0]=[1,10], B[1]=[4,5]
+  Intersection: [max(1,4), min(10,5)] = [4,5] ✅
+  B ends first → j++
+
+i=0, j=2: A[0]=[1,10], B[2]=[6,7]
+  Intersection: [max(1,6), min(10,7)] = [6,7] ✅
+  B ends first → j++
+
+<strong>✅ Result: [[2,3], [4,5], [6,7]]</strong>
+
+When one interval contains many others,
+all the smaller ones become intersections!
+</pre>
+            </div>
+        </section>
+
+        <!-- ENHANCED MEETING ROOMS EXAMPLES -->
+        <section id="meeting-rooms-enhanced">
+            <h3>🏨 Meeting Rooms - Detailed Timeline Simulation</h3>
+            
+            <h4>Complex Example: 5 Meetings</h4>
+            <div class="visual-diagram">
+<pre>
+<strong>Input:</strong> [[0,30], [5,10], [15,20], [25,35], [27,40]]
+
+<strong>Step 1: Separate and Sort</strong>
+Starts: [0, 5, 15, 25, 27]
+Ends:   [10, 20, 30, 35, 40]
+
+<strong>Step 2: Event Timeline Simulation</strong>
+
+┌─────────┬───────┬──────────┬────────────────────────────────┐
+│ Event   │ Time  │ Action   │ Rooms Status                    │
+├─────────┼───────┼──────────┼────────────────────────────────┤
+│ Start   │   0   │ Arrive   │ +1 room  → Total: 1            │
+│         │       │          │ ●                              │
+├─────────┼───────┼──────────┼────────────────────────────────┤
+│ Start   │   5   │ Arrive   │ +1 room  → Total: 2  🎉 PEAK! │
+│         │       │          │ ●●                             │
+├─────────┼───────┼──────────┼────────────────────────────────┤
+│ End     │  10   │ Leave    │ -1 room  → Total: 1            │
+│         │       │          │ ●                              │
+├─────────┼───────┼──────────┼────────────────────────────────┤
+│ Start   │  15   │ Arrive   │ +1 room  → Total: 2            │
+│         │       │          │ ●●                             │
+├─────────┼───────┼──────────┼────────────────────────────────┤
+│ End     │  20   │ Leave    │ -1 room  → Total: 1            │
+│         │       │          │ ●                              │
+├─────────┼───────┼──────────┼────────────────────────────────┤
+│ Start   │  25   │ Arrive   │ +1 room  → Total: 2            │
+│         │       │          │ ●●                             │
+├─────────┼───────┼──────────┼────────────────────────────────┤
+│ Start   │  27   │ Arrive   │ +1 room  → Total: 2            │
+│         │       │          │ ●●                             │
+│         │       │          │ (No change - previous end at 30)│
+├─────────┼───────┼──────────┼────────────────────────────────┤
+│ End     │  30   │ Leave    │ -1 room  → Total: 1            │
+│         │       │          │ ●                              │
+├─────────┼───────┼──────────┼────────────────────────────────┤
+│ End     │  35   │ Leave    │ -1 room  → Total: 0            │
+│         │       │          │                                │
+├─────────┼───────┼──────────┼────────────────────────────────┤
+│ End     │  40   │ Leave    │ -1 room  → Total: 0            │
+│         │       │          │                                │
+└─────────┴───────┴──────────┴────────────────────────────────┘
+
+<strong>Visual Timeline:</strong>
+  0       5       10      15      20      25  27  30      35      40
+  ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━●  Meeting 1
+          ●━━━━━━━●                                          Meeting 2
+                          ●━━━━━━━●                          Meeting 3
+                                          ●━━━━━━━━━━●        Meeting 4
+                                            ●━━━━━━━━━━━━━●  Meeting 5
+  
+  Rooms:  1       2       1       2       1       2   1   0   0    0
+                  ↑                                   
+              PEAK = 2 rooms needed!
+
+<strong>✅ Answer: 2 rooms</strong>
+</pre>
+            </div>
+
+            <h4>Why NOT Merge Intervals Approach?</h4>
+            <div class="danger-box">
+<pre>
+<strong>❌ WRONG APPROACH: Merging intervals</strong>
+
+If you merge [[0,30], [5,10], [15,20]]:
+→ Result: [[0,30]]
+→ Says "1 room needed"
+→ WRONG! We need 2 rooms at time 5!
+
+<strong>✅ RIGHT APPROACH: Event simulation</strong>
+
+Track arrivals and departures separately.
+Count concurrent events, not merged intervals!
+
+<strong>Key Difference:</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Merge Intervals: "How many time ranges after merging?"
+Meeting Rooms:   "What's the MAXIMUM overlap at any point?"
+</pre>
+            </div>
+        </section>
+
+        <!-- DEBUGGING TIPS -->
+        <section id="debugging">
+            <h2>🔧 Debugging Tips & Interview Strategies</h2>
+            
+            <div class="info-box">
+                <h3>Debugging Checklist:</h3>
+                <ol style="line-height: 2; margin-left: 20px; font-size: 1.05em;">
+                    <li><strong>Did you sort?</strong> Print arrays after sorting to verify</li>
+                    <li><strong>Check your comparison:</strong> Is it >= or just >?</li>
+                    <li><strong>Trace through manually:</strong> Use a simple example like [[1,3],[2,4]]</li>
+                    <li><strong>Check indices:</strong> Are you using [0] and [1] correctly?</li>
+                    <li><strong>Last interval:</strong> Did you add it after the loop?</li>
+                    <li><strong>Empty cases:</strong> What happens with [] or [[1,2]]?</li>
+                </ol>
+            </div>
+
+            <div class="warning-box">
+                <h3>Interview Tips:</h3>
+                <ul style="line-height: 2; margin-left: 20px;">
+                    <li>✓ Always draw the timeline first!</li>
+                    <li>✓ Explain why you're sorting</li>
+                    <li>✓ Mention the overlap formula explicitly</li>
+                    <li>✓ Walk through edge cases (touching, nested, etc.)</li>
+                    <li>✓ Discuss complexity: O(n log n) for sort, O(n) for merge</li>
+                </ul>
+            </div>
+        </section>
+
+
+        <!-- SECTION 7: INTERSECTION -->
+        <section id="intersection">
+            <h2>7. Problem 3: Interval Intersections 🤝</h2>
+            
+            <div class="pattern-card">
+                <h3 style="color: #f5576c; margin-top: 0;">Problem Statement - LeetCode 986</h3>
+                <p style="font-size: 1.1em;">
+                    Given two lists of intervals, return the intersection (common time slots).
+                </p>
+            </div>
+
+            <div class="analogy-box">
+                <h3 style="color: #ff6f00; margin-top: 0;">🤝 Finding Meeting Time</h3>
+                <p style="font-size: 1.1em;">
+                    Person A is free: [1-5], [8-10]<br>
+                    Person B is free: [2-6]<br>
+                    When can they BOTH meet? [2-5] ← The intersection!
+                </p>
+            </div>
+
+            <h3>Visual Intersection Logic:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>🔍 FINDING THE COMMON GROUND</strong>
+
+Person A: [1 ------------- 5]
+Person B:      [2 -------------- 6]
+
+<strong>Intersection Formula:</strong>
+Start: max(1, 2) = 2  (Latest start)
+End:   min(5, 6) = 5  (Earliest end)
+
+Result: [2, 5] ✅
+
+Timeline:
+  0   1   2   3   4   5   6   7
+  ────●━━━━━━━━━━━━━━━●───────  Person A [1,5]
+  ────────●━━━━━━━━━━━━━━━●───  Person B [2,6]
+  ────────●━━━━━━━━━●─────────  Intersection [2,5]
+          ↑           ↑
+     Latest Start  Earliest End
+
+<strong>Who Moves Next?</strong>
+The person who finishes FIRST (earliest end) moves to their next slot.
+Why? They can't possibly overlap with future slots of the other person!
+</pre>
+            </div>
+
+            <h3>Complete Java Code:</h3>
+            <div class="code-block">
+<pre>
+<span class="keyword">public int</span>[][] <span class="method">intervalIntersection</span>(<span class="keyword">int</span>[][] A, <span class="keyword">int</span>[][] B) {
+    List&lt;<span class="keyword">int</span>[]&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    <span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>;
+    
+    <span class="keyword">while</span> (i &lt; A.length && j &lt; B.length) {
+        <span class="comment">// Find intersection (common ground)</span>
+        <span class="keyword">int</span> start = Math.<span class="method">max</span>(A[i][<span class="number">0</span>], B[j][<span class="number">0</span>]);  <span class="comment">// Latest start</span>
+        <span class="keyword">int</span> end = Math.<span class="method">min</span>(A[i][<span class="number">1</span>], B[j][<span class="number">1</span>]);    <span class="comment">// Earliest end</span>
+        
+        <span class="comment">// If valid interval (start <= end), add it</span>
+        <span class="keyword">if</span> (start &lt;= end) {
+            result.<span class="method">add</span>(<span class="keyword">new int</span>[]{start, end});
+        }
+        
+        <span class="comment">// Move pointer of interval that ends first</span>
+        <span class="keyword">if</span> (A[i][<span class="number">1</span>] &lt; B[j][<span class="number">1</span>]) {
+            i++;
+        } <span class="keyword">else</span> {
+            j++;
+        }
+    }
+    
+    <span class="keyword">return</span> result.<span class="method">toArray</span>(<span class="keyword">new int</span>[result.<span class="method">size</span>()][]);
+}
+</pre>
+            </div>
+        </section>
+
+        <!-- SECTION 8: MEETING ROOMS -->
+        <section id="meeting-rooms">
+            <h2>8. Problem 4: Minimum Meeting Rooms 🏨</h2>
+            
+            <div class="pattern-card">
+                <h3 style="color: #f5576c; margin-top: 0;">Problem Statement - LeetCode 253</h3>
+                <p style="font-size: 1.1em;">
+                    Given meeting time intervals, find the minimum number of conference rooms required.
+                </p>
+            </div>
+
+            <div class="analogy-box">
+                <h3 style="color: #ff6f00; margin-top: 0;">🏨 The Hotel Manager</h3>
+                <p style="font-size: 1.1em;">
+                    You're a hotel manager. You DON'T merge guests - you need to know 
+                    the maximum number of rooms needed at the busiest time!<br><br>
+                    Guest arrives (start) → Build room (+1)<br>
+                    Guest leaves (end) → Free room (-1)
+                </p>
+            </div>
+
+            <h3>Visual Timeline Simulation:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>🏨 HOTEL ROOM SIMULATION</strong>
+
+Meetings: [[0,30], [5,10], [15,20]]
+
+<strong>Step 1: Separate Starts and Ends</strong>
+Starts: [0, 5, 15]  ← All arrival times
+Ends:   [10, 20, 30] ← All departure times
+Both sorted independently!
+
+<strong>Step 2: Chronological Event Processing</strong>
+
+Time 0 (Start): Meeting 1 arrives
+  ● Rooms needed = 1
+  ● Max so far = 1
+
+Time 5 (Start): Meeting 2 arrives
+  ● Rooms needed = 2  (Meeting 1 still ongoing!)
+  ● Max so far = 2  🎉
+
+Time 10 (End): Meeting 2 leaves
+  ● Rooms needed = 1
+  ● Max so far = 2
+
+Time 15 (Start): Meeting 3 arrives
+  ● Rooms needed = 2
+  ● Max so far = 2
+
+Time 20 (End): Meeting 3 leaves
+  ● Rooms needed = 1
+  ● Max so far = 2
+
+Time 30 (End): Meeting 1 leaves
+  ● Rooms needed = 0
+  ● Max so far = 2
+
+<strong>✅ ANSWER: Need 2 rooms maximum</strong>
+
+Timeline visualization:
+  0       5       10      15      20      30
+  ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━●  Meeting 1
+          ●━━━━━━━●                    Meeting 2
+                          ●━━━━━━━●      Meeting 3
+  
+  Rooms:  1       2       1       2       1       0
+          ↑       ↑                       
+        Need 1  Need 2 (PEAK!)
+</pre>
+            </div>
+
+            <h3>Complete Java Code:</h3>
+            <div class="code-block">
+<pre>
+<span class="keyword">public int</span> <span class="method">minMeetingRooms</span>(<span class="keyword">int</span>[][] intervals) {
+    <span class="keyword">if</span> (intervals.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;
+    
+    <span class="keyword">int</span> n = intervals.length;
+    <span class="keyword">int</span>[] starts = <span class="keyword">new int</span>[n];
+    <span class="keyword">int</span>[] ends = <span class="keyword">new int</span>[n];
+    
+    <span class="comment">// Separate starts and ends</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) {
+        starts[i] = intervals[i][<span class="number">0</span>];
+        ends[i] = intervals[i][<span class="number">1</span>];
+    }
+    
+    <span class="comment">// Sort both arrays independently</span>
+    Arrays.<span class="method">sort</span>(starts);
+    Arrays.<span class="method">sort</span>(ends);
+    
+    <span class="keyword">int</span> rooms = <span class="number">0</span>, maxRooms = <span class="number">0</span>;
+    <span class="keyword">int</span> sPtr = <span class="number">0</span>, ePtr = <span class="number">0</span>;
+    
+    <span class="comment">// Process all start times</span>
+    <span class="keyword">while</span> (sPtr &lt; n) {
+        <span class="comment">// If next event is an arrival (start &lt; end)</span>
+        <span class="keyword">if</span> (starts[sPtr] &lt; ends[ePtr]) {
+            rooms++;        <span class="comment">// Need a room</span>
+            sPtr++;
+        } <span class="keyword">else</span> {
+            rooms--;        <span class="comment">// Free a room</span>
+            ePtr++;
+        }
+        maxRooms = Math.<span class="method">max</span>(maxRooms, rooms);
+    }
+    
+    <span class="keyword">return</span> maxRooms;
+}
+</pre>
+            </div>
+        </section>
+
+        <!-- SECTION 9: CHECK OVERLAP -->
+        <section id="overlap-check">
+            <h2>9. Problem 5: Check for Overlaps ✅</h2>
+            
+            <div class="pattern-card">
+                <h3 style="color: #f5576c; margin-top: 0;">Problem: Can Person Attend All Meetings?</h3>
+                <p style="font-size: 1.1em;">
+                    Given meeting intervals, determine if a person can attend all meetings (no overlaps).
+                </p>
+            </div>
+
+            <h3>Visual Check:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>✅ NO CONFLICTS (Can attend all)</strong>
+[[1,3], [5,7], [9,11]]
+
+  0   1   2   3   4   5   6   7   8   9   10  11
+  ────●━━━●───────────────────────────────────────  [1,3]
+  ────────────────●━━━●───────────────────────────  [5,7]
+  ────────────────────────────────●━━━━━●─────────  [9,11]
+  
+No overlaps → Return TRUE ✅
+
+<strong>❌ CONFLICTS (Cannot attend all)</strong>
+[[1,3], [2,6]]
+
+  0   1   2   3   4   5   6
+  ────●━━━●───────────────────  [1,3]
+  ────────●━━━━━━━━━━━●───────  [2,6]
+          ↑
+        OVERLAP! end₁(3) >= start₂(2)
+        
+Has overlap → Return FALSE ❌
+</pre>
+            </div>
+
+            <h3>Complete Java Code:</h3>
+            <div class="code-block">
+<pre>
+<span class="keyword">public boolean</span> <span class="method">canAttendMeetings</span>(<span class="keyword">int</span>[][] intervals) {
+    <span class="comment">// Sort by start time</span>
+    Arrays.<span class="method">sort</span>(intervals, (a, b) -> Integer.<span class="method">compare</span>(a[<span class="number">0</span>], b[<span class="number">0</span>]));
+    
+    <span class="comment">// Check consecutive intervals for overlap</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; intervals.length; i++) {
+        <span class="comment">// If previous end >= current start → OVERLAP!</span>
+        <span class="keyword">if</span> (intervals[i<span class="number">-1</span>][<span class="number">1</span>] &gt;= intervals[i][<span class="number">0</span>]) {
+            <span class="keyword">return false</span>;  <span class="comment">// Cannot attend all</span>
+        }
+    }
+    
+    <span class="keyword">return true</span>;  <span class="comment">// Can attend all meetings</span>
+}
+</pre>
+            </div>
+        </section>
+
+        <!-- SECTION 10: SUMMARY -->
+        <section id="summary">
+            <h2>10. Quick Reference Summary 📚</h2>
+            
+            <div class="highlight-box">
+                <h3>Master Decision Tree:</h3>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Problem Type</th>
+                        <th>Key Technique</th>
+                        <th>Complexity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Merge Intervals</strong></td>
+                        <td>Sort + scan + merge overlaps</td>
+                        <td>O(n log n)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Insert Interval</strong></td>
+                        <td>3 phases: before, merge, after</td>
+                        <td>O(n)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Intersection</strong></td>
+                        <td>Two pointers, max/min formula</td>
+                        <td>O(n + m)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. Meeting Rooms</strong></td>
+                        <td>Separate starts/ends, event simulation</td>
+                        <td>O(n log n)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5. Check Overlap</strong></td>
+                        <td>Sort + check consecutive pairs</td>
+                        <td>O(n log n)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="success-box">
+                <h4>✅ Master Checklist:</h4>
+                <ul style="line-height: 2; font-size: 1.1em; margin-left: 20px;">
+                    <li>□ Always sort by start time first (except meeting rooms)</li>
+                    <li>□ Overlap check: <code>end₁ >= start₂</code></li>
+                    <li>□ Intersection: <code>max(start₁, start₂)</code> to <code>min(end₁, end₂)</code></li>
+                    <li>□ Meeting rooms: separate starts/ends, sort independently</li>
+                    <li>□ Touching intervals count as overlapping</li>
+                </ul>
+            </div>
+        </section>
+
+        <div style="margin-top: 50px; padding: 40px; background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); color: white; border-radius: 15px; text-align: center;">
+            <h2 style="margin-top: 0;">🎓 You've Mastered Merge Intervals!</h2>
+            <p style="font-size: 1.2em; line-height: 2;">
+                You now understand:<br>
+                ✓ Why sorting by start time is critical<br>
+                ✓ How to merge overlapping intervals<br>
+                ✓ How to insert new intervals efficiently<br>
+                ✓ How to find intersections with two pointers<br>
+                ✓ How to calculate resource requirements<br>
+                <br>
+                <strong style="font-size: 1.3em;">Ready to solve any interval problem! 🚀</strong>
+            </p>
+        </div>
+
+    </div>
+</body>
+</html>
+

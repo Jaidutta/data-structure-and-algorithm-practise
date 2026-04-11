@@ -1,0 +1,2843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Kadane's Algorithm Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #f5576c;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+        
+        h2 {
+            color: #f093fb;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #f5576c;
+        }
+        
+        h3 {
+            color: #f5576c;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        
+        .visual-box {
+            background: #fff5f8;
+            border-left: 5px solid #f5576c;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .array-visual {
+            display: flex;
+            gap: 5px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .array-cell {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #f5576c;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .array-index {
+            font-size: 0.7em;
+            color: #999;
+        }
+        
+        .array-value {
+            font-size: 1.2em;
+            color: #f5576c;
+        }
+        
+        .highlight {
+            background: #ffd700 !important;
+            animation: pulse 1s infinite;
+        }
+        
+        .positive {
+            background: #c8e6c9 !important;
+        }
+        
+        .negative {
+            background: #ffcdd2 !important;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+        
+        .code-block pre {
+            margin: 0;
+        }
+        
+        .keyword { color: #ff79c6; }
+        .function { color: #50fa7b; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; }
+        .number { color: #bd93f9; }
+        
+        .pattern-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .pattern-card h3 {
+            color: white;
+            margin-top: 0;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box h4 {
+            color: #856404;
+            margin-top: 0;
+        }
+        
+        .tip-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .tip-box h4 {
+            color: #155724;
+            margin-top: 0;
+        }
+        
+        .problem-box {
+            background: #fff0f5;
+            border: 2px solid #f5576c;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .problem-box h4 {
+            color: #f5576c;
+            margin-top: 0;
+        }
+        
+        .difficulty {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .easy { background: #d4edda; color: #155724; }
+        .medium { background: #fff3cd; color: #856404; }
+        .hard { background: #f8d7da; color: #721c24; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        th {
+            background: #f5576c;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background: #fff5f8;
+        }
+        
+        .formula {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.1em;
+            border: 2px dashed #f5576c;
+        }
+        
+        .step {
+            background: white;
+            border-left: 3px solid #f5576c;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #f5576c;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .comparison-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .comparison-card {
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid;
+        }
+        
+        .correct-card {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .wrong-card {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Complete Kadane's Algorithm Guide</h1>
+        <p class="subtitle">Master all patterns, avoid common mistakes, and find maximum subarrays efficiently</p>
+        
+        <h2>📊 What is Kadane's Algorithm?</h2>
+        <div class="visual-box">
+            <p><strong>Definition:</strong> Kadane's Algorithm is a dynamic programming technique to find the maximum sum of a contiguous subarray in O(N) time.</p>
+            
+            <p style="margin-top: 15px;"><strong>The Problem:</strong></p>
+            <p>Given an array, find the contiguous subarray with the largest sum.</p>
+            
+            <p style="margin-top: 15px;"><strong>Example:</strong></p>
+            <p>Array: [-2, 1, -3, 4, -1, 2, 1, -5, 4]</p>
+            <p>Answer: [4, -1, 2, 1] with sum = 6</p>
+            
+            <div class="array-visual">
+                <div class="array-cell negative">
+                    <div class="array-index">0</div>
+                    <div class="array-value">-2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">1</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell negative">
+                    <div class="array-index">2</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">3</div>
+                    <div class="array-value">4</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-1</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">5</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">6</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell negative">
+                    <div class="array-index">7</div>
+                    <div class="array-value">-5</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">8</div>
+                    <div class="array-value">4</div>
+                </div>
+            </div>
+            <p style="font-size: 0.9em; color: #666;">🟢 Green cells = maximum subarray, sum = 6</p>
+            
+            <div class="formula">
+                maxEndingHere = max(arr[i], maxEndingHere + arr[i])<br>
+                maxSoFar = max(maxSoFar, maxEndingHere)
+            </div>
+        </div>
+        
+        <h2>🎯 When to Use Kadane's Algorithm?</h2>
+        <div class="tip-box">
+            <h4>✅ Look for these keywords:</h4>
+            <ul>
+                <li><strong>"Maximum sum subarray"</strong> - Direct indication</li>
+                <li><strong>"Largest contiguous sum"</strong> - Same as above</li>
+                <li><strong>"Best consecutive sequence"</strong> - Finding optimal range</li>
+                <li><strong>"Maximum product subarray"</strong> - Modified Kadane's</li>
+                <li><strong>"Maximum sum circular subarray"</strong> - Variant pattern</li>
+                <li><strong>"Maximum alternating subarray"</strong> - State-based variant</li>
+            </ul>
+        </div>
+        
+        <div class="warning-box">
+            <h4>⚠️ Don't confuse with:</h4>
+            <ul>
+                <li><strong>Prefix Sum:</strong> When you need sum = K (specific value), not maximum</li>
+                <li><strong>Sliding Window:</strong> When you need EXACTLY k elements or min/max of fixed window</li>
+                <li><strong>Two Pointers:</strong> When finding pairs/triplets with specific sum</li>
+                <li><strong>DP (general):</strong> When problem has more complex state transitions</li>
+            </ul>
+        </div>
+        
+        <h2>💡 The Core Intuition</h2>
+        <div class="visual-box">
+            <h4>The Key Question at Each Position:</h4>
+            <p style="font-size: 1.1em; font-weight: bold; margin: 15px 0;">
+                "Should I extend the current subarray, or start fresh from here?"
+            </p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>If current sum is POSITIVE:</strong> It helps! Keep adding to it.
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>If current sum is NEGATIVE:</strong> It hurts! Better to start fresh.
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Example walkthrough:</strong></p>
+            <p>Array: [5, -3, 5]</p>
+            <ul style="margin-left: 20px;">
+                <li>At index 0: current = 5</li>
+                <li>At index 1: current = 5 + (-3) = 2 (positive, so keep it!)</li>
+                <li>At index 2: current = 2 + 5 = 7 (maximum!)</li>
+            </ul>
+            
+            <p style="margin-top: 15px;">If we had started fresh at index 2: max would only be 5 (worse!)</p>
+        </div>
+        
+        <h2>🔍 All Kadane's Algorithm Patterns</h2>
+        
+        <div style="background: #fff0f5; padding: 20px; border-left: 5px solid #f5576c; border-radius: 5px; margin-bottom: 30px;">
+            <h4 style="color: #f5576c; margin-top: 0;">📋 Complete Pattern Coverage</h4>
+            <p>This guide covers <strong>10 comprehensive patterns</strong>:</p>
+            <ol style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Classic Maximum Subarray Sum</strong> - Foundation</li>
+                <li><strong>Maximum Product Subarray</strong> - Multiplicative variant</li>
+                <li><strong>Maximum Circular Subarray</strong> - Wrap-around handling</li>
+                <li><strong>Maximum Subarray with Constraints</strong> - Length/element limits</li>
+                <li><strong>Maximum Alternating Subarray</strong> - State transitions</li>
+                <li><strong>Buy and Sell Stock (Kadane variant)</strong> - Profit maximization</li>
+                <li><strong>2D Kadane (Maximum Sum Rectangle)</strong> - Multi-dimensional</li>
+                <li><strong>Minimum Subarray Sum</strong> - Finding minimum (inverted Kadane's)</li>
+                <li><strong>Maximum Subarray Sum with Deletions</strong> - At most K deletions</li>
+                <li><strong>Maximum Sum with No Adjacent Elements</strong> - House Robber pattern</li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 1 -->
+        <div class="pattern-card">
+            <h3>Pattern 1: Classic Maximum Subarray Sum</h3>
+            <p><strong>Problem:</strong> Find the contiguous subarray with maximum sum</p>
+            <p><strong>Key Insight:</strong> At each position, decide: extend current or start new</p>
+            <p><strong>Time:</strong> O(N), Space: O(1)</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Why Use Kadane's Algorithm?</h4>
+            <p><strong>The Problem Without Kadane's:</strong></p>
+            <p>Finding maximum subarray sum naively requires checking all subarrays:</p>
+            <div class="code-block"><pre><span class="keyword">int</span> maxSum = Integer.MIN_VALUE;
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < n; i++) {
+    <span class="keyword">int</span> sum = <span class="number">0</span>;
+    <span class="keyword">for</span> (<span class="keyword">int</span> j = i; j < n; j++) {
+        sum += arr[j];
+        maxSum = Math.max(maxSum, sum);
+    }
+}
+<span class="comment">// O(N²) - checks all N*(N+1)/2 subarrays</span></pre></div>
+            
+            <p style="margin-top: 15px;"><strong>For an array of 10,000 elements:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>❌ Naive: ~50,000,000 operations (N²)</li>
+                <li>✅ Kadane's: ~10,000 operations (N)</li>
+                <li>🚀 <strong>Speed up: ~5000x faster!</strong></li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>The Brilliant Insight:</strong></p>
+            <p>We don't need to remember ALL previous subarrays. We only need to know:</p>
+            <ul style="margin-left: 20px;">
+                <li><strong>maxEndingHere:</strong> Maximum sum ending at current position</li>
+                <li><strong>maxSoFar:</strong> Maximum sum seen anywhere so far</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>The Decision at Each Step:</strong></p>
+            <div class="formula">
+                maxEndingHere = max(arr[i], maxEndingHere + arr[i])
+            </div>
+            <p>This means: "Is it better to start fresh or extend current subarray?"</p>
+            
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>If <code>arr[i]</code> alone is better → Start fresh from here</li>
+                <li>If <code>maxEndingHere + arr[i]</code> is better → Extend current subarray</li>
+            </ul>
+        </div>
+        
+        <div class="code-block"><pre><span class="keyword">public int</span> <span class="function">maxSubArray</span>(<span class="keyword">int</span>[] arr) {
+    <span class="keyword">int</span> maxSoFar = arr[<span class="number">0</span>];        <span class="comment">// Global maximum</span>
+    <span class="keyword">int</span> maxEndingHere = arr[<span class="number">0</span>];   <span class="comment">// Maximum ending at current position</span>
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < arr.length; i++) {
+        <span class="comment">// Decide: extend current subarray or start new?</span>
+        maxEndingHere = Math.max(arr[i], maxEndingHere + arr[i]);
+        
+        <span class="comment">// Update global maximum</span>
+        maxSoFar = Math.max(maxSoFar, maxEndingHere);
+    }
+    
+    <span class="keyword">return</span> maxSoFar;
+}</pre></div>
+
+        <div class="visual-box" style="background: #e8f5e9;">
+            <h4 style="color: #2e7d32;">💻 Step-by-Step Code Execution Trace</h4>
+            <p><strong>Input:</strong> arr = [-2, 1, -3, 4, -1, 2, 1, -5, 4]</p>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Initialization (before loop)</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxSoFar = arr[0] = -2</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxEndingHere = arr[0] = -2</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=1, arr[i]=1</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxEndingHere = Math.max(arr[1], maxEndingHere + arr[1])</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(1, -2 + 1)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(1, -1)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">             = 1  <span style="color: #666;">// Start fresh with 1</span></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxSoFar = Math.max(-2, 1) = 1</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// State: maxEndingHere=1, maxSoFar=1</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=2, arr[i]=-3</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxEndingHere = Math.max(arr[2], maxEndingHere + arr[2])</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(-3, 1 + (-3))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(-3, -2)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">             = -2  <span style="color: #666;">// Extend (less bad)</span></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxSoFar = Math.max(1, -2) = 1</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// State: maxEndingHere=-2, maxSoFar=1</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=3, arr[i]=4</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxEndingHere = Math.max(arr[3], maxEndingHere + arr[3])</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(4, -2 + 4)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(4, 2)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">             = 4  <span style="color: #666;">// Start fresh with 4</span></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxSoFar = Math.max(1, 4) = 4</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// State: maxEndingHere=4, maxSoFar=4</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=4, arr[i]=-1</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxEndingHere = Math.max(arr[4], maxEndingHere + arr[4])</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(-1, 4 + (-1))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(-1, 3)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">             = 3  <span style="color: #666;">// Extend</span></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxSoFar = Math.max(4, 3) = 4</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// State: maxEndingHere=3, maxSoFar=4</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=5, arr[i]=2</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxEndingHere = Math.max(arr[5], maxEndingHere + arr[5])</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(2, 3 + 2)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(2, 5)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">             = 5  <span style="color: #666;">// Extend</span></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxSoFar = Math.max(4, 5) = 5</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// State: maxEndingHere=5, maxSoFar=5</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=6, arr[i]=1</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxEndingHere = Math.max(arr[6], maxEndingHere + arr[6])</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(1, 5 + 1)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(1, 6)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">             = 6  <span style="color: #666;">// Extend</span></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxSoFar = Math.max(5, 6) = 6</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// State: maxEndingHere=6, maxSoFar=6 🎯 NEW MAXIMUM!</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=7, arr[i]=-5</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxEndingHere = Math.max(arr[7], maxEndingHere + arr[7])</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(-5, 6 + (-5))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(-5, 1)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">             = 1  <span style="color: #666;">// Extend</span></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxSoFar = Math.max(6, 1) = 6</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// State: maxEndingHere=1, maxSoFar=6</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=8, arr[i]=4</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxEndingHere = Math.max(arr[8], maxEndingHere + arr[8])</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(4, 1 + 4)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(4, 5)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">             = 5  <span style="color: #666;">// Extend</span></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxSoFar = Math.max(6, 5) = 6</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// State: maxEndingHere=5, maxSoFar=6</p>
+            </div>
+            
+            <div style="background: #c8e6c9; padding: 20px; border: 3px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace; font-size: 1.1em;"><strong>// Loop ends, return maxSoFar</strong></p>
+                <p style="margin: 10px 0; font-family: 'Courier New', monospace; font-size: 1.2em; color: #2e7d32;"><strong>return 6;</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// The maximum subarray is [4, -1, 2, 1] with sum = 6</p>
+            </div>
+        </div>
+
+        <div class="visual-box">
+            <h4>📊 Step-by-Step Execution:</h4>
+            <p><strong>Array:</strong> [-2, 1, -3, 4, -1, 2, 1, -5, 4]</p>
+            
+            <p><strong>Initial State:</strong></p>
+            <div style="background: #fff; padding: 15px; border: 2px solid #f5576c; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;"><strong>maxSoFar:</strong> -2</p>
+                <p style="margin: 5px 0;"><strong>maxEndingHere:</strong> -2</p>
+            </div>
+            
+            <table style="margin-top: 20px;">
+                <tr>
+                    <th>Index</th>
+                    <th>Value</th>
+                    <th>maxEndingHere Calculation</th>
+                    <th>maxEndingHere</th>
+                    <th>maxSoFar</th>
+                    <th>Decision</th>
+                </tr>
+                <tr style="background: #f0f0f0;">
+                    <td>0</td>
+                    <td>-2</td>
+                    <td>Initialize</td>
+                    <td style="font-weight: bold;">-2</td>
+                    <td style="font-weight: bold;">-2</td>
+                    <td>Start</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>max(1, -2+1) = max(1, -1)</td>
+                    <td style="font-weight: bold;">1</td>
+                    <td style="font-weight: bold;">1</td>
+                    <td>Start fresh</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>-3</td>
+                    <td>max(-3, 1-3) = max(-3, -2)</td>
+                    <td style="font-weight: bold;">-2</td>
+                    <td>1</td>
+                    <td>Extend (less bad)</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>max(4, -2+4) = max(4, 2)</td>
+                    <td style="font-weight: bold;">4</td>
+                    <td style="font-weight: bold;">4</td>
+                    <td>Start fresh</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>-1</td>
+                    <td>max(-1, 4-1) = max(-1, 3)</td>
+                    <td style="font-weight: bold;">3</td>
+                    <td>4</td>
+                    <td>Extend</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>2</td>
+                    <td>max(2, 3+2) = max(2, 5)</td>
+                    <td style="font-weight: bold;">5</td>
+                    <td style="font-weight: bold;">5</td>
+                    <td>Extend</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>1</td>
+                    <td>max(1, 5+1) = max(1, 6)</td>
+                    <td style="font-weight: bold;">6</td>
+                    <td style="font-weight: bold; background: #c8e6c9;">6</td>
+                    <td>Extend</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>-5</td>
+                    <td>max(-5, 6-5) = max(-5, 1)</td>
+                    <td style="font-weight: bold;">1</td>
+                    <td>6</td>
+                    <td>Extend</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>4</td>
+                    <td>max(4, 1+4) = max(4, 5)</td>
+                    <td style="font-weight: bold;">5</td>
+                    <td>6</td>
+                    <td>Extend</td>
+                </tr>
+            </table>
+            
+            <div style="background: #d4edda; padding: 20px; border-left: 5px solid #28a745; border-radius: 5px; margin-top: 25px;">
+                <h4 style="color: #155724; margin-top: 0;">✅ Final Result</h4>
+                <p style="margin: 5px 0;"><strong>Maximum Sum = 6</strong></p>
+                <p style="margin: 5px 0;">Subarray: [4, -1, 2, 1] from index 3 to 6</p>
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Visual representation of the subarray:</strong></p>
+            <div class="array-visual">
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">-2</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">3</div>
+                    <div class="array-value">4</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-1</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">5</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">6</div>
+                    <div class="array-value">1</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">7</div>
+                    <div class="array-value">-5</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">8</div>
+                    <div class="array-value">4</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 1 <span class="difficulty easy">Easy-Medium</span></h4>
+            <ol>
+                <li><strong>Maximum Subarray (LC 53)</strong> - Classic Kadane's</li>
+                <li><strong>Maximum Sum Circular Subarray (LC 918)</strong> - Wrap-around variant</li>
+                <li><strong>Maximum Absolute Sum of Any Subarray (LC 1749)</strong></li>
+                <li><strong>K Concatenation Maximum Sum (LC 1191)</strong></li>
+            </ol>
+        </div>
+
+        <h2>🚫 Common Mistakes</h2>
+        
+        <div class="warning-box">
+            <h4>Mistake 1: Wrong Initialization</h4>
+            <div class="comparison-table">
+                <div class="wrong-card">
+                    <h4 style="color: #721c24;">❌ Wrong</h4>
+                    <div class="code-block"><pre><span class="keyword">int</span> maxSoFar = <span class="number">0</span>;
+<span class="keyword">int</span> maxEndingHere = <span class="number">0</span>;</pre></div>
+                    <p><strong>Problem:</strong> If all elements are negative, this returns 0 (wrong!)</p>
+                    <p><strong>Example:</strong> [-5, -2, -3] → returns 0, should return -2</p>
+                </div>
+                <div class="correct-card">
+                    <h4 style="color: #155724;">✅ Correct</h4>
+                    <div class="code-block"><pre><span class="keyword">int</span> maxSoFar = arr[<span class="number">0</span>];
+<span class="keyword">int</span> maxEndingHere = arr[<span class="number">0</span>];</pre></div>
+                    <p><strong>Why:</strong> Initialize with first element to handle all-negative arrays</p>
+                    <p><strong>Example:</strong> [-5, -2, -3] → correctly returns -2</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="warning-box">
+            <h4>Mistake 2: Using Integer.MIN_VALUE for maxEndingHere</h4>
+            <p><strong>Problem:</strong> Only maxSoFar should start at Integer.MIN_VALUE or arr[0]</p>
+            <p><strong>Why:</strong> maxEndingHere represents current subarray, must start with actual element</p>
+        </div>
+        
+        <div class="warning-box">
+            <h4>Mistake 3: Not Updating maxSoFar Inside Loop</h4>
+            <div class="code-block"><pre><span class="comment">// Wrong: Update maxSoFar after loop</span>
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < n; i++) {
+    maxEndingHere = Math.max(arr[i], maxEndingHere + arr[i]);
+}
+maxSoFar = maxEndingHere;  <span class="comment">// ❌ Too late!</span>
+
+<span class="comment">// Correct: Update inside loop</span>
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < n; i++) {
+    maxEndingHere = Math.max(arr[i], maxEndingHere + arr[i]);
+    maxSoFar = Math.max(maxSoFar, maxEndingHere);  <span class="comment">// ✅ Track best</span>
+}</pre></div>
+        </div>
+        
+        <div class="warning-box">
+            <h4>Mistake 4: Empty Subarray Confusion</h4>
+            <p><strong>Problem:</strong> Some problems allow empty subarrays (sum = 0), most don't</p>
+            <p><strong>Default Kadane's:</strong> Does NOT allow empty subarrays</p>
+            <p><strong>If empty allowed:</strong> Return max(0, kadaneResult)</p>
+        </div>
+
+        <div style="text-align: center; margin-top: 50px; padding: 30px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border-radius: 10px;">
+            <h2 style="color: white; margin: 0;">🎉 Master All 7 Patterns!</h2>
+            <p style="margin: 10px 0 0 0;">You've seen Pattern 1 - Let's conquer the rest!</p>
+        </div>
+        
+        <!-- Pattern 2 -->        
+        <div class="pattern-card">
+            <h3>Pattern 2: Maximum Product Subarray</h3>
+            <p><strong>Problem:</strong> Find contiguous subarray with maximum product</p>
+            <p><strong>Key Insight:</strong> Track both max AND min (negative × negative = positive!)</p>
+            <p><strong>Time:</strong> O(N), Space: O(1)</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Why Different from Sum?</h4>
+            <p><strong>The Critical Difference:</strong></p>
+            <p>With multiplication, <strong>a negative number can flip everything!</strong></p>
+            
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>A large negative × current min (also negative) = <strong>huge positive!</strong></li>
+                <li>We need to track BOTH max and min products</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>Example showing why we need min:</strong></p>
+            <p>Array: [2, 3, -2, 4, -1]</p>
+            <ul style="margin-left: 20px;">
+                <li>At index 2 (-2): max = 2×3 = 6, min = 6×(-2) = -12</li>
+                <li>At index 3 (4): max = 4, min = -12×4 = -48</li>
+                <li>At index 4 (-1): max = -48×(-1) = <strong>48</strong> 🎯 (min becomes max!)</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>Key Insight:</strong></p>
+            <div class="formula">
+                maxProduct = max(arr[i], maxProd × arr[i], minProd × arr[i])<br>
+                minProduct = min(arr[i], maxProd × arr[i], minProd × arr[i])
+            </div>
+        </div>
+        
+        <div class="code-block"><pre><span class="keyword">public int</span> <span class="function">maxProduct</span>(<span class="keyword">int</span>[] arr) {
+    <span class="keyword">int</span> maxSoFar = arr[<span class="number">0</span>];
+    <span class="keyword">int</span> maxEndingHere = arr[<span class="number">0</span>];
+    <span class="keyword">int</span> minEndingHere = arr[<span class="number">0</span>];  <span class="comment">// Track minimum too!</span>
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < arr.length; i++) {
+        <span class="keyword">int</span> temp = maxEndingHere;  <span class="comment">// Save before updating</span>
+        
+        <span class="comment">// Max can come from: current, max×current, or min×current</span>
+        maxEndingHere = Math.max(arr[i], 
+                        Math.max(maxEndingHere * arr[i], 
+                                 minEndingHere * arr[i]));
+        
+        <span class="comment">// Min can come from same three options</span>
+        minEndingHere = Math.min(arr[i], 
+                        Math.min(temp * arr[i], 
+                                 minEndingHere * arr[i]));
+        
+        maxSoFar = Math.max(maxSoFar, maxEndingHere);
+    }
+    
+    <span class="keyword">return</span> maxSoFar;
+}</pre></div>
+
+        <div class="visual-box" style="background: #e8f5e9;">
+            <h4 style="color: #2e7d32;">💻 Step-by-Step Code Execution Trace</h4>
+            <p><strong>Input:</strong> arr = [2, 3, -2, 4, -1]</p>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Initialization (before loop)</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxSoFar = arr[0] = 2</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxEndingHere = arr[0] = 2</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">minEndingHere = arr[0] = 2</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=1, arr[i]=3</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">temp = maxEndingHere = 2  <span style="color: #666;">// Save old max</span></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxEndingHere = Math.max(arr[1], Math.max(maxEndingHere * arr[1], minEndingHere * arr[1]))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(3, Math.max(2 * 3, 2 * 3))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(3, Math.max(6, 6))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(3, 6)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">             = 6</p>
+                <p style="margin: 10px 0 5px 0; font-family: 'Courier New', monospace;">minEndingHere = Math.min(arr[1], Math.min(temp * arr[1], minEndingHere * arr[1]))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.min(3, Math.min(2 * 3, 2 * 3))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.min(3, 6)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">             = 3</p>
+                <p style="margin: 10px 0 5px 0; font-family: 'Courier New', monospace;">maxSoFar = Math.max(2, 6) = 6</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// State: maxEndingHere=6, minEndingHere=3, maxSoFar=6</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=2, arr[i]=-2</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">temp = maxEndingHere = 6  <span style="color: #666;">// Save old max</span></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxEndingHere = Math.max(arr[2], Math.max(maxEndingHere * arr[2], minEndingHere * arr[2]))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(-2, Math.max(6 * (-2), 3 * (-2)))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(-2, Math.max(-12, -6))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(-2, -6)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">             = -2  <span style="color: #666;">// Start fresh</span></p>
+                <p style="margin: 10px 0 5px 0; font-family: 'Courier New', monospace;">minEndingHere = Math.min(arr[2], Math.min(temp * arr[2], minEndingHere * arr[2]))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.min(-2, Math.min(6 * (-2), 3 * (-2)))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.min(-2, Math.min(-12, -6))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.min(-2, -12)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #d32f2f; font-weight: bold;">             = -12  <span style="color: #666;">// Keep for future!</span></p>
+                <p style="margin: 10px 0 5px 0; font-family: 'Courier New', monospace;">maxSoFar = Math.max(6, -2) = 6</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// State: maxEndingHere=-2, minEndingHere=-12, maxSoFar=6</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=3, arr[i]=4</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">temp = maxEndingHere = -2</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxEndingHere = Math.max(arr[3], Math.max(maxEndingHere * arr[3], minEndingHere * arr[3]))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(4, Math.max(-2 * 4, -12 * 4))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(4, Math.max(-8, -48))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(4, -8)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">             = 4  <span style="color: #666;">// Start fresh</span></p>
+                <p style="margin: 10px 0 5px 0; font-family: 'Courier New', monospace;">minEndingHere = Math.min(arr[3], Math.min(temp * arr[3], minEndingHere * arr[3]))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.min(4, Math.min(-2 * 4, -12 * 4))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.min(4, Math.min(-8, -48))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.min(4, -48)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #d32f2f; font-weight: bold;">             = -48  <span style="color: #666;">// Still tracking min!</span></p>
+                <p style="margin: 10px 0 5px 0; font-family: 'Courier New', monospace;">maxSoFar = Math.max(6, 4) = 6</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// State: maxEndingHere=4, minEndingHere=-48, maxSoFar=6</p>
+            </div>
+            
+            <div style="background: #fffde7; padding: 15px; border: 3px solid #fbc02d; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=4, arr[i]=-1 🔥 THE MAGIC HAPPENS!</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">temp = maxEndingHere = 4</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">maxEndingHere = Math.max(arr[4], Math.max(maxEndingHere * arr[4], minEndingHere * arr[4]))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(-1, Math.max(4 * (-1), -48 * (-1)))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(-1, Math.max(-4, <span style="color: #f57c00; font-weight: bold;">48</span>))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.max(-1, 48)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #f57c00; font-weight: bold; font-size: 1.1em;">             = 48  <span style="color: #666;">// MIN BECAME MAX! -48 × -1 = 48!</span></p>
+                <p style="margin: 10px 0 5px 0; font-family: 'Courier New', monospace;">minEndingHere = Math.min(arr[4], Math.min(temp * arr[4], minEndingHere * arr[4]))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.min(-1, Math.min(4 * (-1), -48 * (-1)))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.min(-1, Math.min(-4, 48))</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">             = Math.min(-1, -4)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #d32f2f; font-weight: bold;">             = -4</p>
+                <p style="margin: 10px 0 5px 0; font-family: 'Courier New', monospace; font-size: 1.1em;">maxSoFar = Math.max(6, 48) = <span style="color: #f57c00; font-weight: bold;">48</span> 🎉</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// State: maxEndingHere=48, minEndingHere=-4, maxSoFar=48</p>
+            </div>
+            
+            <div style="background: #c8e6c9; padding: 20px; border: 3px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace; font-size: 1.1em;"><strong>// Loop ends, return maxSoFar</strong></p>
+                <p style="margin: 10px 0; font-family: 'Courier New', monospace; font-size: 1.2em; color: #2e7d32;"><strong>return 48;</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// Product = 2 × 3 × (-2) × 4 × (-1) = 48</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// Two negatives multiplied to make huge positive!</p>
+            </div>
+        </div>
+
+        <div class="visual-box">
+            <h4>📊 Example: arr = [2, 3, -2, 4]</h4>
+            
+            <p><strong>Initial State (i=0):</strong></p>
+            <div class="array-visual">
+                <div class="array-cell highlight">
+                    <div class="array-index">0</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">-2</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">3</div>
+                    <div class="array-value">4</div>
+                </div>
+            </div>
+            <div style="background: #fff; padding: 10px; border: 2px solid #f5576c; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;"><strong>maxEndingHere:</strong> 2</p>
+                <p style="margin: 5px 0;"><strong>minEndingHere:</strong> 2</p>
+                <p style="margin: 5px 0;"><strong>maxSoFar:</strong> 2</p>
+            </div>
+            
+            <p><strong>Step 1 (i=1, value=3):</strong></p>
+            <div class="array-visual">
+                <div class="array-cell positive" style="border: 3px solid #4caf50;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">1</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">-2</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">3</div>
+                    <div class="array-value">4</div>
+                </div>
+            </div>
+            <p style="font-size: 0.9em; color: #666;">🟡 Yellow = current, 🟢 Green border = current subarray</p>
+            <div style="background: #fff; padding: 10px; border: 2px solid #f5576c; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;">max(3, 2×3, 2×3) = max(3, 6, 6) = <strong>6</strong></p>
+                <p style="margin: 5px 0;">min(3, 2×3, 2×3) = min(3, 6, 6) = <strong>3</strong></p>
+                <p style="margin: 5px 0;"><strong>maxEndingHere:</strong> 6</p>
+                <p style="margin: 5px 0;"><strong>minEndingHere:</strong> 3</p>
+                <p style="margin: 5px 0;"><strong>maxSoFar:</strong> 6</p>
+            </div>
+            
+            <p><strong>Step 2 (i=2, value=-2):</strong></p>
+            <div class="array-visual">
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">2</div>
+                    <div class="array-value">-2</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">3</div>
+                    <div class="array-value">4</div>
+                </div>
+            </div>
+            <div style="background: #fff; padding: 10px; border: 2px solid #f5576c; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;">max(-2, 6×(-2), 3×(-2)) = max(-2, -12, -6) = <strong>-2</strong></p>
+                <p style="margin: 5px 0;">min(-2, 6×(-2), 3×(-2)) = min(-2, -12, -6) = <strong>-12</strong></p>
+                <p style="margin: 5px 0;"><strong>maxEndingHere:</strong> -2 (start fresh with -2)</p>
+                <p style="margin: 5px 0;"><strong>minEndingHere:</strong> -12 (6×-2, keeping for future!)</p>
+                <p style="margin: 5px 0;"><strong>maxSoFar:</strong> 6</p>
+            </div>
+            
+            <p><strong>Step 3 (i=3, value=4):</strong></p>
+            <div class="array-visual">
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">-2</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">3</div>
+                    <div class="array-value">4</div>
+                </div>
+            </div>
+            <div style="background: #fff; padding: 10px; border: 2px solid #f5576c; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;">max(4, -2×4, -12×4) = max(4, -8, -48) = <strong>4</strong></p>
+                <p style="margin: 5px 0;">min(4, -2×4, -12×4) = min(4, -8, -48) = <strong>-48</strong></p>
+                <p style="margin: 5px 0;"><strong>maxEndingHere:</strong> 4 (start fresh)</p>
+                <p style="margin: 5px 0;"><strong>minEndingHere:</strong> -48</p>
+                <p style="margin: 5px 0;"><strong>maxSoFar:</strong> 6</p>
+            </div>
+            
+            <div style="background: #d4edda; padding: 20px; border-left: 5px solid #28a745; border-radius: 5px; margin-top: 25px;">
+                <h4 style="color: #155724; margin-top: 0;">✅ Final Result: maxSoFar = 6</h4>
+                <p style="margin: 5px 0;">Best subarray: [2, 3] with product = 6</p>
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>🔥 What if we had one more element: arr = [2, 3, -2, 4, -1]</strong></p>
+            
+            <p><strong>Step 4 (i=4, value=-1):</strong></p>
+            <div class="array-visual">
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">-2</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">3</div>
+                    <div class="array-value">4</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-1</div>
+                </div>
+            </div>
+            <div style="background: #fff; padding: 10px; border: 2px solid #f5576c; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;">max(-1, 4×(-1), -48×(-1)) = max(-1, -4, <strong style="color: #28a745;">48</strong>) = <strong style="font-size: 1.2em;">48!</strong></p>
+                <p style="margin: 5px 0;">💡 <strong>The min became max!</strong> -48 × -1 = 48</p>
+                <p style="margin: 5px 0;"><strong>maxEndingHere:</strong> 48</p>
+                <p style="margin: 5px 0;"><strong>minEndingHere:</strong> -4</p>
+                <p style="margin: 5px 0;"><strong>maxSoFar:</strong> 48 🎉</p>
+            </div>
+            
+            <p><strong>Visual representation of the winning subarray [2, 3, -2, 4, -1]:</strong></p>
+            <div class="array-visual">
+                <div class="array-cell positive">
+                    <div class="array-index">0</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">1</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">2</div>
+                    <div class="array-value">-2</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">3</div>
+                    <div class="array-value">4</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-1</div>
+                </div>
+            </div>
+            <p style="text-align: center; font-weight: bold; color: #28a745;">2 × 3 × (-2) × 4 × (-1) = 48 ✓</p>
+            
+            <table>
+                <tr>
+                    <th>i</th>
+                    <th>arr[i]</th>
+                    <th>maxEndingHere</th>
+                    <th>minEndingHere</th>
+                    <th>maxSoFar</th>
+                </tr>
+                <tr>
+                    <td>0</td>
+                    <td>2</td>
+                    <td>2</td>
+                    <td>2</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>3</td>
+                    <td>6</td>
+                    <td>3</td>
+                    <td>6</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>-2</td>
+                    <td>-2</td>
+                    <td>-12</td>
+                    <td>6</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>4</td>
+                    <td>4</td>
+                    <td>-48</td>
+                    <td>6</td>
+                </tr>
+                <tr style="background: #c8e6c9;">
+                    <td>4</td>
+                    <td>-1</td>
+                    <td style="font-weight: bold;">48</td>
+                    <td>-4</td>
+                    <td style="font-weight: bold;">48</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 2 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Maximum Product Subarray (LC 152)</strong> - Classic problem</li>
+                <li><strong>Maximum Product of Three Numbers (LC 628)</strong></li>
+                <li><strong>Maximum Product Difference Between Two Pairs (LC 1913)</strong></li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 3 -->
+        <div class="pattern-card">
+            <h3>Pattern 3: Maximum Circular Subarray</h3>
+            <p><strong>Problem:</strong> Array is circular, maximum subarray can wrap around</p>
+            <p><strong>Key Insight:</strong> Max circular = max(normal max, total - min subarray)</p>
+            <p><strong>Time:</strong> O(N), Space: O(1)</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Why This Pattern?</h4>
+            <p><strong>The Circular Challenge:</strong></p>
+            <p>In a circular array, the maximum subarray can wrap around from end to beginning.</p>
+            
+            <p style="margin-top: 15px;"><strong>Example:</strong> [5, -3, 5]</p>
+            <p>Linear max: 7 ([5, -3, 5])</p>
+            <p>Circular max: 10 ([5] + [5], wrapping around)</p>
+            
+            <p style="margin-top: 20px;"><strong>The Brilliant Trick:</strong></p>
+            <p>If max wraps around, it means we're taking:</p>
+            <ul style="margin-left: 20px;">
+                <li>Some prefix from start</li>
+                <li>Some suffix from end</li>
+                <li><strong>Skipping</strong> some middle part</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>Key Insight:</strong></p>
+            <div class="formula">
+                Max Circular = Total Sum - Min Subarray Sum
+            </div>
+            
+            <p style="margin-top: 10px;">Why? If we remove the minimum subarray, we keep the maximum wrapped part!</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                Find max subarray (normal Kadane's)
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                Find min subarray (inverted Kadane's)
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                Answer = max(maxSubarray, totalSum - minSubarray)
+            </div>
+            
+            <p style="margin-top: 15px;"><strong>Edge Case:</strong> If all numbers are negative, totalSum - minSubarray = 0 (empty array). Return maxSubarray instead.</p>
+        </div>
+        
+        <div class="code-block"><pre><span class="keyword">public int</span> <span class="function">maxCircularSubarray</span>(<span class="keyword">int</span>[] arr) {
+    <span class="keyword">int</span> n = arr.length;
+    
+    <span class="comment">// Case 1: Maximum subarray (normal Kadane's)</span>
+    <span class="keyword">int</span> normalMax = kadaneMax(arr);
+    
+    <span class="comment">// Edge case: all negative</span>
+    <span class="keyword">if</span> (normalMax < <span class="number">0</span>) <span class="keyword">return</span> normalMax;
+    
+    <span class="comment">// Case 2: Maximum wrap-around</span>
+    <span class="keyword">int</span> totalSum = <span class="number">0</span>;
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < n; i++) {
+        totalSum += arr[i];
+        arr[i] = -arr[i];  <span class="comment">// Invert for finding min</span>
+    }
+    
+    <span class="comment">// Find minimum subarray (= maximum of inverted)</span>
+    <span class="keyword">int</span> circularMax = totalSum + kadaneMax(arr);
+    
+    <span class="keyword">return</span> Math.max(normalMax, circularMax);
+}
+
+<span class="keyword">private int</span> <span class="function">kadaneMax</span>(<span class="keyword">int</span>[] arr) {
+    <span class="keyword">int</span> maxSoFar = arr[<span class="number">0</span>];
+    <span class="keyword">int</span> maxEndingHere = arr[<span class="number">0</span>];
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < arr.length; i++) {
+        maxEndingHere = Math.max(arr[i], maxEndingHere + arr[i]);
+        maxSoFar = Math.max(maxSoFar, maxEndingHere);
+    }
+    
+    <span class="keyword">return</span> maxSoFar;
+}</pre></div>
+
+        <div class="visual-box">
+            <h4>📊 Example: arr = [5, -3, 5]</h4>
+            
+            <p><strong>Original Array:</strong></p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">0</div>
+                    <div class="array-value">5</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">1</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">2</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 25px;"><strong>Step 1: Normal Kadane's (find maximum subarray)</strong></p>
+            
+            <p><strong>i=0, value=5:</strong></p>
+            <div class="array-visual">
+                <div class="array-cell highlight">
+                    <div class="array-index">0</div>
+                    <div class="array-value">5</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            <p>maxEndingHere = 5, maxSoFar = 5</p>
+            
+            <p style="margin-top: 15px;"><strong>i=1, value=-3:</strong></p>
+            <div class="array-visual">
+                <div class="array-cell positive" style="border: 3px solid #4caf50;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">5</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">1</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            <p>max(-3, 5-3) = max(-3, 2) = 2</p>
+            <p>maxEndingHere = 2, maxSoFar = 5</p>
+            
+            <p style="margin-top: 15px;"><strong>i=2, value=5:</strong></p>
+            <div class="array-visual">
+                <div class="array-cell positive" style="border: 3px solid #4caf50;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">5</div>
+                </div>
+                <div class="array-cell positive" style="border: 3px solid #4caf50;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">2</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            <p>max(5, 2+5) = max(5, 7) = 7</p>
+            <p>maxEndingHere = 7, <strong>maxSoFar = 7</strong></p>
+            
+            <div style="background: #e7f3ff; padding: 15px; border-left: 5px solid #2196f3; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0;"><strong>Normal Maximum = 7</strong> (entire array [5, -3, 5])</p>
+            </div>
+            
+            <p style="margin-top: 25px;"><strong>Step 2: Find total sum</strong></p>
+            <p>totalSum = 5 + (-3) + 5 = <strong>7</strong></p>
+            
+            <p style="margin-top: 25px;"><strong>Step 3: Invert array and find max (to get min of original)</strong></p>
+            
+            <p><strong>Inverted array:</strong></p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">0</div>
+                    <div class="array-value">-5</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">1</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">2</div>
+                    <div class="array-value">-5</div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 15px;"><strong>Run Kadane's on inverted:</strong></p>
+            
+            <p><strong>i=0, value=-5:</strong></p>
+            <div class="array-visual">
+                <div class="array-cell highlight">
+                    <div class="array-index">0</div>
+                    <div class="array-value">-5</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">-5</div>
+                </div>
+            </div>
+            <p>maxEndingHere = -5, maxSoFar = -5</p>
+            
+            <p style="margin-top: 15px;"><strong>i=1, value=3:</strong></p>
+            <div class="array-visual">
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">-5</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">1</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">-5</div>
+                </div>
+            </div>
+            <p>max(3, -5+3) = max(3, -2) = 3</p>
+            <p>maxEndingHere = 3, <strong>maxSoFar = 3</strong></p>
+            
+            <p style="margin-top: 15px;"><strong>i=2, value=-5:</strong></p>
+            <div class="array-visual">
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">-5</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">2</div>
+                    <div class="array-value">-5</div>
+                </div>
+            </div>
+            <p>max(-5, 3-5) = max(-5, -2) = -2</p>
+            <p>maxEndingHere = -2, maxSoFar = 3</p>
+            
+            <div style="background: #e7f3ff; padding: 15px; border-left: 5px solid #2196f3; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0;"><strong>Max of inverted = 3</strong></p>
+                <p style="margin: 5px 0 0 0;">This means: <strong>Min of original = -3</strong></p>
+            </div>
+            
+            <p style="margin-top: 25px;"><strong>Step 4: Calculate circular max</strong></p>
+            <div class="formula">
+                circularMax = totalSum - minSubarray = 7 - (-3) = <strong>10</strong>
+            </div>
+            
+            <p style="margin-top: 25px;"><strong>Visual Explanation:</strong></p>
+            <p>By removing the minimum subarray [-3], we're left with:</p>
+            <div class="array-visual">
+                <div class="array-cell positive">
+                    <div class="array-index">0</div>
+                    <div class="array-value">5</div>
+                </div>
+                <div class="array-cell negative" style="opacity: 0.3; text-decoration: line-through;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">2</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            <p style="text-align: center;">Which wraps around: 5 + 5 = 10</p>
+            
+            <p style="margin-top: 25px;"><strong>Final answer:</strong></p>
+            <div class="formula">
+                max(normalMax, circularMax) = max(7, 10) = <strong>10</strong> ✓
+            </div>
+            
+            <div style="background: #d4edda; padding: 20px; border-left: 5px solid #28a745; border-radius: 5px; margin-top: 25px;">
+                <h4 style="color: #155724; margin-top: 0;">✅ Final Result</h4>
+                <p style="margin: 5px 0;"><strong>Maximum Circular Sum = 10</strong></p>
+                <p style="margin: 5px 0;">Take both 5's (skip -3 in the middle)</p>
+                <p style="margin: 5px 0;">This represents a circular subarray wrapping around!</p>
+            </div>
+            
+            <div class="array-visual" style="margin-top: 20px;">
+                <div class="array-cell positive">
+                    <div class="array-index">0</div>
+                    <div class="array-value">5</div>
+                </div>
+                <div class="array-cell negative" style="opacity: 0.3;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">2</div>
+                    <div class="array-value">5</div>
+                </div>
+            </div>
+            <p style="font-size: 0.9em; color: #666;">🟢 Green = included in circular max, Gray = skipped (minimum subarray)</p>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 3 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Maximum Sum Circular Subarray (LC 918)</strong></li>
+                <li><strong>House Robber II (LC 213)</strong> - Similar circular logic</li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 4 -->
+        <div class="pattern-card">
+            <h3>Pattern 4: Maximum Subarray with Constraints</h3>
+            <p><strong>Problem:</strong> Find max subarray with length ≤ K or other constraints</p>
+            <p><strong>Key Insight:</strong> Use prefix sum + sliding window with Kadane's logic</p>
+            <p><strong>Time:</strong> O(N), Space: O(N) or O(K)</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 When Constraints Matter?</h4>
+            <p><strong>Common Constraints:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Subarray length must be ≤ K</li>
+                <li>Subarray length must be ≥ K</li>
+                <li>Subarray length must be exactly K</li>
+                <li>Cannot use more than M negative numbers</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>Example: Max sum with length ≤ K</strong></p>
+            <p>Array: [1, -2, 3, 4], K = 2</p>
+            <p>Without constraint: [3, 4] = 7</p>
+            <p>With K=2: Still [3, 4] = 7 (length 2, within limit)</p>
+            <p>But if K=1: Best is [4] = 4</p>
+        </div>
+        
+        <div class="code-block"><pre><span class="comment">// Maximum subarray with length at most K</span>
+<span class="keyword">public int</span> <span class="function">maxSubarrayLengthK</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> k) {
+    <span class="keyword">int</span> n = arr.length;
+    <span class="keyword">int</span> maxSum = Integer.MIN_VALUE;
+    <span class="keyword">int</span> currentSum = <span class="number">0</span>;
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < n; i++) {
+        currentSum += arr[i];
+        
+        <span class="comment">// Update max for subarrays ending here (up to length k)</span>
+        maxSum = Math.max(maxSum, currentSum);
+        
+        <span class="comment">// If window exceeds k, remove leftmost elements</span>
+        <span class="keyword">if</span> (i >= k) {
+            currentSum -= arr[i - k];
+        }
+        
+        <span class="comment">// Apply Kadane's logic: reset if negative</span>
+        <span class="keyword">if</span> (currentSum < <span class="number">0</span>) {
+            currentSum = <span class="number">0</span>;
+        }
+    }
+    
+    <span class="keyword">return</span> maxSum;
+}</pre></div>
+
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 4 <span class="difficulty medium">Medium-Hard</span></h4>
+            <ol>
+                <li><strong>Longest Turbulent Subarray (LC 978)</strong></li>
+                <li><strong>Maximum Sum of Distinct Subarrays With Length K (LC 2461)</strong></li>
+                <li><strong>Max Consecutive Ones III (LC 1004)</strong> - At most K flips</li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 5 -->
+        <div class="pattern-card">
+            <h3>Pattern 5: Maximum Alternating Subarray</h3>
+            <p><strong>Problem:</strong> Subarray with alternating positive/negative (or other states)</p>
+            <p><strong>Key Insight:</strong> Track state transitions, use multiple Kadane's</p>
+            <p><strong>Time:</strong> O(N), Space: O(1)</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 State-Based Kadane's?</h4>
+            <p><strong>When Elements Have States:</strong></p>
+            <p>Sometimes we need to track different states at each position:</p>
+            <ul style="margin-left: 20px;">
+                <li>Ending with positive vs negative number</li>
+                <li>Ending with odd vs even number</li>
+                <li>Buy vs sell state (stock problems)</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>Example: Wiggle Subsequence</strong></p>
+            <p>Find longest subsequence where elements alternate between increasing/decreasing</p>
+            <p>[1, 7, 4, 9, 2, 5] → length 6 (all elements qualify)</p>
+            
+            <p style="margin-top: 15px;"><strong>Solution:</strong> Track two states:</p>
+            <ul style="margin-left: 20px;">
+                <li><strong>up[i]:</strong> Length ending with an increase</li>
+                <li><strong>down[i]:</strong> Length ending with a decrease</li>
+            </ul>
+        </div>
+        
+        <div class="code-block"><pre><span class="comment">// Wiggle Subsequence - alternating increases/decreases</span>
+<span class="keyword">public int</span> <span class="function">wiggleMaxLength</span>(<span class="keyword">int</span>[] arr) {
+    <span class="keyword">if</span> (arr.length < <span class="number">2</span>) <span class="keyword">return</span> arr.length;
+    
+    <span class="keyword">int</span> up = <span class="number">1</span>;    <span class="comment">// Length ending with increase</span>
+    <span class="keyword">int</span> down = <span class="number">1</span>;  <span class="comment">// Length ending with decrease</span>
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < arr.length; i++) {
+        <span class="keyword">if</span> (arr[i] > arr[i - <span class="number">1</span>]) {
+            <span class="comment">// Current is higher: extend "down" sequence</span>
+            up = down + <span class="number">1</span>;
+        } <span class="keyword">else if</span> (arr[i] < arr[i - <span class="number">1</span>]) {
+            <span class="comment">// Current is lower: extend "up" sequence</span>
+            down = up + <span class="number">1</span>;
+        }
+        <span class="comment">// If equal, no change</span>
+    }
+    
+    <span class="keyword">return</span> Math.max(up, down);
+}</pre></div>
+
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 5 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Wiggle Subsequence (LC 376)</strong></li>
+                <li><strong>Longest Turbulent Subarray (LC 978)</strong></li>
+                <li><strong>Maximum Alternating Subsequence Sum (LC 1911)</strong></li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 6 -->
+        <div class="pattern-card">
+            <h3>Pattern 6: Buy and Sell Stock (Kadane Variant)</h3>
+            <p><strong>Problem:</strong> Maximize profit from buying and selling stocks</p>
+            <p><strong>Key Insight:</strong> Track min price seen, max profit = current - min</p>
+            <p><strong>Time:</strong> O(N), Space: O(1)</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Connection to Kadane's?</h4>
+            <p><strong>Stock Problem as Kadane's:</strong></p>
+            <p>If we convert prices to daily changes (differences):</p>
+            <div class="formula">
+                diff[i] = prices[i] - prices[i-1]
+            </div>
+            <p>Then finding max profit = finding max sum subarray of differences!</p>
+            
+            <p style="margin-top: 15px;"><strong>Direct Approach (Better):</strong></p>
+            <p>Track minimum price seen so far, calculate profit at each step</p>
+        </div>
+        
+        <div class="code-block"><pre><span class="comment">// Best Time to Buy and Sell Stock</span>
+<span class="keyword">public int</span> <span class="function">maxProfit</span>(<span class="keyword">int</span>[] prices) {
+    <span class="keyword">int</span> minPrice = Integer.MAX_VALUE;
+    <span class="keyword">int</span> maxProfit = <span class="number">0</span>;
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> price : prices) {
+        <span class="comment">// Update minimum price seen</span>
+        minPrice = Math.min(minPrice, price);
+        
+        <span class="comment">// Calculate profit if we sell today</span>
+        maxProfit = Math.max(maxProfit, price - minPrice);
+    }
+    
+    <span class="keyword">return</span> maxProfit;
+}
+
+<span class="comment">// Alternative: Convert to Kadane's</span>
+<span class="keyword">public int</span> <span class="function">maxProfitKadane</span>(<span class="keyword">int</span>[] prices) {
+    <span class="keyword">int</span> maxEndingHere = <span class="number">0</span>;
+    <span class="keyword">int</span> maxSoFar = <span class="number">0</span>;
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < prices.length; i++) {
+        <span class="comment">// Daily change (profit/loss)</span>
+        <span class="keyword">int</span> change = prices[i] - prices[i - <span class="number">1</span>];
+        
+        <span class="comment">// Apply Kadane's to changes</span>
+        maxEndingHere = Math.max(<span class="number">0</span>, maxEndingHere + change);
+        maxSoFar = Math.max(maxSoFar, maxEndingHere);
+    }
+    
+    <span class="keyword">return</span> maxSoFar;
+}</pre></div>
+
+        <div class="visual-box">
+            <h4>📊 Example: prices = [7, 1, 5, 3, 6, 4]</h4>
+            
+            <table>
+                <tr>
+                    <th>Day</th>
+                    <th>Price</th>
+                    <th>Min So Far</th>
+                    <th>Profit if Sell</th>
+                    <th>Max Profit</th>
+                </tr>
+                <tr>
+                    <td>0</td>
+                    <td>7</td>
+                    <td>7</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>5</td>
+                    <td>1</td>
+                    <td>4</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>3</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>6</td>
+                    <td>1</td>
+                    <td>5</td>
+                    <td style="background: #c8e6c9; font-weight: bold;">5</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>4</td>
+                    <td>1</td>
+                    <td>3</td>
+                    <td>5</td>
+                </tr>
+            </table>
+            
+            <p style="margin-top: 15px;"><strong>Answer: Buy at day 1 (price=1), sell at day 4 (price=6), profit = 5</strong></p>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 6 <span class="difficulty easy">Easy-Medium</span></h4>
+            <ol>
+                <li><strong>Best Time to Buy and Sell Stock (LC 121)</strong></li>
+                <li><strong>Best Time to Buy and Sell Stock II (LC 122)</strong> - Multiple transactions</li>
+                <li><strong>Best Time to Buy and Sell Stock with Cooldown (LC 309)</strong></li>
+                <li><strong>Best Time to Buy and Sell Stock with Transaction Fee (LC 714)</strong></li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 7 -->
+        <div class="pattern-card">
+            <h3>Pattern 7: 2D Kadane (Maximum Sum Rectangle)</h3>
+            <p><strong>Problem:</strong> Find rectangle in 2D matrix with maximum sum</p>
+            <p><strong>Key Insight:</strong> Fix top/bottom rows, compress to 1D, apply Kadane's</p>
+            <p><strong>Time:</strong> O(N² × M), Space: O(M)</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Extending to 2D?</h4>
+            <p><strong>The Challenge:</strong></p>
+            <p>A brute force check of all rectangles is O(N² × M²) - too slow!</p>
+            
+            <p style="margin-top: 15px;"><strong>The Clever Trick:</strong></p>
+            <div class="step">
+                <span class="step-number">1</span>
+                Fix top row and bottom row (O(N²) combinations)
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                Compress all rows between them into a 1D array by summing columns
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                Apply Kadane's algorithm on this 1D array (O(M))
+            </div>
+            
+            <p style="margin-top: 15px;"><strong>Total Time:</strong> O(N²) × O(M) = O(N² × M)</p>
+        </div>
+        
+        <div class="code-block"><pre><span class="keyword">public int</span> <span class="function">maxSumRectangle</span>(<span class="keyword">int</span>[][] matrix) {
+    <span class="keyword">int</span> rows = matrix.length;
+    <span class="keyword">int</span> cols = matrix[<span class="number">0</span>].length;
+    <span class="keyword">int</span> maxSum = Integer.MIN_VALUE;
+    
+    <span class="comment">// Try all possible top row positions</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> top = <span class="number">0</span>; top < rows; top++) {
+        <span class="keyword">int</span>[] temp = <span class="keyword">new int</span>[cols];  <span class="comment">// Compressed array</span>
+        
+        <span class="comment">// Try all possible bottom row positions</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> bottom = top; bottom < rows; bottom++) {
+            <span class="comment">// Add current row to compressed array</span>
+            <span class="keyword">for</span> (<span class="keyword">int</span> col = <span class="number">0</span>; col < cols; col++) {
+                temp[col] += matrix[bottom][col];
+            }
+            
+            <span class="comment">// Apply Kadane's on compressed 1D array</span>
+            <span class="keyword">int</span> currentMax = kadane(temp);
+            maxSum = Math.max(maxSum, currentMax);
+        }
+    }
+    
+    <span class="keyword">return</span> maxSum;
+}
+
+<span class="keyword">private int</span> <span class="function">kadane</span>(<span class="keyword">int</span>[] arr) {
+    <span class="keyword">int</span> maxSoFar = arr[<span class="number">0</span>];
+    <span class="keyword">int</span> maxEndingHere = arr[<span class="number">0</span>];
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < arr.length; i++) {
+        maxEndingHere = Math.max(arr[i], maxEndingHere + arr[i]);
+        maxSoFar = Math.max(maxSoFar, maxEndingHere);
+    }
+    
+    <span class="keyword">return</span> maxSoFar;
+}</pre></div>
+
+        <div class="visual-box">
+            <h4>📊 Example: 3×3 matrix</h4>
+            
+            <table style="width: auto; margin: 15px 0;">
+                <tr>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">2</td>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">1</td>
+                    <td style="padding: 10px; background: #e0e0e0;">-3</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">-1</td>
+                    <td style="padding: 10px; background: #c8e6c9; font-weight: bold;">4</td>
+                    <td style="padding: 10px; background: #e0e0e0;">-1</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; background: #e0e0e0;">-1</td>
+                    <td style="padding: 10px; background: #e0e0e0;">-1</td>
+                    <td style="padding: 10px; background: #e0e0e0;">5</td>
+                </tr>
+            </table>
+            
+            <p><strong>Fix top=0, bottom=1 (first two rows):</strong></p>
+            <p>Compress columns: [2-1, 1+4, -3-1] = [1, 5, -4]</p>
+            <p>Kadane's on [1, 5, -4]: max = 6 (take [1, 5])</p>
+            <p>This represents the green rectangle: sum = 2+1-1+4 = 6 ✓</p>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 7 <span class="difficulty hard">Hard</span></h4>
+            <ol>
+                <li><strong>Max Sum of Rectangle No Larger Than K (LC 363)</strong></li>
+                <li><strong>Maximum Submatrix (GeeksforGeeks)</strong></li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 8 -->
+        <div class="pattern-card">
+            <h3>Pattern 8: Minimum Subarray Sum (Inverted Kadane's)</h3>
+            <p><strong>Problem:</strong> Find contiguous subarray with MINIMUM sum</p>
+            <p><strong>Key Insight:</strong> Same as Kadane's but track minimum instead of maximum</p>
+            <p><strong>Time:</strong> O(N), Space: O(1)</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Why Minimum Subarray?</h4>
+            <p><strong>When Do We Need Minimum?</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Circular Maximum:</strong> We use min to find max circular subarray</li>
+                <li><strong>Optimization Problems:</strong> Finding worst-case scenarios</li>
+                <li><strong>Inverted Problems:</strong> Negate array, find max = find min of original</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>The Modification:</strong></p>
+            <p>Simply flip max to min in Kadane's algorithm:</p>
+            <div class="formula">
+                minEndingHere = min(arr[i], minEndingHere + arr[i])<br>
+                minSoFar = min(minSoFar, minEndingHere)
+            </div>
+        </div>
+        
+        <div class="code-block"><pre><span class="keyword">public int</span> <span class="function">minSubArray</span>(<span class="keyword">int</span>[] arr) {
+    <span class="keyword">int</span> minSoFar = arr[<span class="number">0</span>];
+    <span class="keyword">int</span> minEndingHere = arr[<span class="number">0</span>];
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < arr.length; i++) {
+        <span class="comment">// Keep extending if it makes sum smaller, else start fresh</span>
+        minEndingHere = Math.min(arr[i], minEndingHere + arr[i]);
+        minSoFar = Math.min(minSoFar, minEndingHere);
+    }
+    
+    <span class="keyword">return</span> minSoFar;
+}
+
+<span class="comment">// Alternative: Use max Kadane's on negated array</span>
+<span class="keyword">public int</span> <span class="function">minSubArrayNegation</span>(<span class="keyword">int</span>[] arr) {
+    <span class="keyword">int</span>[] negated = <span class="keyword">new int</span>[arr.length];
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < arr.length; i++) {
+        negated[i] = -arr[i];
+    }
+    <span class="keyword">return</span> -maxSubArray(negated);  <span class="comment">// Negate result back</span>
+}</pre></div>
+
+        <div class="visual-box">
+            <h4>📊 Example: arr = [3, -4, 2, -3, -1, 7, -5]</h4>
+            
+            <p><strong>Original Array:</strong></p>
+            <div class="array-visual">
+                <div class="array-cell">
+                    <div class="array-index">0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">1</div>
+                    <div class="array-value">-4</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">2</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">3</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-1</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">5</div>
+                    <div class="array-value">7</div>
+                </div>
+                <div class="array-cell">
+                    <div class="array-index">6</div>
+                    <div class="array-value">-5</div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Step 0 (i=0, value=3):</strong></p>
+            <div class="array-visual">
+                <div class="array-cell highlight">
+                    <div class="array-index">0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">-4</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">3</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-1</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">5</div>
+                    <div class="array-value">7</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">6</div>
+                    <div class="array-value">-5</div>
+                </div>
+            </div>
+            <div style="background: #fff; padding: 10px; border: 2px solid #f5576c; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;"><strong>minEndingHere:</strong> 3</p>
+                <p style="margin: 5px 0;"><strong>minSoFar:</strong> 3</p>
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Step 1 (i=1, value=-4):</strong></p>
+            <div class="array-visual">
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">1</div>
+                    <div class="array-value">-4</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">3</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-1</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">5</div>
+                    <div class="array-value">7</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">6</div>
+                    <div class="array-value">-5</div>
+                </div>
+            </div>
+            <div style="background: #fff; padding: 10px; border: 2px solid #f5576c; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;">min(-4, 3 + (-4)) = min(-4, -1) = <strong>-4</strong></p>
+                <p style="margin: 5px 0;"><strong>Decision:</strong> Start fresh with -4 (it's smaller!)</p>
+                <p style="margin: 5px 0;"><strong>minEndingHere:</strong> -4</p>
+                <p style="margin: 5px 0;"><strong>minSoFar:</strong> -4</p>
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Step 2 (i=2, value=2):</strong></p>
+            <div class="array-visual">
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell negative" style="border: 3px solid #dc3545;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">-4</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">2</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">3</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-1</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">5</div>
+                    <div class="array-value">7</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">6</div>
+                    <div class="array-value">-5</div>
+                </div>
+            </div>
+            <p style="font-size: 0.9em; color: #666;">🔴 Red border = current minimum subarray</p>
+            <div style="background: #fff; padding: 10px; border: 2px solid #f5576c; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;">min(2, -4 + 2) = min(2, -2) = <strong>-2</strong></p>
+                <p style="margin: 5px 0;"><strong>Decision:</strong> Extend (-4 + 2 = -2 is smaller than 2 alone)</p>
+                <p style="margin: 5px 0;"><strong>minEndingHere:</strong> -2</p>
+                <p style="margin: 5px 0;"><strong>minSoFar:</strong> -4</p>
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Step 3 (i=3, value=-3):</strong></p>
+            <div class="array-visual">
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell negative" style="border: 3px solid #dc3545;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">-4</div>
+                </div>
+                <div class="array-cell negative" style="border: 3px solid #dc3545;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">3</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-1</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">5</div>
+                    <div class="array-value">7</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">6</div>
+                    <div class="array-value">-5</div>
+                </div>
+            </div>
+            <div style="background: #fff; padding: 10px; border: 2px solid #f5576c; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;">min(-3, -2 + (-3)) = min(-3, -5) = <strong>-5</strong></p>
+                <p style="margin: 5px 0;"><strong>Decision:</strong> Extend (sum getting smaller!)</p>
+                <p style="margin: 5px 0;"><strong>minEndingHere:</strong> -5</p>
+                <p style="margin: 5px 0;"><strong>minSoFar:</strong> -5</p>
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Step 4 (i=4, value=-1):</strong></p>
+            <div class="array-visual">
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell negative" style="border: 3px solid #dc3545;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">-4</div>
+                </div>
+                <div class="array-cell negative" style="border: 3px solid #dc3545;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell negative" style="border: 3px solid #dc3545;">
+                    <div class="array-index">3</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-1</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">5</div>
+                    <div class="array-value">7</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">6</div>
+                    <div class="array-value">-5</div>
+                </div>
+            </div>
+            <div style="background: #fff; padding: 10px; border: 2px solid #f5576c; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;">min(-1, -5 + (-1)) = min(-1, -6) = <strong>-6</strong></p>
+                <p style="margin: 5px 0;"><strong>Decision:</strong> Extend (even smaller!)</p>
+                <p style="margin: 5px 0;"><strong>minEndingHere:</strong> -6</p>
+                <p style="margin: 5px 0;"><strong>minSoFar:</strong> -6 🎯 <strong>New minimum!</strong></p>
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Step 5 (i=5, value=7):</strong></p>
+            <div class="array-visual">
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell negative" style="border: 3px solid #dc3545;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">-4</div>
+                </div>
+                <div class="array-cell negative" style="border: 3px solid #dc3545;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell negative" style="border: 3px solid #dc3545;">
+                    <div class="array-index">3</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell negative" style="border: 3px solid #dc3545;">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-1</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">5</div>
+                    <div class="array-value">7</div>
+                </div>
+                <div class="array-cell" style="background: #f0f0f0;">
+                    <div class="array-index">6</div>
+                    <div class="array-value">-5</div>
+                </div>
+            </div>
+            <div style="background: #fff; padding: 10px; border: 2px solid #f5576c; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;">min(7, -6 + 7) = min(7, 1) = <strong>1</strong></p>
+                <p style="margin: 5px 0;"><strong>Decision:</strong> Extend (1 < 7)</p>
+                <p style="margin: 5px 0;"><strong>minEndingHere:</strong> 1</p>
+                <p style="margin: 5px 0;"><strong>minSoFar:</strong> -6</p>
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Step 6 (i=6, value=-5):</strong></p>
+            <div class="array-visual">
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">-4</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">2</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">3</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-1</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">5</div>
+                    <div class="array-value">7</div>
+                </div>
+                <div class="array-cell highlight">
+                    <div class="array-index">6</div>
+                    <div class="array-value">-5</div>
+                </div>
+            </div>
+            <div style="background: #fff; padding: 10px; border: 2px solid #f5576c; border-radius: 5px; margin: 10px 0;">
+                <p style="margin: 5px 0;">min(-5, 1 + (-5)) = min(-5, -4) = <strong>-5</strong></p>
+                <p style="margin: 5px 0;"><strong>Decision:</strong> Start fresh with -5</p>
+                <p style="margin: 5px 0;"><strong>minEndingHere:</strong> -5</p>
+                <p style="margin: 5px 0;"><strong>minSoFar:</strong> -6</p>
+            </div>
+            
+            <div style="background: #d4edda; padding: 20px; border-left: 5px solid #28a745; border-radius: 5px; margin-top: 25px;">
+                <h4 style="color: #155724; margin-top: 0;">✅ Final Result</h4>
+                <p style="margin: 5px 0;"><strong>Minimum Sum = -6</strong></p>
+                <p style="margin: 5px 0;">Subarray: [-4, 2, -3, -1] from index 1 to 4</p>
+                <p style="margin: 5px 0;">Verification: -4 + 2 + (-3) + (-1) = -6 ✓</p>
+            </div>
+            
+            <p style="margin-top: 20px;"><strong>Final visualization of minimum subarray:</strong></p>
+            <div class="array-visual">
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">0</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell negative">
+                    <div class="array-index">1</div>
+                    <div class="array-value">-4</div>
+                </div>
+                <div class="array-cell negative">
+                    <div class="array-index">2</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell negative">
+                    <div class="array-index">3</div>
+                    <div class="array-value">-3</div>
+                </div>
+                <div class="array-cell negative">
+                    <div class="array-index">4</div>
+                    <div class="array-value">-1</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">5</div>
+                    <div class="array-value">7</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">6</div>
+                    <div class="array-value">-5</div>
+                </div>
+            </div>
+            
+            <table>
+                <tr>
+                    <th>i</th>
+                    <th>arr[i]</th>
+                    <th>minEndingHere Calculation</th>
+                    <th>minEndingHere</th>
+                    <th>minSoFar</th>
+                    <th>Decision</th>
+                </tr>
+                <tr style="background: #f0f0f0;">
+                    <td>0</td>
+                    <td>3</td>
+                    <td>Initialize</td>
+                    <td style="font-weight: bold;">3</td>
+                    <td style="font-weight: bold;">3</td>
+                    <td>Start</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>-4</td>
+                    <td>min(-4, 3-4) = min(-4, -1)</td>
+                    <td style="font-weight: bold;">-4</td>
+                    <td style="font-weight: bold;">-4</td>
+                    <td>Start fresh</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>2</td>
+                    <td>min(2, -4+2) = min(2, -2)</td>
+                    <td style="font-weight: bold;">-2</td>
+                    <td>-4</td>
+                    <td>Extend</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>-3</td>
+                    <td>min(-3, -2-3) = min(-3, -5)</td>
+                    <td style="font-weight: bold;">-5</td>
+                    <td style="font-weight: bold;">-5</td>
+                    <td>Extend</td>
+                </tr>
+                <tr style="background: #ffcdd2;">
+                    <td>4</td>
+                    <td>-1</td>
+                    <td>min(-1, -5-1) = min(-1, -6)</td>
+                    <td style="font-weight: bold;">-6</td>
+                    <td style="font-weight: bold; background: #ffcdd2;">-6</td>
+                    <td>Extend</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>7</td>
+                    <td>min(7, -6+7) = min(7, 1)</td>
+                    <td style="font-weight: bold;">1</td>
+                    <td>-6</td>
+                    <td>Extend</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>-5</td>
+                    <td>min(-5, 1-5) = min(-5, -4)</td>
+                    <td style="font-weight: bold;">-5</td>
+                    <td>-6</td>
+                    <td>Start fresh</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 8 <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Maximum Sum Circular Subarray (LC 918)</strong> - Uses min subarray</li>
+                <li><strong>Minimum Size Subarray Sum (LC 209)</strong> - Different constraint</li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 9 -->
+        <div class="pattern-card">
+            <h3>Pattern 9: Maximum Subarray with At Most K Deletions</h3>
+            <p><strong>Problem:</strong> Find max sum allowing deletion of at most K elements</p>
+            <p><strong>Key Insight:</strong> Track state: how many deletions used so far</p>
+            <p><strong>Time:</strong> O(N × K), Space: O(K) or O(1) with optimization</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Why Allow Deletions?</h4>
+            <p><strong>The Power of Skipping:</strong></p>
+            <p>Sometimes we want to skip bad elements (like a large negative) while keeping the subarray "contiguous" in a looser sense.</p>
+            
+            <p style="margin-top: 15px;"><strong>Example:</strong> arr = [8, -1, -1, -1, 9], K = 2</p>
+            <p>Without deletions: max = 9</p>
+            <p>With K=2 deletions: [8, skip(-1), skip(-1), -1, 9] = 8 + (-1) + 9 = 16</p>
+            
+            <p style="margin-top: 15px;"><strong>State Tracking:</strong></p>
+            <p>We need to track: dp[i][j] = max sum ending at i with j deletions used</p>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Include current element:</strong> dp[i][j] = dp[i-1][j] + arr[i]
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Delete current element:</strong> dp[i][j] = dp[i-1][j-1] (if j > 0)
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Start fresh:</strong> dp[i][j] = arr[i]
+            </div>
+        </div>
+        
+        <div class="code-block"><pre><span class="keyword">public int</span> <span class="function">maxSumWithDeletions</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> k) {
+    <span class="keyword">int</span> n = arr.length;
+    <span class="keyword">int</span>[][] dp = <span class="keyword">new int</span>[n][k + <span class="number">1</span>];
+    <span class="keyword">int</span> maxSum = Integer.MIN_VALUE;
+    
+    <span class="comment">// Base case: first element</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j <= k; j++) {
+        dp[<span class="number">0</span>][j] = arr[<span class="number">0</span>];
+        maxSum = Math.max(maxSum, arr[<span class="number">0</span>]);
+    }
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < n; i++) {
+        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j <= k; j++) {
+            <span class="comment">// Option 1: Include current element</span>
+            dp[i][j] = dp[i - <span class="number">1</span>][j] + arr[i];
+            
+            <span class="comment">// Option 2: Start fresh from current</span>
+            dp[i][j] = Math.max(dp[i][j], arr[i]);
+            
+            <span class="comment">// Option 3: Delete current (use one deletion)</span>
+            <span class="keyword">if</span> (j > <span class="number">0</span>) {
+                dp[i][j] = Math.max(dp[i][j], dp[i - <span class="number">1</span>][j - <span class="number">1</span>]);
+            }
+            
+            maxSum = Math.max(maxSum, dp[i][j]);
+        }
+    }
+    
+    <span class="keyword">return</span> maxSum;
+}
+
+<span class="comment">// Space-optimized: O(K) space</span>
+<span class="keyword">public int</span> <span class="function">maxSumWithDeletionsOptimized</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> k) {
+    <span class="keyword">int</span>[] prev = <span class="keyword">new int</span>[k + <span class="number">1</span>];
+    <span class="keyword">int</span>[] curr = <span class="keyword">new int</span>[k + <span class="number">1</span>];
+    <span class="keyword">int</span> maxSum = Integer.MIN_VALUE;
+    
+    Arrays.fill(prev, arr[<span class="number">0</span>]);
+    maxSum = arr[<span class="number">0</span>];
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < arr.length; i++) {
+        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j <= k; j++) {
+            curr[j] = Math.max(arr[i], prev[j] + arr[i]);
+            <span class="keyword">if</span> (j > <span class="number">0</span>) {
+                curr[j] = Math.max(curr[j], prev[j - <span class="number">1</span>]);
+            }
+            maxSum = Math.max(maxSum, curr[j]);
+        }
+        <span class="keyword">int</span>[] temp = prev;
+        prev = curr;
+        curr = temp;
+    }
+    
+    <span class="keyword">return</span> maxSum;
+}</pre></div>
+
+        <div class="visual-box">
+            <h4>📊 Example: arr = [8, -1, -1, -1, 9], K = 2</h4>
+            
+            <p><strong>DP Table (dp[i][j] = max sum at position i with j deletions):</strong></p>
+            <table style="margin: 15px 0;">
+                <tr>
+                    <th>i</th>
+                    <th>arr[i]</th>
+                    <th>j=0 (no del)</th>
+                    <th>j=1 (1 del)</th>
+                    <th>j=2 (2 del)</th>
+                </tr>
+                <tr>
+                    <td>0</td>
+                    <td>8</td>
+                    <td>8</td>
+                    <td>8</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>-1</td>
+                    <td>7</td>
+                    <td>8</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>-1</td>
+                    <td>6</td>
+                    <td>7</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>-1</td>
+                    <td>5</td>
+                    <td>6</td>
+                    <td>7</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>9</td>
+                    <td>14</td>
+                    <td>15</td>
+                    <td style="background: #c8e6c9; font-weight: bold;">16</td>
+                </tr>
+            </table>
+            
+            <p style="margin-top: 15px;"><strong>Maximum = 16</strong></p>
+            <p>Path: Take 8, skip -1, skip -1, take -1, take 9 = 8 + (-1) + 9 = 16</p>
+            <p>(Used 2 deletions to skip two -1's)</p>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 9 <span class="difficulty hard">Hard</span></h4>
+            <ol>
+                <li><strong>Maximum Subarray Sum After One Operation (LC 1746)</strong></li>
+                <li><strong>Maximum Sum with Exactly K Elements (Custom)</strong></li>
+            </ol>
+        </div>
+        
+        <!-- Pattern 10 -->
+        <div class="pattern-card">
+            <h3>Pattern 10: Maximum Sum with No Adjacent Elements (House Robber)</h3>
+            <p><strong>Problem:</strong> Find max sum where no two selected elements are adjacent</p>
+            <p><strong>Key Insight:</strong> At each position: take current + skip previous, or skip current</p>
+            <p><strong>Time:</strong> O(N), Space: O(1)</p>
+        </div>
+        
+        <div class="tip-box">
+            <h4>🤔 Why No Adjacent?</h4>
+            <p><strong>The House Robber Analogy:</strong></p>
+            <p>You're a robber robbing houses in a row. Adjacent houses have alarms that trigger if both are robbed. Maximize stolen money!</p>
+            
+            <p style="margin-top: 15px;"><strong>Example:</strong> [2, 7, 9, 3, 1]</p>
+            <p>Can't take 7 AND 9 (adjacent)</p>
+            <p>Best: 2 + 9 + 1 = 12</p>
+            
+            <p style="margin-top: 15px;"><strong>The DP Transition:</strong></p>
+            <div class="formula">
+                dp[i] = max(dp[i-1], arr[i] + dp[i-2])
+            </div>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Skip current:</strong> dp[i-1] (best so far without current)
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Take current:</strong> arr[i] + dp[i-2] (current + best from 2 back)
+            </div>
+            
+            <p style="margin-top: 15px;"><strong>Space Optimization:</strong></p>
+            <p>We only need last 2 values, so use two variables instead of array!</p>
+        </div>
+        
+        <div class="code-block"><pre><span class="comment">// House Robber - O(1) space</span>
+<span class="keyword">public int</span> <span class="function">rob</span>(<span class="keyword">int</span>[] arr) {
+    <span class="keyword">if</span> (arr.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;
+    <span class="keyword">if</span> (arr.length == <span class="number">1</span>) <span class="keyword">return</span> arr[<span class="number">0</span>];
+    
+    <span class="keyword">int</span> prev2 = arr[<span class="number">0</span>];           <span class="comment">// dp[i-2]</span>
+    <span class="keyword">int</span> prev1 = Math.max(arr[<span class="number">0</span>], arr[<span class="number">1</span>]);  <span class="comment">// dp[i-1]</span>
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i < arr.length; i++) {
+        <span class="keyword">int</span> current = Math.max(prev1, arr[i] + prev2);
+        prev2 = prev1;
+        prev1 = current;
+    }
+    
+    <span class="keyword">return</span> prev1;
+}
+
+<span class="comment">// With DP array (for clarity)</span>
+<span class="keyword">public int</span> <span class="function">robDP</span>(<span class="keyword">int</span>[] arr) {
+    <span class="keyword">if</span> (arr.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;
+    <span class="keyword">if</span> (arr.length == <span class="number">1</span>) <span class="keyword">return</span> arr[<span class="number">0</span>];
+    
+    <span class="keyword">int</span>[] dp = <span class="keyword">new int</span>[arr.length];
+    dp[<span class="number">0</span>] = arr[<span class="number">0</span>];
+    dp[<span class="number">1</span>] = Math.max(arr[<span class="number">0</span>], arr[<span class="number">1</span>]);
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i < arr.length; i++) {
+        dp[i] = Math.max(dp[i - <span class="number">1</span>], arr[i] + dp[i - <span class="number">2</span>]);
+    }
+    
+    <span class="keyword">return</span> dp[arr.length - <span class="number">1</span>];
+}</pre></div>
+
+        <div class="visual-box" style="background: #e8f5e9;">
+            <h4 style="color: #2e7d32;">💻 Step-by-Step Code Execution Trace (DP Array Version)</h4>
+            <p><strong>Input:</strong> arr = [2, 7, 9, 3, 1]</p>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Edge case checks</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">arr.length = 5  <span style="color: #666;">// Not 0 or 1, continue</span></p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Initialize DP array</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">int[] dp = new int[5];  <span style="color: #666;">// Create array of size 5</span></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">dp[0] = arr[0] = 2  <span style="color: #666;">// Best at house 0: rob it</span></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">dp[1] = Math.max(arr[0], arr[1])</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">     = Math.max(2, 7)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">     = 7  <span style="color: #666;">// Best at house 1: rob house 1 (7 > 2)</span></p>
+                <p style="margin: 10px 0 5px 0; font-family: 'Courier New', monospace; color: #666;">// dp = [2, 7, 0, 0, 0]</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=2, arr[i]=9</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">dp[2] = Math.max(dp[i - 1], arr[i] + dp[i - 2])</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">     = Math.max(dp[1], arr[2] + dp[0])</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">     = Math.max(7, 9 + 2)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">     = Math.max(7, 11)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">     = 11  <span style="color: #666;">// Take house 2 (9) + house 0 (2) = 11</span></p>
+                <p style="margin: 10px 0 5px 0; font-family: 'Courier New', monospace; color: #666;">// dp = [2, 7, 11, 0, 0]</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// Houses robbed: 0 and 2 (skip 1 because adjacent)</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=3, arr[i]=3</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">dp[3] = Math.max(dp[i - 1], arr[i] + dp[i - 2])</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">     = Math.max(dp[2], arr[3] + dp[1])</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">     = Math.max(11, 3 + 7)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">     = Math.max(11, 10)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">     = 11  <span style="color: #666;">// Skip house 3, keep previous best (11)</span></p>
+                <p style="margin: 10px 0 5px 0; font-family: 'Courier New', monospace; color: #666;">// dp = [2, 7, 11, 11, 0]</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// Still robbing houses 0 and 2</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=4, arr[i]=1</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">dp[4] = Math.max(dp[i - 1], arr[i] + dp[i - 2])</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">     = Math.max(dp[3], arr[4] + dp[2])</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">     = Math.max(11, 1 + 11)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">     = Math.max(11, 12)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #2e7d32; font-weight: bold;">     = 12  <span style="color: #666;">// Take house 4 (1) + best from house 2 (11)</span></p>
+                <p style="margin: 10px 0 5px 0; font-family: 'Courier New', monospace; color: #666;">// dp = [2, 7, 11, 11, 12]</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// Houses robbed: 0, 2, and 4</p>
+            </div>
+            
+            <div style="background: #c8e6c9; padding: 20px; border: 3px solid #2e7d32; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace; font-size: 1.1em;"><strong>// Return final answer</strong></p>
+                <p style="margin: 10px 0; font-family: 'Courier New', monospace; font-size: 1.2em; color: #2e7d32;"><strong>return dp[arr.length - 1] = dp[4] = 12;</strong></p>
+                <p style="margin: 10px 0 5px 0; font-family: 'Courier New', monospace; color: #666;">// Rob houses: 0 (value=2), 2 (value=9), 4 (value=1)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// Total: 2 + 9 + 1 = 12</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// Skip houses 1 and 3 (adjacent to robbed houses)</p>
+            </div>
+        </div>
+        
+        <div class="visual-box" style="background: #e3f2fd;">
+            <h4 style="color: #1565c0;">💻 Space-Optimized Version Trace (O(1) space)</h4>
+            <p><strong>Same input:</strong> arr = [2, 7, 9, 3, 1]</p>
+            <p style="margin: 10px 0; color: #666;">This version only keeps last 2 values instead of entire array</p>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #1565c0; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Initialization</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">prev2 = arr[0] = 2  <span style="color: #666;">// Represents dp[i-2]</span></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">prev1 = Math.max(arr[0], arr[1]) = Math.max(2, 7) = 7  <span style="color: #666;">// Represents dp[i-1]</span></p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #1565c0; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=2, arr[i]=9</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">current = Math.max(prev1, arr[i] + prev2)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">        = Math.max(7, 9 + 2)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">        = Math.max(7, 11)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #1565c0; font-weight: bold;">        = 11</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">prev2 = prev1 = 7  <span style="color: #666;">// Shift window</span></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">prev1 = current = 11</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// State: prev2=7, prev1=11</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #1565c0; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=3, arr[i]=3</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">current = Math.max(prev1, arr[i] + prev2)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">        = Math.max(11, 3 + 7)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">        = Math.max(11, 10)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #1565c0; font-weight: bold;">        = 11</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">prev2 = prev1 = 11</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">prev1 = current = 11</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// State: prev2=11, prev1=11</p>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border: 2px solid #1565c0; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace;"><strong>// Iteration i=4, arr[i]=1</strong></p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">current = Math.max(prev1, arr[i] + prev2)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">        = Math.max(11, 1 + 11)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">        = Math.max(11, 12)</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #1565c0; font-weight: bold;">        = 12</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">prev2 = prev1 = 11</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace;">prev1 = current = 12</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// State: prev2=11, prev1=12</p>
+            </div>
+            
+            <div style="background: #bbdefb; padding: 20px; border: 3px solid #1565c0; border-radius: 5px; margin: 15px 0;">
+                <p style="margin: 0; font-family: 'Courier New', monospace; font-size: 1.1em;"><strong>// Return answer</strong></p>
+                <p style="margin: 10px 0; font-family: 'Courier New', monospace; font-size: 1.2em; color: #1565c0;"><strong>return prev1 = 12;</strong></p>
+                <p style="margin: 10px 0 5px 0; font-family: 'Courier New', monospace; color: #666;">// Same result as DP array version but using O(1) space!</p>
+                <p style="margin: 5px 0; font-family: 'Courier New', monospace; color: #666;">// We only kept track of last 2 values: prev2 and prev1</p>
+            </div>
+        </div>
+
+        <div class="visual-box">
+            <h4>📊 Example: arr = [2, 7, 9, 3, 1]</h4>
+            
+            <table>
+                <tr>
+                    <th>i</th>
+                    <th>arr[i]</th>
+                    <th>Skip current (dp[i-1])</th>
+                    <th>Take current (arr[i] + dp[i-2])</th>
+                    <th>dp[i] = max</th>
+                </tr>
+                <tr>
+                    <td>0</td>
+                    <td>2</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>7</td>
+                    <td>2</td>
+                    <td>7</td>
+                    <td>7</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>9</td>
+                    <td>7</td>
+                    <td>9 + 2 = 11</td>
+                    <td>11</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>3</td>
+                    <td>11</td>
+                    <td>3 + 7 = 10</td>
+                    <td>11</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>1</td>
+                    <td>11</td>
+                    <td>1 + 11 = 12</td>
+                    <td style="background: #c8e6c9; font-weight: bold;">12</td>
+                </tr>
+            </table>
+            
+            <p style="margin-top: 15px;"><strong>Maximum = 12</strong></p>
+            <p>Take houses: 2, 9, 1 (skip 7 and 3 which are adjacent)</p>
+            
+            <div class="array-visual" style="margin-top: 15px;">
+                <div class="array-cell positive">
+                    <div class="array-index">0</div>
+                    <div class="array-value">2</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">1</div>
+                    <div class="array-value">7</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">2</div>
+                    <div class="array-value">9</div>
+                </div>
+                <div class="array-cell" style="opacity: 0.3;">
+                    <div class="array-index">3</div>
+                    <div class="array-value">3</div>
+                </div>
+                <div class="array-cell positive">
+                    <div class="array-index">4</div>
+                    <div class="array-value">1</div>
+                </div>
+            </div>
+            <p style="font-size: 0.9em; color: #666;">🟢 Green = rob these houses, Gray = skip</p>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 10 <span class="difficulty easy">Easy-Medium</span></h4>
+            <ol>
+                <li><strong>House Robber (LC 198)</strong> - Classic pattern</li>
+                <li><strong>House Robber II (LC 213)</strong> - Circular houses</li>
+                <li><strong>Delete and Earn (LC 740)</strong> - Similar constraint</li>
+                <li><strong>Maximum Sum of Non-Adjacent Elements (GFG)</strong></li>
+                <li><strong>Paint House (LC 256)</strong> - Similar no-adjacent logic</li>
+            </ol>
+        </div>
+        
+        <h2>🔄 Kadane's vs Other Techniques</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Technique</th>
+                    <th>When to Use</th>
+                    <th>Time</th>
+                    <th>Key Difference</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Kadane's</strong></td>
+                    <td>MAXIMUM sum subarray</td>
+                    <td>O(N)</td>
+                    <td>Greedy DP approach</td>
+                </tr>
+                <tr>
+                    <td><strong>Prefix Sum</strong></td>
+                    <td>Sum = K (specific value)</td>
+                    <td>O(N)</td>
+                    <td>Uses HashMap</td>
+                </tr>
+                <tr>
+                    <td><strong>Sliding Window</strong></td>
+                    <td>Fixed size K or min/max</td>
+                    <td>O(N)</td>
+                    <td>Maintains window</td>
+                </tr>
+                <tr>
+                    <td><strong>Two Pointers</strong></td>
+                    <td>Sorted, find pairs</td>
+                    <td>O(N)</td>
+                    <td>Bidirectional scan</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2>💡 Pro Tips</h2>
+        
+        <div class="tip-box">
+            <h4>Tip 1: Watch for Integer Overflow</h4>
+            <p>When dealing with very large numbers, use long instead of int:</p>
+            <div class="code-block"><pre><span class="keyword">long</span> maxSoFar = arr[<span class="number">0</span>];
+<span class="keyword">long</span> maxEndingHere = arr[<span class="number">0</span>];</pre></div>
+        </div>
+        
+        <div class="tip-box">
+            <h4>Tip 2: Track Indices</h4>
+            <p>To return the actual subarray (not just the sum):</p>
+            <div class="code-block"><pre><span class="keyword">int</span> start = <span class="number">0</span>, end = <span class="number">0</span>, tempStart = <span class="number">0</span>;
+
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < n; i++) {
+    <span class="keyword">if</span> (arr[i] > maxEndingHere + arr[i]) {
+        maxEndingHere = arr[i];
+        tempStart = i;  <span class="comment">// New start</span>
+    } <span class="keyword">else</span> {
+        maxEndingHere += arr[i];
+    }
+    
+    <span class="keyword">if</span> (maxEndingHere > maxSoFar) {
+        maxSoFar = maxEndingHere;
+        start = tempStart;
+        end = i;
+    }
+}</pre></div>
+        </div>
+        
+        <div class="tip-box">
+            <h4>Tip 3: All Negative Numbers</h4>
+            <p>Always initialize with arr[0], not 0 or Integer.MIN_VALUE</p>
+            <p>This handles the all-negative case correctly</p>
+        </div>
+        
+        <h2>📚 Complete Problem List (40+ Problems)</h2>
+        
+        <h3>Easy (8 problems)</h3>
+        <div class="problem-box">
+            <ol>
+                <li>Maximum Subarray (LC 53)</li>
+                <li>Best Time to Buy and Sell Stock (LC 121)</li>
+                <li>Maximum Product of Three Numbers (LC 628)</li>
+                <li>Maximum Average Subarray I (LC 643)</li>
+                <li>Degree of an Array (LC 697)</li>
+                <li>Maximum Ascending Subarray Sum (LC 1800)</li>
+                <li>Longest Nice Subarray (LC 2401)</li>
+                <li>Maximum Difference Between Increasing Elements (LC 2016)</li>
+            </ol>
+        </div>
+        
+        <h3>Medium (25 problems)</h3>
+        <div class="problem-box">
+            <ol>
+                <li><strong>Maximum Product Subarray (LC 152) ⭐</strong></li>
+                <li><strong>Maximum Sum Circular Subarray (LC 918) ⭐</strong></li>
+                <li>Best Time to Buy and Sell Stock II (LC 122)</li>
+                <li>Wiggle Subsequence (LC 376)</li>
+                <li>Longest Turbulent Subarray (LC 978)</li>
+                <li>Maximum Alternating Subsequence Sum (LC 1911)</li>
+                <li>Maximum Absolute Sum of Any Subarray (LC 1749)</li>
+                <li>K Concatenation Maximum Sum (LC 1191)</li>
+                <li>Maximum Subarray Sum After One Operation (LC 1746)</li>
+                <li>Jump Game II (LC 45)</li>
+                <li>Max Consecutive Ones III (LC 1004)</li>
+                <li>Longest Continuous Subarray With Absolute Diff ≤ Limit (LC 1438)</li>
+                <li>Maximum Points You Can Obtain from Cards (LC 1423)</li>
+                <li>Best Time to Buy and Sell Stock with Cooldown (LC 309)</li>
+                <li>Best Time to Buy and Sell Stock with Transaction Fee (LC 714)</li>
+                <li>Best Sightseeing Pair (LC 1014)</li>
+                <li>Maximum Sum of Two Non-Overlapping Subarrays (LC 1031)</li>
+                <li>House Robber II (LC 213)</li>
+                <li>Maximum Length of Subarray With Positive Product (LC 1567)</li>
+                <li>Maximum Sum of Distinct Subarrays With Length K (LC 2461)</li>
+                <li>Maximum Earnings From Taxi (LC 2008)</li>
+                <li>Stock Price Fluctuation (LC 2034)</li>
+                <li>Maximum Value of K Coins From Piles (LC 2218)</li>
+                <li>Maximum Tastiness of Candy Basket (LC 2517)</li>
+                <li>Maximum Number of Coins You Can Get (LC 1561)</li>
+            </ol>
+        </div>
+        
+        <h3>Hard (10 problems)</h3>
+        <div class="problem-box">
+            <ol>
+                <li>Best Time to Buy and Sell Stock III (LC 123)</li>
+                <li>Best Time to Buy and Sell Stock IV (LC 188)</li>
+                <li>Max Sum of Rectangle No Larger Than K (LC 363)</li>
+                <li>Maximum Sum of 3 Non-Overlapping Subarrays (LC 689)</li>
+                <li>Maximize Score After N Operations (LC 1799)</li>
+                <li>Maximum Profit in Job Scheduling (LC 1235)</li>
+                <li>Minimum Difficulty of a Job Schedule (LC 1335)</li>
+                <li>Largest Sum of Averages (LC 813)</li>
+                <li>Split Array Largest Sum (LC 410)</li>
+                <li>Count Subarrays With Score Less Than K (LC 2302)</li>
+            </ol>
+        </div>
+        
+        <h2>🎯 Quick Reference Cheat Sheet</h2>
+        
+        <div class="visual-box">
+            <h3>Core Formula</h3>
+            <div class="formula">
+                maxEndingHere = max(arr[i], maxEndingHere + arr[i])<br>
+                maxSoFar = max(maxSoFar, maxEndingHere)
+            </div>
+            
+            <h3 style="margin-top: 25px;">Pattern Recognition</h3>
+            <p><strong>Use Kadane's when you see:</strong></p>
+            <ul>
+                <li>"Maximum sum subarray"</li>
+                <li>"Largest contiguous"</li>
+                <li>"Best consecutive sequence"</li>
+                <li>"Maximum product subarray" (variant)</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>DON'T use Kadane's for:</strong></p>
+            <ul>
+                <li>Finding sum = K (use Prefix Sum)</li>
+                <li>Fixed-size windows (use Sliding Window)</li>
+                <li>Sorted pair finding (use Two Pointers)</li>
+            </ul>
+        </div>
+        
+        <div style="text-align: center; margin-top: 50px; padding: 30px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border-radius: 10px;">
+            <h2 style="color: white; margin: 0;">🎉 You've Mastered Kadane's Algorithm!</h2>
+            <p style="margin: 10px 0 0 0;">With these 10 patterns, you can solve any maximum/minimum subarray problem!</p>
+        </div>
+    </div>
+</body>
+</html>

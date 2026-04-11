@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video 4: Lowest Common Ancestor (LCA) in Binary Tree - Complete Visual Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.7;
+            color: #1a1a1a;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 60px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 45px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        h2 {
+            color: #1e293b;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h3 {
+            color: #334155;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        h4 {
+            color: #475569;
+            font-size: 1.4em;
+            margin: 25px 0 15px 0;
+        }
+
+        .problem-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 15px;
+            padding: 35px;
+            margin: 25px 0;
+            border-left: 8px solid #f59e0b;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+        }
+
+        .tree-visual {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .tree-box {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            line-height: 2.5;
+            display: inline-block;
+            text-align: left;
+        }
+
+        .visual-tree-step {
+            background: white;
+            border: 3px solid #3b82f6;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .boss-count-box {
+            background: #f1f5f9;
+            border: 3px solid #64748b;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .count-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.5em;
+            font-weight: 600;
+            margin: 10px;
+        }
+
+        .count-badge.zero {
+            background: #94a3b8;
+        }
+
+        .count-badge.one {
+            background: #f59e0b;
+        }
+
+        .count-badge.two {
+            background: #10b981;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .code-box {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            line-height: 1.9;
+            font-size: 1em;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .code-keyword {
+            color: #c084fc;
+        }
+
+        .code-function {
+            color: #60a5fa;
+        }
+
+        .code-string {
+            color: #34d399;
+        }
+
+        .code-comment {
+            color: #94a3b8;
+        }
+
+        .output-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 3px solid #10b981;
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #065f46;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left: 6px solid #3b82f6;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 6px solid #f59e0b;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 6px solid #10b981;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .analogy-box {
+            background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 25px 0;
+            border-left: 8px solid #ef4444;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 15px;
+        }
+
+        li {
+            margin: 12px 0;
+            line-height: 1.8;
+        }
+
+        strong {
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .emoji {
+            font-size: 1.3em;
+        }
+
+        .tree-animation {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #667eea;
+            font-weight: bold;
+            align-self: center;
+        }
+
+        .recursion-flow {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>👔 Lowest Common Ancestor (LCA)</h1>
+            <p style="font-size: 1.3em; margin-top: 15px;">The "Boss Count" Method</p>
+            <p style="font-size: 1.1em; margin-top: 10px; opacity: 0.9;">Finding the lowest common ancestor in a Binary Tree</p>
+        </header>
+
+        <div class="content">
+
+            <!-- PROBLEM STATEMENT -->
+            <div class="section">
+                <h2><span class="emoji">📋</span> Problem Statement</h2>
+                
+                <div class="problem-box">
+                    <h3 style="margin-top: 0;">What We Need to Solve:</h3>
+                    <p style="font-size: 1.2em; margin: 20px 0;">
+                        Given a Binary Tree and two nodes <strong>P</strong> and <strong>Q</strong>, 
+                        find their <strong>Lowest Common Ancestor (LCA)</strong>.
+                    </p>
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
+                        <p style="font-size: 1.15em; margin-bottom: 15px;"><strong>What is LCA?</strong></p>
+                        <p style="font-size: 1.1em; line-height: 1.9;">
+                            The LCA is the <strong>lowest node</strong> (deepest in the tree) that has both P and Q as descendants.<br>
+                            <strong>Note:</strong> A node can be a descendant of itself.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="tree-visual">
+                    <h3>🌳 Example Tree</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.2em; line-height: 2.8;">
+                    ┌─────┐
+                    │  3  │  ← Root
+                    └──┬──┘
+          ┌────────────┴────────────┐
+       ┌──┴──┐                   ┌──┴──┐
+       │  5  │                   │  1  │
+       └──┬──┘                   └──┬──┘
+     ┌────┴────┐              ┌────┴────┐
+  ┌──┴──┐   ┌──┴──┐        ┌──┴──┐   ┌──┴──┐
+  │  6  │   │  2  │        │  0  │   │  8  │
+  └─────┘   └──┬──┘        └─────┘   └─────┘
+          ┌────┴────┐
+       ┌──┴──┐   ┌──┴──┐
+       │  7  │   │  4  │
+       └─────┘   └─────┘
+</pre>
+                    </div>
+                    <div style="margin-top: 30px;">
+                        <div style="background: #dbeafe; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                            <p style="font-size: 1.15em;"><strong>Example 1:</strong> LCA(5, 1) = ?</p>
+                            <p style="font-size: 1.3em; color: #667eea; font-weight: 600; margin-top: 10px;">Answer: Node 3</p>
+                            <p style="margin-top: 10px;">5 is in left subtree, 1 is in right subtree. They meet at 3.</p>
+                        </div>
+                        <div style="background: #fef3c7; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                            <p style="font-size: 1.15em;"><strong>Example 2:</strong> LCA(5, 4) = ?</p>
+                            <p style="font-size: 1.3em; color: #f59e0b; font-weight: 600; margin-top: 10px;">Answer: Node 5</p>
+                            <p style="margin-top: 10px;">4 is descendant of 5. A node can be LCA of itself and descendant.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THE BOSS ANALOGY -->
+            <div class="section">
+                <h2><span class="emoji">👔</span> The "Boss Count" Analogy</h2>
+
+                <div class="analogy-box">
+                    <h3 style="margin-top: 0;">🏢 The Company Hierarchy Metaphor</h3>
+                    <p style="font-size: 1.15em; margin: 20px 0; line-height: 1.9;">
+                        Imagine a company org chart (tree structure):<br><br>
+                        • CEO at the top (root)<br>
+                        • Managers below (internal nodes)<br>
+                        • Individual contributors at leaves<br><br>
+                        We want to find the <strong>lowest-level manager</strong> who is the boss of BOTH employee P and employee Q.
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>🎯 The Algorithm Intuition:</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px; line-height: 1.9;">
+                        We ask every node in the tree: <strong>"How many of the two target employees (P or Q) are you the boss of?"</strong>
+                    </p>
+                    <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px;">
+                        <p style="font-size: 1.1em; margin-bottom: 15px;"><strong>Possible answers:</strong></p>
+                        <ul style="font-size: 1.1em;">
+                            <li><strong>0:</strong> Neither P nor Q work under me</li>
+                            <li><strong>1:</strong> Either P or Q works under me (but not both)</li>
+                            <li><strong>2:</strong> BOTH P and Q work under me! 🎯</li>
+                        </ul>
+                        <div style="background: #d1fae5; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                            <p style="font-size: 1.2em; font-weight: 600; color: #065f46;">
+                                The FIRST node (starting from bottom) that answers "2" is the LCA!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>💡 How Do We Count?</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px;">
+                        Each node counts by asking three questions:
+                    </p>
+                    <ol style="font-size: 1.1em; margin-top: 15px; line-height: 2;">
+                        <li><strong>Am I one of the targets?</strong> (Am I P or Q?) → self = 1 or 0</li>
+                        <li><strong>How many does my left child see?</strong> → left = 0, 1, or 2</li>
+                        <li><strong>How many does my right child see?</strong> → right = 0, 1, or 2</li>
+                    </ol>
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        <p style="font-size: 1.3em; text-align: center; font-weight: 600;">
+                            Total Count = left + right + self
+                        </p>
+                        <p style="text-align: center; margin-top: 15px; font-size: 1.1em;">
+                            If total == 2 → This is the LCA! ✅
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP BY STEP EXECUTION -->
+            <div class="section">
+                <h2><span class="emoji">🔄</span> Step-by-Step Execution</h2>
+
+                <div class="info-box">
+                    <p style="font-size: 1.2em; font-weight: 600;">
+                        Let's find LCA of <span style="color: #ef4444;">P = 5</span> and <span style="color: #ef4444;">Q = 1</span>
+                    </p>
+                </div>
+
+                <div class="tree-visual">
+                    <h3>Our Tree with Targets Highlighted:</h3>
+                    <div class="tree-box">
+<pre style="font-size: 1.2em;">
+                    3
+                   / \
+         <span style="background: #ef4444; color: white; padding: 5px 12px; border-radius: 50%;">5</span>   <span style="background: #ef4444; color: white; padding: 5px 12px; border-radius: 50%;">1</span>  ← Target nodes
+                 / \   / \
+                6   2 0   8
+                   / \
+                  7   4
+</pre>
+                    </div>
+                </div>
+
+                <!-- Step 1: Leaf Node 6 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 1</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+                    3
+                   / \
+                  5   1
+                 / \   / \
+               <span style="background: #f59e0b; color: white; padding: 5px 12px; border-radius: 50%;">6</span>   2 0   8
+                   / \
+                  7   4
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="boss-count-box">
+                                <p style="font-weight: 600; margin-bottom: 15px;">Node 6 asks:</p>
+                                <p style="margin: 10px 0;">Am I P or Q? <strong>NO</strong> → self = 0</p>
+                                <p style="margin: 10px 0;">Left child count? <strong>NULL</strong> → left = 0</p>
+                                <p style="margin: 10px 0;">Right child count? <strong>NULL</strong> → right = 0</p>
+                                <div style="margin-top: 20px;">
+                                    <div class="count-badge zero">Total: 0</div>
+                                </div>
+                                <p style="margin-top: 15px; font-weight: 600;">I'm boss of 0 targets</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Leaf Node 7 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 2</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+                    3
+                   / \
+                  5   1
+                 / \   / \
+                6   2 0   8
+                   / \
+                 <span style="background: #f59e0b; color: white; padding: 5px 12px; border-radius: 50%;">7</span>   4
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="boss-count-box">
+                                <p style="font-weight: 600; margin-bottom: 15px;">Node 7 asks:</p>
+                                <p style="margin: 10px 0;">Am I P or Q? <strong>NO</strong> → self = 0</p>
+                                <p style="margin: 10px 0;">Left child? <strong>NULL</strong> → left = 0</p>
+                                <p style="margin: 10px 0;">Right child? <strong>NULL</strong> → right = 0</p>
+                                <div style="margin-top: 20px;">
+                                    <div class="count-badge zero">Total: 0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Leaf Node 4 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 3</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+                    3
+                   / \
+                  5   1
+                 / \   / \
+                6   2 0   8
+                   / \
+                  7  <span style="background: #f59e0b; color: white; padding: 5px 12px; border-radius: 50%;">4</span>
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="boss-count-box">
+                                <p style="font-weight: 600; margin-bottom: 15px;">Node 4 asks:</p>
+                                <p style="margin: 10px 0;">Am I P or Q? <strong>NO</strong> → self = 0</p>
+                                <p style="margin: 10px 0;">Left child? <strong>NULL</strong> → left = 0</p>
+                                <p style="margin: 10px 0;">Right child? <strong>NULL</strong> → right = 0</p>
+                                <div style="margin-top: 20px;">
+                                    <div class="count-badge zero">Total: 0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Node 2 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 4</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+                    3
+                   / \
+                  5   1
+                 / \   / \
+                6  <span style="background: #f59e0b; color: white; padding: 5px 12px; border-radius: 50%;">2</span> 0   8
+                   / \
+                  7   4
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="boss-count-box">
+                                <p style="font-weight: 600; margin-bottom: 15px;">Node 2 asks:</p>
+                                <p style="margin: 10px 0;">Am I P or Q? <strong>NO</strong> → self = 0</p>
+                                <p style="margin: 10px 0;">Left child (7) count? → left = 0</p>
+                                <p style="margin: 10px 0;">Right child (4) count? → right = 0</p>
+                                <div style="margin-top: 20px;">
+                                    <div class="count-badge zero">Total: 0 + 0 + 0 = 0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Node 5 (TARGET!) -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 5</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+                    3
+                   / \
+                 <span style="background: #10b981; color: white; padding: 8px 15px; border-radius: 50%;">5</span>   1  ← I'm P!
+                 / \   / \
+                6   2 0   8
+                   / \
+                  7   4
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="boss-count-box">
+                                <p style="font-weight: 600; margin-bottom: 15px;">Node 5 asks:</p>
+                                <p style="margin: 10px 0; color: #10b981; font-weight: 600;">Am I P or Q? <strong>YES! I'm P</strong> → self = 1</p>
+                                <p style="margin: 10px 0;">Left child (6) count? → left = 0</p>
+                                <p style="margin: 10px 0;">Right child (2) count? → right = 0</p>
+                                <div style="margin-top: 20px;">
+                                    <div class="count-badge one">Total: 0 + 0 + 1 = 1</div>
+                                </div>
+                                <p style="margin-top: 15px; font-weight: 600;">I'm boss of 1 target (myself)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6: Leaf Node 0 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 6</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+                    3
+                   / \
+                  5   1
+                 / \   / \
+                6   2 <span style="background: #f59e0b; color: white; padding: 5px 12px; border-radius: 50%;">0</span>   8
+                   / \
+                  7   4
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="boss-count-box">
+                                <p style="font-weight: 600; margin-bottom: 15px;">Node 0 asks:</p>
+                                <p style="margin: 10px 0;">Am I P or Q? <strong>NO</strong> → self = 0</p>
+                                <p style="margin: 10px 0;">Left/Right? <strong>NULL</strong> → 0</p>
+                                <div style="margin-top: 20px;">
+                                    <div class="count-badge zero">Total: 0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 7: Leaf Node 8 -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 7</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+                    3
+                   / \
+                  5   1
+                 / \   / \
+                6   2 0  <span style="background: #f59e0b; color: white; padding: 5px 12px; border-radius: 50%;">8</span>
+                   / \
+                  7   4
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="boss-count-box">
+                                <p style="font-weight: 600; margin-bottom: 15px;">Node 8 asks:</p>
+                                <p style="margin: 10px 0;">Am I P or Q? <strong>NO</strong> → self = 0</p>
+                                <p style="margin: 10px 0;">Children? <strong>NULL</strong> → 0</p>
+                                <div style="margin-top: 20px;">
+                                    <div class="count-badge zero">Total: 0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 8: Node 1 (TARGET!) -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 8</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+                    3
+                   / \
+                  5  <span style="background: #10b981; color: white; padding: 8px 15px; border-radius: 50%;">1</span>  ← I'm Q!
+                 / \   / \
+                6   2 0   8
+                   / \
+                  7   4
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="boss-count-box">
+                                <p style="font-weight: 600; margin-bottom: 15px;">Node 1 asks:</p>
+                                <p style="margin: 10px 0; color: #10b981; font-weight: 600;">Am I P or Q? <strong>YES! I'm Q</strong> → self = 1</p>
+                                <p style="margin: 10px 0;">Left child (0) count? → left = 0</p>
+                                <p style="margin: 10px 0;">Right child (8) count? → right = 0</p>
+                                <div style="margin-top: 20px;">
+                                    <div class="count-badge one">Total: 0 + 0 + 1 = 1</div>
+                                </div>
+                                <p style="margin-top: 15px; font-weight: 600;">I'm boss of 1 target (myself)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 9: Node 3 (ROOT - LCA FOUND!) -->
+                <div class="visual-tree-step">
+                    <div class="step-number">Step 9 - FINAL!</div>
+                    <div class="tree-animation">
+                        <div>
+                            <div class="tree-box">
+<pre>
+                   <span style="background: #10b981; color: white; padding: 10px 18px; border-radius: 50%; font-size: 1.2em;">3</span> ← LCA FOUND!
+                   / \
+                  5   1
+                 / \   / \
+                6   2 0   8
+                   / \
+                  7   4
+</pre>
+                            </div>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div>
+                            <div class="boss-count-box">
+                                <p style="font-weight: 600; margin-bottom: 15px;">Node 3 asks:</p>
+                                <p style="margin: 10px 0;">Am I P or Q? <strong>NO</strong> → self = 0</p>
+                                <p style="margin: 10px 0; color: #10b981; font-weight: 600;">Left child (5) count? → left = 1 (5 sees P)</p>
+                                <p style="margin: 10px 0; color: #10b981; font-weight: 600;">Right child (1) count? → right = 1 (1 sees Q)</p>
+                                <div style="margin-top: 20px;">
+                                    <div class="count-badge two">Total: 1 + 1 + 0 = 2 🎯</div>
+                                </div>
+                                <p style="margin-top: 15px; font-weight: 600; color: #10b981; font-size: 1.2em;">
+                                    🎉 I'm boss of BOTH targets! I'm the LCA!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="output-box" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; font-size: 1.5em; margin-top: 30px;">
+                        ✅ LCA(5, 1) = Node 3
+                    </div>
+                </div>
+            </div>
+
+            <!-- RECURSION FLOW -->
+            <div class="section">
+                <h2><span class="emoji">🔄</span> Recursion Flow Visualization</h2>
+
+                <div class="info-box">
+                    <h3>🎯 Bottom-Up Processing:</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px;">
+                        Notice how we start from the LEAVES and work our way UP to the root. This is postorder-style recursion!
+                    </p>
+                </div>
+
+                <div class="recursion-flow">
+<pre style="font-size: 1.05em; line-height: 2;">
+countTargets(3)  ← Returns 2 (LCA found!)
+  │
+  ├─ countTargets(5)  ← Returns 1
+  │    │
+  │    ├─ countTargets(6) ← Returns 0
+  │    │
+  │    └─ countTargets(2) ← Returns 0
+  │         │
+  │         ├─ countTargets(7) ← Returns 0
+  │         │
+  │         └─ countTargets(4) ← Returns 0
+  │
+  └─ countTargets(1)  ← Returns 1
+       │
+       ├─ countTargets(0) ← Returns 0
+       │
+       └─ countTargets(8) ← Returns 0
+
+Summary:
+• Leaf nodes return 0 (not targets)
+• Node 5 returns 1 (is target P)
+• Node 1 returns 1 (is target Q)
+• Node 3 receives 1 from left, 1 from right → Total = 2 → LCA!
+</pre>
+                </div>
+            </div>
+
+            <!-- JAVA CODE -->
+            <div class="section">
+                <h2><span class="emoji">💻</span> Java Implementation</h2>
+
+                <div class="code-box">
+<pre><span class="code-keyword">class</span> <span class="code-function">Solution</span> {
+    Node lca = <span class="code-keyword">null</span>;  <span class="code-comment">// Store the LCA when found</span>
+    
+    <span class="code-keyword">public</span> Node <span class="code-function">lowestCommonAncestor</span>(Node root, Node p, Node q) {
+        countTargets(root, p, q);
+        <span class="code-keyword">return</span> lca;
+    }
+    
+    <span class="code-comment">// Returns: How many targets (P or Q) are in this subtree</span>
+    <span class="code-keyword">private int</span> <span class="code-function">countTargets</span>(Node root, Node p, Node q) {
+        <span class="code-comment">// BASE CASE: Null node sees 0 targets</span>
+        <span class="code-keyword">if</span> (root == <span class="code-keyword">null</span>) <span class="code-keyword">return</span> <span class="code-string">0</span>;
+        
+        <span class="code-comment">// Ask left subtree: How many targets do you see?</span>
+        <span class="code-keyword">int</span> left = countTargets(root.left, p, q);
+        
+        <span class="code-comment">// Ask right subtree: How many targets do you see?</span>
+        <span class="code-keyword">int</span> right = countTargets(root.right, p, q);
+        
+        <span class="code-comment">// Am I one of the targets?</span>
+        <span class="code-keyword">int</span> self = (root == p || root == q) ? <span class="code-string">1</span> : <span class="code-string">0</span>;
+        
+        <span class="code-comment">// Total count = left + right + self</span>
+        <span class="code-keyword">int</span> total = left + right + self;
+        
+        <span class="code-comment">// If I see both targets (total == 2) and LCA not found yet</span>
+        <span class="code-keyword">if</span> (total == <span class="code-string">2</span> && lca == <span class="code-keyword">null</span>) {
+            lca = root;  <span class="code-comment">// I'm the LCA!</span>
+        }
+        
+        <span class="code-comment">// Return my count to parent</span>
+        <span class="code-keyword">return</span> total;
+    }
+}
+
+<span class="code-comment">// Example Usage:</span>
+<span class="code-keyword">public static void</span> <span class="code-function">main</span>(String[] args) {
+    Solution sol = <span class="code-keyword">new</span> Solution();
+    
+    <span class="code-comment">// Build the tree from our example</span>
+    Node root = <span class="code-keyword">new</span> Node(<span class="code-string">3</span>);
+    root.left = <span class="code-keyword">new</span> Node(<span class="code-string">5</span>);
+    root.right = <span class="code-keyword">new</span> Node(<span class="code-string">1</span>);
+    root.left.left = <span class="code-keyword">new</span> Node(<span class="code-string">6</span>);
+    root.left.right = <span class="code-keyword">new</span> Node(<span class="code-string">2</span>);
+    root.left.right.left = <span class="code-keyword">new</span> Node(<span class="code-string">7</span>);
+    root.left.right.right = <span class="code-keyword">new</span> Node(<span class="code-string">4</span>);
+    root.right.left = <span class="code-keyword">new</span> Node(<span class="code-string">0</span>);
+    root.right.right = <span class="code-keyword">new</span> Node(<span class="code-string">8</span>);
+    
+    Node p = root.left;       <span class="code-comment">// Node 5</span>
+    Node q = root.right;      <span class="code-comment">// Node 1</span>
+    
+    Node result = sol.lowestCommonAncestor(root, p, q);
+    System.out.println(<span class="code-string">"LCA: "</span> + result.data);  <span class="code-comment">// Output: LCA: 3</span>
+}</pre>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Code Explanation:</h3>
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li><strong>Line 1:</strong> Global variable to store LCA when found</li>
+                        <li><strong>Line 9:</strong> Base case - null node contributes 0</li>
+                        <li><strong>Line 12-15:</strong> Ask both children for their counts (postorder!)</li>
+                        <li><strong>Line 18:</strong> Check if current node is one of the targets</li>
+                        <li><strong>Line 21:</strong> Add up all three counts</li>
+                        <li><strong>Line 24-26:</strong> If total is 2 and LCA not set, current node is LCA</li>
+                        <li><strong>Line 29:</strong> Return count to parent for their calculation</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>💡 Why Check "lca == null"?</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px; line-height: 1.9;">
+                        Once we find the LCA, we want to keep it! Higher nodes might also have total == 2, 
+                        but we want the LOWEST (first one found from bottom-up).
+                    </p>
+                    <p style="margin-top: 15px; font-size: 1.1em;">
+                        <strong>Example:</strong> If LCA is node 5, then node 3 will also see both targets. 
+                        But we already found 5 first (it's lower), so we keep it.
+                    </p>
+                </div>
+            </div>
+
+            <!-- COMPLEXITY ANALYSIS -->
+            <div class="section">
+                <h2><span class="emoji">⚡</span> Complexity Analysis</h2>
+
+                <table>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Complexity</th>
+                        <th>Explanation</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Time</strong></td>
+                        <td>O(N)</td>
+                        <td>Visit every node once in worst case</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Space</strong></td>
+                        <td>O(H)</td>
+                        <td>Recursion stack depth = height of tree</td>
+                    </tr>
+                </table>
+
+                <div class="info-box" style="margin-top: 25px;">
+                    <h3>📊 Why O(N) Time?</h3>
+                    <p style="font-size: 1.1em; margin-top: 15px; line-height: 1.9;">
+                        In the worst case, we visit every single node to count targets.<br><br>
+                        <strong>Best case:</strong> If LCA is near root, we might not visit all nodes, but we still analyze this as O(N) for worst case.<br><br>
+                        <strong>Why not stop early?</strong> We could optimize to stop once LCA is found, but the basic algorithm visits all nodes.
+                    </p>
+                </div>
+            </div>
+
+            <!-- ALTERNATIVE APPROACH -->
+            <div class="section">
+                <h2><span class="emoji">🔄</span> Alternative Approach (Classic Method)</h2>
+
+                <div class="info-box">
+                    <h3>📝 The Traditional Approach:</h3>
+                    <p style="font-size: 1.15em; margin-top: 15px;">
+                        There's another popular way to solve this without counting:
+                    </p>
+                </div>
+
+                <div class="code-box">
+<pre><span class="code-comment">// Classic LCA approach (returns the LCA node directly)</span>
+<span class="code-keyword">public</span> Node <span class="code-function">lowestCommonAncestor</span>(Node root, Node p, Node q) {
+    <span class="code-comment">// BASE CASE: Empty tree or found one of the targets</span>
+    <span class="code-keyword">if</span> (root == <span class="code-keyword">null</span> || root == p || root == q) {
+        <span class="code-keyword">return</span> root;
+    }
+    
+    <span class="code-comment">// Search in left and right subtrees</span>
+    Node left = lowestCommonAncestor(root.left, p, q);
+    Node right = lowestCommonAncestor(root.right, p, q);
+    
+    <span class="code-comment">// If both sides found something, current node is LCA</span>
+    <span class="code-keyword">if</span> (left != <span class="code-keyword">null</span> && right != <span class="code-keyword">null</span>) {
+        <span class="code-keyword">return</span> root;
+    }
+    
+    <span class="code-comment">// Otherwise return whichever side found something</span>
+    <span class="code-keyword">return</span> left != <span class="code-keyword">null</span> ? left : right;
+}</pre>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🎯 Comparison:</h3>
+                    <table>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Boss Count Method</th>
+                            <th>Classic Method</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Intuition</strong></td>
+                            <td>Count targets in subtrees</td>
+                            <td>Return nodes when found</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Code Length</strong></td>
+                            <td>Longer (counting logic)</td>
+                            <td>Shorter (simpler)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Clarity</strong></td>
+                            <td>Very explicit (count = 2)</td>
+                            <td>More abstract</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Complexity</strong></td>
+                            <td>O(N) time, O(H) space</td>
+                            <td>O(N) time, O(H) space</td>
+                        </tr>
+                    </table>
+                    <p style="margin-top: 20px; font-size: 1.1em;">
+                        <strong>Both work perfectly!</strong> The Boss Count method is easier to understand conceptually.
+                    </p>
+                </div>
+            </div>
+
+            <!-- KEY TAKEAWAYS -->
+            <div class="section">
+                <h2><span class="emoji">✨</span> Key Takeaways</h2>
+
+                <div class="success-box">
+                    <h3>Remember These Forever:</h3>
+                    <ol style="font-size: 1.15em; line-height: 2; margin-top: 15px;">
+                        <li><strong>LCA = Lowest Common Ancestor</strong> - deepest node that has both targets as descendants</li>
+                        <li><strong>Boss Count Method:</strong> Each node counts how many targets in its subtree</li>
+                        <li><strong>Count Formula:</strong> total = left + right + self</li>
+                        <li><strong>LCA Condition:</strong> First node with count == 2</li>
+                        <li><strong>Bottom-Up Processing:</strong> Start from leaves, work up (postorder style)</li>
+                        <li><strong>A node can be LCA of itself:</strong> If one target is ancestor of the other</li>
+                        <li><strong>Time: O(N)</strong> - visit every node once</li>
+                        <li><strong>Space: O(H)</strong> - recursion stack depth</li>
+                        <li><strong>Check "lca == null":</strong> Keep the FIRST (lowest) node found</li>
+                    </ol>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>🧠 Memory Trick:</h3>
+                    <p style="font-size: 1.2em; line-height: 2; margin-top: 15px;">
+                        <strong>"Who's Your Boss?"</strong><br><br>
+                        Ask every employee (node): "How many of these 2 people work under you?"<br>
+                        The first manager who answers "Both!" is the LCA.<br><br>
+                        <strong>Count = 0:</strong> Neither works for me<br>
+                        <strong>Count = 1:</strong> One works for me<br>
+                        <strong>Count = 2:</strong> Both work for me → I'm the LCA! 👔
+                    </p>
+                </div>
+
+                <div class="info-box">
+                    <h3>🎯 Common Interview Follow-Ups:</h3>
+                    <ul style="font-size: 1.1em; margin-top: 15px;">
+                        <li><strong>What if P or Q doesn't exist in the tree?</strong> 
+                            <br>→ Need to verify both exist first (separate traversal)</li>
+                        <li><strong>What if there are more than 2 nodes?</strong> 
+                            <br>→ Find LCA of all pairs, then find LCA of those results</li>
+                        <li><strong>Can you do it iteratively?</strong> 
+                            <br>→ Yes, but requires storing paths from root to P and Q, then comparing</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,3652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Pointers Pattern - Complete Visual Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #16a085;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            border: 2px solid #e0e0e0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .section h2 {
+            color: var(--primary);
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .section h3 {
+            color: var(--secondary);
+            font-size: 1.6em;
+            margin: 25px 0 15px 0;
+        }
+
+        .section h4 {
+            color: var(--info);
+            font-size: 1.3em;
+            margin: 20px 0 10px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #fff9c4, #ffeb3b);
+            border: 3px solid #fbc02d;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            font-size: 1.15em;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid var(--info);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 5px solid var(--success);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 5px solid var(--warning);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .danger-box {
+            background: #ffebee;
+            border-left: 5px solid var(--danger);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 25px 0;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre;
+            color: inherit;
+        }
+
+        .keyword { color: #569cd6; font-weight: bold; }
+        .comment { color: #6a9955; font-style: italic; }
+        .string { color: #ce9178; }
+        .number { color: #b5cea8; }
+
+        .array-visual {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .array-cell {
+            width: 70px;
+            height: 70px;
+            border: 3px solid #333;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5em;
+            background: white;
+            position: relative;
+        }
+
+        .array-cell .index {
+            position: absolute;
+            top: -25px;
+            font-size: 0.6em;
+            color: #666;
+            font-weight: normal;
+        }
+
+        .array-cell .label {
+            position: absolute;
+            bottom: -30px;
+            font-size: 0.5em;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .array-cell.left-pointer {
+            background: linear-gradient(135deg, #bbdefb, #2196f3);
+            border-color: #1565c0;
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+
+        .array-cell.right-pointer {
+            background: linear-gradient(135deg, #c8e6c9, #4caf50);
+            border-color: #2e7d32;
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+
+        .array-cell.officer {
+            background: linear-gradient(135deg, #fff9c4, #ffeb3b);
+            border-color: #f9a825;
+        }
+
+        .array-cell.cm {
+            background: linear-gradient(135deg, #f8bbd0, #e91e63);
+            border-color: #c2185b;
+            color: white;
+        }
+
+        .array-cell.low {
+            background: linear-gradient(135deg, #ffcdd2, #f44336);
+            border-color: #c62828;
+            color: white;
+        }
+
+        .array-cell.mid {
+            background: linear-gradient(135deg, #fff9c4, #ffeb3b);
+            border-color: #f9a825;
+        }
+
+        .array-cell.high {
+            background: linear-gradient(135deg, #c5e1a5, #8bc34a);
+            border-color: #689f38;
+            color: white;
+        }
+
+        .array-cell.fixed {
+            background: linear-gradient(135deg, #ce93d8, #ab47bc);
+            border-color: #7b1fa2;
+            color: white;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .step-box {
+            background: white;
+            border: 3px solid var(--info);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .step-box h4 {
+            color: var(--info);
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: var(--light);
+        }
+
+        .flowchart {
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .flowchart-box {
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px auto;
+            max-width: 400px;
+            font-weight: bold;
+        }
+
+        .flowchart-arrow {
+            font-size: 2em;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        .toc {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .toc li {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+
+        .toc a {
+            color: var(--dark);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .toc a:hover {
+            color: var(--primary);
+            padding-left: 10px;
+        }
+
+        .building-visual {
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .complexity-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 5px;
+            font-size: 0.9em;
+        }
+
+        .complexity-badge.time {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .complexity-badge.space {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Two Pointers Pattern</h1>
+            <p style="font-size: 1.3em;">Complete Visual Guide with Detailed Examples & Code</p>
+            <p style="font-size: 1em; margin-top: 10px;">Master the Pattern that Optimizes O(N²) to O(N)!</p>
+        </header>
+
+        <div class="content">
+
+            <!-- ============================================ -->
+            <!-- CORE LOGIC & STRATEGY SECTION - NEW ADDITION -->
+            <!-- ============================================ -->
+                <h2>1️⃣ Introduction & Core Concepts</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">What is Two Pointers?</h3>
+                    <p style="font-size: 1.2em; line-height: 2;">
+                        The <strong>Two Pointers</strong> technique uses two indices (or "pointers") to traverse a data structure 
+                        <strong>simultaneously</strong>, optimizing solutions that would otherwise require nested loops.
+                    </p>
+                </div>
+
+                <h3>👤 The Human Analogy</h3>
+
+                <p style="font-size: 1.05em; margin-bottom: 20px;">
+                    Imagine you have a <strong>row of 8 lockers</strong>, each with a number on it.
+                    Your task: <strong>find two lockers that add up to 10</strong>.
+                </p>
+
+                <!-- WITHOUT TWO POINTERS -->
+                <div style="border: 3px solid #e74c3c; border-radius: 12px; overflow: hidden; margin: 25px 0;">
+                    <div style="background: #e74c3c; color: white; padding: 14px 22px; font-size: 1.2em; font-weight: 700;">
+                        ❌ Without Two Pointers — The Naive Way
+                    </div>
+                    <div style="padding: 25px; background: #fff5f5;">
+
+                        <p style="font-size: 1.05em; margin-bottom: 20px; line-height: 1.8;">
+                            You send <strong>one person (🧍 Alex)</strong>. Alex picks locker 1, then walks to every
+                            other locker to check if it pairs with locker 1. Then goes back, picks locker 2, walks
+                            to every other locker again. And so on...
+                        </p>
+
+                        <!-- ROW OF LOCKERS -->
+                        <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 20px 0 30px;">
+                            <div style="text-align:center;">
+                                <div style="width:55px;height:55px;border:3px solid #e74c3c;border-radius:8px;background:#ffebee;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2em;">1</div>
+                                <div style="font-size:0.7em;color:#666;margin-top:4px;">lock 0</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="width:55px;height:55px;border:3px solid #e74c3c;border-radius:8px;background:#ffebee;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2em;">3</div>
+                                <div style="font-size:0.7em;color:#666;margin-top:4px;">lock 1</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="width:55px;height:55px;border:3px solid #e74c3c;border-radius:8px;background:#ffebee;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2em;">4</div>
+                                <div style="font-size:0.7em;color:#666;margin-top:4px;">lock 2</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="width:55px;height:55px;border:3px solid #e74c3c;border-radius:8px;background:#ffebee;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2em;">5</div>
+                                <div style="font-size:0.7em;color:#666;margin-top:4px;">lock 3</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="width:55px;height:55px;border:3px solid #e74c3c;border-radius:8px;background:#ffebee;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2em;">6</div>
+                                <div style="font-size:0.7em;color:#666;margin-top:4px;">lock 4</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="width:55px;height:55px;border:3px solid #e74c3c;border-radius:8px;background:#ffebee;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2em;">7</div>
+                                <div style="font-size:0.7em;color:#666;margin-top:4px;">lock 5</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="width:55px;height:55px;border:3px solid #e74c3c;border-radius:8px;background:#ffebee;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2em;">9</div>
+                                <div style="font-size:0.7em;color:#666;margin-top:4px;">lock 6</div>
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="width:55px;height:55px;border:3px solid #e74c3c;border-radius:8px;background:#ffebee;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2em;">10</div>
+                                <div style="font-size:0.7em;color:#666;margin-top:4px;">lock 7</div>
+                            </div>
+                        </div>
+
+                        <!-- ALEX'S JOURNEY -->
+                        <div style="background:white; border-radius:10px; padding:20px; border:2px solid #ffcdd2;">
+                            <p style="font-weight:700; margin-bottom:14px; color:#c62828;">🧍 Alex's journey (target = 10):</p>
+                            <div style="font-family: monospace; font-size: 0.95em; line-height: 2.2;">
+                                <div style="padding: 6px 10px; background:#fff3e0; border-radius:5px; margin:4px 0;">
+                                    🧍 Stands at lock 0 (val=1) → checks lock 1 (1+3=4 ✗), lock 2 (1+4=5 ✗), lock 3 (1+5=6 ✗)... lock 7 (1+10=11 ✗)
+                                    <span style="color:#e74c3c; font-weight:700;"> → 7 checks, no match</span>
+                                </div>
+                                <div style="padding: 6px 10px; background:#fff3e0; border-radius:5px; margin:4px 0;">
+                                    🧍 Walks back. Stands at lock 1 (val=3) → checks lock 2 (3+4=7 ✗), lock 3 (3+5=8 ✗)... lock 6 (3+7=10 ✓?)
+                                    <span style="color:#e74c3c; font-weight:700;"> → 6 checks</span>
+                                </div>
+                                <div style="padding: 6px 10px; background:#fce4ec; border-radius:5px; margin:4px 0; font-weight:700; color:#c62828;">
+                                    Total: up to N×N = 8×8 = 64 possible checks → O(N²)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 16px; padding: 12px 18px; background: #ffebee; border-radius: 8px; font-size: 1em; line-height: 1.8;">
+                            Alex is exhausted 😮‍💨 — they walked the entire row once <strong>for every single locker</strong>.
+                            With 1000 lockers that's up to <strong>1,000,000 checks</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WITH TWO POINTERS -->
+                <div style="border: 3px solid #27ae60; border-radius: 12px; overflow: hidden; margin: 25px 0;">
+                    <div style="background: #27ae60; color: white; padding: 14px 22px; font-size: 1.2em; font-weight: 700;">
+                        ✅ With Two Pointers — The Smart Way
+                    </div>
+                    <div style="padding: 25px; background: #f0fff4;">
+
+                        <p style="font-size: 1.05em; margin-bottom: 20px; line-height: 1.8;">
+                            Now send <strong>two people</strong>: 🧍 Alex starts at the <strong>left end</strong> (smallest number),
+                            🧍 Blake starts at the <strong>right end</strong> (largest number). They walk <em>toward each other</em>
+                            and together they can make smart decisions every step.
+                        </p>
+
+                        <!-- STEP 1 -->
+                        <div style="background:white; border-radius:10px; padding:18px 20px; border:2px solid #a5d6a7; margin: 14px 0;">
+                            <p style="font-weight:700; color:#2e7d32; margin-bottom:12px;">Step 1: Alex at lock 0 (1), Blake at lock 7 (10). Sum = 11 &gt; 10</p>
+                            <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom:12px;">
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #1565c0;border-radius:8px;background:#bbdefb;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;">1</div><div style="font-size:0.7em;color:#1565c0;margin-top:3px;">🧍Alex</div></div>
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #ccc;border-radius:8px;background:#f9f9f9;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;">3</div></div>
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #ccc;border-radius:8px;background:#f9f9f9;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;">4</div></div>
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #ccc;border-radius:8px;background:#f9f9f9;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;">5</div></div>
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #ccc;border-radius:8px;background:#f9f9f9;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;">6</div></div>
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #ccc;border-radius:8px;background:#f9f9f9;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;">7</div></div>
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #ccc;border-radius:8px;background:#f9f9f9;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;">9</div></div>
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #bf360c;border-radius:8px;background:#ffccbc;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;">10</div><div style="font-size:0.7em;color:#bf360c;margin-top:3px;">🧍Blake</div></div>
+                            </div>
+                            <p style="font-size:0.95em; color:#555;">1 + 10 = 11 &gt; 10 → too big! Blake moves left (10 is too large, pairing it with anything bigger won't help).</p>
+                        </div>
+
+                        <!-- STEP 2 -->
+                        <div style="background:white; border-radius:10px; padding:18px 20px; border:2px solid #a5d6a7; margin: 14px 0;">
+                            <p style="font-weight:700; color:#2e7d32; margin-bottom:12px;">Step 2: Alex at lock 0 (1), Blake at lock 6 (9). Sum = 10 ✅</p>
+                            <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom:12px;">
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #1565c0;border-radius:8px;background:#bbdefb;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;">1</div><div style="font-size:0.7em;color:#1565c0;margin-top:3px;">🧍Alex</div></div>
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #ccc;border-radius:8px;background:#f9f9f9;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;">3</div></div>
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #ccc;border-radius:8px;background:#f9f9f9;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;">4</div></div>
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #ccc;border-radius:8px;background:#f9f9f9;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;">5</div></div>
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #ccc;border-radius:8px;background:#f9f9f9;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;">6</div></div>
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #ccc;border-radius:8px;background:#f9f9f9;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;">7</div></div>
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #bf360c;border-radius:8px;background:#ffccbc;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;">9</div><div style="font-size:0.7em;color:#bf360c;margin-top:3px;">🧍Blake</div></div>
+                                <div style="text-align:center;"><div style="width:50px;height:50px;border:3px solid #aaa;border-radius:8px;background:#eeeeee;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1em;color:#aaa;">10</div><div style="font-size:0.7em;color:#aaa;margin-top:3px;">skipped</div></div>
+                            </div>
+                            <p style="font-size:0.95em; color:#2e7d32; font-weight:700;">1 + 9 = 10 ✅ Found in just 2 steps!</p>
+                        </div>
+
+                        <!-- KEY INSIGHT -->
+                        <div style="margin-top: 16px; padding: 16px 20px; background: #e8f5e9; border-radius: 8px; font-size: 1em; line-height: 2; border-left: 4px solid #27ae60;">
+                            <strong>Why is this smart?</strong><br>
+                            Because the array is <strong>sorted</strong>, Alex and Blake can reason at every step:<br>
+                            • Sum <strong>too big</strong> → Blake moves left (reduce the right value)<br>
+                            • Sum <strong>too small</strong> → Alex moves right (increase the left value)<br>
+                            • Sum <strong>exact</strong> → done! 🎉<br><br>
+                            They never need to re-check anything. Each step eliminates an entire column of possibilities.
+                            With 1000 lockers: only up to <strong>1000 checks</strong> instead of 1,000,000. That's <strong>O(N) vs O(N²)</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SIDE BY SIDE SUMMARY -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0;">
+                    <div style="background: #ffebee; border-radius: 10px; padding: 20px; border: 2px solid #ef9a9a;">
+                        <h4 style="color:#c62828; margin-bottom: 12px;">❌ Alex alone (Brute Force)</h4>
+                        <div style="font-size: 2.5rem; text-align:center; margin: 10px 0;">🧍</div>
+                        <ul style="font-size: 0.95em; line-height: 2;">
+                            <li>Checks every pair</li>
+                            <li>Lots of backtracking</li>
+                            <li>N × N comparisons</li>
+                            <li>O(N²) time</li>
+                        </ul>
+                    </div>
+                    <div style="background: #e8f5e9; border-radius: 10px; padding: 20px; border: 2px solid #a5d6a7;">
+                        <h4 style="color:#2e7d32; margin-bottom: 12px;">✅ Alex + Blake (Two Pointers)</h4>
+                        <div style="font-size: 2.5rem; text-align:center; margin: 10px 0;">🧍 → ← 🧍</div>
+                        <ul style="font-size: 0.95em; line-height: 2;">
+                            <li>Walk toward each other</li>
+                            <li>Each step eliminates options</li>
+                            <li>At most N comparisons</li>
+                            <li>O(N) time</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>🎯 Goal of Two Pointers</h3>
+                <div class="info-box">
+                    <table>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Without Two Pointers</th>
+                            <th>With Two Pointers</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Time Complexity</strong></td>
+                            <td>O(N²) or O(N³)</td>
+                            <td>O(N) or O(N²)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Space Complexity</strong></td>
+                            <td>Often O(N)</td>
+                            <td>O(1) in-place</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Approach</strong></td>
+                            <td>Nested loops</td>
+                            <td>Smart pointer movement</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION 2: WHEN TO USE -->
+            <section id="when" class="section">
+                <h2>2️⃣ When to Use Two Pointers</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">The Decision Flowchart</h3>
+                    <p>Check if your problem has these characteristics:</p>
+                </div>
+
+                <div class="flowchart">
+                    <div class="flowchart-box" style="background: #e3f2fd;">
+                        Is it an <strong>Array</strong> or <strong>Linked List</strong>?
+                    </div>
+                    <div class="flowchart-arrow">↓ YES</div>
+                    
+                    <div class="flowchart-box" style="background: #f3e5f5;">
+                        Is it <strong>sorted</strong> OR would <strong>sorting</strong> help?
+                        <div style="margin-top: 10px; padding: 8px 12px; background: rgba(33,150,243,0.1); border-left: 3px solid #2196f3; font-size: 0.9em; font-style: italic; color: #1565c0;">
+                            💡 Original order does not matter
+                        </div>
+                    </div>
+                    <div class="flowchart-arrow">↓ YES</div>
+                    
+                    <div class="flowchart-box" style="background: #fff9c4;">
+                        Does it involve <strong>pairs/triplets</strong> OR<br>
+                        <strong>rearranging/merging</strong> in-place?
+                        <div style="margin-top: 10px; padding: 8px 12px; background: rgba(255,152,0,0.1); border-left: 3px solid #ff9800; font-size: 0.85em; text-align: left; line-height: 1.6;">
+                            <strong>Examples:</strong><br>
+                            • pair(i, j), triplet(i, j, k), quadruple(i, j, k, l)<br>
+                            • Rearrange: 0/1/2 or red/blue/green balls in-order without using any extra space<br>
+                            • <span style="color: #c62828;">Detect cycle in a linkedlist</span>
+                        </div>
+                    </div>
+                    <div class="flowchart-arrow">↓ YES</div>
+                    
+                    <div class="flowchart-box" style="background: #e8f5e9;">
+                        Is there a <strong>space constraint</strong><br>
+                        (O(1) space needed)?
+                    </div>
+                    <div class="flowchart-arrow">↓ YES</div>
+                    
+                    <div class="flowchart-box" style="background: linear-gradient(135deg, #4caf50, #45a049); color: white; font-size: 1.3em;">
+                        ✅ USE TWO POINTERS!
+                    </div>
+                </div>
+
+                <h3>✅ When to Use</h3>
+                <div class="success-box">
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li>✓ Data is <strong>sorted</strong> or can be sorted</li>
+                        <li>✓ Need to find <strong>pairs, triplets,</strong> or quadruplets</li>
+                        <li>✓ Problem involves <strong>rearranging</strong> elements</li>
+                        <li>✓ Need to <strong>remove duplicates</strong></li>
+                        <li>✓ <strong>Merge</strong> operations in-place</li>
+                        <li>✓ Constraint: <strong>"Do not use extra space"</strong></li>
+                        <li>✓ Need to optimize from O(N²) to O(N)</li>
+                    </ul>
+                </div>
+
+                <h3>❌ When NOT to Use</h3>
+                <div class="danger-box">
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li>✗ Unsorted array and must <strong>return indices</strong> → Use HashMap</li>
+                        <li>✗ Need <strong>ALL subsets</strong> → Use Backtracking</li>
+                        <li>✗ <strong>Optimization problems</strong> (min/max) → Use DP</li>
+                        <li>✗ <strong>Graph traversal</strong> → Use DFS/BFS</li>
+                        <li>✗ Only need to <strong>count</strong> something → May use DP or Math</li>
+                    </ul>
+                </div>
+            </section>
+
+
+            <!-- SECTION 3: TWO SUM -->
+            <section id="twosum" class="section">
+                <h2>3️⃣ Two Sum (Sorted Array) - Foundation</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Problem:</strong> Find two numbers in a sorted array that add up to target<br>
+                        <strong>Example:</strong> arr = [1, 3, 5, 7, 9], target = 12 → Output: [3, 9]
+                    </p>
+                </div>
+
+                <h3>Why Two Pointers Works</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        Array is <strong>sorted</strong>: smallest at start, largest at end<br>
+                        • If sum too small → need bigger number (move left forward)<br>
+                        • If sum too large → need smaller number (move right backward)
+                    </p>
+                </div>
+
+                <h3>🧠 Core Logic</h3>
+                <div class="code-block"><pre><span class="comment">// Two Sum Template</span>
+L = <span class="number">0</span>,  R = n <span class="number">-1</span>
+
+<span class="keyword">while</span> (L < R) {
+    sum = arr[L] + arr[R]
+    
+    <span class="keyword">if</span> (sum == target)
+        <span class="keyword">return</span> [arr[L], arr[R]]
+    
+    <span class="keyword">else if</span> (sum < target)
+        L++   <span class="comment">// Need larger number</span>
+    
+    <span class="keyword">else</span>
+        R--   <span class="comment">// Need smaller number</span>
+}</pre></div>
+
+                <h3>📊 Visual Step-by-Step</h3>
+
+                <!-- Step 0 -->
+                <div class="step-box">
+                    <h4>Step 0: Initialize Pointers</h4>
+                    <p><strong>Target:</strong> 12</p>
+                    
+                    <div class="array-visual">
+                        <div class="array-cell left-pointer">
+                            <div class="index">0</div>
+                            1
+                            <div class="label">LEFT</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">1</div>
+                            3
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">2</div>
+                            5
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">3</div>
+                            7
+                        </div>
+                        <div class="array-cell right-pointer">
+                            <div class="index">4</div>
+                            9
+                            <div class="label">RIGHT</div>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Calculation:</strong> sum = 1 + 9 = 10<br>
+                        <strong>Decision:</strong> 10 < 12 → Sum too small, move LEFT forward →
+                    </div>
+                </div>
+
+                <!-- Step 1 -->
+                <div class="step-box">
+                    <h4>Step 1: Left Moved Forward</h4>
+                    
+                    <div class="array-visual">
+                        <div class="array-cell">
+                            <div class="index">0</div>
+                            1
+                        </div>
+                        <div class="array-cell left-pointer">
+                            <div class="index">1</div>
+                            3
+                            <div class="label">LEFT</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">2</div>
+                            5
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">3</div>
+                            7
+                        </div>
+                        <div class="array-cell right-pointer">
+                            <div class="index">4</div>
+                            9
+                            <div class="label">RIGHT</div>
+                        </div>
+                    </div>
+
+                    <div class="success-box">
+                        <strong>Calculation:</strong> sum = 3 + 9 = 12<br>
+                        <strong>Decision:</strong> 12 == 12 → ✅ FOUND! Return [3, 9]
+                    </div>
+                </div>
+
+                <h3>💻 Java Code (Fully Commented)</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Two Sum - Sorted Array
+ * 
+ * Problem: Find two numbers that add up to target in sorted array
+ * 
+ * Approach: Two Pointers from opposite ends
+ * - left pointer starts at smallest element (index 0)
+ * - right pointer starts at largest element (index n-1)
+ * - Move pointers based on sum comparison with target
+ * 
+ * Why it works:
+ * - Array is SORTED, so we know smallest and largest values
+ * - If sum too small → need bigger number → move left forward
+ * - If sum too large → need smaller number → move right backward
+ * - Pointers eventually meet or find the answer
+ * 
+ * Time: O(N) - single pass through array
+ * Space: O(1) - only two pointers used
+ */</span>
+<span class="keyword">public int</span>[] twoSumSorted(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> target) {
+    <span class="comment">// Initialize left pointer at start (smallest element)</span>
+    <span class="keyword">int</span> left = <span class="number">0</span>;
+    
+    <span class="comment">// Initialize right pointer at end (largest element)</span>
+    <span class="keyword">int</span> right = arr.length - <span class="number">1</span>;
+    
+    <span class="comment">// Keep searching while pointers haven't crossed</span>
+    <span class="comment">// Stop when left >= right (no more pairs to check)</span>
+    <span class="keyword">while</span> (left < right) {
+        <span class="comment">// Calculate sum of current pair</span>
+        <span class="keyword">int</span> sum = arr[left] + arr[right];
+        
+        <span class="comment">// Case 1: Found the target sum!</span>
+        <span class="keyword">if</span> (sum == target) {
+            <span class="comment">// Return the indices (or values depending on problem)</span>
+            <span class="keyword">return new int</span>[]{left, right};
+        } 
+        
+        <span class="comment">// Case 2: Sum is too small</span>
+        <span class="comment">// We need a LARGER sum, so move left pointer forward</span>
+        <span class="comment">// This gives us a bigger number (array is sorted!)</span>
+        <span class="keyword">else if</span> (sum < target) {
+            left++;
+        } 
+        
+        <span class="comment">// Case 3: Sum is too large</span>
+        <span class="comment">// We need a SMALLER sum, so move right pointer backward</span>
+        <span class="comment">// This gives us a smaller number (array is sorted!)</span>
+        <span class="keyword">else</span> {
+            right--;
+        }
+    }
+    
+    <span class="comment">// If we exit the loop, no pair was found</span>
+    <span class="comment">// Return [-1, -1] to indicate no solution exists</span>
+    <span class="keyword">return new int</span>[]{-<span class="number">1</span>, -<span class="number">1</span>};
+}</pre></div>
+
+                <div style="display: flex; gap: 10px; margin: 20px 0;">
+                    <span class="complexity-badge time">Time: O(N)</span>
+                    <span class="complexity-badge space">Space: O(1)</span>
+                </div>
+
+                <h3>🔧 Foundation: Merge Two Sorted Arrays</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em;">
+                        <strong>Essential Building Block:</strong> This merging technique is used in many problems!
+                    </p>
+                </div>
+
+                <h3>📊 Visual Step-by-Step</h3>
+                
+                <div class="step-box">
+                    <h4>Example: Merge A = [1, 3, 5] and B = [2, 4, 6]</h4>
+                </div>
+
+                <div class="step-box">
+                    <h4>Step 0: Initial State</h4>
+                    <p><strong>Array A:</strong></p>
+                    <div class="array-visual">
+                        <div class="array-cell left-pointer">
+                            <div class="index">i=0</div>
+                            1
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">1</div>
+                            3
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">2</div>
+                            5
+                        </div>
+                    </div>
+                    <p><strong>Array B:</strong></p>
+                    <div class="array-visual">
+                        <div class="array-cell right-pointer">
+                            <div class="index">j=0</div>
+                            2
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">1</div>
+                            4
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">2</div>
+                            6
+                        </div>
+                    </div>
+                    <p><strong>Compare:</strong> 1 vs 2 → 1 smaller, take from A</p>
+                </div>
+
+                <div class="step-box">
+                    <h4>After Step 1: Took 1 from A</h4>
+                    <p><strong>Result:</strong></p>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background: #c8e6c9;">
+                            <div class="index">0</div>
+                            1
+                        </div>
+                        <div class="array-cell" style="background: #f5f5f5;">
+                            <div class="index">1</div>
+                            _
+                        </div>
+                        <div class="array-cell" style="background: #f5f5f5;">
+                            <div class="index">2</div>
+                            _
+                        </div>
+                        <div class="array-cell" style="background: #f5f5f5;">
+                            <div class="index">3</div>
+                            _
+                        </div>
+                        <div class="array-cell" style="background: #f5f5f5;">
+                            <div class="index">4</div>
+                            _
+                        </div>
+                        <div class="array-cell" style="background: #f5f5f5;">
+                            <div class="index">5</div>
+                            _
+                        </div>
+                    </div>
+                    <p><strong>Next Compare:</strong> 3 vs 2 → 2 smaller, take from B</p>
+                </div>
+
+                <div class="step-box">
+                    <h4>After Step 2: Took 2 from B</h4>
+                    <p><strong>Result:</strong></p>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background: #c8e6c9;">
+                            <div class="index">0</div>
+                            1
+                        </div>
+                        <div class="array-cell" style="background: #c8e6c9;">
+                            <div class="index">1</div>
+                            2
+                        </div>
+                        <div class="array-cell" style="background: #f5f5f5;">
+                            <div class="index">2</div>
+                            _
+                        </div>
+                        <div class="array-cell" style="background: #f5f5f5;">
+                            <div class="index">3</div>
+                            _
+                        </div>
+                        <div class="array-cell" style="background: #f5f5f5;">
+                            <div class="index">4</div>
+                            _
+                        </div>
+                        <div class="array-cell" style="background: #f5f5f5;">
+                            <div class="index">5</div>
+                            _
+                        </div>
+                    </div>
+                    <p>Continue this process... Final: [1, 2, 3, 4, 5, 6]</p>
+                    <div style="margin-top: 15px; padding: 12px 16px; background: rgba(198,40,40,0.1); border-left: 4px solid #c62828; border-radius: 4px;">
+                        <p style="color: #c62828; font-weight: 600; margin-bottom: 8px;">📝 Important Notes:</p>
+                        <ul style="font-size: 0.95em; line-height: 1.8; color: #c62828; margin-left: 20px;">
+                            <li><strong>We keep on doing this: i < A.length && j < B.length</strong></li>
+                            <li><strong>We will add remaining elements to the resulting array if i < A.length</strong></li>
+                            <li><strong>We will add remaining elements to the resulting array if j < B.length</strong></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>💻 Java Code (Fully Commented)</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Merge Two Sorted Arrays
+ * Time: O(N + M), Space: O(N + M)
+ */</span>
+<span class="keyword">public int</span>[] mergeSortedArrays(<span class="keyword">int</span>[] A, <span class="keyword">int</span>[] B) {
+    <span class="keyword">int</span>[] result = <span class="keyword">new int</span>[A.length + B.length];
+    <span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>, k = <span class="number">0</span>;
+    
+    <span class="comment">// Merge while both have elements</span>
+    <span class="keyword">while</span> (i < A.length && j < B.length) {
+        <span class="keyword">if</span> (A[i] <= B[j]) {
+            result[k++] = A[i++];
+        } <span class="keyword">else</span> {
+            result[k++] = B[j++];
+        }
+    }
+    
+    <span class="comment">// Copy remaining from A</span>
+    <span class="keyword">while</span> (i < A.length) result[k++] = A[i++];
+    
+    <span class="comment">// Copy remaining from B</span>
+    <span class="keyword">while</span> (j < B.length) result[k++] = B[j++];
+    
+    <span class="keyword">return</span> result;
+}</pre></div>
+            </section>
+
+
+            <!-- SECTION 4: SQUARES -->
+            <section id="squares" class="section">
+                <h2>4️⃣ Squares of Sorted Array</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Problem:</strong> Given sorted array with negatives, return sorted squares<br>
+                        <strong>Example:</strong> [-4, -1, 0, 3, 10] → [0, 1, 9, 16, 100]
+                    </p>
+                </div>
+
+                <h3>Why Simple Squaring Breaks Sorting</h3>
+                <div class="warning-box">
+                    <pre style="font-family: monospace; font-size: 1.1em;">
+Original:  [-4, -1,  0,  3, 10]
+After ^2:  [16,  1,  0,  9, 100]  ❌ NOT SORTED!
+
+Why? -4 squared = 16 (larger than 3 squared = 9)</pre>
+                    <div style="margin-top: 15px; padding: 12px 16px; background: rgba(198,40,40,0.15); border-left: 4px solid #c62828; border-radius: 4px;">
+                        <p style="color: #c62828; font-weight: 700; font-size: 1.05em;">
+                            Squaring -ve elements gives us positive numbers and as a result it becomes tricky since they are sorted in descending order
+                        </p>
+                    </div>
+                </div>
+
+                <h3>Solution: Split and Merge</h3>
+                <div class="step-box">
+                    <h4>Key Insight</h4>
+                    <p>The array has TWO sorted parts:</p>
+                    <ol style="font-size: 1.1em; line-height: 2;">
+                        <li><strong>Negatives:</strong> Read right-to-left and square → ascending (no reverse needed)</li>
+                        <li><strong>Positives:</strong> Already ascending → square on the fly during merge (no extra list needed)</li>
+                    </ol>
+                </div>
+
+                <h3>📊 Visual Example</h3>
+                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <pre style="font-family: monospace; font-size: 1.1em;">
+Input: [-4, -1, 0, 3, 10]
+
+Step 1: Split
+neg = [-4, -1]      pos = [0, 3, 10]
+
+Step 2: Set pointers
+i = 1 (END of neg)  j = 0 (START of pos)
+↑ reading neg right-to-left gives ascending squares — no reverse() needed!
+↑ pos is already ascending — no posSquared list needed, square on the fly!
+
+Step 3: Merge (squaring on the fly)
+i=1: (-1)²=1  vs  j=0: 0²=0   → 0 smaller  → result[0]=0,  j=1
+i=1: (-1)²=1  vs  j=1: 3²=9   → 1 smaller  → result[1]=1,  i=0
+i=0: (-4)²=16 vs  j=1: 3²=9   → 9 smaller  → result[2]=9,  j=2
+i=0: (-4)²=16 vs  j=2: 10²=100 → 16 smaller → result[3]=16, i=-1
+neg exhausted → drain pos: result[4]=100
+
+Final: [0, 1, 9, 16, 100] ✓</pre>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin: 20px 0;">
+                    <span class="complexity-badge time">Time: O(N)</span>
+                    <span class="complexity-badge space">Space: O(N)</span>
+                </div>
+
+                <h3>💻 Java Code</h3>
+
+                <div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px 20px; border-radius: 8px; margin: 15px 0;">
+                    <strong>💡 Key Observations:</strong>
+                    <ul style="margin-top: 8px; line-height: 2;">
+                        <li>Positives squared → stay ascending → <strong>no extra list needed, square on the fly</strong></li>
+                        <li>Negatives read <strong>right-to-left</strong> and squared → ascending → <strong>no reverse() needed</strong></li>
+                    </ul>
+                </div>
+
+                <div class="code-block"><pre><span class="comment">// Approach 1: Split + Merge
+// Time: O(N)  |  Space: O(N)</span>
+
+<span class="keyword">public int</span>[] sortedSquares(<span class="keyword">int</span>[] nums) {
+    <span class="keyword">int</span>[] neg = <span class="keyword">new int</span>[nums.length];
+    <span class="keyword">int</span>[] pos = <span class="keyword">new int</span>[nums.length];
+    <span class="keyword">int</span> negSize = <span class="number">0</span>, posSize = <span class="number">0</span>;
+
+    <span class="keyword">for</span> (<span class="keyword">int</span> num : nums) {
+        <span class="keyword">if</span> (num &lt; <span class="number">0</span>) neg[negSize++] = num;
+        <span class="keyword">else</span>         pos[posSize++] = num;
+    }
+
+    <span class="comment">// i starts at END of neg → right-to-left gives ascending squares (no reverse needed)
+    // j starts at START of pos → already ascending, square on the fly</span>
+    <span class="keyword">int</span>[] result = <span class="keyword">new int</span>[nums.length];
+    <span class="keyword">int</span> i = negSize - <span class="number">1</span>;
+    <span class="keyword">int</span> j = <span class="number">0</span>;
+    <span class="keyword">int</span> k = <span class="number">0</span>;
+
+    <span class="keyword">while</span> (i &gt;= <span class="number">0</span> &amp;&amp; j &lt; posSize) {
+        <span class="keyword">int</span> negVal = neg[i] * neg[i];
+        <span class="keyword">int</span> posVal = pos[j] * pos[j];
+
+        <span class="keyword">if</span> (negVal &lt;= posVal) { result[k++] = negVal; i--; }
+        <span class="keyword">else</span>                  { result[k++] = posVal; j++; }
+    }
+
+    <span class="keyword">while</span> (i &gt;= <span class="number">0</span>)      { result[k++] = neg[i] * neg[i]; i--; }
+    <span class="keyword">while</span> (j &lt; posSize) { result[k++] = pos[j] * pos[j]; j++; }
+
+    <span class="keyword">return</span> result;
+}
+
+<span class="comment">/*
+ * Trace: [-4, -1, 0, 3, 10]
+ * neg=[-4,-1]  pos=[0,3,10]   i=1  j=0
+ *
+ * i=1: (-1)²=1  vs 0²=0   → result[0]=0,  j=1
+ * i=1: (-1)²=1  vs 3²=9   → result[1]=1,  i=0
+ * i=0: (-4)²=16 vs 3²=9   → result[2]=9,  j=2
+ * i=0: (-4)²=16 vs 10²=100 → result[3]=16, i=-1
+ * drain pos: result[4]=100
+ *
+ * Result: [0, 1, 9, 16, 100] ✓
+ */</span></pre></div>
+
+                <h3>💻 Optimal: Two Pointers on Original Array</h3>
+                <div style="background: #d4edda; border-left: 4px solid #28a745; padding: 15px 20px; border-radius: 8px; margin: 15px 0;">
+                    <strong>✅ No helper lists at all.</strong> The largest square always lives at one of the two ends —
+                    compare both ends, place the larger one from the right.
+                </div>
+
+                <div class="code-block"><pre><span class="comment">// Approach 2: Two Pointers on original array  ← Most Optimal
+// Time: O(N)  |  Space: O(1) extra</span>
+<span class="keyword">public int</span>[] sortedSquares(<span class="keyword">int</span>[] nums) {
+    <span class="keyword">int</span> n = nums.length;
+    <span class="keyword">int</span>[] result = <span class="keyword">new int</span>[n];
+
+    <span class="keyword">int</span> L = <span class="number">0</span>;
+    <span class="keyword">int</span> R = n - <span class="number">1</span>;
+    <span class="keyword">int</span> k = n - <span class="number">1</span>;  <span class="comment">// fill result right to left</span>
+
+    <span class="keyword">while</span> (L &lt;= R) {
+        <span class="keyword">int</span> leftSq  = nums[L] * nums[L];
+        <span class="keyword">int</span> rightSq = nums[R] * nums[R];
+
+        <span class="keyword">if</span> (leftSq &gt; rightSq) { result[k--] = leftSq;  L++; }
+        <span class="keyword">else</span>                  { result[k--] = rightSq; R--; }
+    }
+
+    <span class="keyword">return</span> result;
+}</pre></div>
+
+                <h3>📊 Visual Trace: [-4, -1, 0, 3, 10]</h3>
+
+                <p style="margin-bottom: 15px; font-size: 1.05em;">
+                    <span style="background:#bbdefb;padding:2px 8px;border-radius:4px;">Blue = L pointer</span>&nbsp;
+                    <span style="background:#ffccbc;padding:2px 8px;border-radius:4px;">Orange = R pointer</span>&nbsp;
+                    <span style="background:#c8e6c9;padding:2px 8px;border-radius:4px;">Green = placed in result</span>&nbsp;
+                    k fills result right → left
+                </p>
+
+                <!-- INITIAL STATE -->
+                <div class="step-box">
+                    <h4>🔵 Initial State &nbsp;|&nbsp; L=0 &nbsp; R=4 &nbsp; k=4</h4>
+                    <p style="margin-bottom:10px;">Input array:</p>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background:#bbdefb;border:3px solid #1565c0;">
+                            <div class="index">0</div>-4<div class="label" style="color:#1565c0;">L</div>
+                        </div>
+                        <div class="array-cell"><div class="index">1</div>-1</div>
+                        <div class="array-cell"><div class="index">2</div>0</div>
+                        <div class="array-cell"><div class="index">3</div>3</div>
+                        <div class="array-cell" style="background:#ffccbc;border:3px solid #bf360c;">
+                            <div class="index">4</div>10<div class="label" style="color:#bf360c;">R</div>
+                        </div>
+                    </div>
+                    <p style="margin-top:12px;">Result array (empty): <code>[ _, _, _, _, _ ]</code></p>
+                    <p style="margin-top:6px;">L²= (-4)²= <strong>16</strong> &nbsp;|&nbsp; R²= 10²= <strong>100</strong></p>
+                </div>
+
+                <!-- STEP 1 -->
+                <div class="step-box">
+                    <h4>Step 1 &nbsp;|&nbsp; L=0 R=4 &nbsp; (-4)²=16 vs 10²=<strong style="color:#2e7d32;">100</strong> → 100 wins → result[4]=100, R--</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background:#bbdefb;border:3px solid #1565c0;">
+                            <div class="index">0</div>-4<div class="label" style="color:#1565c0;">L</div>
+                        </div>
+                        <div class="array-cell"><div class="index">1</div>-1</div>
+                        <div class="array-cell"><div class="index">2</div>0</div>
+                        <div class="array-cell" style="background:#ffccbc;border:3px solid #bf360c;">
+                            <div class="index">3</div>3<div class="label" style="color:#bf360c;">R</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">4</div>10<div class="label" style="color:#2e7d32;">✓</div>
+                        </div>
+                    </div>
+                    <p style="margin-top:10px;">Result: <code>[ _, _, _, _, <strong style="color:#2e7d32;">100</strong> ]</code> &nbsp;|&nbsp; 10² was larger, placed at k=4. R moves left.</p>
+                </div>
+
+                <!-- STEP 2 -->
+                <div class="step-box">
+                    <h4>Step 2 &nbsp;|&nbsp; L=0 R=3 &nbsp; (-4)²=<strong style="color:#2e7d32;">16</strong> vs 3²=9 → 16 wins → result[3]=16, L++</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">0</div>-4<div class="label" style="color:#2e7d32;">✓</div>
+                        </div>
+                        <div class="array-cell" style="background:#bbdefb;border:3px solid #1565c0;">
+                            <div class="index">1</div>-1<div class="label" style="color:#1565c0;">L</div>
+                        </div>
+                        <div class="array-cell"><div class="index">2</div>0</div>
+                        <div class="array-cell" style="background:#ffccbc;border:3px solid #bf360c;">
+                            <div class="index">3</div>3<div class="label" style="color:#bf360c;">R</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">4</div>10<div class="label" style="color:#2e7d32;">✓</div>
+                        </div>
+                    </div>
+                    <p style="margin-top:10px;">Result: <code>[ _, _, _, <strong style="color:#2e7d32;">16</strong>, 100 ]</code> &nbsp;|&nbsp; (-4)² was larger, placed at k=3. L moves right.</p>
+                </div>
+
+                <!-- STEP 3 -->
+                <div class="step-box">
+                    <h4>Step 3 &nbsp;|&nbsp; L=1 R=3 &nbsp; (-1)²=1 vs 3²=<strong style="color:#2e7d32;">9</strong> → 9 wins → result[2]=9, R--</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">0</div>-4<div class="label" style="color:#2e7d32;">✓</div>
+                        </div>
+                        <div class="array-cell" style="background:#bbdefb;border:3px solid #1565c0;">
+                            <div class="index">1</div>-1<div class="label" style="color:#1565c0;">L</div>
+                        </div>
+                        <div class="array-cell" style="background:#ffccbc;border:3px solid #bf360c;">
+                            <div class="index">2</div>0<div class="label" style="color:#bf360c;">R</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">3</div>3<div class="label" style="color:#2e7d32;">✓</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">4</div>10<div class="label" style="color:#2e7d32;">✓</div>
+                        </div>
+                    </div>
+                    <p style="margin-top:10px;">Result: <code>[ _, _, <strong style="color:#2e7d32;">9</strong>, 16, 100 ]</code> &nbsp;|&nbsp; 3² was larger, placed at k=2. R moves left.</p>
+                </div>
+
+                <!-- STEP 4 -->
+                <div class="step-box">
+                    <h4>Step 4 &nbsp;|&nbsp; L=1 R=2 &nbsp; (-1)²=<strong style="color:#2e7d32;">1</strong> vs 0²=0 → 1 wins → result[1]=1, L++</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">0</div>-4<div class="label" style="color:#2e7d32;">✓</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">1</div>-1<div class="label" style="color:#2e7d32;">✓</div>
+                        </div>
+                        <div class="array-cell" style="background:#bbdefb;border:3px solid #1565c0;border-right:3px solid #bf360c;">
+                            <div class="index">2</div>0<div class="label" style="color:#1565c0;">L/R</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">3</div>3<div class="label" style="color:#2e7d32;">✓</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">4</div>10<div class="label" style="color:#2e7d32;">✓</div>
+                        </div>
+                    </div>
+                    <p style="margin-top:10px;">Result: <code>[ _, <strong style="color:#2e7d32;">1</strong>, 9, 16, 100 ]</code> &nbsp;|&nbsp; (-1)² was larger, placed at k=1. L moves right.</p>
+                </div>
+
+                <!-- STEP 5 -->
+                <div class="step-box">
+                    <h4>Step 5 &nbsp;|&nbsp; L=2 R=2 &nbsp; 0²=<strong style="color:#2e7d32;">0</strong> vs 0²=0 → equal → result[0]=0, R--</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">0</div>-4<div class="label" style="color:#2e7d32;">✓</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">1</div>-1<div class="label" style="color:#2e7d32;">✓</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">2</div>0<div class="label" style="color:#2e7d32;">✓</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">3</div>3<div class="label" style="color:#2e7d32;">✓</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">4</div>10<div class="label" style="color:#2e7d32;">✓</div>
+                        </div>
+                    </div>
+                    <p style="margin-top:10px;">Result: <code>[ <strong style="color:#2e7d32;">0</strong>, 1, 9, 16, 100 ]</code> &nbsp;|&nbsp; R-- → R=1. Now L(2) &gt; R(1) → loop ends. ✅</p>
+                </div>
+
+                <!-- FINAL -->
+                <div class="step-box" style="border-color:#2e7d32; background:#f1f8e9;">
+                    <h4 style="color:#2e7d32;">✅ Final Result: [0, 1, 9, 16, 100]</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background:#c8e6c9;"><div class="index">0</div>0</div>
+                        <div class="array-cell" style="background:#c8e6c9;"><div class="index">1</div>1</div>
+                        <div class="array-cell" style="background:#c8e6c9;"><div class="index">2</div>9</div>
+                        <div class="array-cell" style="background:#c8e6c9;"><div class="index">3</div>16</div>
+                        <div class="array-cell" style="background:#c8e6c9;"><div class="index">4</div>100</div>
+                    </div>
+                    <p style="margin-top:12px;">Single pass, no helper lists, result filled from right to left.</p>
+                </div>
+            </section>
+
+
+            <!-- SECTION 5: REMOVE DUPLICATES -->
+            <section id="duplicates" class="section">
+                <h2>5️⃣ Remove Duplicates from Sorted Array</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Problem:</strong> Remove duplicates in-place, return count of unique<br>
+                        <strong>Example:</strong> [1, 1, 2, 2, 3] → [1, 2, 3, _, _], return 3
+                    </p>
+                </div>
+
+                <h3>👮 The Officer & CM Analogy</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>Scenario:</strong> Chief Minister (CM) allocating houses, Officer manages allocation<br><br>
+                        
+                        <strong>Officer (Slow Pointer):</strong> Tracks last unique element position<br>
+                        <strong>CM (Fast Pointer):</strong> Scans array to find unique elements
+                    </p>
+                </div>
+
+                <h3>📊 Visual Step-by-Step</h3>
+
+                <div class="step-box">
+                    <h4>Step 0: Initial State</h4>
+                    <div class="array-visual">
+                        <div class="array-cell officer">
+                            <div class="index">0</div>
+                            1
+                            <div class="label">OFFICER</div>
+                        </div>
+                        <div class="array-cell cm">
+                            <div class="index">1</div>
+                            1
+                            <div class="label">CM</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">2</div>
+                            2
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">3</div>
+                            2
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">4</div>
+                            3
+                        </div>
+                    </div>
+                    <p><strong>Check:</strong> arr[1] == arr[0]? 1 == 1 → Duplicate! CM moves →</p>
+                </div>
+
+                <div class="step-box">
+                    <h4>Step 1: Found Unique</h4>
+                    <div class="array-visual">
+                        <div class="array-cell officer">
+                            <div class="index">0</div>
+                            1
+                            <div class="label">OFFICER</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">1</div>
+                            1
+                        </div>
+                        <div class="array-cell cm">
+                            <div class="index">2</div>
+                            2
+                            <div class="label">CM</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">3</div>
+                            2
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">4</div>
+                            3
+                        </div>
+                    </div>
+                    <p><strong>Check:</strong> arr[2] == arr[1]? 2 == 1 → Unique! Officer++ and place</p>
+                </div>
+
+                <div class="step-box">
+                    <h4>After Placement</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background: #c8e6c9;">
+                            <div class="index">0</div>
+                            1
+                        </div>
+                        <div class="array-cell officer" style="background: #fff9c4;">
+                            <div class="index">1</div>
+                            2
+                            <div class="label">OFFICER</div>
+                        </div>
+                        <div class="array-cell cm">
+                            <div class="index">2</div>
+                            2
+                            <div class="label">CM</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">3</div>
+                            2
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">4</div>
+                            3
+                        </div>
+                    </div>
+                    <p>✓ Placed 2 at position 1</p>
+                    <div style="margin-top: 15px; padding: 12px 16px; background: rgba(198,40,40,0.1); border-left: 4px solid #c62828; border-radius: 4px;">
+                        <p style="color: #c62828; font-weight: 700; font-size: 1.05em;">
+                            The process continues until CM visits all the elements
+                        </p>
+                    </div>
+                </div>
+
+                <h3>💻 Java Code (Fully Commented)</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Remove Duplicates from Sorted Array
+ * 
+ * Problem: Remove duplicates in-place, return count of unique elements
+ * Input: [1, 1, 2, 2, 3]
+ * Output: 3 (array becomes [1, 2, 3, _, _])
+ * 
+ * Approach: Slow and Fast Pointers (Officer & CM analogy)
+ * - Officer (slow): Tracks position of last unique element placed
+ * - CM (fast): Scans ahead to find new unique elements
+ * 
+ * Key Insight:
+ * - In sorted array, duplicates are GROUPED together
+ * - Compare current with previous: if different, it's unique!
+ * - Officer only moves when a new unique element is found
+ * 
+ * Time: O(N) - single pass through array
+ * Space: O(1) - in-place modification
+ */</span>
+<span class="keyword">public int</span> removeDuplicates(<span class="keyword">int</span>[] nums) {
+    <span class="comment">// Edge case: empty array has 0 unique elements</span>
+    <span class="keyword">if</span> (nums.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;
+    
+    <span class="comment">// Officer pointer: tracks last unique element position</span>
+    <span class="comment">// Starts at 0 because first element is ALWAYS unique</span>
+    <span class="keyword">int</span> officer = <span class="number">0</span>;
+    
+    <span class="comment">// CM pointer: scans array starting from second element</span>
+    <span class="comment">// We use the loop variable 'cm' as our fast pointer</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> cm = <span class="number">1</span>; cm < nums.length; cm++) {
+        
+        <span class="comment">// Check if current element is different from previous</span>
+        <span class="comment">// If nums[cm] != nums[cm-1], we found a UNIQUE element!</span>
+        <span class="keyword">if</span> (nums[cm] != nums[cm - <span class="number">1</span>]) {
+            
+            <span class="comment">// Move officer forward to next empty slot</span>
+            officer++;
+            
+            <span class="comment">// Place the unique element at officer's position</span>
+            <span class="comment">// This builds the unique array at the front</span>
+            nums[officer] = nums[cm];
+        }
+        
+        <span class="comment">// If nums[cm] == nums[cm-1], it's a DUPLICATE</span>
+        <span class="comment">// CM just continues scanning (loop auto-increments cm)</span>
+        <span class="comment">// Officer stays put - doesn't waste a slot on duplicates</span>
+    }
+    
+    <span class="comment">// Return count of unique elements</span>
+    <span class="comment">// Officer is at last unique position (0-indexed)</span>
+    <span class="comment">// So count = officer + 1</span>
+    <span class="comment">// Example: if officer = 2, we have elements at [0,1,2] = 3 elements</span>
+    <span class="keyword">return</span> officer + <span class="number">1</span>;
+}
+
+<span class="comment">/*
+ * Example Trace: [1, 1, 2, 2, 3]
+ * 
+ * Initial: officer=0, cm=1
+ *          [1, 1, 2, 2, 3]
+ *           ^  ^
+ *           O  C
+ *          nums[1] == nums[0]? → YES (duplicate), continue
+ * 
+ * Step 1: officer=0, cm=2
+ *         [1, 1, 2, 2, 3]
+ *          ^     ^
+ *          O     C
+ *         nums[2] != nums[1]? → YES (unique!)
+ *         officer++ → officer=1
+ *         nums[1] = nums[2] = 2
+ *         Array: [1, 2, 2, 2, 3]
+ * 
+ * Step 2: officer=1, cm=3
+ *         [1, 2, 2, 2, 3]
+ *             ^     ^
+ *             O     C
+ *         nums[3] == nums[2]? → YES (duplicate), continue
+ * 
+ * Step 3: officer=1, cm=4
+ *         [1, 2, 2, 2, 3]
+ *             ^        ^
+ *             O        C
+ *         nums[4] != nums[3]? → YES (unique!)
+ *         officer++ → officer=2
+ *         nums[2] = nums[4] = 3
+ *         Array: [1, 2, 3, 2, 3]
+ * 
+ * Result: officer = 2, return 2+1 = 3
+ *         First 3 elements are unique: [1, 2, 3]
+ */</span></pre></div>
+
+                <div style="display: flex; gap: 10px; margin: 20px 0;">
+                    <span class="complexity-badge time">Time: O(N)</span>
+                    <span class="complexity-badge space">Space: O(1)</span>
+                </div>
+            </section>
+
+
+            <!-- SECTION 6: DUTCH NATIONAL FLAG -->
+            <section id="dutch" class="section">
+                <h2>6️⃣ Dutch National Flag (Sort Colors)</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Problem:</strong> Sort array of 0s, 1s, 2s in ONE PASS<br>
+                        <strong>Example:</strong> [2, 0, 2, 1, 1, 0] → [0, 0, 1, 1, 2, 2]<br>
+                        <strong>Constraint:</strong> O(N) time, O(1) space, no library sort()
+                    </p>
+                </div>
+
+                <h3>🧠 How the Algorithm Works</h3>
+
+                <div class="info-box">
+                    <p style="font-size: 1.1em; margin-bottom: 12px;">
+                        The idea is to <strong>maintain three pointers</strong> that divide the array into four regions at all times:
+                    </p>
+                    <pre style="font-family: monospace; font-size: 1.1em; margin: 15px 0;">
+[  0s  |  1s  |  unknown  |  2s  ]
+   ↑      ↑        ↑          ↑
+   0    low       mid        high   n-1</pre>
+                    <ol style="line-height: 2.2; margin-top: 10px;">
+                        <li><strong>0 … low-1</strong> → confirmed 0s (left wall, grows rightward)</li>
+                        <li><strong>low … mid-1</strong> → confirmed 1s (middle, grows rightward)</li>
+                        <li><strong>mid … high</strong> → <span style="color:#e65100;"><strong>unknown</strong></span> — this is what mid scans through</li>
+                        <li><strong>high+1 … n-1</strong> → confirmed 2s (right wall, grows leftward)</li>
+                    </ol>
+                </div>
+
+                <p style="margin: 20px 0 10px; font-size: 1.05em;">
+                    <strong>The goal:</strong> keep shrinking the unknown region until it disappears (<code>mid &gt; high</code>).<br>
+                    <code>mid</code> is the scanner — it looks at <code>arr[mid]</code> and decides what to do:
+                </p>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 20px 0;">
+                    <div style="background:#ffebee; border:2px solid #ef9a9a; border-radius:8px; padding:18px;">
+                        <div style="font-size:2rem; text-align:center; margin-bottom:8px;">0️⃣</div>
+                        <p style="font-weight:700; margin-bottom:8px;">arr[mid] == 0</p>
+                        <p style="font-size:0.95em; line-height:1.7;">
+                            0 belongs at the <strong>left</strong>.<br>
+                            Swap with <code>low</code>.<br>
+                            <code>low++</code> (0s zone grew)<br>
+                            <code>mid++</code> (safe — low came from processed region, so swapped value is 0 or 1, not unknown)
+                        </p>
+                    </div>
+                    <div style="background:#fffde7; border:2px solid #fff176; border-radius:8px; padding:18px;">
+                        <div style="font-size:2rem; text-align:center; margin-bottom:8px;">1️⃣</div>
+                        <p style="font-weight:700; margin-bottom:8px;">arr[mid] == 1</p>
+                        <p style="font-size:0.95em; line-height:1.7;">
+                            1 belongs in the <strong>middle</strong>.<br>
+                            Already in the right place — no swap needed.<br>
+                            Just <code>mid++</code> to expand the 1s zone and move on.
+                        </p>
+                    </div>
+                    <div style="background:#e8f5e9; border:2px solid #a5d6a7; border-radius:8px; padding:18px;">
+                        <div style="font-size:2rem; text-align:center; margin-bottom:8px;">2️⃣</div>
+                        <p style="font-weight:700; margin-bottom:8px;">arr[mid] == 2</p>
+                        <p style="font-size:0.95em; line-height:1.7;">
+                            2 belongs at the <strong>right</strong>.<br>
+                            Swap with <code>high</code>.<br>
+                            <code>high--</code> (2s zone grew)<br>
+                            <strong>mid stays!</strong> — high came from the unknown region, so we must check the swapped value before moving on.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>🔑 The One Tricky Rule</h4>
+                    <p style="font-size: 1.05em; line-height: 1.9;">
+                        When swapping with <strong>low</strong> → <code>mid++</code> is safe because <code>low</code> is always in the <em>already-processed</em> region (contains 0 or 1 — both fine at mid's position).<br><br>
+                        When swapping with <strong>high</strong> → <code>mid</code> must <em>stay</em> because <code>high</code> came from the <em>unknown</em> region. It could be 0, 1, or 2 — we don't know yet and must check it next.
+                    </p>
+                </div>
+
+                <h3>📊 Visual Example — Full Step-by-Step Trace</h3>
+
+                <p style="margin-bottom: 15px; font-size: 1.05em;">
+                    Input: <strong>[2, 0, 2, 1, 1, 0]</strong> &nbsp;|&nbsp;
+                    <span style="background:#ef9a9a;padding:2px 8px;border-radius:4px;">Red = 0s zone</span>&nbsp;
+                    <span style="background:#fff9c4;padding:2px 8px;border-radius:4px;">Yellow = 1s zone</span>&nbsp;
+                    <span style="background:#c8e6c9;padding:2px 8px;border-radius:4px;">Green = 2s zone</span>&nbsp;
+                    <span style="background:#e3f2fd;padding:2px 8px;border-radius:4px;">Blue = unknown</span>
+                </p>
+
+                <!-- STEP 0: INITIAL -->
+                <div class="step-box">
+                    <h4>🔵 Initial State &nbsp; low=0 &nbsp; mid=0 &nbsp; high=5</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background:#e3f2fd;border:3px solid #1565c0;">
+                            <div class="index">0</div>2<div class="label" style="color:#1565c0;">L/M</div>
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;">
+                            <div class="index">1</div>0
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;">
+                            <div class="index">2</div>2
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;">
+                            <div class="index">3</div>1
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;">
+                            <div class="index">4</div>1
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;border:3px solid #b71c1c;">
+                            <div class="index">5</div>0<div class="label" style="color:#b71c1c;">H</div>
+                        </div>
+                    </div>
+                    <p>Everything is in the unknown zone. All three pointers set.</p>
+                </div>
+
+                <!-- STEP 1 -->
+                <div class="step-box">
+                    <h4>Step 1 &nbsp;|&nbsp; arr[mid]=<strong style="color:#b71c1c;">2</strong> → swap(mid, high), high--</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background:#e3f2fd;border:3px solid #1565c0;">
+                            <div class="index">0</div><strong style="color:#2e7d32;">0</strong><div class="label" style="color:#1565c0;">L/M</div>
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;">
+                            <div class="index">1</div>0
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;">
+                            <div class="index">2</div>2
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;">
+                            <div class="index">3</div>1
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;border:3px solid #b71c1c;">
+                            <div class="index">4</div>1<div class="label" style="color:#b71c1c;">H</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">5</div>2
+                        </div>
+                    </div>
+                    <p>arr[mid]=2 → belongs at end. Swap arr[0]↔arr[5]: <strong>2↔0</strong>. high-- → high=4.<br>
+                    ⚠️ mid stays at 0 — we just got an unknown value from high, must check it!</p>
+                </div>
+
+                <!-- STEP 2 -->
+                <div class="step-box">
+                    <h4>Step 2 &nbsp;|&nbsp; arr[mid]=<strong style="color:#2e7d32;">0</strong> → swap(mid, low), low++, mid++</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background:#ef9a9a;">
+                            <div class="index">0</div>0
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;border:3px solid #1565c0;border-top:3px solid #f9a825;">
+                            <div class="index">1</div><strong>0</strong><div class="label" style="color:#1565c0;">L/M</div>
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;">
+                            <div class="index">2</div>2
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;">
+                            <div class="index">3</div>1
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;border:3px solid #b71c1c;">
+                            <div class="index">4</div>1<div class="label" style="color:#b71c1c;">H</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">5</div>2
+                        </div>
+                    </div>
+                    <p>arr[mid]=0 → belongs at start. Swap arr[0]↔arr[0] (same position, no change). low++ → 1, mid++ → 1.<br>
+                    Index 0 is now confirmed in the 0s zone.</p>
+                </div>
+
+                <!-- STEP 3 -->
+                <div class="step-box">
+                    <h4>Step 3 &nbsp;|&nbsp; arr[mid]=<strong style="color:#2e7d32;">0</strong> → swap(mid, low), low++, mid++</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background:#ef9a9a;">
+                            <div class="index">0</div>0
+                        </div>
+                        <div class="array-cell" style="background:#ef9a9a;">
+                            <div class="index">1</div>0
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;border:3px solid #1565c0;border-top:3px solid #f9a825;">
+                            <div class="index">2</div><strong>2</strong><div class="label" style="color:#1565c0;">L/M</div>
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;">
+                            <div class="index">3</div>1
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;border:3px solid #b71c1c;">
+                            <div class="index">4</div>1<div class="label" style="color:#b71c1c;">H</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">5</div>2
+                        </div>
+                    </div>
+                    <p>arr[mid]=0 → swap arr[1]↔arr[1] (same position). low++ → 2, mid++ → 2.<br>
+                    Indices 0–1 confirmed as 0s zone.</p>
+                </div>
+
+                <!-- STEP 4 -->
+                <div class="step-box">
+                    <h4>Step 4 &nbsp;|&nbsp; arr[mid]=<strong style="color:#b71c1c;">2</strong> → swap(mid, high), high--</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background:#ef9a9a;">
+                            <div class="index">0</div>0
+                        </div>
+                        <div class="array-cell" style="background:#ef9a9a;">
+                            <div class="index">1</div>0
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;border:3px solid #1565c0;border-top:3px solid #f9a825;">
+                            <div class="index">2</div><strong style="color:#f57f17;">1</strong><div class="label" style="color:#1565c0;">L/M</div>
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;border:3px solid #b71c1c;">
+                            <div class="index">3</div>1<div class="label" style="color:#b71c1c;">H</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">4</div>2
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">5</div>2
+                        </div>
+                    </div>
+                    <p>arr[mid]=2 → belongs at end. Swap arr[2]↔arr[4]: <strong>2↔1</strong>. high-- → 3.<br>
+                    ⚠️ mid stays at 2 — must check the 1 we just received.</p>
+                </div>
+
+                <!-- STEP 5 -->
+                <div class="step-box">
+                    <h4>Step 5 &nbsp;|&nbsp; arr[mid]=<strong style="color:#f57f17;">1</strong> → already in place, mid++</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background:#ef9a9a;">
+                            <div class="index">0</div>0
+                        </div>
+                        <div class="array-cell" style="background:#ef9a9a;">
+                            <div class="index">1</div>0
+                        </div>
+                        <div class="array-cell" style="background:#fff9c4;">
+                            <div class="index">2</div>1
+                        </div>
+                        <div class="array-cell" style="background:#e3f2fd;border:3px solid #1565c0;border-top:3px solid #f9a825;border-right:3px solid #b71c1c;">
+                            <div class="index">3</div><strong style="color:#f57f17;">1</strong><div class="label" style="color:#1565c0;">L/M/H</div>
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">4</div>2
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">5</div>2
+                        </div>
+                    </div>
+                    <p>arr[mid]=1 → already in the 1s zone. No swap needed. mid++ → 3.</p>
+                </div>
+
+                <!-- STEP 6 -->
+                <div class="step-box">
+                    <h4>Step 6 &nbsp;|&nbsp; arr[mid]=<strong style="color:#f57f17;">1</strong> → already in place, mid++</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background:#ef9a9a;">
+                            <div class="index">0</div>0
+                        </div>
+                        <div class="array-cell" style="background:#ef9a9a;">
+                            <div class="index">1</div>0
+                        </div>
+                        <div class="array-cell" style="background:#fff9c4;">
+                            <div class="index">2</div>1
+                        </div>
+                        <div class="array-cell" style="background:#fff9c4;">
+                            <div class="index">3</div>1
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">4</div>2
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">5</div>2
+                        </div>
+                    </div>
+                    <p>mid++ → 4. Now <strong>mid (4) &gt; high (3)</strong> → loop ends. Unknown region is empty! ✅</p>
+                </div>
+
+                <!-- FINAL -->
+                <div class="step-box" style="border-color: #2e7d32; background: #f1f8e9;">
+                    <h4 style="color:#2e7d32;">✅ Final Result: [0, 0, 1, 1, 2, 2]</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background:#ef9a9a;">
+                            <div class="index">0</div>0
+                        </div>
+                        <div class="array-cell" style="background:#ef9a9a;">
+                            <div class="index">1</div>0
+                        </div>
+                        <div class="array-cell" style="background:#fff9c4;">
+                            <div class="index">2</div>1
+                        </div>
+                        <div class="array-cell" style="background:#fff9c4;">
+                            <div class="index">3</div>1
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">4</div>2
+                        </div>
+                        <div class="array-cell" style="background:#c8e6c9;">
+                            <div class="index">5</div>2
+                        </div>
+                    </div>
+                    <p>All three zones are fully sorted in a single pass. No extra space used.</p>
+                </div>
+
+                <!-- SWAP RULES QUICK REF -->
+                <div class="info-box" style="margin-top: 25px;">
+                    <h4>📌 The 3 Rules — Quick Reference</h4>
+                    <table style="width:100%; border-collapse:collapse; margin-top:12px; font-size:1.05em;">
+                        <thead>
+                            <tr style="background:#e8eaf6;">
+                                <th style="padding:10px; text-align:left; border:1px solid #ccc;">arr[mid]</th>
+                                <th style="padding:10px; text-align:left; border:1px solid #ccc;">Action</th>
+                                <th style="padding:10px; text-align:left; border:1px solid #ccc;">Move mid?</th>
+                                <th style="padding:10px; text-align:left; border:1px solid #ccc;">Why?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding:10px; border:1px solid #ccc; background:#ef9a9a;"><strong>0</strong></td>
+                                <td style="padding:10px; border:1px solid #ccc;">swap(mid, low), low++, mid++</td>
+                                <td style="padding:10px; border:1px solid #ccc; color:#2e7d32;"><strong>Yes ✓</strong></td>
+                                <td style="padding:10px; border:1px solid #ccc;">low came from processed region — safe to advance</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px; border:1px solid #ccc; background:#fff9c4;"><strong>1</strong></td>
+                                <td style="padding:10px; border:1px solid #ccc;">mid++ only</td>
+                                <td style="padding:10px; border:1px solid #ccc; color:#2e7d32;"><strong>Yes ✓</strong></td>
+                                <td style="padding:10px; border:1px solid #ccc;">Already in the right place</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:10px; border:1px solid #ccc; background:#c8e6c9;"><strong>2</strong></td>
+                                <td style="padding:10px; border:1px solid #ccc;">swap(mid, high), high--</td>
+                                <td style="padding:10px; border:1px solid #ccc; color:#b71c1c;"><strong>No ✗</strong></td>
+                                <td style="padding:10px; border:1px solid #ccc;">high came from unknown region — must check it first</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>💻 Java Code (Fully Commented)</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Dutch National Flag Algorithm - Sort Colors (0, 1, 2)
+ * 
+ * Problem: Sort array of 0s, 1s, 2s in ONE PASS
+ * Input: [2, 0, 2, 1, 1, 0]
+ * Output: [0, 0, 1, 1, 2, 2]
+ * 
+ * Constraint: O(N) time, O(1) space, no library sort()
+ * 
+ * Approach: Three Pointers to Partition Array into 4 Regions
+ * 
+ * Array Layout:
+ * [  0s  |  1s  | unknown |  2s  ]
+ *    ↑      ↑       ↑        ↑
+ *    0    low    mid      high   n-1
+ * 
+ * Regions:
+ * 1. [0 to low-1]: Contains all 0s (SORTED)
+ * 2. [low to mid-1]: Contains all 1s (SORTED)
+ * 3. [mid to high]: UNKNOWN (needs processing)
+ * 4. [high+1 to end]: Contains all 2s (SORTED)
+ * 
+ * Goal: Shrink the unknown region to zero
+ * 
+ * Rules:
+ * - If arr[mid] == 0: Belongs at start, swap with low
+ * - If arr[mid] == 1: Already in correct place, just move mid
+ * - If arr[mid] == 2: Belongs at end, swap with high
+ * 
+ * Time: O(N) - single pass
+ * Space: O(1) - in-place
+ */</span>
+<span class="keyword">public void</span> sortColors(<span class="keyword">int</span>[] nums) {
+    <span class="comment">// low: boundary of 0s region (end of 0s)</span>
+    <span class="comment">// Everything from 0 to low-1 should be 0s</span>
+    <span class="keyword">int</span> low = <span class="number">0</span>;
+    
+    <span class="comment">// mid: current scanner/processing pointer</span>
+    <span class="comment">// This scans the unknown region</span>
+    <span class="keyword">int</span> mid = <span class="number">0</span>;
+    
+    <span class="comment">// high: boundary of 2s region (start of 2s)</span>
+    <span class="comment">// Everything from high+1 to end should be 2s</span>
+    <span class="keyword">int</span> high = nums.length - <span class="number">1</span>;
+    
+    <span class="comment">// Process until mid crosses high</span>
+    <span class="comment">// Note: mid <= high (NOT mid < high)</span>
+    <span class="comment">// We need to process the element at high too!</span>
+    <span class="keyword">while</span> (mid <= high) {
+        
+        <span class="comment">// ===== CASE 1: Current element is 0 =====</span>
+        <span class="comment">// 0 belongs at the START (with other 0s)</span>
+        <span class="keyword">if</span> (nums[mid] == <span class="number">0</span>) {
+            <span class="comment">// Swap arr[mid] with arr[low]</span>
+            <span class="comment">// This moves the 0 to the 0s region</span>
+            <span class="keyword">int</span> temp = nums[low];
+            nums[low] = nums[mid];
+            nums[mid] = temp;
+            
+            <span class="comment">// Increment low: 0s region grew by 1</span>
+            low++;
+            
+            <span class="comment">// Increment mid: We can safely move forward</span>
+            <span class="comment">// WHY? Because arr[low] was either 0 or 1 (from processed region)</span>
+            <span class="comment">// After swap, arr[mid] is now 0 or 1, which is fine in 1s region</span>
+            mid++;
+        } 
+        
+        <span class="comment">// ===== CASE 2: Current element is 1 =====</span>
+        <span class="comment">// 1 is already in the CORRECT position (middle region)</span>
+        <span class="keyword">else if</span> (nums[mid] == <span class="number">1</span>) {
+            <span class="comment">// Just move mid forward, nothing to swap</span>
+            <span class="comment">// The 1s region automatically grows</span>
+            mid++;
+        } 
+        
+        <span class="comment">// ===== CASE 3: Current element is 2 =====</span>
+        <span class="comment">// 2 belongs at the END (with other 2s)</span>
+        <span class="keyword">else</span> {  <span class="comment">// nums[mid] == 2</span>
+            <span class="comment">// Swap arr[mid] with arr[high]</span>
+            <span class="comment">// This moves the 2 to the 2s region</span>
+            <span class="keyword">int</span> temp = nums[high];
+            nums[high] = nums[mid];
+            nums[mid] = temp;
+            
+            <span class="comment">// Decrement high: 2s region grew by 1</span>
+            high--;
+            
+            <span class="comment">// CRITICAL: Do NOT increment mid!</span>
+            <span class="comment">// WHY? Because arr[high] came from UNKNOWN region</span>
+            <span class="comment">// It could be 0, 1, or 2 - we don't know yet!</span>
+            <span class="comment">// We need to CHECK it in the next iteration</span>
+            <span class="comment">// This is the KEY difference from Case 1</span>
+        }
+    }
+    
+    <span class="comment">// When loop ends, mid > high</span>
+    <span class="comment">// Unknown region is now empty - array is sorted!</span>
+}
+
+<span class="comment">/*
+ * Example Trace: [2, 0, 2, 1, 1, 0]
+ * 
+ * Initial: low=0, mid=0, high=5
+ *          [2, 0, 2, 1, 1, 0]
+ *           ^              ^
+ *          L/M             H
+ * 
+ * Step 1: arr[mid]=2, swap with high
+ *         Swap arr[0] and arr[5]: 2 ↔ 0
+ *         [0, 0, 2, 1, 1, 2]
+ *          ^           ^
+ *         L/M          H
+ *         high-- → high=4
+ *         mid stays at 0 (need to check the 0 we just got)
+ * 
+ * Step 2: arr[mid]=0, swap with low
+ *         Swap arr[0] and arr[0]: 0 ↔ 0 (no change)
+ *         [0, 0, 2, 1, 1, 2]
+ *          ^  ^        ^
+ *          L  M        H
+ *         low++ → low=1
+ *         mid++ → mid=1
+ * 
+ * Step 3: arr[mid]=0, swap with low
+ *         Swap arr[1] and arr[1]: 0 ↔ 0 (no change)
+ *         [0, 0, 2, 1, 1, 2]
+ *             ^  ^     ^
+ *             L  M     H
+ *         low++ → low=2
+ *         mid++ → mid=2
+ * 
+ * Step 4: arr[mid]=2, swap with high
+ *         Swap arr[2] and arr[4]: 2 ↔ 1
+ *         [0, 0, 1, 1, 2, 2]
+ *                ^  ^
+ *                L  M/H
+ *         high-- → high=3
+ *         mid stays at 2
+ * 
+ * Step 5: arr[mid]=1, correct position
+ *         [0, 0, 1, 1, 2, 2]
+ *                ^     ^
+ *                L   M/H
+ *         mid++ → mid=3
+ * 
+ * Step 6: arr[mid]=1, correct position
+ *         [0, 0, 1, 1, 2, 2]
+ *                   ^  ^
+ *                   L  M=H
+ *         mid++ → mid=4
+ * 
+ * Now mid > high (4 > 3), loop ends
+ * Result: [0, 0, 1, 1, 2, 2] ✓
+ */</span></pre></div>
+
+                <div class="warning-box">
+                    <h4>🔑 Critical Insight</h4>
+                    <p style="font-size: 1.1em;">
+                        <strong>Why don't we increment mid after swapping with high?</strong><br><br>
+                        When we swap arr[mid] with arr[high]:<br>
+                        • We DON'T KNOW what arr[high] was (it's from unknown region)<br>
+                        • Could be 0, 1, or 2 → We need to CHECK it!<br><br>
+                        
+                        When we swap arr[mid] with arr[low]:<br>
+                        • We KNOW arr[low] was either 0 or 1 (processed region)<br>
+                        • Safe to move both pointers forward
+                    </p>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin: 20px 0;">
+                    <span class="complexity-badge time">Time: O(N)</span>
+                    <span class="complexity-badge space">Space: O(1)</span>
+                </div>
+            </section>
+
+
+            <!-- SECTION 6.5: TWO SUM WITH DUPLICATES -->
+            <section id="twosum-duplicates" class="section">
+                <h2>6.5️⃣ Two Sum - Handling Duplicates</h2>
+                
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em;">
+                        <strong>Problem:</strong> Find all unique pairs in a sorted array that sum to target<br>
+                        <strong>Example:</strong> arr = [1, 1, 2, 2, 3, 4, 5], target = 6<br>
+                        <strong>Challenge:</strong> Array has duplicates — avoid counting the same pair twice!
+                    </p>
+                </div>
+
+                <!-- EVOLUTION BOX: 2Sum Duplicates -->
+                <div style="background: linear-gradient(135deg, #fff3e0, #ffe0b2); border: 4px solid #ff6f00; border-radius: 15px; padding: 30px; margin: 30px 0;">
+                    <h3 style="color: #e65100; margin-top: 0;">🔄 EVOLUTION: 2Sum → Find ALL Unique Pairs</h3>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                        <p style="font-size: 1.15rem; line-height: 2;">
+                            <strong style="color: #d84315;">Change:</strong> Find ALL unique pairs instead of just one<br>
+                            <strong>Example:</strong> <code>arr = [-2, -1, 0, 0, 1, 2]</code>, <code>target = 0</code><br>
+                            <strong>Output:</strong> <code>[[-2,2], [-1,1], [0,0]]</code>
+                        </p>
+                    </div>
+
+                    <h4 style="color: #f57c00; margin-top: 20px;">💡 What to Add</h4>
+                    <p style="font-size: 1.1rem; line-height: 1.9;">
+                        Same base logic, <strong>ADD duplicate skipping:</strong>
+                    </p>
+                    
+                    <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                        <p style="font-size: 1.05rem; line-height: 2;">
+                            When you find a match:
+                        </p>
+                        <ol style="font-size: 1.05rem; line-height: 2.2; margin-left: 20px;">
+                            <li>Store the pair</li>
+                            <li>Skip duplicate lefts: <code>while (left < right && arr[left] == arr[left+1]) left++;</code></li>
+                            <li>Skip duplicate rights: <code>while (left < right && arr[right] == arr[right-1]) right--;</code></li>
+                            <li>Move both: <code>left++; right--;</code></li>
+                        </ol>
+                    </div>
+                </div>
+
+
+                <h3>🎯 The Key Challenge</h3>
+                <div class="warning-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        When there are duplicates in the array, naive two pointers would return:<br>
+                        <code>[1, 5], [1, 5], [2, 4], [2, 4]</code> ❌<br><br>
+                        But we want unique pairs only:<br>
+                        <code>[1, 5], [2, 4]</code> ✓
+                    </p>
+                </div>
+
+                <h3>💡 Solution: Skip Duplicates After Finding a Pair</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        After finding a valid pair, we need to skip all duplicate values at both L and R pointers:<br><br>
+                        <code>while (L < R && arr[L] == arr[L+1]) L++;</code><br>
+                        <code>while (L < R && arr[R] == arr[R-1]) R--;</code>
+                    </p>
+                </div>
+
+                <h3>🧠 Core Logic</h3>
+                <div class="code-block"><pre><span class="comment">// Two Sum with Duplicates Template</span>
+L = <span class="number">0</span>,  R = n <span class="number">-1</span>
+result = []
+
+<span class="keyword">while</span> (L < R) {
+    sum = arr[L] + arr[R]
+    
+    <span class="keyword">if</span> (sum == target) {
+        result.add([arr[L], arr[R]])
+        
+        <span class="comment">// SKIP DUPLICATES at both ends</span>
+        L++
+        R--
+        <span class="keyword">while</span> (L < R && arr[L] == arr[L<span class="number">-1</span>]) L++
+        <span class="keyword">while</span> (L < R && arr[R] == arr[R<span class="number">+1</span>]) R--
+    }
+    <span class="keyword">else if</span> (sum < target)
+        L++
+    <span class="keyword">else</span>
+        R--
+}
+
+<span class="keyword">return</span> result</pre></div>
+
+                <h3>📊 Visual Step-by-Step</h3>
+                <p style="margin-bottom: 20px; font-size: 1.05rem;">
+                    <strong>Array:</strong> [1, 1, 2, 2, 3, 4, 5] &nbsp; <strong>Target:</strong> 6
+                </p>
+
+                <!-- STEP 0: INITIAL -->
+                <div class="step-box">
+                    <h4>Step 0: Initial State</h4>
+                    <div class="array-visual">
+                        <div class="array-cell left-pointer">
+                            <div class="index">0</div>
+                            1
+                            <div class="label">L</div>
+                        </div>
+                        <div class="array-cell" style="background: #ffe0b2; border: 2px dashed #ff9800;">
+                            <div class="index">1</div>
+                            1
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">2</div>
+                            2
+                        </div>
+                        <div class="array-cell" style="background: #ffe0b2; border: 2px dashed #ff9800;">
+                            <div class="index">3</div>
+                            2
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">4</div>
+                            3
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">5</div>
+                            4
+                        </div>
+                        <div class="array-cell right-pointer">
+                            <div class="index">6</div>
+                            5
+                            <div class="label">R</div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 12px;">
+                        <strong>Check:</strong> 1 + 5 = 6 ✅ Found a pair!<br>
+                        Orange dashed cells = duplicates we need to skip
+                    </p>
+                </div>
+
+                <!-- STEP 1: SKIP DUPLICATES -->
+                <div class="step-box">
+                    <h4>Step 1: Skip Duplicates at L</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background: #ffccbc; opacity: 0.5;">
+                            <div class="index">0</div>
+                            1
+                        </div>
+                        <div class="array-cell" style="background: #ffccbc; border: 3px solid #d32f2f;">
+                            <div class="index">1</div>
+                            1
+                            <div class="label" style="color: #d32f2f;">SKIP</div>
+                        </div>
+                        <div class="array-cell left-pointer">
+                            <div class="index">2</div>
+                            2
+                            <div class="label">L</div>
+                        </div>
+                        <div class="array-cell" style="background: #ffe0b2; border: 2px dashed #ff9800;">
+                            <div class="index">3</div>
+                            2
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">4</div>
+                            3
+                        </div>
+                        <div class="array-cell" style="background: #ffccbc; opacity: 0.5;">
+                            <div class="index">5</div>
+                            4
+                        </div>
+                        <div class="array-cell" style="background: #ffccbc; opacity: 0.5;">
+                            <div class="index">6</div>
+                            5
+                        </div>
+                    </div>
+                    <p style="margin-top: 12px; color: #d32f2f; font-weight: 600;">
+                        arr[1] == arr[0] (1 == 1) → Skip! Move L to index 2
+                    </p>
+                </div>
+
+                <!-- STEP 2: SKIP DUPLICATES AT R -->
+                <div class="step-box">
+                    <h4>Step 2: Skip Duplicates at R (none here, just move)</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background: #ffccbc; opacity: 0.5;">
+                            <div class="index">0</div>
+                            1
+                        </div>
+                        <div class="array-cell" style="background: #ffccbc; opacity: 0.5;">
+                            <div class="index">1</div>
+                            1
+                        </div>
+                        <div class="array-cell left-pointer">
+                            <div class="index">2</div>
+                            2
+                            <div class="label">L</div>
+                        </div>
+                        <div class="array-cell" style="background: #ffe0b2; border: 2px dashed #ff9800;">
+                            <div class="index">3</div>
+                            2
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">4</div>
+                            3
+                        </div>
+                        <div class="array-cell right-pointer">
+                            <div class="index">5</div>
+                            4
+                            <div class="label">R</div>
+                        </div>
+                        <div class="array-cell" style="background: #ffccbc; opacity: 0.5;">
+                            <div class="index">6</div>
+                            5
+                        </div>
+                    </div>
+                    <p style="margin-top: 12px;">
+                        No duplicate at R, so just R--<br>
+                        Now check: 2 + 4 = 6 ✅ Found another pair!
+                    </p>
+                </div>
+
+                <!-- STEP 3: SKIP DUPLICATES AGAIN -->
+                <div class="step-box">
+                    <h4>Step 3: Skip Duplicates at L Again</h4>
+                    <div class="array-visual">
+                        <div class="array-cell" style="background: #ffccbc; opacity: 0.5;">
+                            <div class="index">0</div>
+                            1
+                        </div>
+                        <div class="array-cell" style="background: #ffccbc; opacity: 0.5;">
+                            <div class="index">1</div>
+                            1
+                        </div>
+                        <div class="array-cell" style="background: #ffccbc; opacity: 0.5;">
+                            <div class="index">2</div>
+                            2
+                        </div>
+                        <div class="array-cell" style="background: #ffccbc; border: 3px solid #d32f2f;">
+                            <div class="index">3</div>
+                            2
+                            <div class="label" style="color: #d32f2f;">SKIP</div>
+                        </div>
+                        <div class="array-cell left-pointer">
+                            <div class="index">4</div>
+                            3
+                            <div class="label">L</div>
+                        </div>
+                        <div class="array-cell" style="background: #ffccbc; opacity: 0.5;">
+                            <div class="index">5</div>
+                            4
+                        </div>
+                        <div class="array-cell" style="background: #ffccbc; opacity: 0.5;">
+                            <div class="index">6</div>
+                            5
+                        </div>
+                    </div>
+                    <p style="margin-top: 12px; color: #d32f2f; font-weight: 600;">
+                        arr[3] == arr[2] (2 == 2) → Skip! Move L to index 4<br>
+                        Also R-- to index 4... L meets R → Done!
+                    </p>
+                </div>
+
+                <!-- FINAL RESULT -->
+                <div class="step-box" style="border-color: #2e7d32; background: #f1f8e9;">
+                    <h4 style="color:#2e7d32;">✅ Final Result</h4>
+                    <p style="font-size: 1.1rem; line-height: 2;">
+                        <strong>Unique Pairs Found:</strong><br>
+                        1. [1, 5]<br>
+                        2. [2, 4]<br><br>
+                        No duplicate pairs! ✓
+                    </p>
+                </div>
+
+                <h3>💻 Java Code (Fully Commented)</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * Two Sum - Find All Unique Pairs (With Duplicates)
+ * 
+ * Problem: Find all unique pairs that sum to target
+ * Input: sorted array with duplicates
+ * Output: List of unique pairs
+ * 
+ * Key Challenge: Skip duplicates to avoid counting same pair twice
+ * 
+ * Time: O(N) - single pass with two pointers
+ * Space: O(1) - only store results
+ */</span>
+<span class="keyword">public int</span>[][] <span class="function">twoSum</span>(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> target) {
+    List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    <span class="keyword">int</span> L = <span class="number">0</span>, R = arr.length - <span class="number">1</span>;
+
+    <span class="keyword">while</span> (L &lt; R) {
+        <span class="keyword">int</span> sum = arr[L] + arr[R];
+
+        <span class="keyword">if</span> (sum == target) {
+            result.add(Arrays.asList(arr[L], arr[R]));
+            L++;
+            R--;
+
+            <span class="comment">// CRITICAL: Skip all duplicates at L</span>
+            <span class="keyword">while</span> (L &lt; R && arr[L] == arr[L - <span class="number">1</span>]) L++;
+
+            <span class="comment">// CRITICAL: Skip all duplicates at R</span>
+            <span class="keyword">while</span> (L &lt; R && arr[R] == arr[R + <span class="number">1</span>]) R--;
+
+        } <span class="keyword">else if</span> (sum &lt; target) {
+            L++;
+        } <span class="keyword">else</span> {
+            R--;
+        }
+    }
+
+    <span class="comment">// Convert to int[][]</span>
+    <span class="keyword">int</span>[][] resultArray = <span class="keyword">new int</span>[result.size()][<span class="number">2</span>];
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; result.size(); i++) {
+        resultArray[i][<span class="number">0</span>] = result.get(i).get(<span class="number">0</span>);
+        resultArray[i][<span class="number">1</span>] = result.get(i).get(<span class="number">1</span>);
+    }
+    <span class="keyword">return</span> resultArray;
+}
+
+<span class="comment">/*
+ * Example Trace: arr = [1, 1, 2, 2, 3, 4, 5], target = 6
+ * 
+ * Initial: L=0, R=6
+ * Step 1: arr[0] + arr[6] = 1 + 5 = 6 ✓
+ *         Add [1, 5] to result
+ *         Skip duplicates: L moves from 0 → 1 → 2 (skip the second 1)
+ *         R moves from 6 → 5 (no duplicate)
+ *         Now: L=2, R=5
+ * 
+ * Step 2: arr[2] + arr[5] = 2 + 4 = 6 ✓
+ *         Add [2, 4] to result
+ *         Skip duplicates: L moves from 2 → 3 → 4 (skip the second 2)
+ *         R moves from 5 → 4 (no duplicate)
+ *         Now: L=4, R=4 → L >= R → Stop
+ * 
+ * Result: [[1, 5], [2, 4]]
+ */</span></pre></div>
+
+                <div class="card success">
+                    <h3 style="margin-top: 0;">✅ Key Takeaways</h3>
+                    <ul style="font-size: 1.05rem; line-height: 2.2; margin-top: 12px;">
+                        <li><strong>Why skip duplicates?</strong> To ensure we return unique pairs only</li>
+                        <li><strong>When to skip?</strong> After finding a valid pair, before moving pointers</li>
+                        <li><strong>How to skip?</strong> Use while loops: <code>while (arr[L] == arr[L+1]) L++;</code></li>
+                        <li><strong>Both sides?</strong> Yes! Must skip duplicates at both L and R</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h3 style="margin-top: 0;">⚠️ Common Mistakes</h3>
+                    <ul style="font-size: 1.05rem; line-height: 2.2; margin-top: 12px;">
+                        <li>❌ Forgetting to skip duplicates → returns duplicate pairs</li>
+                        <li>❌ Only skipping at L or R (not both) → still returns duplicates</li>
+                        <li>❌ Moving L++ or R-- before skipping → off-by-one errors</li>
+                        <li>❌ Not checking <code>L < R</code> in skip loops → array out of bounds</li>
+                    </ul>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin: 20px 0;">
+                    <span class="complexity-badge time">Time: O(N)</span>
+                    <span class="complexity-badge space">Space: O(1)</span>
+                </div>
+            </section>
+
+
+            <!-- SECTION 7: 3SUM -->
+            <section id="3sum" class="section">
+                <h2>7️⃣ 3Sum Problems (Triplets)</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">Common Pattern for All Triplet Problems</h3>
+                    <p style="font-size: 1.2em;">
+                        1. Sort array O(N log N)<br>
+                        2. Fix one element with loop <code>i</code><br>
+                        3. Use Two Pointers on remaining array
+                    </p>
+                </div>
+
+                <!-- EVOLUTION BOX: 3Sum -->
+                <div style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); border: 4px solid #0277bd; border-radius: 15px; padding: 30px; margin: 30px 0;">
+                    <h3 style="color: #01579b; margin-top: 0;">🎯 EVOLUTION: 3Sum = Fix One + 2Sum</h3>
+                    
+                    <div style="background: #fff9c4; padding: 25px; border-radius: 10px; margin: 15px 0; border: 3px solid #f57f17;">
+                        <h4 style="color: #f57f17; margin-top: 0;">💡 The Key Insight</h4>
+                        <p style="font-size: 1.2rem; line-height: 2; font-weight: 600;">
+                            3Sum is just <strong>2Sum called multiple times!</strong><br><br>
+                            
+                            Fix <code>arr[i]</code>, then find two numbers summing to <code>-arr[i]</code> in the rest<br>
+                            The inner loop is <strong style="color: #d84315;">IDENTICAL to 2Sum with duplicates</strong>
+                        </p>
+                    </div>
+
+                    <h4 style="color: #0288d1; margin-top: 20px;">💡 The Strategy</h4>
+                    <ol style="font-size: 1.05rem; line-height: 2.2; margin-left: 20px;">
+                        <li><strong>Outer loop:</strong> Fix element at index <code>i</code></li>
+                        <li><strong>Inner:</strong> Run 2Sum on <code>arr[i+1...n-1]</code> with <code>target = -arr[i]</code></li>
+                        <li><strong>Skip duplicates at 3 places:</strong>
+                            <ul style="margin-top: 8px; margin-left: 20px;">
+                                <li>① Skip duplicate i: <code>if (i > 0 && arr[i] == arr[i-1]) continue;</code></li>
+                                <li>② Skip duplicate left (same as 2Sum all pairs)</li>
+                                <li>③ Skip duplicate right (same as 2Sum all pairs)</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+
+
+                <h3>Problem: 3Sum (Find Triplets Summing to Zero)</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em;">
+                        <strong>Input:</strong> [-1, 0, 1, 2, -1, -4]<br>
+                        <strong>Output:</strong> [[-1, -1, 2], [-1, 0, 1]]<br>
+                        <strong>Constraint:</strong> No duplicate triplets
+                    </p>
+                </div>
+
+                <h3>🧠 Core Logic</h3>
+                <div class="code-block"><pre><span class="comment">// 3Sum Template (extends Two Sum with Duplicates)</span>
+sort(arr)
+result = []
+
+<span class="keyword">for</span> i = <span class="number">0</span> to n<span class="number">-3</span>:
+    <span class="comment">// Skip duplicate i values</span>
+    <span class="keyword">if</span> (i > <span class="number">0</span> && arr[i] == arr[i<span class="number">-1</span>]) <span class="keyword">continue</span>
+    
+    <span class="comment">// Fix arr[i], find Two Sum for remaining</span>
+    L = i + <span class="number">1</span>
+    R = n <span class="number">-1</span>
+    target = <span class="number">-</span>arr[i]  <span class="comment">// Want arr[i] + arr[L] + arr[R] = 0</span>
+    
+    <span class="keyword">while</span> (L < R) {
+        sum = arr[L] + arr[R]
+        
+        <span class="keyword">if</span> (sum == target) {
+            result.add([arr[i], arr[L], arr[R]])
+            
+            <span class="comment">// SKIP DUPLICATES at L and R</span>
+            L++
+            R--
+            <span class="keyword">while</span> (L < R && arr[L] == arr[L<span class="number">-1</span>]) L++
+            <span class="keyword">while</span> (L < R && arr[R] == arr[R<span class="number">+1</span>]) R--
+        }
+        <span class="keyword">else if</span> (sum < target)
+            L++
+        <span class="keyword">else</span>
+            R--
+    }
+
+<span class="keyword">return</span> result</pre></div>
+
+                <h3>📊 Visual Example - Complete Walkthrough</h3>
+                
+                <p style="margin-bottom: 20px; font-size: 1.1rem;">
+                    <strong>Input:</strong> [-1, 0, 1, 2, -1, -4]<br>
+                    <strong>After Sort:</strong> [-4, -1, -1, 0, 1, 2]
+                </p>
+
+                <!-- i=0 ITERATION -->
+                <div class="step-box">
+                    <h4>Iteration 1: i=0, arr[i]=-4, target=4</h4>
+                    <div class="array-visual">
+                        <div class="array-cell fixed">
+                            <div class="index">0</div>
+                            -4
+                            <div class="label">FIXED</div>
+                        </div>
+                        <div class="array-cell left-pointer">
+                            <div class="index">1</div>
+                            -1
+                            <div class="label">L</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">2</div>
+                            -1
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">3</div>
+                            0
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">4</div>
+                            1
+                        </div>
+                        <div class="array-cell right-pointer">
+                            <div class="index">5</div>
+                            2
+                            <div class="label">R</div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 12px;">
+                        <strong>Check:</strong> -1 + 2 = 1, need 4 → sum < target → L++<br>
+                        Continue checking... No triplet found that sums to 0 with -4
+                    </p>
+                </div>
+
+                <!-- i=1 ITERATION -->
+                <div class="step-box">
+                    <h4>Iteration 2: i=1, arr[i]=-1, target=1</h4>
+                    <div class="array-visual">
+                        <div class="array-cell">
+                            <div class="index">0</div>
+                            -4
+                        </div>
+                        <div class="array-cell fixed">
+                            <div class="index">1</div>
+                            -1
+                            <div class="label">FIXED</div>
+                        </div>
+                        <div class="array-cell left-pointer">
+                            <div class="index">2</div>
+                            -1
+                            <div class="label">L</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">3</div>
+                            0
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">4</div>
+                            1
+                        </div>
+                        <div class="array-cell right-pointer">
+                            <div class="index">5</div>
+                            2
+                            <div class="label">R</div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 12px;">
+                        <strong>Check:</strong> -1 + 2 = 1 == target ✅<br>
+                        <strong>Found:</strong> [-1, -1, 2]<br>
+                        Skip duplicates, move L++, R--
+                    </p>
+                </div>
+
+                <!-- AFTER FIRST TRIPLET -->
+                <div class="step-box">
+                    <h4>Continue: i=1, after finding first triplet</h4>
+                    <div class="array-visual">
+                        <div class="array-cell">
+                            <div class="index">0</div>
+                            -4
+                        </div>
+                        <div class="array-cell fixed">
+                            <div class="index">1</div>
+                            -1
+                            <div class="label">FIXED</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">2</div>
+                            -1
+                        </div>
+                        <div class="array-cell left-pointer">
+                            <div class="index">3</div>
+                            0
+                            <div class="label">L</div>
+                        </div>
+                        <div class="array-cell right-pointer">
+                            <div class="index">4</div>
+                            1
+                            <div class="label">R</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">5</div>
+                            2
+                        </div>
+                    </div>
+                    <p style="margin-top: 12px;">
+                        <strong>Check:</strong> 0 + 1 = 1 == target ✅<br>
+                        <strong>Found:</strong> [-1, 0, 1]<br>
+                        L and R meet → done with i=1
+                    </p>
+                </div>
+
+                <!-- i=2 SKIP -->
+                <div class="step-box">
+                    <h4>Iteration 3: i=2, arr[i]=-1</h4>
+                    <div class="array-visual">
+                        <div class="array-cell">
+                            <div class="index">0</div>
+                            -4
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">1</div>
+                            -1
+                        </div>
+                        <div class="array-cell fixed" style="background: #ffebee; border-color: #ef5350;">
+                            <div class="index">2</div>
+                            -1
+                            <div class="label">SKIP</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">3</div>
+                            0
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">4</div>
+                            1
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">5</div>
+                            2
+                        </div>
+                    </div>
+                    <p style="margin-top: 12px; color: #d32f2f; font-weight: 600;">
+                        ⚠️ arr[2] == arr[1] (-1 == -1) → Duplicate! Skip to avoid duplicate triplets
+                    </p>
+                </div>
+
+                <!-- FINAL RESULT -->
+                <div class="step-box" style="background: #e8f5e9; border-color: #4caf50;">
+                    <h4 style="color: #2e7d32;">✅ Final Result</h4>
+                    <p style="font-size: 1.1rem; line-height: 2;">
+                        <strong>Found Triplets:</strong><br>
+                        1. [-1, -1, 2]<br>
+                        2. [-1, 0, 1]<br><br>
+                        Continue for remaining values of i (i=3, i=4)... no more triplets found
+                    </p>
+                </div>
+
+                <h3>Handling Duplicates (CRUCIAL!)</h3>
+                <div class="danger-box">
+                    <p style="font-size: 1.1em;"><strong>Three places for duplicates:</strong></p>
+                    <ol style="line-height: 2;">
+                        <li><strong>Duplicate i:</strong> <code>if (i > 0 && arr[i] == arr[i-1]) continue;</code></li>
+                        <li><strong>Duplicate left:</strong> <code>while (left < right && arr[left] == arr[left+1]) left++;</code></li>
+                        <li><strong>Duplicate right:</strong> <code>while (left < right && arr[right] == arr[right-1]) right--;</code></li>
+                    </ol>
+                </div>
+
+                <h3>💻 Java Code (Fully Commented)</h3>
+                <div class="code-block"><pre><span class="comment">/**
+ * 3Sum - Find All Unique Triplets that Sum to Zero
+ * 
+ * Problem: Find all unique triplets [a, b, c] where a + b + c = 0
+ * Input: [-1, 0, 1, 2, -1, -4]
+ * Output: [[-1, -1, 2], [-1, 0, 1]]
+ * 
+ * Constraint: Solution set must NOT contain duplicate triplets
+ * 
+ * Approach: Fix one element, then use Two Pointers on rest
+ * 1. Sort array first (enables two pointers + duplicate skipping)
+ * 2. Loop through array with index i (this is the "fixed" element)
+ * 3. For remaining array, use Two Pointers to find pairs that sum to -arr[i]
+ * 4. Skip duplicates at THREE places: i, left, right
+ * 
+ * Why this works:
+ * - Fixing arr[i] reduces 3Sum to 2Sum problem
+ * - Sorted array allows efficient two pointers
+ * - Sorting groups duplicates, making them easy to skip
+ * 
+ * Time: O(N²) - O(N log N) for sort + O(N) loop × O(N) two pointers
+ * Space: O(1) - not counting output array
+ */</span>
+<span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; threeSum(<span class="keyword">int</span>[] nums) {
+    <span class="comment">// Step 1: Sort the array</span>
+    <span class="comment">// This enables: two pointers approach + easy duplicate skipping</span>
+    Arrays.sort(nums);
+    
+    <span class="comment">// Result list to store all unique triplets</span>
+    List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();
+    
+    <span class="comment">// Step 2: Loop through array, fixing one element at a time</span>
+    <span class="comment">// Stop at n-2 because we need at least 2 more elements for left and right</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < nums.length - <span class="number">2</span>; i++) {
+        
+        <span class="comment">// ===== DUPLICATE SKIP 1: Skip duplicate 'i' values =====</span>
+        <span class="comment">// If current element same as previous, we'd get duplicate triplets</span>
+        <span class="comment">// Example: [-1, -1, 0, 1] - if we process both -1s, we get duplicates</span>
+        <span class="comment">// Check i > 0 to avoid index out of bounds on first iteration</span>
+        <span class="keyword">if</span> (i > <span class="number">0</span> && nums[i] == nums[i - <span class="number">1</span>]) {
+            <span class="keyword">continue</span>;  <span class="comment">// Skip this iteration</span>
+        }
+        
+        <span class="comment">// Step 3: Set up two pointers for remaining array</span>
+        <span class="comment">// left: starts right after i</span>
+        <span class="keyword">int</span> left = i + <span class="number">1</span>;
+        
+        <span class="comment">// right: starts at end of array</span>
+        <span class="keyword">int</span> right = nums.length - <span class="number">1</span>;
+        
+        <span class="comment">// We want: arr[i] + arr[left] + arr[right] = 0</span>
+        <span class="comment">// Rearranging: arr[left] + arr[right] = -arr[i]</span>
+        <span class="comment">// So target for two pointers is -arr[i]</span>
+        <span class="keyword">int</span> target = -nums[i];
+        
+        <span class="comment">// Step 4: Two pointers approach on remaining array</span>
+        <span class="keyword">while</span> (left < right) {
+            <span class="comment">// Calculate sum of the two pointers</span>
+            <span class="keyword">int</span> sum = nums[left] + nums[right];
+            
+            <span class="comment">// ===== CASE 1: Found a valid triplet! =====</span>
+            <span class="keyword">if</span> (sum == target) {
+                <span class="comment">// Add triplet to result</span>
+                <span class="comment">// [nums[i], nums[left], nums[right]] sums to 0</span>
+                result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                
+                <span class="comment">// ===== DUPLICATE SKIP 2: Skip duplicate 'left' values =====</span>
+                <span class="comment">// Move left forward while next element is same</span>
+                <span class="comment">// Example: [-1, 0, 0, 0, 1] - skip the extra 0s</span>
+                <span class="keyword">while</span> (left < right && nums[left] == nums[left + <span class="number">1</span>]) {
+                    left++;
+                }
+                
+                <span class="comment">// ===== DUPLICATE SKIP 3: Skip duplicate 'right' values =====</span>
+                <span class="comment">// Move right backward while previous element is same</span>
+                <span class="keyword">while</span> (left < right && nums[right] == nums[right - <span class="number">1</span>]) {
+                    right--;
+                }
+                
+                <span class="comment">// Move both pointers after finding a triplet</span>
+                <span class="comment">// (and after skipping duplicates)</span>
+                left++;
+                right--;
+            } 
+            
+            <span class="comment">// ===== CASE 2: Sum too small =====</span>
+            <span class="comment">// Need a larger sum, move left forward (array is sorted!)</span>
+            <span class="keyword">else if</span> (sum < target) {
+                left++;
+            } 
+            
+            <span class="comment">// ===== CASE 3: Sum too large =====</span>
+            <span class="comment">// Need a smaller sum, move right backward</span>
+            <span class="keyword">else</span> {
+                right--;
+            }
+        }
+    }
+    
+    <span class="comment">// Return all unique triplets found</span>
+    <span class="keyword">return</span> result;
+}
+
+<span class="comment">/*
+ * Example Trace: [-1, 0, 1, 2, -1, -4]
+ * After sort: [-4, -1, -1, 0, 1, 2]
+ * 
+ * Iteration i=0: arr[i]=-4, target=4
+ * [-4, -1, -1, 0, 1, 2]
+ *   ^   L           R
+ * sum = -1+2 = 1 < 4 → left++
+ * sum = -1+2 = 1 < 4 → left++
+ * sum = 0+2 = 2 < 4 → left++
+ * sum = 1+2 = 3 < 4 → left++
+ * left >= right, no solution for i=0
+ * 
+ * Iteration i=1: arr[i]=-1, target=1
+ * [-4, -1, -1, 0, 1, 2]
+ *       ^   L      R
+ * sum = -1+2 = 1 == 1 ✓ Found triplet: [-1, -1, 2]
+ * Skip duplicates, move pointers
+ * 
+ * Continue finding: [-1, 0, 1]
+ * 
+ * Iteration i=2: arr[i]=-1 == arr[1]=-1 → Skip duplicate i
+ * 
+ * Final result: [[-1, -1, 2], [-1, 0, 1]]
+ * 
+ * KEY INSIGHT: Three places to skip duplicates!
+ * 1. Duplicate i (outer loop)
+ * 2. Duplicate left (after finding triplet)
+ * 3. Duplicate right (after finding triplet)
+ * Without this, we'd get duplicate triplets in output
+ */</span></pre></div>
+
+                <div style="display: flex; gap: 10px; margin: 20px 0;">
+                    <span class="complexity-badge time">Time: O(N²)</span>
+                    <span class="complexity-badge space">Space: O(1)</span>
+                </div>
+
+                <h3>Other Variations</h3>
+                <table>
+                    <tr>
+                        <th>Problem</th>
+                        <th>Goal</th>
+                        <th>Key Difference</th>
+                    </tr>
+                    <tr>
+                        <td><strong>3Sum Closest</strong></td>
+                        <td>Find sum closest to target</td>
+                        <td>Track minimum <code>|sum - target|</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Triplets Smaller Sum</strong></td>
+                        <td>Count triplets where sum < target</td>
+                        <td>Add <code>(right - left)</code> when sum < target</td>
+                    </tr>
+                </table>
+
+                <h3>💻 3Sum Closest - Java Code (Fully Commented)</h3>
+
+                <div class="warning-box">
+                    <h4>🎯 Key Difference from Regular 3Sum</h4>
+                    <p style="font-size: 1.1em; line-height: 1.8;">
+                        <strong>3Sum:</strong> Find triplets that sum to EXACTLY zero<br>
+                        <strong>3Sum Closest:</strong> Find triplet that sums CLOSEST to target<br><br>
+                        <strong>Strategy:</strong> Track the minimum distance from target throughout the search!
+                    </p>
+                </div>
+
+                <h3>🧠 Core Logic</h3>
+                <div class="code-block"><pre><span class="comment">// 3Sum Closest Template (same loop structure as 3Sum)</span>
+sort(arr)
+closestSum = arr[<span class="number">0</span>] + arr[<span class="number">1</span>] + arr[<span class="number">2</span>]  <span class="comment">// Initial guess</span>
+
+<span class="keyword">for</span> i = <span class="number">0</span> to n<span class="number">-3</span>:
+    <span class="comment">// Fix arr[i], use Two Pointers on remaining</span>
+    L = i + <span class="number">1</span>
+    R = n <span class="number">-1</span>
+    
+    <span class="keyword">while</span> (L < R) {
+        currentSum = arr[i] + arr[L] + arr[R]
+        
+        <span class="comment">// Update if this sum is closer to target</span>
+        <span class="keyword">if</span> (|currentSum - target| < |closestSum - target|)
+            closestSum = currentSum
+        
+        <span class="comment">// Move pointers based on comparison (same as 3Sum)</span>
+        <span class="keyword">if</span> (currentSum < target)
+            L++   <span class="comment">// Need larger sum</span>
+        <span class="keyword">else if</span> (currentSum > target)
+            R--   <span class="comment">// Need smaller sum</span>
+        <span class="keyword">else</span>
+            <span class="keyword">return</span> currentSum  <span class="comment">// Exact match, can't get closer!</span>
+    }
+
+<span class="keyword">return</span> closestSum</pre></div>
+
+                <div class="card info">
+                    <h4>🔑 Key Insight: No Duplicate Skipping Needed!</h4>
+                    <p style="font-size: 1.05rem; line-height: 2; margin-top: 12px;">
+                        Unlike regular 3Sum, we DON'T need to skip duplicates because:<br>
+                        • We're finding just ONE triplet (the closest), not ALL triplets<br>
+                        • Duplicate combinations will have the same sum anyway<br>
+                        • No need to avoid returning duplicate results
+                    </p>
+                </div>
+
+                <h4>📊 Complete Step-by-Step Visual Walkthrough</h4>
+                <div class="step-box">
+                    <h4>Input: nums = [-1, 2, 1, -4], target = 1</h4>
+                    <h4>After Sort: [-4, -1, 1, 2]</h4>
+                    
+                    <div class="info-box">
+                        <h4>📌 Initial Setup</h4>
+                        <p><strong>closestSum</strong> = nums[0] + nums[1] + nums[2] = -4 + (-1) + 1 = <strong>-4</strong></p>
+                        <p><strong>distance from target:</strong> |-4 - 1| = <strong>5</strong></p>
+                    </div>
+
+                    <hr style="margin: 30px 0; border: 1px solid #ddd;">
+
+                    <h4 style="background: #f5f5f5; padding: 15px; border-radius: 8px;">🔄 Iteration 1: i=0 (fixed = -4)</h4>
+                    
+                    <p style="margin: 15px 0;"><strong>Step 1a:</strong> left=1, right=3</p>
+                    <div class="array-visual">
+                        <div class="array-cell fixed">
+                            <div class="index">0</div>
+                            -4
+                            <div class="label">FIXED</div>
+                        </div>
+                        <div class="array-cell left-pointer">
+                            <div class="index">1</div>
+                            -1
+                            <div class="label">L</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">2</div>
+                            1
+                        </div>
+                        <div class="array-cell right-pointer">
+                            <div class="index">3</div>
+                            2
+                            <div class="label">R</div>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <p>
+                            <strong>currentSum</strong> = -4 + (-1) + 2 = <strong>-3</strong><br>
+                            <strong>distance from target:</strong> |-3 - 1| = <strong>4</strong><br>
+                            <strong>Compare:</strong> 4 < 5? YES! → Update closestSum = -3 ✅<br>
+                            <strong>Decision:</strong> currentSum (-3) < target (1) → <code>left++</code>
+                        </p>
+                    </div>
+
+                    <p style="margin: 15px 0;"><strong>Step 1b:</strong> left=2, right=3</p>
+                    <div class="array-visual">
+                        <div class="array-cell fixed">
+                            <div class="index">0</div>
+                            -4
+                            <div class="label">FIXED</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">1</div>
+                            -1
+                        </div>
+                        <div class="array-cell left-pointer">
+                            <div class="index">2</div>
+                            1
+                            <div class="label">L</div>
+                        </div>
+                        <div class="array-cell right-pointer">
+                            <div class="index">3</div>
+                            2
+                            <div class="label">R</div>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <p>
+                            <strong>currentSum</strong> = -4 + 1 + 2 = <strong>-1</strong><br>
+                            <strong>distance from target:</strong> |-1 - 1| = <strong>2</strong><br>
+                            <strong>Compare:</strong> 2 < 4? YES! → Update closestSum = -1 ✅<br>
+                            <strong>Decision:</strong> currentSum (-1) < target (1) → <code>left++</code><br>
+                            <strong>Result:</strong> left > right, inner loop ends
+                        </p>
+                    </div>
+
+                    <hr style="margin: 30px 0; border: 1px solid #ddd;">
+
+                    <h4 style="background: #f5f5f5; padding: 15px; border-radius: 8px;">🔄 Iteration 2: i=1 (fixed = -1)</h4>
+                    
+                    <p style="margin: 15px 0;"><strong>Step 2a:</strong> left=2, right=3</p>
+                    <div class="array-visual">
+                        <div class="array-cell">
+                            <div class="index">0</div>
+                            -4
+                        </div>
+                        <div class="array-cell fixed">
+                            <div class="index">1</div>
+                            -1
+                            <div class="label">FIXED</div>
+                        </div>
+                        <div class="array-cell left-pointer">
+                            <div class="index">2</div>
+                            1
+                            <div class="label">L</div>
+                        </div>
+                        <div class="array-cell right-pointer">
+                            <div class="index">3</div>
+                            2
+                            <div class="label">R</div>
+                        </div>
+                    </div>
+                    <div class="success-box">
+                        <p style="font-size: 1.15em;">
+                            <strong>currentSum</strong> = -1 + 1 + 2 = <strong>2</strong><br>
+                            <strong>distance from target:</strong> |2 - 1| = <strong>1</strong><br>
+                            <strong>Compare:</strong> 1 < 2? YES! → Update closestSum = 2 ✅<br>
+                            <strong>🎉 This is the closest we'll get!</strong><br>
+                            <strong>Decision:</strong> currentSum (2) > target (1) → <code>right--</code><br>
+                            <strong>Result:</strong> left > right, inner loop ends
+                        </p>
+                    </div>
+
+                    <hr style="margin: 30px 0; border: 1px solid #ddd;">
+
+                    <h4 style="background: #f5f5f5; padding: 15px; border-radius: 8px;">🔄 Iteration 3: i=2 (would be last, but...)</h4>
+                    <div class="info-box">
+                        <p>Loop condition: <code>i < nums.length - 2</code> → i < 2<br>
+                        When i=2, the condition is false, so we stop here.</p>
+                    </div>
+
+                    <hr style="margin: 30px 0; border: 1px solid #ddd;">
+
+                    <h4 style="background: #e8f5e9; padding: 20px; border-radius: 8px; border: 2px solid #27ae60;">
+                        ✅ Final Answer: closestSum = 2
+                    </h4>
+                    
+                    <div class="highlight-box">
+                        <h4>📊 Distance Tracking Throughout:</h4>
+                        <table style="width: 100%; margin-top: 15px; border-collapse: collapse;">
+                            <tr style="background: #f5f5f5; font-weight: bold;">
+                                <th style="padding: 10px; border: 1px solid #ddd;">Iteration</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Triplet</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Sum</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Distance from 1</th>
+                                <th style="padding: 10px; border: 1px solid #ddd;">Update?</th>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ddd;">Initial</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">[-4, -1, 1]</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">-4</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">5</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">-</td>
+                            </tr>
+                            <tr style="background: #fff3e0;">
+                                <td style="padding: 10px; border: 1px solid #ddd;">1a</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">[-4, -1, 2]</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">-3</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">4</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">✅ YES (4 < 5)</td>
+                            </tr>
+                            <tr style="background: #fff3e0;">
+                                <td style="padding: 10px; border: 1px solid #ddd;">1b</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">[-4, 1, 2]</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">-1</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">2</td>
+                                <td style="padding: 10px; border: 1px solid #ddd;">✅ YES (2 < 4)</td>
+                            </tr>
+                            <tr style="background: #e8f5e9;">
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>2a</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>[-1, 1, 2]</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>2</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>1</strong></td>
+                                <td style="padding: 10px; border: 1px solid #ddd;"><strong>✅ YES (1 < 2) - BEST!</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="success-box" style="margin-top: 30px;">
+                        <h4>🔑 Key Insights:</h4>
+                        <ul style="line-height: 2; font-size: 1.05em;">
+                            <li><strong>No exact match needed:</strong> Unlike 3Sum, we don't need sum == target</li>
+                            <li><strong>Always update:</strong> Check distance every iteration and keep the closest</li>
+                            <li><strong>Pointer movement:</strong> Still based on comparison with target (not with closestSum)</li>
+                            <li><strong>Early exit optimization:</strong> If currentSum == target, return immediately (distance = 0)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h4>💻 Implementation with Line-by-Line Explanation</h4>
+
+                <div class="code-block"><pre><span class="comment">/**
+ * 3Sum Closest
+ * 
+ * Problem: Find triplet with sum CLOSEST to target
+ * Input: nums = [-1, 2, 1, -4], target = 1
+ * Output: 2 (triplet [-1, 1, 2] sums to 2, closest to 1)
+ * 
+ * Approach: Same structure as 3Sum but track closest sum
+ * 1. Sort array (enables two pointers)
+ * 2. Fix element i
+ * 3. Use two pointers to find closest sum
+ * 4. Track minimum distance from target throughout
+ * 
+ * Key Difference from 3Sum:
+ * - 3Sum: Find exact match (sum == 0)
+ * - 3Sum Closest: Find minimum distance (track |sum - target|)
+ * 
+ * Time: O(N²) - O(N log N) sort + O(N) outer * O(N) inner
+ * Space: O(1) - only using pointers
+ */</span>
+<span class="keyword">public int</span> threeSumClosest(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) {
+    <span class="comment">// Step 1: Sort the array</span>
+    <span class="comment">// This enables two pointers approach</span>
+    Arrays.sort(nums);
+    
+    <span class="comment">// Initialize closestSum with first possible triplet</span>
+    <span class="comment">// This gives us a baseline to compare against</span>
+    <span class="keyword">int</span> closestSum = nums[<span class="number">0</span>] + nums[<span class="number">1</span>] + nums[<span class="number">2</span>];
+    
+    <span class="comment">// Step 2: Fix first element with loop</span>
+    <span class="comment">// Stop at length-2 because we need 2 more elements for left/right</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < nums.length - <span class="number">2</span>; i++) {
+        <span class="comment">// Step 3: Set up two pointers for remaining array</span>
+        <span class="keyword">int</span> left = i + <span class="number">1</span>;           <span class="comment">// Start after fixed element</span>
+        <span class="keyword">int</span> right = nums.length - <span class="number">1</span>; <span class="comment">// Start at end</span>
+        
+        <span class="comment">// Step 4: Two pointers search</span>
+        <span class="keyword">while</span> (left < right) {
+            <span class="comment">// Calculate current triplet sum</span>
+            <span class="keyword">int</span> currentSum = nums[i] + nums[left] + nums[right];
+            
+            <span class="comment">// ===== KEY: Update closestSum based on distance =====</span>
+            <span class="comment">// Compare absolute distances from target</span>
+            <span class="comment">// |currentSum - target| vs |closestSum - target|</span>
+            <span class="keyword">if</span> (Math.abs(currentSum - target) < Math.abs(closestSum - target)) {
+                closestSum = currentSum;
+            }
+            
+            <span class="comment">// ===== OPTIMIZATION: Early exit if exact match =====</span>
+            <span class="comment">// If we find exact target, distance = 0 (can't get closer!)</span>
+            <span class="keyword">if</span> (currentSum == target) {
+                <span class="keyword">return</span> currentSum; <span class="comment">// Perfect match, return immediately</span>
+            }
+            
+            <span class="comment">// ===== Move pointers based on comparison with TARGET =====</span>
+            <span class="comment">// (NOT based on closestSum - still compare to target!)</span>
+            
+            <span class="comment">// Case 1: Current sum is less than target</span>
+            <span class="comment">// Need larger sum → move left pointer forward</span>
+            <span class="keyword">if</span> (currentSum < target) {
+                left++;
+            } 
+            <span class="comment">// Case 2: Current sum is greater than target</span>
+            <span class="comment">// Need smaller sum → move right pointer backward</span>
+            <span class="keyword">else</span> {
+                right--;
+            }
+        }
+    }
+    
+    <span class="comment">// Return the closest sum we found</span>
+    <span class="keyword">return</span> closestSum;
+}
+
+<span class="comment">/* 
+ * Complete Trace: nums = [-1, 2, 1, -4], target = 1
+ * After sort: [-4, -1, 1, 2]
+ * 
+ * Initialize: closestSum = -4 + (-1) + 1 = -4 (distance = 5)
+ * 
+ * i=0 (fixed=-4):
+ *   left=1, right=3: [-4, -1, 2] → sum=-3, distance=4 → UPDATE to -3
+ *   left=2, right=3: [-4, 1, 2] → sum=-1, distance=2 → UPDATE to -1
+ *   left > right → inner loop ends
+ * 
+ * i=1 (fixed=-1):
+ *   left=2, right=3: [-1, 1, 2] → sum=2, distance=1 → UPDATE to 2 ✓
+ *   currentSum (2) > target (1) → right--
+ *   left > right → inner loop ends
+ * 
+ * i=2 would start, but i < 2 is false → outer loop ends
+ * 
+ * Return closestSum = 2
+ * 
+ * FINAL ANSWER: Triplet [-1, 1, 2] has sum 2, closest to target 1
+ */</span></pre></div>
+
+                <div class="highlight-box" style="margin: 40px 0;">
+                    <h4>📊 3Sum vs 3Sum Closest - Quick Comparison</h4>
+                    <table style="width: 100%; margin-top: 20px; border-collapse: collapse;">
+                        <tr style="background: #f5f5f5; font-weight: bold;">
+                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Aspect</th>
+                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">3Sum</th>
+                            <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">3Sum Closest</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Goal</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Find triplets with sum == 0 (exact)</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Find triplet closest to target</td>
+                        </tr>
+                        <tr style="background: #fafafa;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Return Type</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">List of Lists (all unique triplets)</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Single integer (the closest sum)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Comparison</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><code>if (sum == target)</code></td>
+                            <td style="padding: 12px; border: 1px solid #ddd;"><code>if (|currentSum - target| < |closestSum - target|)</code></td>
+                        </tr>
+                        <tr style="background: #fafafa;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Duplicates</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Must skip duplicates at 3 places</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">No duplicate handling needed (single answer)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Early Exit</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Keep searching (may have multiple answers)</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">Return immediately if exact match found</td>
+                        </tr>
+                        <tr style="background: #fafafa;">
+                            <td style="padding: 12px; border: 1px solid #ddd; font-weight: bold;">Example</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">[-1, 0, 1, 2, -1, -4] → [[-1,-1,2], [-1,0,1]]</td>
+                            <td style="padding: 12px; border: 1px solid #ddd;">[-1, 2, 1, -4], target=1 → 2</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h3>💻 Triplets with Smaller Sum - Java Code (Fully Commented)</h3>
+
+                <h4>📊 Visual Example - The KEY OPTIMIZATION!</h4>
+                <div class="step-box">
+                    <h4>Input: nums = [-2, 0, 1, 3], target = 2</h4>
+                    
+                    <p><strong>i=0, arr[i]=-2</strong></p>
+                    <div class="array-visual">
+                        <div class="array-cell fixed">
+                            <div class="index">0</div>
+                            -2
+                            <div class="label">FIXED</div>
+                        </div>
+                        <div class="array-cell left-pointer">
+                            <div class="index">1</div>
+                            0
+                            <div class="label">L</div>
+                        </div>
+                        <div class="array-cell">
+                            <div class="index">2</div>
+                            1
+                        </div>
+                        <div class="array-cell right-pointer">
+                            <div class="index">3</div>
+                            3
+                            <div class="label">R</div>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box">
+                        <p><strong>sum</strong> = -2 + 0 + 3 = <strong>1 < 2</strong> ✓</p>
+                        <p style="font-size: 1.2em; margin-top: 10px;">
+                            <strong>KEY INSIGHT:</strong> If sum < target, then ALL these triplets work:
+                        </p>
+                        <ul style="margin: 15px 0; line-height: 2;">
+                            <li>[-2, 0, 3] → sum = 1 < 2 ✓</li>
+                            <li>[-2, 0, 1] → sum = -1 < 2 ✓</li>
+                        </ul>
+                        <p style="font-size: 1.3em; color: #d32f2f; font-weight: bold;">
+                            That's <code>(right - left)</code> = (3 - 1) = <strong>2 triplets!</strong>
+                        </p>
+                        <p style="margin-top: 10px;">
+                            Why? Because array is sorted, all elements between left and right are ≤ arr[right]
+                        </p>
+                    </div>
+
+                    <div class="success-box">
+                        <p><strong>Without optimization:</strong> Need to check each combination → O(N³)</p>
+                        <p><strong>With optimization:</strong> Count all at once with (right - left) → O(N²)</p>
+                    </div>
+                </div>
+
+                <div class="code-block"><pre><span class="comment">/**
+ * Triplets with Smaller Sum
+ * 
+ * Problem: COUNT triplets where sum < target
+ * Input: nums = [-1, 0, 2, 3], target = 3
+ * Output: 2 (triplets: [-1, 0, 2] and [-1, 0, 3])
+ * 
+ * Approach: Same structure but with counting optimization
+ * - If sum < target: ALL elements from left to right work!
+ * - This is because array is sorted
+ * - Add (right - left) to count immediately
+ * 
+ * KEY INSIGHT:
+ * If arr[i] + arr[left] + arr[right] < target
+ * Then arr[i] + arr[left] + ANY element between left and right < target
+ * Because array is sorted, all middle elements ≤ arr[right]
+ * 
+ * Time: O(N²)
+ * Space: O(1)
+ */</span>
+<span class="keyword">public int</span> threeSumSmaller(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target) {
+    Arrays.sort(nums);
+    <span class="keyword">int</span> count = <span class="number">0</span>;
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < nums.length - <span class="number">2</span>; i++) {
+        <span class="keyword">int</span> left = i + <span class="number">1</span>;
+        <span class="keyword">int</span> right = nums.length - <span class="number">1</span>;
+        
+        <span class="keyword">while</span> (left < right) {
+            <span class="keyword">int</span> sum = nums[i] + nums[left] + nums[right];
+            
+            <span class="comment">// ===== KEY OPTIMIZATION =====</span>
+            <span class="keyword">if</span> (sum < target) {
+                <span class="comment">// If sum < target, then:</span>
+                <span class="comment">// - arr[i] + arr[left] + arr[right] < target ✓</span>
+                <span class="comment">// - arr[i] + arr[left] + arr[right-1] < target ✓</span>
+                <span class="comment">// - arr[i] + arr[left] + arr[right-2] < target ✓</span>
+                <span class="comment">// - ... (all elements between left and right work!)</span>
+                <span class="comment">// - arr[i] + arr[left] + arr[left+1] < target ✓</span>
+                <span class="comment">// </span>
+                <span class="comment">// That's (right - left) valid triplets!</span>
+                <span class="comment">// Add them ALL at once</span>
+                count += (right - left);
+                
+                <span class="comment">// Move left forward to find more combinations</span>
+                left++;
+            } <span class="keyword">else</span> {
+                <span class="comment">// Sum >= target, need smaller sum</span>
+                <span class="comment">// Move right backward</span>
+                right--;
+            }
+        }
+    }
+    
+    <span class="keyword">return</span> count;
+}
+
+<span class="comment">/*
+ * Example Trace: nums = [-2, 0, 1, 3], target = 2
+ * After sort: same
+ * 
+ * i=0, arr[i]=-2
+ * [-2, 0, 1, 3]
+ *   ^  L     R
+ * 
+ * sum = -2+0+3 = 1 < 2 ✓
+ * 
+ * How many valid triplets with arr[i]=-2 and arr[left]=0?
+ * - [-2, 0, 3] → sum = 1 < 2 ✓
+ * - [-2, 0, 1] → sum = -1 < 2 ✓
+ * 
+ * Count = right - left = 3 - 1 = 2 ✓
+ * This is the KEY optimization!
+ * 
+ * Without this, we'd need nested loops to check each combination
+ * With this, we count all valid combinations in O(1)
+ */</span></pre></div>
+            </section>
+
+            <!-- SECTION 7.5: UNIFIED STRATEGY -->
+            <section id="unified-strategy" class="section">
+                <h2>🎯 Unified Strategy: The Pattern Across All Problems</h2>
+
+                <div class="highlight-box">
+                    <p style="font-size: 1.2em; line-height: 2;">
+                        All four problems follow the <strong>SAME CORE STRATEGY</strong> with small variations!<br>
+                        Understanding this pattern will help you solve ANY similar problem.
+                    </p>
+                </div>
+
+                <h3>📊 Side-by-Side Comparison</h3>
+                <table style="font-size: 0.95rem;">
+                    <thead style="background: #2d3561; color: white;">
+                        <tr>
+                            <th style="padding: 15px;">Problem</th>
+                            <th style="padding: 15px;">Goal</th>
+                            <th style="padding: 15px;">Loop Structure</th>
+                            <th style="padding: 15px;">Duplicate Handling</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background: #e3f2fd;">
+                            <td style="padding: 12px;"><strong>Two Sum</strong></td>
+                            <td style="padding: 12px;">Find ONE pair summing to target</td>
+                            <td style="padding: 12px;"><code>while (L < R)</code></td>
+                            <td style="padding: 12px;">❌ Not needed</td>
+                        </tr>
+                        <tr style="background: #fff3e0;">
+                            <td style="padding: 12px;"><strong>Two Sum Duplicates</strong></td>
+                            <td style="padding: 12px;">Find ALL unique pairs</td>
+                            <td style="padding: 12px;"><code>while (L < R)</code></td>
+                            <td style="padding: 12px;">✅ Skip at L and R</td>
+                        </tr>
+                        <tr style="background: #f3e5f5;">
+                            <td style="padding: 12px;"><strong>3Sum</strong></td>
+                            <td style="padding: 12px;">Find ALL unique triplets = 0</td>
+                            <td style="padding: 12px;"><code>for i + while (L < R)</code></td>
+                            <td style="padding: 12px;">✅ Skip at i, L, and R</td>
+                        </tr>
+                        <tr style="background: #e8f5e9;">
+                            <td style="padding: 12px;"><strong>3Sum Closest</strong></td>
+                            <td style="padding: 12px;">Find ONE closest triplet</td>
+                            <td style="padding: 12px;"><code>for i + while (L < R)</code></td>
+                            <td style="padding: 12px;">❌ Not needed</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>🧩 The Universal Template</h3>
+                <div class="card concept">
+                    <h4>Step 1: Sort the Array</h4>
+                    <p style="font-size: 1.05rem; line-height: 2;">
+                        <strong>ALL</strong> four problems start with sorting: <code>Arrays.sort(arr)</code><br>
+                        Time: O(N log N)
+                    </p>
+                </div>
+
+                <div class="card concept">
+                    <h4>Step 2: Choose Your Loop Structure</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+                        <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #1976d2;">
+                            <h5 style="color: #1565c0; margin-bottom: 10px;">For Pairs (2 Sum)</h5>
+                            <div class="code-block" style="margin-top: 10px;"><pre>L = <span class="number">0</span>
+R = n <span class="number">-1</span>
+
+<span class="keyword">while</span> (L < R) {
+    <span class="comment">// Two pointer logic</span>
+}</pre></div>
+                        </div>
+
+                        <div style="background: #f3e5f5; padding: 20px; border-radius: 10px; border: 2px solid #7b1fa2;">
+                            <h5 style="color: #6a1b9a; margin-bottom: 10px;">For Triplets (3 Sum)</h5>
+                            <div class="code-block" style="margin-top: 10px;"><pre><span class="keyword">for</span> i = <span class="number">0</span> to n<span class="number">-3</span>:
+    L = i + <span class="number">1</span>
+    R = n <span class="number">-1</span>
+    
+    <span class="keyword">while</span> (L < R) {
+        <span class="comment">// Two pointer logic</span>
+    }</pre></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card concept">
+                    <h4>Step 3: Apply Two Pointer Logic (SAME for all!)</h4>
+                    <div class="code-block"><pre><span class="keyword">while</span> (L < R) {
+    currentSum = <span class="comment">/* arr[L] + arr[R] OR arr[i] + arr[L] + arr[R] */</span>
+    
+    <span class="keyword">if</span> (currentSum == target) {
+        <span class="comment">// Found a match!</span>
+        <span class="comment">// → For "find ONE": return immediately</span>
+        <span class="comment">// → For "find ALL": add to result, skip duplicates</span>
+    }
+    <span class="keyword">else if</span> (currentSum < target) {
+        L++  <span class="comment">// Need larger sum</span>
+    }
+    <span class="keyword">else</span> {
+        R--  <span class="comment">// Need smaller sum</span>
+    }
+}</pre></div>
+                </div>
+
+                <div class="card concept">
+                    <h4>Step 4: Handle Duplicates (When Needed)</h4>
+                    <table style="width: 100%; margin-top: 15px;">
+                        <thead style="background: #fff3e0;">
+                            <tr>
+                                <th style="padding: 10px; border: 1px solid #ffb74d;">When?</th>
+                                <th style="padding: 10px; border: 1px solid #ffb74d;">Where to Skip?</th>
+                                <th style="padding: 10px; border: 1px solid #ffb74d;">Code</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ffb74d;">Finding ALL unique results</td>
+                                <td style="padding: 10px; border: 1px solid #ffb74d;">After finding a match</td>
+                                <td style="padding: 10px; border: 1px solid #ffb74d;"><code>while (L < R && arr[L] == arr[L-1]) L++</code></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ffb74d;">3Sum variations</td>
+                                <td style="padding: 10px; border: 1px solid #ffb74d;">In the outer loop too</td>
+                                <td style="padding: 10px; border: 1px solid #ffb74d;"><code>if (i > 0 && arr[i] == arr[i-1]) continue</code></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #ffb74d;">Finding ONE result only</td>
+                                <td style="padding: 10px; border: 1px solid #ffb74d;">Not needed!</td>
+                                <td style="padding: 10px; border: 1px solid #ffb74d;"><code>// No duplicate skipping</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>🔗 Pattern Mapping - How They Connect</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin: 30px 0;">
+                    <!-- Two Sum -->
+                    <div style="background: #e3f2fd; border: 3px solid #1976d2; border-radius: 12px; padding: 25px;">
+                        <h4 style="color: #1565c0; margin-bottom: 15px;">1. Two Sum (Foundation)</h4>
+                        <div style="font-size: 0.95rem; line-height: 2;">
+                            <strong>Strategy:</strong> Basic two pointer<br>
+                            <strong>Returns:</strong> First pair found<br>
+                            <strong>Duplicates:</strong> None<br>
+                            <strong>Code Lines:</strong> ~10
+                        </div>
+                    </div>
+
+                    <!-- Two Sum Duplicates -->
+                    <div style="background: #fff3e0; border: 3px solid #f57c00; border-radius: 12px; padding: 25px;">
+                        <h4 style="color: #e65100; margin-bottom: 15px;">2. Two Sum + Duplicates</h4>
+                        <div style="font-size: 0.95rem; line-height: 2;">
+                            <strong>Strategy:</strong> Two Sum + skip logic<br>
+                            <strong>Returns:</strong> All unique pairs<br>
+                            <strong>Duplicates:</strong> Skip at L & R<br>
+                            <strong>Code Lines:</strong> ~18 (+8 lines)
+                        </div>
+                    </div>
+
+                    <!-- 3Sum -->
+                    <div style="background: #f3e5f5; border: 3px solid #7b1fa2; border-radius: 12px; padding: 25px;">
+                        <h4 style="color: #6a1b9a; margin-bottom: 15px;">3. 3Sum</h4>
+                        <div style="font-size: 0.95rem; line-height: 2;">
+                            <strong>Strategy:</strong> Loop + Two Sum Duplicates<br>
+                            <strong>Returns:</strong> All unique triplets<br>
+                            <strong>Duplicates:</strong> Skip at i, L & R<br>
+                            <strong>Code Lines:</strong> ~25 (+7 lines)
+                        </div>
+                    </div>
+
+                    <!-- 3Sum Closest -->
+                    <div style="background: #e8f5e9; border: 3px solid #388e3c; border-radius: 12px; padding: 25px;">
+                        <h4 style="color: #2e7d32; margin-bottom: 15px;">4. 3Sum Closest</h4>
+                        <div style="font-size: 0.95rem; line-height: 2;">
+                            <strong>Strategy:</strong> Loop + Two Sum + tracking<br>
+                            <strong>Returns:</strong> ONE closest triplet<br>
+                            <strong>Duplicates:</strong> None needed<br>
+                            <strong>Code Lines:</strong> ~22 (simpler than 3Sum!)
+                        </div>
+                    </div>
+                </div>
+
+                <h3>💡 Mental Model: Building Blocks</h3>
+                <div class="highlight-box">
+                    <div style="font-size: 1.15rem; line-height: 2.2;">
+                        <strong>1. Two Sum</strong> = Core building block<br>
+                        <strong>2. Two Sum Duplicates</strong> = Two Sum + duplicate handling<br>
+                        <strong>3. 3Sum</strong> = Loop + Two Sum Duplicates (for each fixed element)<br>
+                        <strong>4. 3Sum Closest</strong> = Loop + Two Sum + tracking (no duplicate logic needed)<br><br>
+                        
+                        <strong style="color: #d32f2f;">Master Two Sum → Everything else follows naturally!</strong>
+                    </div>
+                </div>
+
+                <h3>🎓 Practice Progression</h3>
+                <div class="card success">
+                    <ol style="font-size: 1.1rem; line-height: 2.2; margin-top: 12px;">
+                        <li><strong>Start:</strong> Two Sum (basic template)</li>
+                        <li><strong>Add:</strong> Duplicate skipping (Two Sum Duplicates)</li>
+                        <li><strong>Extend:</strong> Add outer loop (3Sum)</li>
+                        <li><strong>Modify:</strong> Change goal to "closest" (3Sum Closest)</li>
+                    </ol>
+                    <p style="margin-top: 20px; font-size: 1.05rem; color: #2e7d32; font-weight: 700;">
+                        Once you understand this progression, you can solve 4Sum, kSum, and any variant!
+                    </p>
+                </div>
+            </section>
+
+            <!-- SECTION 8: SUMMARY -->
+            <section id="summary" class="section" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+                <h2 style="color: white; border-color: white;">8️⃣ Summary & Checklist</h2>
+                
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: white; margin-top: 0;">Time Complexity Summary</h3>
+                    <table style="background: white; color: #333;">
+                        <tr>
+                            <th>Problem</th>
+                            <th>Time</th>
+                            <th>Space</th>
+                        </tr>
+                        <tr>
+                            <td>Two Sum (Sorted)</td>
+                            <td>O(N)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Remove Duplicates</td>
+                            <td>O(N)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Squares of Sorted Array</td>
+                            <td>O(N)</td>
+                            <td>O(N)</td>
+                        </tr>
+                        <tr>
+                            <td>Dutch National Flag</td>
+                            <td>O(N)</td>
+                            <td>O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>3Sum</td>
+                            <td>O(N²)</td>
+                            <td>O(1)</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; margin: 20px 0;">
+                    <h3 style="color: white; margin-top: 0;">Common Patterns</h3>
+                    
+                    <h4 style="color: #ffeb3b;">Pattern 1: Opposite Ends</h4>
+                    <p style="font-size: 1.1em;">Use: Two Sum, 3Sum inner loop</p>
+                    <pre style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px;">
+left = 0, right = n-1
+while (left < right) {
+    // Move based on comparison
+}</pre>
+
+                    <h4 style="color: #ffeb3b;">Pattern 2: Slow & Fast</h4>
+                    <p style="font-size: 1.1em;">Use: Remove Duplicates</p>
+                    <pre style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px;">
+slow = 0
+for fast from 1 to n-1 {
+    if (condition) {
+        slow++
+        arr[slow] = arr[fast]
+    }
+}</pre>
+
+                    <h4 style="color: #ffeb3b;">Pattern 3: Three Pointers Partition</h4>
+                    <p style="font-size: 1.1em;">Use: Dutch National Flag</p>
+                    <pre style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px;">
+low = 0, mid = 0, high = n-1
+while (mid <= high) {
+    // Partition based on value
+}</pre>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px;">
+                    <h3 style="color: white; margin-top: 0;">Key Takeaways</h3>
+                    <ul style="font-size: 1.2em; line-height: 2.5;">
+                        <li>✅ Always sort first (unless already sorted)</li>
+                        <li>✅ Handle edge cases: empty arrays, single elements</li>
+                        <li>✅ Watch boundary conditions: <code>left < right</code> vs <code>left <= right</code></li>
+                        <li>✅ Skip duplicates when finding unique solutions</li>
+                        <li>✅ Understand WHY pointer movements work (sorted property)</li>
+                        <li>✅ Practice recognizing the pattern in new problems</li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center; margin-top: 40px; padding: 30px; background: rgba(255,255,255,0.2); border-radius: 15px;">
+                    <h2 style="color: white;">🎉 You've Mastered Two Pointers!</h2>
+                    <p style="font-size: 1.3em; line-height: 2;">
+                        You now understand:<br>
+                        • When to use the pattern<br>
+                        • How pointer movements work<br>
+                        • All major problem types<br>
+                        • Complete implementations<br><br>
+                        <strong>Practice these problems to solidify your understanding!</strong>
+                    </p>
+               
+
+                <!-- QUICK COMPARISON TABLE -->
+                <div style="background: white; border-radius: 15px; padding: 40px; margin: 40px 0;">
+                    <h2 style="color: #1976d2; text-align: center; margin-bottom: 30px;">📋 Quick Comparison</h2>
+                    
+                    <table style="width: 100%; border-collapse: collapse; font-size: 1.05rem;">
+                        <thead>
+                            <tr style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                                <th style="padding: 20px; text-align: left; color: white; border: 2px solid #764ba2;">Problem</th>
+                                <th style="padding: 20px; text-align: left; color: white; border: 2px solid #764ba2;">Base</th>
+                                <th style="padding: 20px; text-align: left; color: white; border: 2px solid #764ba2;">Key Change</th>
+                                <th style="padding: 20px; text-align: left; color: white; border: 2px solid #764ba2;">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: #f5f5f5;">
+                                <td style="padding: 15px; border: 1px solid #ddd;"><strong>2Sum</strong></td>
+                                <td style="padding: 15px; border: 1px solid #ddd;">left/right pointers</td>
+                                <td style="padding: 15px; border: 1px solid #ddd;"><strong>Foundation</strong></td>
+                                <td style="padding: 15px; border: 1px solid #ddd;"><code>O(N)</code></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px; border: 1px solid #ddd;"><strong>2Sum All</strong></td>
+                                <td style="padding: 15px; border: 1px solid #ddd;">Same</td>
+                                <td style="padding: 15px; border: 1px solid #ddd;">+ Skip duplicates</td>
+                                <td style="padding: 15px; border: 1px solid #ddd;"><code>O(N)</code></td>
+                            </tr>
+                            <tr style="background: #f5f5f5;">
+                                <td style="padding: 15px; border: 1px solid #ddd;"><strong>3Sum</strong></td>
+                                <td style="padding: 15px; border: 1px solid #ddd;">Fix i + 2Sum</td>
+                                <td style="padding: 15px; border: 1px solid #ddd;">+ Skip at 3 places</td>
+                                <td style="padding: 15px; border: 1px solid #ddd;"><code>O(N²)</code></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 15px; border: 1px solid #ddd;"><strong>3Sum Closest</strong></td>
+                                <td style="padding: 15px; border: 1px solid #ddd;">Fix i + 2Sum</td>
+                                <td style="padding: 15px; border: 1px solid #ddd;">Track closest, no skip</td>
+                                <td style="padding: 15px; border: 1px solid #ddd;"><code>O(N²)</code></td>
+                            </tr>
+                            <tr style="background: #f5f5f5;">
+                                <td style="padding: 15px; border: 1px solid #ddd;"><strong>3Sum Smaller</strong></td>
+                                <td style="padding: 15px; border: 1px solid #ddd;">Fix i + 2Sum</td>
+                                <td style="padding: 15px; border: 1px solid #ddd;">Count: += (right-left)</td>
+                                <td style="padding: 15px; border: 1px solid #ddd;"><code>O(N²)</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- REMEMBER THIS BOX -->
+                <div style="background: linear-gradient(135deg, #00b894, #00cec9); border-radius: 20px; padding: 50px; margin: 40px 0; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                    <h2 style="color: white; font-size: 2.5rem; margin-bottom: 30px;">🎯 Remember This!</h2>
+                    
+                    <div style="background: white; border-radius: 15px; padding: 35px; text-align: left;">
+                        <p style="font-size: 1.3rem; line-height: 2.5; color: #2d3436;">
+                            <strong style="color: #00b894; font-size: 1.5rem;">Every problem = Same core pattern:</strong>
+                        </p>
+                        
+                        <ol style="font-size: 1.2rem; line-height: 2.5; color: #2d3436; margin: 25px 0;">
+                            <li><strong style="color: #00b894;">1️⃣ Sort array</strong></li>
+                            <li><strong style="color: #00b894;">2️⃣ Two pointers</strong> (left/right)</li>
+                            <li><strong style="color: #00b894;">3️⃣ Compare sum</strong> to target</li>
+                            <li><strong style="color: #00b894;">4️⃣ Move pointers</strong> based on comparison</li>
+                        </ol>
+                        
+                        <p style="font-size: 1.4rem; text-align: center; color: #d63031; font-weight: bold; margin-top: 30px; padding: 20px; background: #fff5f5; border-radius: 10px;">
+                            Master 2Sum → Everything else follows! 🚀
+                        </p>
+                    </div>
+                </div>
+ </div>
+            </section>
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,2902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Dynamic Programming Guide - All Patterns</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #f5576c;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.8em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-style: italic;
+            font-size: 1.2em;
+        }
+        
+        h2 {
+            color: #d81b60;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #f5576c;
+            font-size: 2em;
+        }
+        
+        h3 {
+            color: #f5576c;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        h4 {
+            color: #d81b60;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+        
+        .visual-box {
+            background: #fce4ec;
+            border-left: 5px solid #f5576c;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        
+        .keyword { color: #ff79c6; }
+        .function { color: #50fa7b; }
+        .string { color: #f1fa8c; }
+        .comment { color: #6272a4; }
+        .number { color: #bd93f9; }
+        .type { color: #8be9fd; }
+        
+        .pattern-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .pattern-card h3 {
+            color: white;
+            margin-top: 0;
+        }
+        
+        .recognition-box {
+            background: #fff9c4;
+            border-left: 5px solid #fbc02d;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .recognition-box h4 {
+            color: #f57f17;
+            margin-top: 0;
+        }
+        
+        .tip-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .tip-box h4 {
+            color: #155724;
+            margin-top: 0;
+        }
+        
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .warning-box h4 {
+            color: #856404;
+            margin-top: 0;
+        }
+        
+        .problem-box {
+            background: #e7f3ff;
+            border: 2px solid #f5576c;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .problem-box h4 {
+            color: #f5576c;
+            margin-top: 0;
+        }
+        
+        .difficulty {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .easy { background: #d4edda; color: #155724; }
+        .medium { background: #fff3cd; color: #856404; }
+        .hard { background: #f8d7da; color: #721c24; }
+        
+        .dp-table {
+            background: white;
+            border: 3px solid #f5576c;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+        
+        .step {
+            background: white;
+            border-left: 3px solid #f5576c;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #f5576c;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        th {
+            background: #f5576c;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background: #fce4ec;
+        }
+        
+        .formula {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.1em;
+            border: 2px dashed #f5576c;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .comparison-item {
+            background: white;
+            border: 2px solid #f5576c;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .comparison-item h4 {
+            color: #f5576c;
+            margin-top: 0;
+        }
+        
+        .recursion-tree {
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+            border: 3px solid #f5576c;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💎 Ultimate Dynamic Programming Guide</h1>
+        <p class="subtitle">All Patterns | Top-Down & Bottom-Up | Complete Visualizations | 100+ Problems</p>
+        
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px; margin: 30px 0;">
+            <h3 style="color: white; margin-top: 0; text-align: center;">📚 What You'll Master</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <div>
+                    <h4 style="color: white; margin-bottom: 10px;">Core Concepts</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>✓ What is DP?</li>
+                        <li>✓ When to use DP?</li>
+                        <li>✓ Recognition signals</li>
+                        <li>✓ Top-Down vs Bottom-Up</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: white; margin-bottom: 10px;">All 10 Patterns</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>✓ 1D DP (Fibonacci, Climbing Stairs)</li>
+                        <li>✓ 2D DP (Grid, Strings)</li>
+                        <li>✓ Knapsack (0/1, Unbounded)</li>
+                        <li>✓ LCS, LIS, Palindromes</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: white; margin-bottom: 10px;">Complete Visualizations</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li>✓ Recursion trees</li>
+                        <li>✓ DP tables step-by-step</li>
+                        <li>✓ Memoization cache</li>
+                        <li>✓ State transitions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <h2>📖 What is Dynamic Programming?</h2>
+        
+        <div class="visual-box">
+            <h3>Definition</h3>
+            <p><strong>Dynamic Programming (DP):</strong> An optimization technique that solves complex problems by breaking them down into simpler subproblems and storing the results to avoid redundant calculations.</p>
+            
+            <div class="formula">
+                DP = Recursion + Memoization<br>
+                (Store results to avoid recomputation)
+            </div>
+            
+            <h4>The Simple Explanation:</h4>
+            <p style="margin: 15px 0; font-size: 1.1em;">Imagine you're climbing stairs and someone asks "How many ways to reach step 10?" Instead of recounting every path from scratch each time, you <strong>write down the answer</strong> and reuse it. That's DP!</p>
+            
+            <div style="background: #fff; padding: 20px; border-radius: 5px; margin: 20px 0;">
+                <h4 style="color: #d81b60; margin-top: 0;">🎯 Real-World Analogy: The Student's Homework Problem</h4>
+                
+                <p style="margin: 10px 0;"><strong>Scenario:</strong> You have 10 math problems to solve.</p>
+                
+                <div style="margin: 15px 0; padding: 15px; background: #ffebee; border-left: 4px solid #c62828;">
+                    <p style="font-weight: bold; margin-bottom: 10px;">❌ WITHOUT DP (Naive Approach):</p>
+                    <p>• Problem 5 requires solving problem 3</p>
+                    <p>• Problem 7 ALSO requires solving problem 3</p>
+                    <p>• Problem 9 ALSO requires solving problem 3</p>
+                    <p>• You solve problem 3 <strong>THREE TIMES</strong> - wasting time!</p>
+                </div>
+                
+                <div style="margin: 15px 0; padding: 15px; background: #e8f5e9; border-left: 4px solid #2e7d32;">
+                    <p style="font-weight: bold; margin-bottom: 10px;">✅ WITH DP (Smart Approach):</p>
+                    <p>• Solve problem 3 once</p>
+                    <p>• <strong>Write down the answer</strong> in your notebook</p>
+                    <p>• When problem 5 needs it → look at notebook!</p>
+                    <p>• When problem 7 needs it → look at notebook!</p>
+                    <p>• When problem 9 needs it → look at notebook!</p>
+                    <p style="margin-top: 10px; font-weight: bold; color: #2e7d32;">You solved problem 3 ONCE, used the answer THREE TIMES!</p>
+                </div>
+            </div>
+            
+            <h4>Key Characteristics:</h4>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Optimal Substructure:</strong> Solution to problem can be constructed from solutions to subproblems
+                <div style="margin-left: 50px; margin-top: 10px;">
+                    <p><strong>Example:</strong> Shortest path from A to C = Shortest path from A to B + Shortest path from B to C</p>
+                    <p style="margin-top: 5px;">If you know the best way to get to an intermediate point, you can use that to find the best overall path.</p>
+                </div>
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Overlapping Subproblems:</strong> Same subproblems are solved multiple times
+                <div style="margin-left: 50px; margin-top: 10px;">
+                    <p><strong>Example:</strong> Calculating Fibonacci(5) requires Fibonacci(3) twice</p>
+                    <p style="margin-top: 5px;">Without DP: compute Fibonacci(3) two separate times (wasteful!)</p>
+                    <p style="margin-top: 5px;">With DP: compute Fibonacci(3) once, store it, reuse it (efficient!)</p>
+                </div>
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Memoization/Tabulation:</strong> Store results to avoid redundant computation
+                <div style="margin-left: 50px; margin-top: 10px;">
+                    <p><strong>Memoization (Top-Down):</strong> Store results in a cache as you compute them</p>
+                    <p style="margin-top: 5px;"><strong>Tabulation (Bottom-Up):</strong> Fill a table from smallest to largest subproblem</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="warning-box">
+            <h4>⚠️ When NOT to Use DP</h4>
+            <p>DP is NOT the right tool when:</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>No overlapping subproblems:</strong> If each subproblem is unique, DP doesn't help (example: Merge Sort - each partition is different)</li>
+                <li><strong>Greedy works:</strong> If a greedy choice always leads to optimal solution (example: Activity Selection)</li>
+                <li><strong>Simple recursion is fast enough:</strong> Small input sizes where redundancy doesn't matter</li>
+            </ul>
+        </div>
+        
+        <h2>🎯 When to Use Dynamic Programming?</h2>
+        
+        <div class="recognition-box">
+            <h4>🔥 THE GOLDEN SIGNALS - Instant DP Recognition</h4>
+            
+            <div style="background: #fff; padding: 15px; margin: 15px 0; border: 3px solid #f57f17; border-radius: 5px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">Signal #1: Keywords in Problem</p>
+                <ul style="margin-left: 20px;">
+                    <li>✓ "Maximum" / "Minimum" (optimization)</li>
+                    <li>✓ "Count number of ways" (counting)</li>
+                    <li>✓ "Longest" / "Shortest"</li>
+                    <li>✓ "Can you achieve?" (decision - true/false)</li>
+                    <li>✓ "All possible ways"</li>
+                </ul>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; margin: 15px 0; border: 3px solid #f57f17; border-radius: 5px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">Signal #2: Problem Structure</p>
+                <ul style="margin-left: 20px;">
+                    <li>✓ Make choices at each step</li>
+                    <li>✓ Choices affect future decisions</li>
+                    <li>✓ Need to try all possibilities</li>
+                    <li>✓ Looking for optimal solution</li>
+                </ul>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; margin: 15px 0; border: 3px solid #f57f17; border-radius: 5px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">Signal #3: Recurrence Relation Exists</p>
+                <ul style="margin-left: 20px;">
+                    <li>✓ Can express problem as: f(n) = f(n-1) + f(n-2)</li>
+                    <li>✓ Current state depends on previous states</li>
+                    <li>✓ Pattern repeats at different scales</li>
+                </ul>
+            </div>
+        </div>
+        
+        <h2>🔄 Top-Down vs Bottom-Up Approaches</h2>
+        
+        <div class="comparison-grid">
+            <div class="comparison-item">
+                <h4>Top-Down (Memoization)</h4>
+                <p><strong>Approach:</strong> Start from the problem, recursively break down</p>
+                <p><strong>Method:</strong> Recursion + Cache (HashMap/Array)</p>
+                
+                <div class="code-block" style="margin-top: 15px;"><pre><span class="comment">// Top-Down Template</span>
+<span class="keyword">int</span>[] memo;
+
+<span class="keyword">int</span> <span class="function">solve</span>(<span class="keyword">int</span> n) {
+    <span class="comment">// Base case</span>
+    <span class="keyword">if</span> (n <= <span class="number">1</span>) <span class="keyword">return</span> n;
+    
+    <span class="comment">// Check cache</span>
+    <span class="keyword">if</span> (memo[n] != -<span class="number">1</span>) {
+        <span class="keyword">return</span> memo[n];
+    }
+    
+    <span class="comment">// Compute & store</span>
+    memo[n] = solve(n-<span class="number">1</span>) + solve(n-<span class="number">2</span>);
+    <span class="keyword">return</span> memo[n];
+}</pre></div>
+                
+                <p style="margin-top: 10px;"><strong>Pros:</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>Natural to write (follows recursion)</li>
+                    <li>Only computes needed subproblems</li>
+                    <li>Easier to understand initially</li>
+                </ul>
+                
+                <p style="margin-top: 10px;"><strong>Cons:</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>Recursion overhead (stack space)</li>
+                    <li>Risk of stack overflow for large n</li>
+                </ul>
+            </div>
+            
+            <div class="comparison-item">
+                <h4>Bottom-Up (Tabulation)</h4>
+                <p><strong>Approach:</strong> Start from base case, build up to solution</p>
+                <p><strong>Method:</strong> Iteration + DP Table (Array)</p>
+                
+                <div class="code-block" style="margin-top: 15px;"><pre><span class="comment">// Bottom-Up Template</span>
+<span class="keyword">int</span> <span class="function">solve</span>(<span class="keyword">int</span> n) {
+    <span class="comment">// Create DP table</span>
+    <span class="keyword">int</span>[] dp = <span class="keyword">new int</span>[n + <span class="number">1</span>];
+    
+    <span class="comment">// Base cases</span>
+    dp[<span class="number">0</span>] = <span class="number">0</span>;
+    dp[<span class="number">1</span>] = <span class="number">1</span>;
+    
+    <span class="comment">// Fill table iteratively</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i <= n; i++) {
+        dp[i] = dp[i-<span class="number">1</span>] + dp[i-<span class="number">2</span>];
+    }
+    
+    <span class="keyword">return</span> dp[n];
+}</pre></div>
+                
+                <p style="margin-top: 10px;"><strong>Pros:</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>No recursion overhead</li>
+                    <li>Better space optimization possible</li>
+                    <li>Faster in practice</li>
+                </ul>
+                
+                <p style="margin-top: 10px;"><strong>Cons:</strong></p>
+                <ul style="margin-left: 20px;">
+                    <li>Computes all subproblems (even unneeded)</li>
+                    <li>Less intuitive initially</li>
+                </ul>
+            </div>
+        </div>
+
+DP_INTRO_END
+
+        <h2>Pattern 1: Fibonacci / 1D DP (Linear Sequence)</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 1: Fibonacci-Style Problems</h3>
+            <p><strong>Problem Type:</strong> Each state depends on 1-2 previous states</p>
+            <p><strong>Recurrence:</strong> dp[i] = f(dp[i-1], dp[i-2], ...)</p>
+            <p><strong>Examples:</strong> Fibonacci, Climbing Stairs, House Robber</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 When to Use This Pattern?</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ Single variable changing (n, position, step)</li>
+                <li>✓ Current state depends on previous 1-2 states</li>
+                <li>✓ "How many ways to reach step n?"</li>
+                <li>✓ "Maximum profit up to house i"</li>
+                <li>✓ Array or 1D problem</li>
+            </ul>
+        </div>
+        
+        <h3>Example: Fibonacci Numbers</h3>
+        
+        <div class="recursion-tree">
+            <h4 style="color: #d81b60; margin-top: 0;">🌳 Recursion Tree for fib(5) - Without DP</h4>
+            <div style="background: white; padding: 30px; border-radius: 10px; overflow-x: auto;">
+                <pre style="font-family: 'Courier New', monospace; font-size: 1.1em; line-height: 2.5; color: #333; text-align: center;">
+                                    <span style="background: #ffcdd2; padding: 5px 10px; border-radius: 5px; font-weight: bold;">fib(5)</span>
+                                   ╱                    ╲
+                                 ╱                        ╲
+                              ╱                              ╲
+                           ╱                                    ╲
+                  <span style="background: #f8bbd0; padding: 5px 10px; border-radius: 5px; font-weight: bold;">fib(4)</span>                                  <span style="background: #ffeb3b; padding: 5px 10px; border-radius: 5px; font-weight: bold;">fib(3)</span> ← 1st time
+                 ╱        ╲                                   ╱        ╲
+               ╱            ╲                               ╱            ╲
+             ╱                ╲                           ╱                ╲
+    <span style="background: #ffeb3b; padding: 5px 10px; border-radius: 5px; font-weight: bold;">fib(3)</span> ← 2nd time   <span style="background: #fff9c4; padding: 5px 10px; border-radius: 5px;">fib(2)</span>              <span style="background: #fff9c4; padding: 5px 10px; border-radius: 5px;">fib(2)</span>              <span style="background: #c8e6c9; padding: 5px 10px; border-radius: 5px;">fib(1)</span>
+       ╱      ╲               ╱      ╲                 ╱      ╲                   = 1
+     ╱          ╲           ╱          ╲             ╱          ╲
+<span style="background: #fff9c4; padding: 5px 10px; border-radius: 5px;">fib(2)</span>      <span style="background: #c8e6c9; padding: 5px 10px; border-radius: 5px;">fib(1)</span>   <span style="background: #c8e6c9; padding: 5px 10px; border-radius: 5px;">fib(1)</span>      <span style="background: #c5e1a5; padding: 5px 10px; border-radius: 5px;">fib(0)</span>   <span style="background: #c8e6c9; padding: 5px 10px; border-radius: 5px;">fib(1)</span>      <span style="background: #c5e1a5; padding: 5px 10px; border-radius: 5px;">fib(0)</span>
+  ╱    ╲          = 1         = 1          = 0         = 1          = 0
+╱        ╲
+<span style="background: #c8e6c9; padding: 5px 10px; border-radius: 5px;">fib(1)</span>  <span style="background: #c5e1a5; padding: 5px 10px; border-radius: 5px;">fib(0)</span>
+ = 1      = 0
+</pre>
+
+                <div style="margin-top: 30px; padding: 20px; background: #ffebee; border-radius: 8px; border-left: 5px solid #c62828;">
+                    <h4 style="color: #c62828; margin-top: 0;">❌ Problem: Massive Redundancy!</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
+                        <div>
+                            <p style="font-weight: bold; margin-bottom: 10px;">Repeated Calculations:</p>
+                            <ul style="margin-left: 20px;">
+                                <li><span style="background: #ffeb3b; padding: 2px 8px; border-radius: 3px; font-weight: bold;">fib(3)</span>: computed <strong>2 times</strong></li>
+                                <li><span style="background: #fff9c4; padding: 2px 8px; border-radius: 3px;">fib(2)</span>: computed <strong>3 times</strong></li>
+                                <li><span style="background: #c8e6c9; padding: 2px 8px; border-radius: 3px;">fib(1)</span>: computed <strong>5 times</strong></li>
+                                <li><span style="background: #c5e1a5; padding: 2px 8px; border-radius: 3px;">fib(0)</span>: computed <strong>3 times</strong></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p style="font-weight: bold; margin-bottom: 10px;">Complexity:</p>
+                            <div style="background: white; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                                <p style="margin: 5px 0;"><strong>Total Function Calls:</strong> 15</p>
+                                <p style="margin: 5px 0;"><strong>Unique Subproblems:</strong> 6</p>
+                                <p style="margin: 5px 0;"><strong>Wasted Calls:</strong> 9 (60%!)</p>
+                                <p style="margin: 10px 0; padding: 10px; background: #ffcdd2; border-radius: 3px;">
+                                    <strong>Time: O(2<sup>n</sup>) - Exponential 🔥</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 20px; background: #e8f5e9; border-radius: 8px; border-left: 5px solid #2e7d32;">
+                    <h4 style="color: #2e7d32; margin-top: 0;">✅ Solution: Dynamic Programming!</h4>
+                    <p style="font-size: 1.1em; margin: 10px 0;">With memoization, each subproblem is computed <strong>only once</strong>:</p>
+                    <div style="background: white; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                        <p style="margin: 5px 0;">1. Compute fib(0) = 0, <strong>cache it</strong> ✓</p>
+                        <p style="margin: 5px 0;">2. Compute fib(1) = 1, <strong>cache it</strong> ✓</p>
+                        <p style="margin: 5px 0;">3. Compute fib(2) = fib(1) + fib(0) = 1, <strong>cache it</strong> ✓</p>
+                        <p style="margin: 5px 0;">4. Compute fib(3) = fib(2) + fib(1) = 2, <strong>cache it</strong> ✓</p>
+                        <p style="margin: 5px 0;">5. When fib(3) needed again → <strong>return from cache!</strong> 🚀</p>
+                        <p style="margin: 15px 0; padding: 15px; background: #c8e6c9; border-radius: 5px; text-align: center;">
+                            <strong style="font-size: 1.2em;">Time: O(n) - Linear ✨</strong><br>
+                            <span style="font-size: 0.95em;">From 15 calls → 6 calls (60% reduction!)</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="visual-box" style="background: #e8f5e9;">
+            <h4 style="color: #2e7d32;">✅ Solution: Memoization</h4>
+            <pre style="font-family: 'Courier New', monospace; background: #fff; padding: 15px; border-radius: 5px; color: #333;">
+Call fib(5):
+  Call fib(4):
+    Call fib(3):
+      Call fib(2): returns 1, <strong style="color: #2e7d32;">CACHE[2] = 1</strong>
+      Call fib(1): returns 1
+      fib(3) = 2, <strong style="color: #2e7d32;">CACHE[3] = 2</strong>
+    Call fib(2): <strong style="color: #2e7d32;">FOUND IN CACHE!</strong> returns 1
+    fib(4) = 3, <strong style="color: #2e7d32;">CACHE[4] = 3</strong>
+  Call fib(3): <strong style="color: #2e7d32;">FOUND IN CACHE!</strong> returns 2
+  fib(5) = 5, <strong style="color: #2e7d32;">CACHE[5] = 5</strong>
+
+<strong style="color: #2e7d32;">Each subproblem computed ONCE! Time: O(n)</strong>
+            </pre>
+        </div>
+        
+        <div class="code-block"><pre><span class="comment">// Approach 1: Top-Down (Recursion + Memoization)</span>
+<span class="keyword">class</span> <span class="type">Solution</span> {
+    <span class="keyword">public int</span> <span class="function">fib</span>(<span class="keyword">int</span> n) {
+        <span class="keyword">int</span>[] memo = <span class="keyword">new int</span>[n + <span class="number">1</span>];
+        Arrays.fill(memo, -<span class="number">1</span>);
+        <span class="keyword">return</span> fibHelper(n, memo);
+    }
+    
+    <span class="keyword">private int</span> <span class="function">fibHelper</span>(<span class="keyword">int</span> n, <span class="keyword">int</span>[] memo) {
+        <span class="comment">// Base cases</span>
+        <span class="keyword">if</span> (n <= <span class="number">1</span>) <span class="keyword">return</span> n;
+        
+        <span class="comment">// Check if already computed</span>
+        <span class="keyword">if</span> (memo[n] != -<span class="number">1</span>) {
+            <span class="keyword">return</span> memo[n];  <span class="comment">// Return cached result</span>
+        }
+        
+        <span class="comment">// Compute and cache</span>
+        memo[n] = fibHelper(n - <span class="number">1</span>, memo) + fibHelper(n - <span class="number">2</span>, memo);
+        <span class="keyword">return</span> memo[n];
+    }
+}
+
+<span class="comment">// Approach 2: Bottom-Up (Tabulation)</span>
+<span class="keyword">public int</span> <span class="function">fib</span>(<span class="keyword">int</span> n) {
+    <span class="keyword">if</span> (n <= <span class="number">1</span>) <span class="keyword">return</span> n;
+    
+    <span class="comment">// Create DP table</span>
+    <span class="keyword">int</span>[] dp = <span class="keyword">new int</span>[n + <span class="number">1</span>];
+    
+    <span class="comment">// Base cases</span>
+    dp[<span class="number">0</span>] = <span class="number">0</span>;
+    dp[<span class="number">1</span>] = <span class="number">1</span>;
+    
+    <span class="comment">// Fill table from bottom up</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i <= n; i++) {
+        dp[i] = dp[i - <span class="number">1</span>] + dp[i - <span class="number">2</span>];
+    }
+    
+    <span class="keyword">return</span> dp[n];
+}
+
+<span class="comment">// Approach 3: Space Optimized Bottom-Up</span>
+<span class="keyword">public int</span> <span class="function">fib</span>(<span class="keyword">int</span> n) {
+    <span class="keyword">if</span> (n <= <span class="number">1</span>) <span class="keyword">return</span> n;
+    
+    <span class="comment">// Only need previous 2 values</span>
+    <span class="keyword">int</span> prev2 = <span class="number">0</span>, prev1 = <span class="number">1</span>;
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i <= n; i++) {
+        <span class="keyword">int</span> current = prev1 + prev2;
+        prev2 = prev1;
+        prev1 = current;
+    }
+    
+    <span class="keyword">return</span> prev1;
+}
+<span class="comment">// Space: O(n) → O(n) → O(1) optimization!</span></pre></div>
+
+        <div class="dp-table">
+            <h4 style="color: #d81b60; margin-top: 0;">📊 DP Table Visualization for fib(6)</h4>
+            
+            <table style="margin: 20px auto; width: auto; font-family: 'Courier New', monospace;">
+                <thead>
+                    <tr>
+                        <th style="background: #f5576c;">i</th>
+                        <th style="background: #f5576c;">0</th>
+                        <th style="background: #f5576c;">1</th>
+                        <th style="background: #f5576c;">2</th>
+                        <th style="background: #f5576c;">3</th>
+                        <th style="background: #f5576c;">4</th>
+                        <th style="background: #f5576c;">5</th>
+                        <th style="background: #f5576c;">6</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight: bold; background: #fce4ec;">dp[i]</td>
+                        <td style="background: #c8e6c9; font-weight: bold;">0</td>
+                        <td style="background: #c8e6c9; font-weight: bold;">1</td>
+                        <td style="background: #fff9c4;">1</td>
+                        <td style="background: #fff9c4;">2</td>
+                        <td style="background: #fff9c4;">3</td>
+                        <td style="background: #fff9c4;">5</td>
+                        <td style="background: #fff9c4;">8</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #e8f5f1; border-radius: 5px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">Step-by-Step Filling:</p>
+                <p style="margin: 5px 0;">• i=0: dp[0] = 0 (base case)</p>
+                <p style="margin: 5px 0;">• i=1: dp[1] = 1 (base case)</p>
+                <p style="margin: 5px 0;">• i=2: dp[2] = dp[1] + dp[0] = 1 + 0 = 1</p>
+                <p style="margin: 5px 0;">• i=3: dp[3] = dp[2] + dp[1] = 1 + 1 = 2</p>
+                <p style="margin: 5px 0;">• i=4: dp[4] = dp[3] + dp[2] = 2 + 1 = 3</p>
+                <p style="margin: 5px 0;">• i=5: dp[5] = dp[4] + dp[3] = 3 + 2 = 5</p>
+                <p style="margin: 5px 0;">• i=6: dp[6] = dp[5] + dp[4] = 5 + 3 = <strong style="color: #2e7d32;">8 ✓</strong></p>
+            </div>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 1 (1D DP) <span class="difficulty easy">Easy-Medium</span></h4>
+            <ol>
+                <li><strong>Fibonacci Number (LC 509) ⭐</strong></li>
+                <li><strong>Climbing Stairs (LC 70) ⭐</strong></li>
+                <li><strong>House Robber (LC 198) ⭐</strong></li>
+                <li>Min Cost Climbing Stairs (LC 746)</li>
+                <li>Decode Ways (LC 91)</li>
+                <li>House Robber II (LC 213)</li>
+                <li>Delete and Earn (LC 740)</li>
+                <li>Fibonacci Number (LC 509)</li>
+            </ol>
+        </div>
+        
+        <h3>Bonus Example: House Robber (Pattern 1 Variant)</h3>
+        
+        <div class="visual-box">
+            <h4>Problem:</h4>
+            <p><strong>Array:</strong> [2, 7, 9, 3, 1]</p>
+            <p><strong>Rule:</strong> Can't rob adjacent houses</p>
+            <p><strong>Goal:</strong> Maximum money you can rob</p>
+        </div>
+        
+        <div class="recursion-tree">
+            <h4 style="color: #d81b60; margin-top: 0;">🌳 Decision Tree: Should I Rob House at Index 3?</h4>
+            <div style="background: white; padding: 30px; border-radius: 10px; overflow-x: auto;">
+                <pre style="font-family: 'Courier New', monospace; font-size: 1.05em; line-height: 2.5; color: #333;">
+                                 <span style="background: #ffcdd2; padding: 5px 15px; border-radius: 5px; font-weight: bold;">rob([2,7,9,3,1])</span>
+                                      max = ?
+                                ╱                    ╲
+                              ╱                        ╲
+                            ╱                            ╲
+                   <span style="background: #fff9c4; padding: 5px 10px; border-radius: 5px;">ROB house 0</span>                    <span style="background: #e1bee7; padding: 5px 10px; border-radius: 5px;">SKIP house 0</span>
+                    (take 2)                         (take 0)
+                        │                                 │
+                        ↓                                 ↓
+           <span style="background: #f8bbd0; padding: 5px 10px; border-radius: 5px;">2 + rob([9,3,1])</span>              <span style="background: #ce93d8; padding: 5px 10px; border-radius: 5px;">rob([7,9,3,1])</span>
+             (skip house 1)                    (can rob house 1)
+                   ╱    ╲                            ╱         ╲
+                 ╱        ╲                        ╱             ╲
+        <span style="background: #fff9c4; padding: 4px 8px; border-radius: 3px;">ROB 9</span>     <span style="background: #e1bee7; padding: 4px 8px; border-radius: 3px;">SKIP 9</span>              <span style="background: #fff9c4; padding: 4px 8px; border-radius: 3px;">ROB 7</span>          <span style="background: #e1bee7; padding: 4px 8px; border-radius: 3px;">SKIP 7</span>
+          │           │                    │                 │
+    <span style="background: #c8e6c9; padding: 4px 8px; border-radius: 3px;">2+9+rob([1])</span>  <span style="background: #c8e6c9; padding: 4px 8px; border-radius: 3px;">2+rob([3,1])</span>     <span style="background: #c8e6c9; padding: 4px 8px; border-radius: 3px;">7+rob([3,1])</span>    <span style="background: #c8e6c9; padding: 4px 8px; border-radius: 3px;">rob([9,3,1])</span>
+       = 12           ...                  ...               ...
+</pre>
+
+                <div style="margin-top: 30px; padding: 20px; background: #fff9c4; border-radius: 8px; border-left: 5px solid #f57c00;">
+                    <h4 style="color: #e65100; margin-top: 0;">🤔 The Pattern:</h4>
+                    <p style="font-size: 1.1em; line-height: 1.8;">At each house, we have TWO choices:</p>
+                    <ul style="margin-left: 25px; margin-top: 15px; font-size: 1.05em;">
+                        <li style="margin: 10px 0;"><strong style="color: #d84315;">ROB this house:</strong> Take its value + rob from house (i-2)</li>
+                        <li style="margin: 10px 0;"><strong style="color: #5e35b1;">SKIP this house:</strong> Rob from house (i-1)</li>
+                    </ul>
+                    <div style="background: white; padding: 15px; border-radius: 5px; margin-top: 15px; text-align: center;">
+                        <p style="font-size: 1.2em; font-weight: bold; font-family: 'Courier New', monospace; color: #2e7d32;">
+                            dp[i] = max(nums[i] + dp[i-2], dp[i-1])
+                        </p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 20px; background: #e8f5e9; border-radius: 8px; border-left: 5px solid #2e7d32;">
+                    <h4 style="color: #2e7d32; margin-top: 0;">✅ DP Table Solution:</h4>
+                    <table style="margin: 15px auto; font-family: 'Courier New', monospace; width: auto;">
+                        <thead>
+                            <tr>
+                                <th style="background: #f5576c;">Index i</th>
+                                <th style="background: #f5576c;">0</th>
+                                <th style="background: #f5576c;">1</th>
+                                <th style="background: #f5576c;">2</th>
+                                <th style="background: #f5576c;">3</th>
+                                <th style="background: #f5576c;">4</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: bold; background: #fce4ec;">nums[i]</td>
+                                <td>2</td>
+                                <td>7</td>
+                                <td>9</td>
+                                <td>3</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: bold; background: #fce4ec;">dp[i]</td>
+                                <td style="background: #c8e6c9;">2</td>
+                                <td style="background: #c8e6c9;">7</td>
+                                <td style="background: #fff9c4;">11</td>
+                                <td style="background: #fff9c4;">11</td>
+                                <td style="background: #ffeb3b; font-weight: bold;">12</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="background: white; padding: 15px; border-radius: 5px; margin-top: 15px;">
+                        <p style="margin: 5px 0;"><strong>Calculation:</strong></p>
+                        <p style="margin: 5px 0;">• dp[0] = 2 (rob first house)</p>
+                        <p style="margin: 5px 0;">• dp[1] = max(2, 7) = 7 (rob second house is better)</p>
+                        <p style="margin: 5px 0;">• dp[2] = max(7, 9+2) = 11 (rob houses 0 and 2)</p>
+                        <p style="margin: 5px 0;">• dp[3] = max(11, 3+7) = 11 (don't rob house 3)</p>
+                        <p style="margin: 5px 0;">• dp[4] = max(11, 1+11) = 12 (rob house 4)</p>
+                        <p style="margin-top: 15px; padding: 10px; background: #c8e6c9; border-radius: 5px; text-align: center; font-weight: bold; font-size: 1.2em;">
+                            Maximum: $12 (houses 0, 2, 4)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <h2>Pattern 2: 0/1 Knapsack</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 2: 0/1 Knapsack Problems</h3>
+            <p><strong>Problem Type:</strong> Make binary choice (include/exclude) for each item</p>
+            <p><strong>Recurrence:</strong> dp[i][w] = max(include item i, exclude item i)</p>
+            <p><strong>Examples:</strong> Subset Sum, Partition Equal, Target Sum</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 When to Use This Pattern?</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ Have a set of items with weights/values</li>
+                <li>✓ Can ONLY use each item ONCE (0/1 choice)</li>
+                <li>✓ Have a capacity/target constraint</li>
+                <li>✓ "Maximum value with constraint"</li>
+                <li>✓ "Can you achieve target sum?"</li>
+                <li>✓ "Count subsets that sum to target"</li>
+            </ul>
+        </div>
+        
+        <h3>Example: 0/1 Knapsack</h3>
+        
+        <div class="visual-box">
+            <h4>Problem:</h4>
+            <p><strong>Items:</strong> weights = [1, 3, 4, 5], values = [1, 4, 5, 7]</p>
+            <p><strong>Capacity:</strong> W = 7</p>
+            <p><strong>Goal:</strong> Maximize value without exceeding capacity</p>
+        </div>
+        
+        <div class="recursion-tree">
+            <h4 style="color: #d81b60; margin-top: 0;">🌳 Decision Tree: Knapsack with First 2 Items, Capacity 7</h4>
+            <div style="background: white; padding: 30px; border-radius: 10px; overflow-x: auto;">
+                <pre style="font-family: 'Courier New', monospace; font-size: 1.05em; line-height: 2.5; color: #333;">
+                         <span style="background: #ffcdd2; padding: 5px 15px; border-radius: 5px; font-weight: bold;">knapsack(items=4, capacity=7)</span>
+                                    max value = ?
+                              ╱                              ╲
+                            ╱                                  ╲
+                          ╱                                      ╲
+              <span style="background: #fff9c4; padding: 5px 10px; border-radius: 5px; font-weight: bold;">INCLUDE item 0</span>                          <span style="background: #e1bee7; padding: 5px 10px; border-radius: 5px; font-weight: bold;">EXCLUDE item 0</span>
+              (weight=1, value=1)                          (skip item 0)
+                      │                                            │
+                      ↓                                            ↓
+        <span style="background: #c8e6c9; padding: 5px 10px; border-radius: 5px;">value=1, remaining=6</span>                    <span style="background: #f8bbd0; padding: 5px 10px; border-radius: 5px;">value=0, remaining=7</span>
+         <span style="background: #b2dfdb; padding: 3px 8px; border-radius: 3px;">knapsack(items=3, cap=6)</span>              <span style="background: #f48fb1; padding: 3px 8px; border-radius: 3px;">knapsack(items=3, cap=7)</span>
+                 ╱          ╲                                 ╱          ╲
+               ╱              ╲                             ╱              ╲
+     <span style="background: #fff9c4; padding: 4px 8px; border-radius: 3px;">INCLUDE item 1</span>  <span style="background: #e1bee7; padding: 4px 8px; border-radius: 3px;">EXCLUDE item 1</span>       <span style="background: #fff9c4; padding: 4px 8px; border-radius: 3px;">INCLUDE item 1</span>  <span style="background: #e1bee7; padding: 4px 8px; border-radius: 3px;">EXCLUDE item 1</span>
+     (w=3, v=4)           (skip)            (w=3, v=4)           (skip)
+          │                  │                   │                  │
+   <span style="background: #a5d6a7; padding: 3px 6px; border-radius: 3px;">val=5</span>          <span style="background: #ce93d8; padding: 3px 6px; border-radius: 3px;">val=1</span>            <span style="background: #a5d6a7; padding: 3px 6px; border-radius: 3px;">val=4</span>          <span style="background: #ce93d8; padding: 3px 6px; border-radius: 3px;">val=0</span>
+   <span style="background: #81c784; padding: 3px 6px; border-radius: 3px;">cap=3</span>          <span style="background: #ba68c8; padding: 3px 6px; border-radius: 3px;">cap=6</span>            <span style="background: #81c784; padding: 3px 6px; border-radius: 3px;">cap=4</span>          <span style="background: #ba68c8; padding: 3px 6px; border-radius: 3px;">cap=7</span>
+    ...              ...               ...              ...
+</pre>
+
+                <div style="margin-top: 30px; padding: 20px; background: #fff3e0; border-radius: 8px; border-left: 5px solid #ff6f00;">
+                    <h4 style="color: #e65100; margin-top: 0;">🎯 The Two Choices at Each Step:</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+                        <div style="background: #fff9c4; padding: 15px; border-radius: 8px; border: 2px solid #f57c00;">
+                            <h4 style="color: #e65100; margin-top: 0;">✅ INCLUDE Item i</h4>
+                            <p style="margin: 8px 0;"><strong>Condition:</strong> weight[i] ≤ capacity</p>
+                            <p style="margin: 8px 0;"><strong>Action:</strong> Take value[i]</p>
+                            <p style="margin: 8px 0;"><strong>Recurse:</strong> Solve for remaining items with reduced capacity</p>
+                            <div style="background: white; padding: 10px; border-radius: 5px; margin-top: 10px; font-family: 'Courier New', monospace;">
+                                value[i] + knapsack(i+1, cap-weight[i])
+                            </div>
+                        </div>
+                        <div style="background: #f3e5f5; padding: 15px; border-radius: 8px; border: 2px solid #7b1fa2;">
+                            <h4 style="color: #6a1b9a; margin-top: 0;">⏭️ EXCLUDE Item i</h4>
+                            <p style="margin: 8px 0;"><strong>Condition:</strong> Always possible</p>
+                            <p style="margin: 8px 0;"><strong>Action:</strong> Skip this item (take 0 value)</p>
+                            <p style="margin: 8px 0;"><strong>Recurse:</strong> Solve for remaining items with same capacity</p>
+                            <div style="background: white; padding: 10px; border-radius: 5px; margin-top: 10px; font-family: 'Courier New', monospace;">
+                                knapsack(i+1, capacity)
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background: #c8e6c9; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center;">
+                        <p style="font-size: 1.2em; font-weight: bold; font-family: 'Courier New', monospace; color: #1b5e20;">
+                            dp[i][w] = max(include, exclude)
+                        </p>
+                        <p style="margin-top: 10px; font-size: 1.05em;">
+                            Take the maximum of both choices!
+                        </p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 20px; background: #ffebee; border-radius: 8px; border-left: 5px solid #c62828;">
+                    <h4 style="color: #c62828; margin-top: 0;">⚠️ Without DP: Exponential Time!</h4>
+                    <p style="font-size: 1.05em; line-height: 1.8;">Each item has 2 choices → 2 × 2 × 2 × 2 = 2<sup>n</sup> paths to explore!</p>
+                    <p style="margin-top: 10px;">For 20 items: 2<sup>20</sup> = <strong>1,048,576 function calls!</strong></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="code-block"><pre><span class="comment">// Top-Down Approach</span>
+<span class="keyword">class</span> <span class="type">Solution</span> {
+    <span class="keyword">public int</span> <span class="function">knapsack</span>(<span class="keyword">int</span>[] weights, <span class="keyword">int</span>[] values, <span class="keyword">int</span> W) {
+        <span class="keyword">int</span> n = weights.length;
+        <span class="keyword">int</span>[][] memo = <span class="keyword">new int</span>[n][W + <span class="number">1</span>];
+        <span class="keyword">for</span> (<span class="keyword">int</span>[] row : memo) Arrays.fill(row, -<span class="number">1</span>);
+        <span class="keyword">return</span> knapsackHelper(<span class="number">0</span>, W, weights, values, memo);
+    }
+    
+    <span class="keyword">private int</span> <span class="function">knapsackHelper</span>(<span class="keyword">int</span> i, <span class="keyword">int</span> w, <span class="keyword">int</span>[] weights, 
+                                   <span class="keyword">int</span>[] values, <span class="keyword">int</span>[][] memo) {
+        <span class="comment">// Base case: no items left or no capacity</span>
+        <span class="keyword">if</span> (i >= weights.length || w == <span class="number">0</span>) {
+            <span class="keyword">return</span> <span class="number">0</span>;
+        }
+        
+        <span class="comment">// Check cache</span>
+        <span class="keyword">if</span> (memo[i][w] != -<span class="number">1</span>) <span class="keyword">return</span> memo[i][w];
+        
+        <span class="comment">// Choice 1: Exclude current item</span>
+        <span class="keyword">int</span> exclude = knapsackHelper(i + <span class="number">1</span>, w, weights, values, memo);
+        
+        <span class="comment">// Choice 2: Include current item (if it fits)</span>
+        <span class="keyword">int</span> include = <span class="number">0</span>;
+        <span class="keyword">if</span> (weights[i] <= w) {
+            include = values[i] + knapsackHelper(i + <span class="number">1</span>, w - weights[i], 
+                                                  weights, values, memo);
+        }
+        
+        <span class="comment">// Take maximum and cache</span>
+        memo[i][w] = Math.max(include, exclude);
+        <span class="keyword">return</span> memo[i][w];
+    }
+}
+
+<span class="comment">// Bottom-Up Approach</span>
+<span class="keyword">public int</span> <span class="function">knapsack</span>(<span class="keyword">int</span>[] weights, <span class="keyword">int</span>[] values, <span class="keyword">int</span> W) {
+    <span class="keyword">int</span> n = weights.length;
+    <span class="keyword">int</span>[][] dp = <span class="keyword">new int</span>[n + <span class="number">1</span>][W + <span class="number">1</span>];
+    
+    <span class="comment">// Fill table</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i <= n; i++) {
+        <span class="keyword">for</span> (<span class="keyword">int</span> w = <span class="number">1</span>; w <= W; w++) {
+            <span class="comment">// Exclude current item</span>
+            dp[i][w] = dp[i - <span class="number">1</span>][w];
+            
+            <span class="comment">// Include current item if it fits</span>
+            <span class="keyword">if</span> (weights[i - <span class="number">1</span>] <= w) {
+                dp[i][w] = Math.max(dp[i][w], 
+                                    values[i - <span class="number">1</span>] + dp[i - <span class="number">1</span>][w - weights[i - <span class="number">1</span>]]);
+            }
+        }
+    }
+    
+    <span class="keyword">return</span> dp[n][W];
+}</pre></div>
+
+        <div class="dp-table">
+            <h4 style="color: #d81b60; margin-top: 0;">📊 2D DP Table for Knapsack</h4>
+            <p>weights = [1, 3, 4, 5], values = [1, 4, 5, 7], W = 7</p>
+            
+            <table style="margin: 20px auto; font-family: 'Courier New', monospace; font-size: 0.9em;">
+                <thead>
+                    <tr>
+                        <th style="background: #f5576c;">i\w</th>
+                        <th style="background: #f5576c;">0</th>
+                        <th style="background: #f5576c;">1</th>
+                        <th style="background: #f5576c;">2</th>
+                        <th style="background: #f5576c;">3</th>
+                        <th style="background: #f5576c;">4</th>
+                        <th style="background: #f5576c;">5</th>
+                        <th style="background: #f5576c;">6</th>
+                        <th style="background: #f5576c;">7</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="background: #fce4ec; font-weight: bold;">0 (no items)</td>
+                        <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+                    </tr>
+                    <tr>
+                        <td style="background: #fce4ec; font-weight: bold;">1 (w=1, v=1)</td>
+                        <td>0</td><td style="background: #c8e6c9; font-weight: bold;">1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td>
+                    </tr>
+                    <tr>
+                        <td style="background: #fce4ec; font-weight: bold;">2 (w=3, v=4)</td>
+                        <td>0</td><td>1</td><td>1</td><td style="background: #c8e6c9; font-weight: bold;">4</td><td style="background: #c8e6c9; font-weight: bold;">5</td><td>5</td><td>5</td><td>5</td>
+                    </tr>
+                    <tr>
+                        <td style="background: #fce4ec; font-weight: bold;">3 (w=4, v=5)</td>
+                        <td>0</td><td>1</td><td>1</td><td>4</td><td>5</td><td style="background: #c8e6c9; font-weight: bold;">6</td><td>6</td><td style="background: #c8e6c9; font-weight: bold;">9</td>
+                    </tr>
+                    <tr>
+                        <td style="background: #fce4ec; font-weight: bold;">4 (w=5, v=7)</td>
+                        <td>0</td><td>1</td><td>1</td><td>4</td><td>5</td><td>7</td><td style="background: #ffeb3b; font-weight: bold;">8</td><td style="background: #ffeb3b; font-weight: bold;">9</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #e8f5f1; border-radius: 5px;">
+                <p style="font-weight: bold; color: #2e7d32;">✅ Answer: dp[4][7] = 9</p>
+                <p style="margin-top: 10px;"><strong>Items selected:</strong> Item 2 (w=3, v=4) + Item 3 (w=4, v=5)</p>
+                <p style="margin-top: 5px;"><strong>Total weight:</strong> 3 + 4 = 7 ≤ 7 ✓</p>
+                <p style="margin-top: 5px;"><strong>Total value:</strong> 4 + 5 = 9 (maximum possible)</p>
+            </div>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #fff9c4; border-radius: 5px;">
+                <p style="font-weight: bold;">💡 How to read the table:</p>
+                <p style="margin-top: 5px;">• <strong>dp[i][w]</strong> = maximum value using first i items with capacity w</p>
+                <p style="margin-top: 5px;">• Green cells show when including an item gives better value</p>
+                <p style="margin-top: 5px;">• Yellow cells are the final answer</p>
+            </div>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 2 (0/1 Knapsack) <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Partition Equal Subset Sum (LC 416) ⭐</strong></li>
+                <li><strong>Target Sum (LC 494) ⭐</strong></li>
+                <li>Subset Sum (Classic Problem)</li>
+                <li>Partition to K Equal Sum Subsets (LC 698)</li>
+                <li>Last Stone Weight II (LC 1049)</li>
+                <li>Ones and Zeroes (LC 474)</li>
+            </ol>
+        </div>
+
+        <h2>Pattern 3: Longest Common Subsequence (LCS)</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 3: String DP - LCS Style</h3>
+            <p><strong>Problem Type:</strong> Compare two strings, find common patterns</p>
+            <p><strong>Recurrence:</strong> if s1[i]==s2[j]: dp[i][j] = 1 + dp[i-1][j-1], else: max(dp[i-1][j], dp[i][j-1])</p>
+            <p><strong>Examples:</strong> LCS, Edit Distance, Distinct Subsequences</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 When to Use This Pattern?</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ Have TWO strings to compare</li>
+                <li>✓ "Longest common subsequence"</li>
+                <li>✓ "Edit distance" / "Minimum operations"</li>
+                <li>✓ "How many distinct ways" (string matching)</li>
+                <li>✓ 2D DP table with strings as dimensions</li>
+            </ul>
+        </div>
+        
+        <h3>Example: Longest Common Subsequence</h3>
+        
+        <div class="visual-box">
+            <h4>Problem:</h4>
+            <p><strong>String 1:</strong> "ABCDE"</p>
+            <p><strong>String 2:</strong> "ACE"</p>
+            <p><strong>Goal:</strong> Find length of longest subsequence common to both</p>
+            <p><strong>Answer:</strong> 3 (subsequence "ACE")</p>
+        </div>
+        
+        <div class="recursion-tree">
+            <h4 style="color: #d81b60; margin-top: 0;">🌳 Decision Tree: LCS("ABC", "AC")</h4>
+            <div style="background: white; padding: 30px; border-radius: 10px; overflow-x: auto;">
+                <pre style="font-family: 'Courier New', monospace; font-size: 1.05em; line-height: 2.5; color: #333;">
+                              <span style="background: #ffcdd2; padding: 5px 15px; border-radius: 5px; font-weight: bold;">LCS("ABC", "AC")</span>
+                                   i=0, j=0
+                              Compare: A vs A
+                                     ╲
+                                       ╲
+                                <span style="background: #c8e6c9; padding: 5px 10px; border-radius: 5px; font-weight: bold;">✓ MATCH!</span>
+                                A == A
+                                     │
+                                     ↓
+                        <span style="background: #a5d6a7; padding: 5px 10px; border-radius: 5px;">1 + LCS("BC", "C")</span>
+                              i=1, j=1
+                          Compare: B vs C
+                         ╱              ╲
+                       ╱                  ╲
+              <span style="background: #fff9c4; padding: 5px 10px; border-radius: 5px;">Skip B</span>           <span style="background: #e1bee7; padding: 5px 10px; border-radius: 5px;">Skip C</span>
+               B ≠ C                B ≠ C
+                  │                    │
+                  ↓                    ↓
+        <span style="background: #fff59d; padding: 4px 8px; border-radius: 3px;">LCS("C", "C")</span>        <span style="background: #ce93d8; padding: 4px 8px; border-radius: 3px;">LCS("BC", "")</span>
+           i=2, j=1              i=1, j=2
+        Compare: C vs C         (empty string)
+              │                      │
+              ↓                      ↓
+       <span style="background: #c8e6c9; padding: 4px 8px; border-radius: 3px;">✓ MATCH!</span>              <span style="background: #ffcdd2; padding: 4px 8px; border-radius: 3px;">Base: 0</span>
+         C == C
+              │
+              ↓
+      <span style="background: #81c784; padding: 4px 8px; border-radius: 3px;">1 + LCS("", "")</span>
+              │
+              ↓
+       <span style="background: #66bb6a; padding: 4px 8px; border-radius: 3px;">Base: 0</span>
+</pre>
+
+                <div style="margin-top: 30px; padding: 20px; background: #e3f2fd; border-radius: 8px; border-left: 5px solid #1976d2;">
+                    <h4 style="color: #1565c0; margin-top: 0;">🎯 The Decision at Each Step:</h4>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                        <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 15px;">When comparing s1[i] and s2[j]:</p>
+                        
+                        <div style="background: #c8e6c9; padding: 15px; border-radius: 8px; margin: 15px 0; border: 3px solid #2e7d32;">
+                            <h4 style="color: #1b5e20; margin-top: 0;">✅ Case 1: Characters MATCH (s1[i] == s2[j])</h4>
+                            <p style="margin: 10px 0; font-size: 1.05em;">
+                                This character is part of LCS! Include it.
+                            </p>
+                            <div style="background: white; padding: 12px; border-radius: 5px; margin: 10px 0; font-family: 'Courier New', monospace; text-align: center; font-size: 1.1em;">
+                                LCS[i][j] = <strong style="color: #2e7d32;">1</strong> + LCS[i-1][j-1]
+                            </div>
+                            <p style="margin-top: 10px; font-size: 0.95em; color: #555;">
+                                Move both pointers forward (i-1, j-1) and add 1 to count
+                            </p>
+                        </div>
+                        
+                        <div style="background: #fff9c4; padding: 15px; border-radius: 8px; margin: 15px 0; border: 3px solid #f57c00;">
+                            <h4 style="color: #e65100; margin-top: 0;">❌ Case 2: Characters DON'T MATCH (s1[i] ≠ s2[j])</h4>
+                            <p style="margin: 10px 0; font-size: 1.05em;">
+                                Try skipping one character from either string, take the max!
+                            </p>
+                            <div style="background: white; padding: 12px; border-radius: 5px; margin: 10px 0; font-family: 'Courier New', monospace; text-align: center; font-size: 1.1em;">
+                                LCS[i][j] = <strong style="color: #f57c00;">max</strong>(LCS[i-1][j], LCS[i][j-1])
+                            </div>
+                            <p style="margin-top: 10px; font-size: 0.95em; color: #555;">
+                                Either skip s1[i] OR skip s2[j], whichever gives longer LCS
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin-top: 20px;">
+                        <h4 style="color: #2e7d32; margin-top: 0;">📊 Calculation for LCS("ABC", "AC"):</h4>
+                        <ul style="margin-left: 20px; margin-top: 10px; font-size: 1.05em;">
+                            <li style="margin: 8px 0;">Compare A vs A: <strong style="color: #2e7d32;">MATCH!</strong> → 1 + LCS("BC", "C")</li>
+                            <li style="margin: 8px 0;">Compare B vs C: <strong style="color: #e65100;">NO MATCH</strong> → max(LCS("C","C"), LCS("BC",""))</li>
+                            <li style="margin: 8px 0;">Compare C vs C: <strong style="color: #2e7d32;">MATCH!</strong> → 1 + LCS("", "")</li>
+                            <li style="margin: 8px 0;">Base case: LCS("", "") = 0</li>
+                        </ul>
+                        <div style="background: white; padding: 15px; border-radius: 5px; margin-top: 15px; text-align: center;">
+                            <p style="font-size: 1.3em; font-weight: bold; color: #2e7d32;">
+                                Result: 1 + (1 + 0) = 2
+                            </p>
+                            <p style="margin-top: 10px; font-size: 1.05em;">
+                                LCS = "AC" (length 2)
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="code-block"><pre><span class="comment">// Bottom-Up LCS</span>
+<span class="keyword">public int</span> <span class="function">longestCommonSubsequence</span>(<span class="type">String</span> text1, <span class="type">String</span> text2) {
+    <span class="keyword">int</span> m = text1.length();
+    <span class="keyword">int</span> n = text2.length();
+    <span class="keyword">int</span>[][] dp = <span class="keyword">new int</span>[m + <span class="number">1</span>][n + <span class="number">1</span>];
+    
+    <span class="comment">// Fill table</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i <= m; i++) {
+        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j <= n; j++) {
+            <span class="keyword">if</span> (text1.charAt(i - <span class="number">1</span>) == text2.charAt(j - <span class="number">1</span>)) {
+                <span class="comment">// Characters match - extend LCS</span>
+                dp[i][j] = <span class="number">1</span> + dp[i - <span class="number">1</span>][j - <span class="number">1</span>];
+            } <span class="keyword">else</span> {
+                <span class="comment">// Characters don't match - take max of excluding one</span>
+                dp[i][j] = Math.max(dp[i - <span class="number">1</span>][j], dp[i][j - <span class="number">1</span>]);
+            }
+        }
+    }
+    
+    <span class="keyword">return</span> dp[m][n];
+}</pre></div>
+
+        <div class="dp-table">
+            <h4 style="color: #d81b60; margin-top: 0;">📊 LCS DP Table</h4>
+            <p>text1 = "ABCDE", text2 = "ACE"</p>
+            
+            <table style="margin: 20px auto; font-family: 'Courier New', monospace;">
+                <thead>
+                    <tr>
+                        <th style="background: #f5576c;"></th>
+                        <th style="background: #f5576c;">""</th>
+                        <th style="background: #f5576c;">A</th>
+                        <th style="background: #f5576c;">C</th>
+                        <th style="background: #f5576c;">E</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="background: #fce4ec; font-weight: bold;">""</td>
+                        <td>0</td><td>0</td><td>0</td><td>0</td>
+                    </tr>
+                    <tr>
+                        <td style="background: #fce4ec; font-weight: bold;">A</td>
+                        <td>0</td><td style="background: #c8e6c9; font-weight: bold;">1</td><td>1</td><td>1</td>
+                    </tr>
+                    <tr>
+                        <td style="background: #fce4ec; font-weight: bold;">B</td>
+                        <td>0</td><td>1</td><td>1</td><td>1</td>
+                    </tr>
+                    <tr>
+                        <td style="background: #fce4ec; font-weight: bold;">C</td>
+                        <td>0</td><td>1</td><td style="background: #c8e6c9; font-weight: bold;">2</td><td>2</td>
+                    </tr>
+                    <tr>
+                        <td style="background: #fce4ec; font-weight: bold;">D</td>
+                        <td>0</td><td>1</td><td>2</td><td>2</td>
+                    </tr>
+                    <tr>
+                        <td style="background: #fce4ec; font-weight: bold;">E</td>
+                        <td>0</td><td>1</td><td>2</td><td style="background: #ffeb3b; font-weight: bold;">3</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #e8f5f1; border-radius: 5px;">
+                <p style="font-weight: bold;">Step-by-Step:</p>
+                <p style="margin: 5px 0;">• (A, A): Match! dp[1][1] = 1 + dp[0][0] = 1</p>
+                <p style="margin: 5px 0;">• (C, C): Match! dp[3][2] = 1 + dp[2][1] = 2</p>
+                <p style="margin: 5px 0;">• (E, E): Match! dp[5][3] = 1 + dp[4][2] = 3</p>
+                <p style="margin: 10px 0; font-weight: bold; color: #2e7d32;">✅ LCS length = 3, sequence = "ACE"</p>
+            </div>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 3 (LCS) <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Longest Common Subsequence (LC 1143) ⭐</strong></li>
+                <li><strong>Edit Distance (LC 72) ⭐</strong></li>
+                <li><strong>Distinct Subsequences (LC 115)</strong></li>
+                <li>Longest Palindromic Subsequence (LC 516)</li>
+                <li>Minimum ASCII Delete Sum (LC 712)</li>
+                <li>Shortest Common Supersequence (LC 1092)</li>
+            </ol>
+        </div>
+
+
+        <h2>Pattern 4: Longest Increasing Subsequence (LIS)</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 4: LIS and Variants</h3>
+            <p><strong>Problem Type:</strong> Find longest subsequence with specific ordering property</p>
+            <p><strong>Recurrence:</strong> dp[i] = max(dp[j] + 1) where arr[j] < arr[i] for all j < i</p>
+            <p><strong>Time:</strong> O(N²) DP or O(N log N) with Binary Search</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 When to Use This Pattern?</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ "Longest increasing subsequence"</li>
+                <li>✓ "Maximum length with ordering constraint"</li>
+                <li>✓ "Number of LIS"</li>
+                <li>✓ Each element depends on ALL previous elements</li>
+            </ul>
+        </div>
+        
+        <div class="code-block"><pre><span class="comment">// LIS - O(N²) DP Solution</span>
+<span class="keyword">public int</span> <span class="function">lengthOfLIS</span>(<span class="keyword">int</span>[] nums) {
+    <span class="keyword">int</span> n = nums.length;
+    <span class="keyword">int</span>[] dp = <span class="keyword">new int</span>[n];
+    Arrays.fill(dp, <span class="number">1</span>);  <span class="comment">// Each element is LIS of length 1</span>
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < n; i++) {
+        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j < i; j++) {
+            <span class="keyword">if</span> (nums[i] > nums[j]) {
+                dp[i] = Math.max(dp[i], dp[j] + <span class="number">1</span>);
+            }
+        }
+    }
+    
+    <span class="comment">// Return maximum value in dp array</span>
+    <span class="keyword">return</span> Arrays.stream(dp).max().getAsInt();
+}</pre></div>
+
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 4 (LIS)</h4>
+            <ol>
+                <li><strong>Longest Increasing Subsequence (LC 300) ⭐</strong></li>
+                <li>Number of LIS (LC 673)</li>
+                <li>Russian Doll Envelopes (LC 354)</li>
+                <li>Maximum Length of Pair Chain (LC 646)</li>
+            </ol>
+        </div>
+
+        <h2>Pattern 5: Palindromes</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 5: Palindrome Problems</h3>
+            <p><strong>Problem Type:</strong> Check/find palindromic substrings or subsequences</p>
+            <p><strong>Recurrence:</strong> dp[i][j] = (s[i] == s[j]) && dp[i+1][j-1]</p>
+            <p><strong>Key:</strong> Expand from center or use 2D table</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 When to Use This Pattern?</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ "Palindrome" in problem name</li>
+                <li>✓ "Longest palindromic substring/subsequence"</li>
+                <li>✓ "Minimum cuts for palindrome partitioning"</li>
+                <li>✓ Need to check if substring is palindrome</li>
+            </ul>
+        </div>
+        
+        <div class="code-block"><pre><span class="comment">// Longest Palindromic Substring</span>
+<span class="keyword">public</span> <span class="type">String</span> <span class="function">longestPalindrome</span>(<span class="type">String</span> s) {
+    <span class="keyword">int</span> n = s.length();
+    <span class="keyword">boolean</span>[][] dp = <span class="keyword">new boolean</span>[n][n];
+    <span class="keyword">int</span> start = <span class="number">0</span>, maxLen = <span class="number">1</span>;
+    
+    <span class="comment">// Every single character is a palindrome</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < n; i++) {
+        dp[i][i] = <span class="keyword">true</span>;
+    }
+    
+    <span class="comment">// Check substrings of length 2</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < n - <span class="number">1</span>; i++) {
+        <span class="keyword">if</span> (s.charAt(i) == s.charAt(i + <span class="number">1</span>)) {
+            dp[i][i + <span class="number">1</span>] = <span class="keyword">true</span>;
+            start = i;
+            maxLen = <span class="number">2</span>;
+        }
+    }
+    
+    <span class="comment">// Check substrings of length 3+</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> len = <span class="number">3</span>; len <= n; len++) {
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < n - len + <span class="number">1</span>; i++) {
+            <span class="keyword">int</span> j = i + len - <span class="number">1</span>;
+            <span class="keyword">if</span> (s.charAt(i) == s.charAt(j) && dp[i + <span class="number">1</span>][j - <span class="number">1</span>]) {
+                dp[i][j] = <span class="keyword">true</span>;
+                start = i;
+                maxLen = len;
+            }
+        }
+    }
+    
+    <span class="keyword">return</span> s.substring(start, start + maxLen);
+}</pre></div>
+
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 5 (Palindromes)</h4>
+            <ol>
+                <li><strong>Longest Palindromic Substring (LC 5) ⭐</strong></li>
+                <li><strong>Palindromic Substrings (LC 647) ⭐</strong></li>
+                <li>Longest Palindromic Subsequence (LC 516)</li>
+                <li>Palindrome Partitioning II (LC 132)</li>
+                <li>Palindrome Partitioning (LC 131)</li>
+            </ol>
+        </div>
+
+        <h2>Pattern 6: Grid/Matrix DP</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 6: Grid/Matrix Path Problems</h3>
+            <p><strong>Problem Type:</strong> Count paths, find min/max cost path in 2D grid</p>
+            <p><strong>Recurrence:</strong> dp[i][j] = f(dp[i-1][j], dp[i][j-1])</p>
+            <p><strong>Examples:</strong> Unique Paths, Min Path Sum, Dungeon Game</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 When to Use This Pattern?</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ Have a 2D grid/matrix</li>
+                <li>✓ "How many ways to reach bottom-right?"</li>
+                <li>✓ "Minimum/Maximum path sum"</li>
+                <li>✓ Can only move right or down (or up/left sometimes)</li>
+                <li>✓ Start at top-left, goal at bottom-right</li>
+                <li>✓ Each cell depends on neighbors</li>
+            </ul>
+        </div>
+        
+        <h3>Example: Unique Paths</h3>
+        
+        <div class="visual-box">
+            <h4>Problem:</h4>
+            <p><strong>Grid:</strong> m=3 rows, n=3 columns</p>
+            <p><strong>Start:</strong> Top-left (0,0)</p>
+            <p><strong>Goal:</strong> Bottom-right (2,2)</p>
+            <p><strong>Moves:</strong> Only RIGHT or DOWN</p>
+            <p><strong>Question:</strong> How many unique paths?</p>
+        </div>
+        
+        <div class="recursion-tree">
+            <h4 style="color: #d81b60; margin-top: 0;">🌳 Decision Tree: Paths from (0,0) to (2,2)</h4>
+            <div style="background: white; padding: 30px; border-radius: 10px; overflow-x: auto;">
+                <pre style="font-family: 'Courier New', monospace; font-size: 1.05em; line-height: 2.5; color: #333;">
+                            <span style="background: #c8e6c9; padding: 5px 15px; border-radius: 5px; font-weight: bold;">START (0,0)</span>
+                                  │
+                         ╱                 ╲
+                       ╱                     ╲
+                     ╱                         ╲
+          <span style="background: #fff9c4; padding: 5px 10px; border-radius: 5px;">Move RIGHT</span>              <span style="background: #e1bee7; padding: 5px 10px; border-radius: 5px;">Move DOWN</span>
+              (0,1)                         (1,0)
+               │                             │
+          ╱         ╲                   ╱         ╲
+        ╱             ╲               ╱             ╲
+  <span style="background: #fff59d; padding: 4px 8px; border-radius: 3px;">RIGHT</span>        <span style="background: #ce93d8; padding: 4px 8px; border-radius: 3px;">DOWN</span>          <span style="background: #fff59d; padding: 4px 8px; border-radius: 3px;">RIGHT</span>        <span style="background: #ce93d8; padding: 4px 8px; border-radius: 3px;">DOWN</span>
+  (0,2)          (1,1)          (1,1)          (2,0)
+    │        ╱         ╲          ╱    ╲          │
+    │      ╱             ╲      ╱        ╲        │
+  <span style="background: #ce93d8; padding: 3px 6px; border-radius: 3px;">DOWN</span>  <span style="background: #fff59d; padding: 3px 6px; border-radius: 3px;">RIGHT</span>      <span style="background: #ce93d8; padding: 3px 6px; border-radius: 3px;">DOWN</span>   <span style="background: #fff59d; padding: 3px 6px; border-radius: 3px;">RIGHT</span>   <span style="background: #ce93d8; padding: 3px 6px; border-radius: 3px;">DOWN</span>  <span style="background: #fff59d; padding: 3px 6px; border-radius: 3px;">RIGHT</span>
+  (1,2)    (1,2)      (2,1)   (1,2)   (2,1)    (2,1)
+    │        │          │       │       │        │
+    └────────┴──────────┴───────┴───────┴────────┘
+                          │
+                          ↓
+                   <span style="background: #ffeb3b; padding: 5px 15px; border-radius: 5px; font-weight: bold;">GOAL (2,2)</span>
+                    6 paths total!
+</pre>
+
+                <div style="margin-top: 30px; padding: 20px; background: #e3f2fd; border-radius: 8px; border-left: 5px solid #1976d2;">
+                    <h4 style="color: #1565c0; margin-top: 0;">🎯 The Pattern:</h4>
+                    <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 15px;">
+                        To reach any cell (i, j), you can ONLY come from two places:
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                        <div style="background: #fff9c4; padding: 15px; border-radius: 8px; border: 2px solid #f57c00;">
+                            <h4 style="color: #e65100; margin-top: 0;">➡️ From LEFT (i, j-1)</h4>
+                            <p style="margin: 10px 0;">Move RIGHT to reach (i, j)</p>
+                            <div style="background: white; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                                <pre style="font-family: 'Courier New', monospace; margin: 0;">
+    [i, j-1] ──→ [i, j]
+                                </pre>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #f3e5f5; padding: 15px; border-radius: 8px; border: 2px solid #7b1fa2;">
+                            <h4 style="color: #6a1b9a; margin-top: 0;">⬇️ From TOP (i-1, j)</h4>
+                            <p style="margin: 10px 0;">Move DOWN to reach (i, j)</p>
+                            <div style="background: white; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                                <pre style="font-family: 'Courier New', monospace; margin: 0;">
+    [i-1, j]
+        │
+        ↓
+    [i, j]
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #c8e6c9; padding: 20px; border-radius: 8px; margin-top: 20px; text-align: center; border: 3px solid #2e7d32;">
+                        <p style="font-size: 1.3em; font-weight: bold; font-family: 'Courier New', monospace; color: #1b5e20; margin-bottom: 10px;">
+                            paths[i][j] = paths[i-1][j] + paths[i][j-1]
+                        </p>
+                        <p style="font-size: 1.05em; color: #2e7d32;">
+                            Total paths = (paths from top) + (paths from left)
+                        </p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 20px; background: #fff3e0; border-radius: 8px; border-left: 5px solid #ff6f00;">
+                    <h4 style="color: #e65100; margin-top: 0;">📊 All 6 Unique Paths Visualized:</h4>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px;">
+                        <div style="background: white; padding: 12px; border-radius: 5px; border: 2px solid #1976d2;">
+                            <p style="font-weight: bold; margin-bottom: 8px; color: #1565c0;">Path 1:</p>
+                            <p style="font-family: 'Courier New', monospace; font-size: 0.9em;">R → R → D → D</p>
+                        </div>
+                        <div style="background: white; padding: 12px; border-radius: 5px; border: 2px solid #1976d2;">
+                            <p style="font-weight: bold; margin-bottom: 8px; color: #1565c0;">Path 2:</p>
+                            <p style="font-family: 'Courier New', monospace; font-size: 0.9em;">R → D → R → D</p>
+                        </div>
+                        <div style="background: white; padding: 12px; border-radius: 5px; border: 2px solid #1976d2;">
+                            <p style="font-weight: bold; margin-bottom: 8px; color: #1565c0;">Path 3:</p>
+                            <p style="font-family: 'Courier New', monospace; font-size: 0.9em;">R → D → D → R</p>
+                        </div>
+                        <div style="background: white; padding: 12px; border-radius: 5px; border: 2px solid #1976d2;">
+                            <p style="font-weight: bold; margin-bottom: 8px; color: #1565c0;">Path 4:</p>
+                            <p style="font-family: 'Courier New', monospace; font-size: 0.9em;">D → R → R → D</p>
+                        </div>
+                        <div style="background: white; padding: 12px; border-radius: 5px; border: 2px solid #1976d2;">
+                            <p style="font-weight: bold; margin-bottom: 8px; color: #1565c0;">Path 5:</p>
+                            <p style="font-family: 'Courier New', monospace; font-size: 0.9em;">D → R → D → R</p>
+                        </div>
+                        <div style="background: white; padding: 12px; border-radius: 5px; border: 2px solid #1976d2;">
+                            <p style="font-weight: bold; margin-bottom: 8px; color: #1565c0;">Path 6:</p>
+                            <p style="font-family: 'Courier New', monospace; font-size: 0.9em;">D → D → R → R</p>
+                        </div>
+                    </div>
+                    <p style="margin-top: 15px; font-style: italic; color: #666;">
+                        Note: R = Right, D = Down. Need exactly 2 Rights and 2 Downs to reach (2,2) from (0,0)
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dp-table">
+            <h4 style="color: #d81b60; margin-top: 0;">📊 Grid DP Visualization (3x3)</h4>
+            
+            <div style="margin: 20px 0;">
+                <p style="font-weight: bold; margin-bottom: 15px;">Visual Grid with Path Counts:</p>
+                
+                <table style="margin: 20px auto; font-family: 'Courier New', monospace; font-size: 1.2em; width: auto;">
+                    <tbody>
+                        <tr>
+                            <td style="padding: 20px; background: #c8e6c9; border: 3px solid #4caf50; font-weight: bold; text-align: center;">
+                                START<br>1
+                            </td>
+                            <td style="padding: 20px; background: #fff9c4; border: 3px solid #fbc02d; font-weight: bold; text-align: center;">
+                                →<br>1
+                            </td>
+                            <td style="padding: 20px; background: #fff9c4; border: 3px solid #fbc02d; font-weight: bold; text-align: center;">
+                                →<br>1
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 20px; background: #fff9c4; border: 3px solid #fbc02d; font-weight: bold; text-align: center;">
+                                ↓<br>1
+                            </td>
+                            <td style="padding: 20px; background: #e1bee7; border: 3px solid #9c27b0; font-weight: bold; text-align: center;">
+                                2
+                            </td>
+                            <td style="padding: 20px; background: #e1bee7; border: 3px solid #9c27b0; font-weight: bold; text-align: center;">
+                                3
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 20px; background: #fff9c4; border: 3px solid #fbc02d; font-weight: bold; text-align: center;">
+                                ↓<br>1
+                            </td>
+                            <td style="padding: 20px; background: #e1bee7; border: 3px solid #9c27b0; font-weight: bold; text-align: center;">
+                                3
+                            </td>
+                            <td style="padding: 20px; background: #ffeb3b; border: 3px solid #f57c00; font-weight: bold; text-align: center;">
+                                GOAL<br>6
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="margin-top: 20px; padding: 15px; background: #e8f5f1; border-radius: 5px;">
+                    <p style="font-weight: bold;">Legend:</p>
+                    <p style="margin: 5px 0;">🟢 Green (1): Only ONE way to reach (first row/column - can only go in one direction)</p>
+                    <p style="margin: 5px 0;">🟣 Purple (2,3): Multiple paths converge</p>
+                    <p style="margin: 5px 0;">🟡 Yellow (6): Final answer - 6 unique paths!</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #fff9c4; border-radius: 5px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">Step-by-Step Calculation:</p>
+                <p style="margin: 5px 0;">• dp[0][0] = 1 (start position)</p>
+                <p style="margin: 5px 0;">• dp[0][1] = 1 (can only come from left)</p>
+                <p style="margin: 5px 0;">• dp[0][2] = 1 (can only come from left)</p>
+                <p style="margin: 5px 0;">• dp[1][0] = 1 (can only come from top)</p>
+                <p style="margin: 5px 0;">• dp[1][1] = dp[0][1] + dp[1][0] = 1 + 1 = <strong>2</strong></p>
+                <p style="margin: 5px 0;">• dp[1][2] = dp[0][2] + dp[1][1] = 1 + 2 = <strong>3</strong></p>
+                <p style="margin: 5px 0;">• dp[2][0] = 1 (can only come from top)</p>
+                <p style="margin: 5px 0;">• dp[2][1] = dp[1][1] + dp[2][0] = 2 + 1 = <strong>3</strong></p>
+                <p style="margin: 5px 0;">• dp[2][2] = dp[1][2] + dp[2][1] = 3 + 3 = <strong style="color: #f57c00;">6 ✓</strong></p>
+            </div>
+        </div>
+        
+        <div class="code-block"><pre><span class="comment">// Unique Paths - Bottom-Up</span>
+<span class="keyword">public int</span> <span class="function">uniquePaths</span>(<span class="keyword">int</span> m, <span class="keyword">int</span> n) {
+    <span class="keyword">int</span>[][] dp = <span class="keyword">new int</span>[m][n];
+    
+    <span class="comment">// Base case: first column (can only go down)</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < m; i++) {
+        dp[i][<span class="number">0</span>] = <span class="number">1</span>;
+    }
+    
+    <span class="comment">// Base case: first row (can only go right)</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j < n; j++) {
+        dp[<span class="number">0</span>][j] = <span class="number">1</span>;
+    }
+    
+    <span class="comment">// Fill rest of table</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < m; i++) {
+        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j < n; j++) {
+            <span class="comment">// Paths from top + paths from left</span>
+            dp[i][j] = dp[i - <span class="number">1</span>][j] + dp[i][j - <span class="number">1</span>];
+        }
+    }
+    
+    <span class="keyword">return</span> dp[m - <span class="number">1</span>][n - <span class="number">1</span>];
+}
+
+<span class="comment">// Min Path Sum - Similar pattern but take minimum</span>
+<span class="keyword">public int</span> <span class="function">minPathSum</span>(<span class="keyword">int</span>[][] grid) {
+    <span class="keyword">int</span> m = grid.length, n = grid[<span class="number">0</span>].length;
+    <span class="keyword">int</span>[][] dp = <span class="keyword">new int</span>[m][n];
+    
+    dp[<span class="number">0</span>][<span class="number">0</span>] = grid[<span class="number">0</span>][<span class="number">0</span>];
+    
+    <span class="comment">// First column</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < m; i++) {
+        dp[i][<span class="number">0</span>] = dp[i - <span class="number">1</span>][<span class="number">0</span>] + grid[i][<span class="number">0</span>];
+    }
+    
+    <span class="comment">// First row</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j < n; j++) {
+        dp[<span class="number">0</span>][j] = dp[<span class="number">0</span>][j - <span class="number">1</span>] + grid[<span class="number">0</span>][j];
+    }
+    
+    <span class="comment">// Fill table - take MINIMUM path</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < m; i++) {
+        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j < n; j++) {
+            dp[i][j] = grid[i][j] + Math.min(dp[i - <span class="number">1</span>][j], dp[i][j - <span class="number">1</span>]);
+        }
+    }
+    
+    <span class="keyword">return</span> dp[m - <span class="number">1</span>][n - <span class="number">1</span>];
+}</pre></div>
+
+        <div class="visual-box" style="background: #e8f5e9;">
+            <h4 style="color: #2e7d32;">💡 Intuition</h4>
+            <p><strong>Why does this work?</strong></p>
+            <ol style="margin-left: 20px; margin-top: 10px;">
+                <li style="margin: 10px 0;"><strong>Optimal Substructure:</strong> To reach cell (i,j), you MUST come from either (i-1,j) or (i,j-1)</li>
+                <li style="margin: 10px 0;"><strong>Combine Solutions:</strong> Number of ways to (i,j) = ways to (i-1,j) + ways to (i,j-1)</li>
+                <li style="margin: 10px 0;"><strong>Build Up:</strong> Start from base cases (first row/column) and build to target</li>
+            </ol>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 6 (Grid DP) <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Unique Paths (LC 62) ⭐</strong></li>
+                <li><strong>Unique Paths II (LC 63) ⭐</strong></li>
+                <li><strong>Minimum Path Sum (LC 64) ⭐</strong></li>
+                <li>Triangle (LC 120)</li>
+                <li>Maximal Square (LC 221)</li>
+                <li>Dungeon Game (LC 174)</li>
+                <li>Cherry Pickup (LC 741)</li>
+                <li>Count Square Submatrices (LC 1277)</li>
+            </ol>
+        </div>
+
+        <h2>Pattern 7: Unbounded Knapsack</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 7: Unbounded Knapsack (Unlimited Use)</h3>
+            <p><strong>Problem Type:</strong> Like 0/1 Knapsack BUT can use each item UNLIMITED times</p>
+            <p><strong>Key Difference:</strong> After using item i, can use it again → dp[i][w-weight] instead of dp[i-1][w-weight]</p>
+            <p><strong>Examples:</strong> Coin Change, Rod Cutting, Combination Sum</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 When to Use This Pattern?</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ "Unlimited" or "as many times as you want"</li>
+                <li>✓ "Minimum coins to make amount"</li>
+                <li>✓ "Number of ways to make amount"</li>
+                <li>✓ Can reuse items/coins/elements</li>
+                <li>✓ Different from 0/1 where each item used ONCE</li>
+            </ul>
+        </div>
+        
+        <h3>Example: Coin Change</h3>
+        
+        <div class="visual-box">
+            <h4>Problem:</h4>
+            <p><strong>Coins:</strong> [1, 2, 5]</p>
+            <p><strong>Amount:</strong> 11</p>
+            <p><strong>Goal:</strong> Minimum number of coins to make 11</p>
+            <p><strong>Answer:</strong> 3 coins (5 + 5 + 1)</p>
+        </div>
+        
+        <div class="recursion-tree">
+            <h4 style="color: #d81b60; margin-top: 0;">🌳 Decision Tree: Making Amount 6 with Coins [1, 2, 5]</h4>
+            <div style="background: white; padding: 30px; border-radius: 10px; overflow-x: auto;">
+                <pre style="font-family: 'Courier New', monospace; font-size: 1.05em; line-height: 2.5; color: #333;">
+                             <span style="background: #ffcdd2; padding: 5px 15px; border-radius: 5px; font-weight: bold;">makeChange(amount=6)</span>
+                                min coins = ?
+                      ╱              |              ╲
+                    ╱                |                ╲
+                  ╱                  |                  ╲
+        <span style="background: #c8e6c9; padding: 5px 10px; border-radius: 5px;">Use coin 1</span>      <span style="background: #fff9c4; padding: 5px 10px; border-radius: 5px;">Use coin 2</span>      <span style="background: #e1bee7; padding: 5px 10px; border-radius: 5px;">Use coin 5</span>
+             │                   │                   │
+             ↓                   ↓                   ↓
+  <span style="background: #a5d6a7; padding: 4px 8px; border-radius: 3px;">1 + make(5)</span>     <span style="background: #fff59d; padding: 4px 8px; border-radius: 3px;">1 + make(4)</span>     <span style="background: #ce93d8; padding: 4px 8px; border-radius: 3px;">1 + make(1)</span>
+      = 1+2=3               = 1+2=3               = 1+1=<strong style="color: #2e7d32;">2</strong> ✓ BEST!
+         │                      │                      │
+    ╱    |    ╲            ╱    |    ╲                ↓
+  ╱      |      ╲        ╱      |      ╲         <span style="background: #81c784; padding: 3px 6px; border-radius: 3px;">make(1)</span>
+<span style="background: #81c784; padding: 3px 6px; border-radius: 3px;">+1</span>    <span style="background: #aed581; padding: 3px 6px; border-radius: 3px;">+2</span>    <span style="background: #9ccc65; padding: 3px 6px; border-radius: 3px;">+5</span>      <span style="background: #81c784; padding: 3px 6px; border-radius: 3px;">+1</span>    <span style="background: #aed581; padding: 3px 6px; border-radius: 3px;">+2</span>    <span style="background: #9ccc65; padding: 3px 6px; border-radius: 3px;">+5</span>         = <strong>1</strong>
+(4)    (3)    (0)        (3)    (2)    (X)
+ │      │      │          │      │
+...    ...   done        ...    ...
+</pre>
+
+                <div style="margin-top: 30px; padding: 20px; background: #e3f2fd; border-radius: 8px; border-left: 5px solid #1976d2;">
+                    <h4 style="color: #1565c0; margin-top: 0;">🎯 Key Insight: Unbounded = Can Reuse!</h4>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                        <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 15px;">At each step, try EVERY coin:</p>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0;">
+                            <div style="background: #c8e6c9; padding: 15px; border-radius: 8px; border: 2px solid #2e7d32;">
+                                <h4 style="color: #1b5e20; margin: 0 0 10px 0;">💰 Try Coin 1</h4>
+                                <p style="margin: 5px 0; font-size: 0.95em;">Amount: 6 - 1 = 5</p>
+                                <p style="margin: 5px 0; font-family: 'Courier New', monospace; background: white; padding: 8px; border-radius: 3px;">
+                                    1 + make(5)
+                                </p>
+                            </div>
+                            
+                            <div style="background: #fff9c4; padding: 15px; border-radius: 8px; border: 2px solid #f57c00;">
+                                <h4 style="color: #e65100; margin: 0 0 10px 0;">💰 Try Coin 2</h4>
+                                <p style="margin: 5px 0; font-size: 0.95em;">Amount: 6 - 2 = 4</p>
+                                <p style="margin: 5px 0; font-family: 'Courier New', monospace; background: white; padding: 8px; border-radius: 3px;">
+                                    1 + make(4)
+                                </p>
+                            </div>
+                            
+                            <div style="background: #f3e5f5; padding: 15px; border-radius: 8px; border: 2px solid #7b1fa2;">
+                                <h4 style="color: #6a1b9a; margin: 0 0 10px 0;">💰 Try Coin 5</h4>
+                                <p style="margin: 5px 0; font-size: 0.95em;">Amount: 6 - 5 = 1</p>
+                                <p style="margin: 5px 0; font-family: 'Courier New', monospace; background: white; padding: 8px; border-radius: 3px;">
+                                    1 + make(1)
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #c8e6c9; padding: 20px; border-radius: 8px; margin-top: 20px; text-align: center; border: 3px solid #2e7d32;">
+                            <p style="font-size: 1.3em; font-weight: bold; font-family: 'Courier New', monospace; color: #1b5e20; margin-bottom: 10px;">
+                                dp[amount] = min(1 + dp[amount - coin<sub>i</sub>])
+                            </p>
+                            <p style="font-size: 1.05em; color: #2e7d32;">
+                                Try ALL coins, take the MINIMUM!
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #fff3e0; padding: 20px; border-radius: 8px; margin-top: 20px; border-left: 5px solid #ff6f00;">
+                        <h4 style="color: #e65100; margin-top: 0;">🔄 Unbounded vs 0/1 Knapsack:</h4>
+                        <table style="width: 100%; margin: 15px 0;">
+                            <thead>
+                                <tr style="background: #ff6f00; color: white;">
+                                    <th>Feature</th>
+                                    <th>0/1 Knapsack</th>
+                                    <th>Unbounded Knapsack</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: bold;">Item Usage</td>
+                                    <td>Use ONCE only</td>
+                                    <td style="background: #c8e6c9; font-weight: bold;">Use UNLIMITED times</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">After Using Item i</td>
+                                    <td>Move to i+1</td>
+                                    <td style="background: #c8e6c9; font-weight: bold;">Can use i again!</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold;">Recurrence</td>
+                                    <td>dp[i-1][w-weight[i]]</td>
+                                    <td style="background: #c8e6c9; font-weight: bold;">dp[i][w-weight[i]]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; padding: 20px; background: #e8f5e9; border-radius: 8px; border-left: 5px solid #2e7d32;">
+                    <h4 style="color: #2e7d32; margin-top: 0;">✅ Solution for makeChange(6):</h4>
+                    <ul style="margin-left: 20px; margin-top: 15px; font-size: 1.05em;">
+                        <li style="margin: 10px 0;">Try coin 1: 1 + make(5) = 1 + 2 = <strong>3 coins</strong></li>
+                        <li style="margin: 10px 0;">Try coin 2: 1 + make(4) = 1 + 2 = <strong>3 coins</strong></li>
+                        <li style="margin: 10px 0; background: #c8e6c9; padding: 10px; border-radius: 5px;">
+                            <strong>Try coin 5: 1 + make(1) = 1 + 1 = <span style="font-size: 1.2em; color: #1b5e20;">2 coins</span> ✓ BEST!</strong>
+                        </li>
+                    </ul>
+                    <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px; text-align: center;">
+                        <p style="font-size: 1.4em; font-weight: bold; color: #2e7d32;">
+                            Answer: 2 coins (5 + 1)
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dp-table">
+            <h4 style="color: #d81b60; margin-top: 0;">📊 Unbounded Knapsack Table</h4>
+            <p>coins = [1, 2, 5], amount = 11</p>
+            
+            <table style="margin: 20px auto; font-family: 'Courier New', monospace;">
+                <thead>
+                    <tr>
+                        <th style="background: #f5576c;">amount →</th>
+                        <th style="background: #f5576c;">0</th>
+                        <th style="background: #f5576c;">1</th>
+                        <th style="background: #f5576c;">2</th>
+                        <th style="background: #f5576c;">3</th>
+                        <th style="background: #f5576c;">4</th>
+                        <th style="background: #f5576c;">5</th>
+                        <th style="background: #f5576c;">6</th>
+                        <th style="background: #f5576c;">7</th>
+                        <th style="background: #f5576c;">8</th>
+                        <th style="background: #f5576c;">9</th>
+                        <th style="background: #f5576c;">10</th>
+                        <th style="background: #f5576c;">11</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="background: #fce4ec; font-weight: bold;">dp[i]</td>
+                        <td style="background: #c8e6c9;">0</td>
+                        <td style="background: #fff9c4;">1</td>
+                        <td style="background: #fff9c4;">1</td>
+                        <td style="background: #fff9c4;">2</td>
+                        <td style="background: #fff9c4;">2</td>
+                        <td style="background: #fff9c4;">1</td>
+                        <td style="background: #fff9c4;">2</td>
+                        <td style="background: #fff9c4;">2</td>
+                        <td style="background: #fff9c4;">3</td>
+                        <td style="background: #fff9c4;">3</td>
+                        <td style="background: #fff9c4;">2</td>
+                        <td style="background: #ffeb3b; font-weight: bold;">3</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #e8f5f1; border-radius: 5px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">Step-by-Step:</p>
+                <p style="margin: 5px 0;">• dp[0] = 0 (0 coins to make 0)</p>
+                <p style="margin: 5px 0;">• dp[1] = 1 (use coin 1)</p>
+                <p style="margin: 5px 0;">• dp[2] = 1 (use coin 2) instead of two 1s</p>
+                <p style="margin: 5px 0;">• dp[5] = 1 (use coin 5) - best!</p>
+                <p style="margin: 5px 0;">• dp[6] = 2 (5+1)</p>
+                <p style="margin: 5px 0;">• dp[10] = 2 (5+5)</p>
+                <p style="margin: 5px 0;">• dp[11] = dp[11-5] + 1 = dp[6] + 1 = 2 + 1 = <strong style="color: #2e7d32;">3</strong></p>
+                <p style="margin-top: 10px; font-weight: bold; color: #2e7d32;">✅ Solution: 5 + 5 + 1 = 3 coins</p>
+            </div>
+        </div>
+        
+        <div class="code-block"><pre><span class="comment">// Coin Change - Unbounded Knapsack</span>
+<span class="keyword">public int</span> <span class="function">coinChange</span>(<span class="keyword">int</span>[] coins, <span class="keyword">int</span> amount) {
+    <span class="keyword">int</span>[] dp = <span class="keyword">new int</span>[amount + <span class="number">1</span>];
+    Arrays.fill(dp, amount + <span class="number">1</span>);  <span class="comment">// Initialize to impossible value</span>
+    dp[<span class="number">0</span>] = <span class="number">0</span>;  <span class="comment">// Base case: 0 coins for 0 amount</span>
+    
+    <span class="comment">// For each amount from 1 to target</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i <= amount; i++) {
+        <span class="comment">// Try each coin</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> coin : coins) {
+            <span class="keyword">if</span> (i >= coin) {
+                <span class="comment">// KEY: Can use same coin again → dp[i - coin]</span>
+                dp[i] = Math.min(dp[i], dp[i - coin] + <span class="number">1</span>);
+            }
+        }
+    }
+    
+    <span class="keyword">return</span> dp[amount] > amount ? -<span class="number">1</span> : dp[amount];
+}
+
+<span class="comment">// Coin Change 2 - Count number of ways</span>
+<span class="keyword">public int</span> <span class="function">change</span>(<span class="keyword">int</span> amount, <span class="keyword">int</span>[] coins) {
+    <span class="keyword">int</span>[] dp = <span class="keyword">new int</span>[amount + <span class="number">1</span>];
+    dp[<span class="number">0</span>] = <span class="number">1</span>;  <span class="comment">// 1 way to make 0: use no coins</span>
+    
+    <span class="comment">// For each coin type</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> coin : coins) {
+        <span class="comment">// Update all amounts that can include this coin</span>
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = coin; i <= amount; i++) {
+            dp[i] += dp[i - coin];  <span class="comment">// Add ways using this coin</span>
+        }
+    }
+    
+    <span class="keyword">return</span> dp[amount];
+}</pre></div>
+
+        <div class="visual-box" style="background: #e8f5e9;">
+            <h4 style="color: #2e7d32;">💡 Key Difference from 0/1 Knapsack</h4>
+            
+            <div style="background: #fff; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                <p style="font-weight: bold;">0/1 Knapsack (each item ONCE):</p>
+                <pre style="font-family: 'Courier New', monospace; margin-top: 5px;">dp[i][w] = max(dp[i-1][w], value[i] + dp[<strong>i-1</strong>][w-weight[i]])
+                                                     ↑ i-1 (can't reuse)</pre>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                <p style="font-weight: bold;">Unbounded Knapsack (unlimited use):</p>
+                <pre style="font-family: 'Courier New', monospace; margin-top: 5px;">dp[i] = min(dp[i], 1 + dp[<strong>i</strong>-coin])
+                               ↑ i (can reuse same coin!)</pre>
+            </div>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 7 (Unbounded Knapsack) <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Coin Change (LC 322) ⭐</strong></li>
+                <li><strong>Coin Change 2 (LC 518) ⭐</strong></li>
+                <li>Combination Sum IV (LC 377)</li>
+                <li>Perfect Squares (LC 279)</li>
+                <li>Minimum Cost For Tickets (LC 983)</li>
+                <li>Integer Break (LC 343)</li>
+            </ol>
+        </div>
+
+        <h2>Pattern 8: DP on Trees</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 8: Tree DP (Bottom-Up on Tree Structure)</h3>
+            <p><strong>Problem Type:</strong> Tree structure, need to compute something for each subtree</p>
+            <p><strong>Method:</strong> DFS + Return values from children to parent</p>
+            <p><strong>Examples:</strong> House Robber III, Binary Tree Cameras, Tree Diameter</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 When to Use This Pattern?</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ Input is a binary tree or tree structure</li>
+                <li>✓ Need to make decisions at each node</li>
+                <li>✓ Decision depends on children's results</li>
+                <li>✓ "Maximum/minimum value in tree with constraint"</li>
+                <li>✓ Return values from subtrees</li>
+            </ul>
+        </div>
+        
+        <h3>Example: House Robber III</h3>
+        
+        <div class="visual-box">
+            <h4>Problem:</h4>
+            <p>Rob houses arranged as binary tree. Can't rob two directly-connected houses.</p>
+            <p><strong>Constraint:</strong> If rob parent, can't rob children</p>
+            
+            <div style="margin: 20px 0; font-family: 'Courier New', monospace; text-align: center;">
+                <pre>
+        3
+       / \
+      2   3
+       \   \ 
+        3   1
+                </pre>
+                <p style="margin-top: 10px;"><strong>Answer:</strong> 7 (rob 3 + 3 + 1)</p>
+            </div>
+        </div>
+        
+        <div class="code-block"><pre><span class="comment">// House Robber III - Tree DP</span>
+<span class="keyword">public int</span> <span class="function">rob</span>(<span class="type">TreeNode</span> root) {
+    <span class="keyword">int</span>[] result = robHelper(root);
+    <span class="keyword">return</span> Math.max(result[<span class="number">0</span>], result[<span class="number">1</span>]);
+}
+
+<span class="comment">/**
+ * Returns [robRoot, notRobRoot]
+ * robRoot: max money if we ROB current node
+ * notRobRoot: max money if we DON'T rob current node
+ */</span>
+<span class="keyword">private int</span>[] <span class="function">robHelper</span>(<span class="type">TreeNode</span> node) {
+    <span class="keyword">if</span> (node == <span class="keyword">null</span>) {
+        <span class="keyword">return new int</span>[]{<span class="number">0</span>, <span class="number">0</span>};
+    }
+    
+    <span class="comment">// Get results from children (postorder - children first!)</span>
+    <span class="keyword">int</span>[] left = robHelper(node.left);
+    <span class="keyword">int</span>[] right = robHelper(node.right);
+    
+    <span class="comment">// If we rob current node, can't rob children</span>
+    <span class="keyword">int</span> robRoot = node.val + left[<span class="number">1</span>] + right[<span class="number">1</span>];
+    
+    <span class="comment">// If we don't rob current, take max from children (rob or not)</span>
+    <span class="keyword">int</span> notRobRoot = Math.max(left[<span class="number">0</span>], left[<span class="number">1</span>]) + 
+                        Math.max(right[<span class="number">0</span>], right[<span class="number">1</span>]);
+    
+    <span class="keyword">return new int</span>[]{robRoot, notRobRoot};
+}</pre></div>
+
+        <div class="recursion-tree">
+            <h4 style="color: #d81b60; margin-top: 0;">🌳 Execution Trace</h4>
+            <pre style="color: #333;">
+Tree:     3
+         / \
+        2   3
+         \   \
+          3   1
+
+Process (Postorder - bottom up):
+
+1. Node(3 - leftmost leaf):
+   left = [0,0], right = [0,0]
+   rob = 3 + 0 + 0 = 3
+   notRob = 0
+   return [3, 0]
+
+2. Node(2):
+   left = [0,0], right = [3,0]
+   rob = 2 + 0 + 0 = 2
+   notRob = max(0,0) + max(3,0) = 3
+   return [2, 3]
+
+3. Node(1 - rightmost leaf):
+   return [1, 0]
+
+4. Node(3 - right of root):
+   left = [0,0], right = [1,0]
+   rob = 3 + 0 + 0 = 3
+   notRob = max(0,0) + max(1,0) = 1
+   return [3, 1]
+
+5. Root Node(3):
+   left = [2,3], right = [3,1]
+   rob = 3 + 3 + 1 = <strong style="color: #2e7d32;">7</strong>
+   notRob = max(2,3) + max(3,1) = 3 + 3 = 6
+   return [7, 6]
+
+<strong style="color: #2e7d32;">Answer: max(7, 6) = 7</strong>
+            </pre>
+        </div>
+        
+        <div class="visual-box" style="background: #e8f5e9;">
+            <h4 style="color: #2e7d32;">💡 Intuition</h4>
+            <p><strong>Why return TWO values?</strong></p>
+            <ol style="margin-left: 20px; margin-top: 10px;">
+                <li style="margin: 10px 0;"><strong>Track Both States:</strong> Need to know max if we rob AND if we don't rob</li>
+                <li style="margin: 10px 0;"><strong>Parent Depends on Children:</strong> Robbing parent affects what we can do with children</li>
+                <li style="margin: 10px 0;"><strong>Postorder Traversal:</strong> Process children first, then use their results for parent</li>
+            </ol>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 8 (Tree DP) <span class="difficulty medium">Medium-Hard</span></h4>
+            <ol>
+                <li><strong>House Robber III (LC 337) ⭐</strong></li>
+                <li>Binary Tree Cameras (LC 968)</li>
+                <li>Binary Tree Maximum Path Sum (LC 124)</li>
+                <li>Diameter of Binary Tree (LC 543)</li>
+                <li>Longest Univalue Path (LC 687)</li>
+            </ol>
+        </div>
+
+        <h2>Pattern 9: State Machine DP</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 9: State Machine DP</h3>
+            <p><strong>Problem Type:</strong> Multiple states, transitions between states with rules</p>
+            <p><strong>Method:</strong> Track all possible states at each step</p>
+            <p><strong>Examples:</strong> Buy/Sell Stock with Cooldown/Fee, String with States</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 When to Use This Pattern?</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ Problem has distinct "states" (bought, sold, cooldown, etc.)</li>
+                <li>✓ Transitions between states have specific rules</li>
+                <li>✓ "Buy/Sell stock with cooldown"</li>
+                <li>✓ "With transaction fee"</li>
+                <li>✓ Multiple phases or modes</li>
+            </ul>
+        </div>
+        
+        <h3>Example: Best Time to Buy/Sell Stock with Cooldown</h3>
+        
+        <div class="visual-box">
+            <h4>Problem:</h4>
+            <p>Can buy/sell stocks multiple times, but after selling must cooldown 1 day</p>
+            <p><strong>States:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>hold:</strong> Currently holding stock</li>
+                <li><strong>sold:</strong> Just sold stock (must cooldown next day)</li>
+                <li><strong>rest:</strong> Not holding, not in cooldown</li>
+            </ul>
+        </div>
+        
+        <div class="dp-table">
+            <h4 style="color: #d81b60; margin-top: 0;">📊 State Transition Diagram</h4>
+            
+            <div style="background: white; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <pre style="font-family: 'Courier New', monospace; color: #333; line-height: 2;">
+    ┌─────────────────────┐
+    │                     │
+    │      <strong style="color: #f5576c;">REST</strong>        │ ← Start here
+    │  (not holding)      │
+    │                     │
+    └─────────────────────┘
+           │      ↑
+    <strong>buy</strong> │      │ <strong>cooldown</strong>
+           ↓      │
+    ┌─────────────────────┐         ┌─────────────────────┐
+    │                     │         │                     │
+    │      <strong style="color: #11998e;">HOLD</strong>       │──<strong>sell</strong>──→│      <strong style="color: #f093fb;">SOLD</strong>       │
+    │  (holding stock)    │         │  (just sold)        │
+    │                     │         │                     │
+    └─────────────────────┘         └─────────────────────┘
+           │                               │
+           └───────────────────────────────┘
+                    <strong>hold</strong> (do nothing)
+                </pre>
+            </div>
+        </div>
+        
+        <div class="code-block"><pre><span class="comment">// Stock with Cooldown - State Machine DP</span>
+<span class="keyword">public int</span> <span class="function">maxProfit</span>(<span class="keyword">int</span>[] prices) {
+    <span class="keyword">if</span> (prices.length <= <span class="number">1</span>) <span class="keyword">return</span> <span class="number">0</span>;
+    
+    <span class="keyword">int</span> n = prices.length;
+    
+    <span class="comment">// Three states</span>
+    <span class="keyword">int</span> hold = -prices[<span class="number">0</span>];  <span class="comment">// Bought first stock</span>
+    <span class="keyword">int</span> sold = <span class="number">0</span>;           <span class="comment">// Haven't sold yet</span>
+    <span class="keyword">int</span> rest = <span class="number">0</span>;           <span class="comment">// At rest</span>
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < n; i++) {
+        <span class="keyword">int</span> prevHold = hold;
+        <span class="keyword">int</span> prevSold = sold;
+        <span class="keyword">int</span> prevRest = rest;
+        
+        <span class="comment">// Update each state</span>
+        hold = Math.max(prevHold, prevRest - prices[i]);  <span class="comment">// Keep holding OR buy</span>
+        sold = prevHold + prices[i];                      <span class="comment">// Sell stock</span>
+        rest = Math.max(prevRest, prevSold);              <span class="comment">// Rest OR was sold</span>
+    }
+    
+    <span class="comment">// Return max of not holding stock</span>
+    <span class="keyword">return</span> Math.max(sold, rest);
+}
+
+<span class="comment">// Stock with Transaction Fee - Similar approach</span>
+<span class="keyword">public int</span> <span class="function">maxProfit</span>(<span class="keyword">int</span>[] prices, <span class="keyword">int</span> fee) {
+    <span class="keyword">int</span> cash = <span class="number">0</span>;    <span class="comment">// Max profit if we don't own stock</span>
+    <span class="keyword">int</span> hold = -prices[<span class="number">0</span>];  <span class="comment">// Max profit if we own stock</span>
+    
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < prices.length; i++) {
+        cash = Math.max(cash, hold + prices[i] - fee);  <span class="comment">// Sell (pay fee)</span>
+        hold = Math.max(hold, cash - prices[i]);        <span class="comment">// Buy</span>
+    }
+    
+    <span class="keyword">return</span> cash;
+}</pre></div>
+
+        <div class="dp-table">
+            <h4 style="color: #d81b60; margin-top: 0;">Example Trace: prices = [1,2,3,0,2]</h4>
+            
+            <table style="margin: 20px auto; font-family: 'Courier New', monospace;">
+                <thead>
+                    <tr>
+                        <th style="background: #f5576c;">Day</th>
+                        <th style="background: #f5576c;">Price</th>
+                        <th style="background: #f5576c;">hold</th>
+                        <th style="background: #f5576c;">sold</th>
+                        <th style="background: #f5576c;">rest</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td><td>1</td><td>-1</td><td>0</td><td>0</td>
+                    </tr>
+                    <tr>
+                        <td>1</td><td>2</td><td>-1</td><td>1</td><td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>3</td><td>-1</td><td>2</td><td>1</td>
+                    </tr>
+                    <tr>
+                        <td>3</td><td>0</td><td>1</td><td>-1</td><td>2</td>
+                    </tr>
+                    <tr>
+                        <td>4</td><td>2</td><td style="background: #c8e6c9;">1</td><td style="background: #ffeb3b; font-weight: bold;">3</td><td>2</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #e8f5f1; border-radius: 5px;">
+                <p style="font-weight: bold; color: #2e7d32;">✅ Max Profit = 3</p>
+                <p style="margin-top: 10px;"><strong>Strategy:</strong> Buy at 0, sell at 2, cooldown, buy at 0, sell at 2</p>
+            </div>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 9 (State Machine) <span class="difficulty medium">Medium</span></h4>
+            <ol>
+                <li><strong>Best Time Stock with Cooldown (LC 309) ⭐</strong></li>
+                <li><strong>Best Time Stock with Fee (LC 714) ⭐</strong></li>
+                <li>Best Time to Buy and Sell Stock IV (LC 188)</li>
+                <li>Best Time to Buy and Sell Stock III (LC 123)</li>
+            </ol>
+        </div>
+
+        <h2>Pattern 10: Digit DP</h2>
+        
+        <div class="pattern-card">
+            <h3>📝 Pattern 10: Digit DP (Count Numbers with Constraints)</h3>
+            <p><strong>Problem Type:</strong> Count numbers in range with digit-level constraints</p>
+            <p><strong>Method:</strong> Build numbers digit by digit, track tight bound</p>
+            <p><strong>Examples:</strong> Numbers with unique digits, digit sum constraints</p>
+        </div>
+        
+        <div class="recognition-box">
+            <h4>🎯 When to Use This Pattern?</h4>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✓ "Count numbers in range [L, R]"</li>
+                <li>✓ "With digit constraints" (unique, sum, etc.)</li>
+                <li>✓ "Numbers at most N digits"</li>
+                <li>✓ Build numbers digit by digit</li>
+                <li>✓ Need to track if still at boundary</li>
+            </ul>
+        </div>
+        
+        <h3>Example: Count Numbers with Unique Digits</h3>
+        
+        <div class="visual-box">
+            <h4>Problem:</h4>
+            <p>Given n, count numbers from 0 to 10^n - 1 with all unique digits</p>
+            <p><strong>Example:</strong> n=2 → count from 0 to 99</p>
+            <p><strong>Answer:</strong> 91 (all two-digit numbers with unique digits + single digits)</p>
+        </div>
+        
+        <div class="code-block"><pre><span class="comment">// Count Numbers with Unique Digits</span>
+<span class="keyword">public int</span> <span class="function">countNumbersWithUniqueDigits</span>(<span class="keyword">int</span> n) {
+    <span class="keyword">if</span> (n == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1</span>;
+    
+    <span class="keyword">int</span> result = <span class="number">10</span>;  <span class="comment">// For n=1: 0-9</span>
+    <span class="keyword">int</span> uniqueDigits = <span class="number">9</span>;
+    <span class="keyword">int</span> availableDigits = <span class="number">9</span>;
+    
+    <span class="comment">// For each additional digit position</span>
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i <= n && availableDigits > <span class="number">0</span>; i++) {
+        uniqueDigits = uniqueDigits * availableDigits;
+        result += uniqueDigits;
+        availableDigits--;
+    }
+    
+    <span class="keyword">return</span> result;
+}
+
+<span class="comment">// Advanced Digit DP Template (for range queries)</span>
+<span class="keyword">public int</span> <span class="function">countInRange</span>(<span class="keyword">int</span> low, <span class="keyword">int</span> high) {
+    <span class="keyword">return</span> countUpTo(high) - countUpTo(low - <span class="number">1</span>);
+}
+
+<span class="keyword">private int</span> <span class="function">countUpTo</span>(<span class="keyword">int</span> num) {
+    String s = String.valueOf(num);
+    <span class="keyword">int</span> n = s.length();
+    
+    <span class="comment">// dp[pos][tight][... other states]</span>
+    <span class="comment">// pos: current position in number</span>
+    <span class="comment">// tight: whether we're still bounded by original number</span>
+    
+    <span class="keyword">return</span> solve(<span class="number">0</span>, <span class="keyword">true</span>, s);
+}
+
+<span class="keyword">private int</span> <span class="function">solve</span>(<span class="keyword">int</span> pos, <span class="keyword">boolean</span> tight, String num) {
+    <span class="comment">// Base case: built complete number</span>
+    <span class="keyword">if</span> (pos == num.length()) {
+        <span class="keyword">return</span> <span class="number">1</span>;
+    }
+    
+    <span class="comment">// Determine max digit we can use at this position</span>
+    <span class="keyword">int</span> maxDigit = tight ? (num.charAt(pos) - <span class="string">'0'</span>) : <span class="number">9</span>;
+    
+    <span class="keyword">int</span> count = <span class="number">0</span>;
+    <span class="keyword">for</span> (<span class="keyword">int</span> digit = <span class="number">0</span>; digit <= maxDigit; digit++) {
+        <span class="comment">// Recurse for next position</span>
+        count += solve(pos + <span class="number">1</span>, tight && (digit == maxDigit), num);
+    }
+    
+    <span class="keyword">return</span> count;
+}</pre></div>
+
+        <div class="visual-box" style="background: #e8f5e9;">
+            <h4 style="color: #2e7d32;">💡 Intuition</h4>
+            <p><strong>Building numbers digit by digit:</strong></p>
+            <ol style="margin-left: 20px; margin-top: 10px;">
+                <li style="margin: 10px 0;"><strong>Position-wise:</strong> Build number from left to right (most significant first)</li>
+                <li style="margin: 10px 0;"><strong>Tight Bound:</strong> Track if we're still at the upper limit (affects which digits we can use)</li>
+                <li style="margin: 10px 0;"><strong>State Tracking:</strong> Keep track of constraints (digits used, sum, etc.)</li>
+            </ol>
+        </div>
+        
+        <div class="problem-box">
+            <h4>Practice Problems - Pattern 10 (Digit DP) <span class="difficulty medium">Medium-Hard</span></h4>
+            <ol>
+                <li><strong>Count Numbers with Unique Digits (LC 357) ⭐</strong></li>
+                <li>Numbers At Most N Given Digit Set (LC 902)</li>
+                <li>Non-negative Integers without Consecutive Ones (LC 600)</li>
+                <li>Numbers With Repeated Digits (LC 1012)</li>
+            </ol>
+        </div>
+
+
+        <h2>🎯 Complete Pattern Recognition Guide</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 20%;">Pattern</th>
+                    <th style="width: 30%;">Keywords/Signals</th>
+                    <th style="width: 25%;">Recurrence Type</th>
+                    <th style="width: 25%;">Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>1D DP</strong></td>
+                    <td>"nth step", "ways to reach", single variable</td>
+                    <td>dp[i] = f(dp[i-1], dp[i-2])</td>
+                    <td>Climbing Stairs</td>
+                </tr>
+                <tr>
+                    <td><strong>0/1 Knapsack</strong></td>
+                    <td>"each item once", "subset sum", "partition"</td>
+                    <td>max(include, exclude)</td>
+                    <td>Partition Equal</td>
+                </tr>
+                <tr>
+                    <td><strong>LCS</strong></td>
+                    <td>"two strings", "common", "edit distance"</td>
+                    <td>if match: 1+dp[i-1][j-1], else: max</td>
+                    <td>LCS, Edit Distance</td>
+                </tr>
+                <tr>
+                    <td><strong>LIS</strong></td>
+                    <td>"increasing", "longest with order"</td>
+                    <td>max(dp[j]+1) for all j<i</td>
+                    <td>LIS</td>
+                </tr>
+                <tr>
+                    <td><strong>Palindrome</strong></td>
+                    <td>"palindrome", "palindromic substring"</td>
+                    <td>(s[i]==s[j]) && dp[i+1][j-1]</td>
+                    <td>Longest Palindrome</td>
+                </tr>
+                <tr>
+                    <td><strong>Grid DP</strong></td>
+                    <td>"grid", "matrix", "path", "unique ways"</td>
+                    <td>dp[i][j] = dp[i-1][j] + dp[i][j-1]</td>
+                    <td>Unique Paths</td>
+                </tr>
+                <tr>
+                    <td><strong>Unbounded KS</strong></td>
+                    <td>"unlimited use", "coin change"</td>
+                    <td>dp[i] = min(dp[i], dp[i-coin]+1)</td>
+                    <td>Coin Change</td>
+                </tr>
+                <tr>
+                    <td><strong>Tree DP</strong></td>
+                    <td>"binary tree", "rob houses on tree"</td>
+                    <td>DFS with return values</td>
+                    <td>House Robber III</td>
+                </tr>
+                <tr>
+                    <td><strong>State Machine</strong></td>
+                    <td>"states", "buy/sell", "cooldown"</td>
+                    <td>Track multiple states</td>
+                    <td>Stock Problems</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2>🔍 Quick Decision Flowchart</h2>
+        
+        <div class="visual-box">
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Can you identify overlapping subproblems?</strong>
+                <div style="margin-left: 50px; margin-top: 10px;">
+                    <p>• Draw recursion tree - do you see repeated calls? → DP candidate</p>
+                    <p>• If no overlap → Might be greedy or other approach</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>What's the variable(s) changing?</strong>
+                <div style="margin-left: 50px; margin-top: 10px;">
+                    <p>• ONE variable (n, i, position) → 1D DP (Pattern 1)</p>
+                    <p>• TWO variables (i, j) or (items, capacity) → 2D DP</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>What type of 2D DP?</strong>
+                <div style="margin-left: 50px; margin-top: 10px;">
+                    <p>• Two strings? → LCS (Pattern 3)</p>
+                    <p>• Items + capacity? → Knapsack (Pattern 2)</p>
+                    <p>• Grid/matrix? → Grid DP (Pattern 6)</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Check keywords:</strong>
+                <div style="margin-left: 50px; margin-top: 10px;">
+                    <p>• "Palindrome" → Pattern 5</p>
+                    <p>• "Increasing" with order → LIS (Pattern 4)</p>
+                    <p>• "Unlimited use" → Unbounded Knapsack (Pattern 7)</p>
+                </div>
+            </div>
+        </div>
+        
+        <h2>📚 Complete Problem List (100+ Problems)</h2>
+        
+        <h3>Easy (15 problems)</h3>
+        <div class="problem-box">
+            <ol style="column-count: 2; column-gap: 40px;">
+                <li>Fibonacci Number (LC 509)</li>
+                <li>Climbing Stairs (LC 70)</li>
+                <li>Min Cost Climbing Stairs (LC 746)</li>
+                <li>N-th Tribonacci (LC 1137)</li>
+                <li>Pascal's Triangle (LC 118)</li>
+                <li>Divisor Game (LC 1025)</li>
+                <li>Is Subsequence (LC 392)</li>
+                <li>Range Sum Query (LC 303)</li>
+                <li>Best Time Stock I (LC 121)</li>
+                <li>Maximum Subarray (LC 53)</li>
+                <li>House Robber (LC 198)</li>
+                <li>Get Max Gold (LC 1219)</li>
+                <li>Counting Bits (LC 338)</li>
+                <li>Min Subsequence (LC 1403)</li>
+                <li>Maximum Score (LC 1423)</li>
+            </ol>
+        </div>
+        
+        <h3>Medium (60 problems)</h3>
+        <div class="problem-box">
+            <ol style="column-count: 3; column-gap: 30px;">
+                <li><strong>Unique Paths (LC 62) ⭐</strong></li>
+                <li><strong>Coin Change (LC 322) ⭐</strong></li>
+                <li><strong>LCS (LC 1143) ⭐</strong></li>
+                <li><strong>LIS (LC 300) ⭐</strong></li>
+                <li><strong>Partition Equal (LC 416) ⭐</strong></li>
+                <li>Decode Ways (LC 91)</li>
+                <li>Unique Paths II (LC 63)</li>
+                <li>Min Path Sum (LC 64)</li>
+                <li>Triangle (LC 120)</li>
+                <li>House Robber II (LC 213)</li>
+                <li>Word Break (LC 139)</li>
+                <li>Longest Palindrome (LC 5)</li>
+                <li>Palindromic Substrings (LC 647)</li>
+                <li>Target Sum (LC 494)</li>
+                <li>Coin Change 2 (LC 518)</li>
+                <li>Combination Sum IV (LC 377)</li>
+                <li>Perfect Squares (LC 279)</li>
+                <li>Longest Palin Subseq (LC 516)</li>
+                <li>Delete and Earn (LC 740)</li>
+                <li>2 Keys Keyboard (LC 650)</li>
+                <li>Partition K Subsets (LC 698)</li>
+                <li>Knight Dialer (LC 935)</li>
+                <li>Ones and Zeroes (LC 474)</li>
+                <li>Last Stone Weight II (LC 1049)</li>
+                <li>Max Product Subarray (LC 152)</li>
+                <li>Jump Game (LC 55)</li>
+                <li>Jump Game II (LC 45)</li>
+                <li>Decode Ways II (LC 639)</li>
+                <li>Number of Dice Rolls (LC 1155)</li>
+                <li>Knight Probability (LC 688)</li>
+                <li>Out of Boundary (LC 576)</li>
+                <li>Ugly Number II (LC 264)</li>
+                <li>Integer Break (LC 343)</li>
+                <li>Arithmetic Slices (LC 413)</li>
+                <li>Predict Winner (LC 486)</li>
+                <li>Stone Game (LC 877)</li>
+                <li>Maximum Length Chain (LC 646)</li>
+                <li>Number of LIS (LC 673)</li>
+                <li>Partition to K Subsets (LC 698)</li>
+                <li>Best Team Score (LC 1626)</li>
+                <li>Max Dot Product (LC 1458)</li>
+                <li>Stone Game II (LC 1140)</li>
+                <li>Pizza 3n Slices (LC 1388)</li>
+                <li>Number of Ways (LC 1269)</li>
+                <li>Min Difficulty (LC 1335)</li>
+                <li>Number of Sets (LC 1621)</li>
+                <li>Min Swaps (LC 1536)</li>
+                <li>Stock Cooldown (LC 309)</li>
+                <li>Stock with Fee (LC 714)</li>
+                <li>Maximal Square (LC 221)</li>
+                <li>Count Square Submatrices (LC 1277)</li>
+                <li>Longest Arith Subsequence (LC 1027)</li>
+                <li>Wiggle Subsequence (LC 376)</li>
+                <li>Partition Labels (LC 763)</li>
+                <li>Ones and Zeroes (LC 474)</li>
+                <li>Video Stitching (LC 1024)</li>
+                <li>Minimum Cost Tree (LC 1130)</li>
+                <li>Tiling Rectangle (LC 1240)</li>
+                <li>Reducing Dishes (LC 1402)</li>
+                <li>Build Array (LC 1420)</li>
+            </ol>
+        </div>
+        
+        <h3>Hard (30 problems)</h3>
+        <div class="problem-box">
+            <ol style="column-count: 2; column-gap: 40px;">
+                <li><strong>Edit Distance (LC 72) ⭐</strong></li>
+                <li><strong>Regular Expression (LC 10) ⭐</strong></li>
+                <li><strong>Wildcard Matching (LC 44) ⭐</strong></li>
+                <li>Distinct Subsequences (LC 115)</li>
+                <li>Interleaving String (LC 97)</li>
+                <li>Scramble String (LC 87)</li>
+                <li>Max Rectangle (LC 85)</li>
+                <li>Palindrome Partition II (LC 132)</li>
+                <li>Word Break II (LC 140)</li>
+                <li>Dungeon Game (LC 174)</li>
+                <li>Best Stock IV (LC 188)</li>
+                <li>Russian Doll (LC 354)</li>
+                <li>Burst Balloons (LC 312)</li>
+                <li>Super Egg Drop (LC 887)</li>
+                <li>Shortest Common Super (LC 1092)</li>
+                <li>Longest Valid Parens (LC 32)</li>
+                <li>Minimum Window Subseq (LC 727)</li>
+                <li>Cherry Pickup (LC 741)</li>
+                <li>Cherry Pickup II (LC 1463)</li>
+                <li>Stickers to Spell (LC 691)</li>
+                <li>Strange Printer (LC 664)</li>
+                <li>Freedom Trail (LC 514)</li>
+                <li>Frog Jump (LC 403)</li>
+                <li>Split Array Largest (LC 410)</li>
+                <li>Number of Music Playlists (LC 920)</li>
+                <li>Max Vacation Days (LC 568)</li>
+                <li>Paint House III (LC 1473)</li>
+                <li>Minimum Cost Cut Stick (LC 1547)</li>
+                <li>Count Different Palin (LC 1930)</li>
+                <li>Count Vowel Perm (LC 1220)</li>
+            </ol>
+        </div>
+        
+        <h2>💡 Pro Tips & Common Mistakes</h2>
+        
+        <div class="tip-box">
+            <h4>✅ Pro Tips</h4>
+            <ol style="margin-left: 20px;">
+                <li><strong>Start with recursion:</strong> Write recursive solution first, then add memoization</li>
+                <li><strong>Identify states:</strong> What variables change? These become DP dimensions</li>
+                <li><strong>Base cases first:</strong> Always handle base cases explicitly</li>
+                <li><strong>Draw it out:</strong> Sketch recursion tree or DP table to visualize</li>
+                <li><strong>Space optimization:</strong> After getting it working, optimize space (often O(N) → O(1))</li>
+                <li><strong>Check constraints:</strong> Array bounds, negative indices, empty cases</li>
+            </ol>
+        </div>
+        
+        <div class="warning-box">
+            <h4>⚠️ Common Mistakes</h4>
+            <ol style="margin-left: 20px;">
+                <li><strong>Forgetting base case:</strong> Leads to stack overflow or wrong answer</li>
+                <li><strong>Wrong initialization:</strong> Arrays not initialized to correct default values</li>
+                <li><strong>Off-by-one errors:</strong> Array index mistakes, especially in 2D DP</li>
+                <li><strong>Not checking memo:</strong> Forgetting to check cache before recursive call</li>
+                <li><strong>Using wrong index:</strong> In bottom-up, using dp[i] vs dp[i-1] incorrectly</li>
+                <li><strong>Greedy when need DP:</strong> Not all optimization problems are greedy!</li>
+            </ol>
+        </div>
+        
+        <h2>🎓 DP Interview Strategy</h2>
+        
+        <div class="visual-box">
+            <h3>Step-by-Step Approach:</h3>
+            
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Recognize it's DP:</strong>
+                <ul style="margin-left: 20px; margin-top: 5px;">
+                    <li>Keywords: max/min, count ways, optimization</li>
+                    <li>Overlapping subproblems visible</li>
+                </ul>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Define state:</strong>
+                <ul style="margin-left: 20px; margin-top: 5px;">
+                    <li>What does dp[i] or dp[i][j] represent?</li>
+                    <li>"dp[i] = maximum profit using first i houses"</li>
+                </ul>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Find recurrence relation:</strong>
+                <ul style="margin-left: 20px; margin-top: 5px;">
+                    <li>How to compute dp[i] from previous states?</li>
+                    <li>"dp[i] = max(rob[i] + dp[i-2], dp[i-1])"</li>
+                </ul>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Identify base cases:</strong>
+                <ul style="margin-left: 20px; margin-top: 5px;">
+                    <li>dp[0] = ?, dp[1] = ?</li>
+                    <li>Empty input, single element cases</li>
+                </ul>
+            </div>
+            
+            <div class="step">
+                <span class="step-number">5</span>
+                <strong>Code it:</strong>
+                <ul style="margin-left: 20px; margin-top: 5px;">
+                    <li>Start with top-down (easier to think)</li>
+                    <li>Convert to bottom-up if needed</li>
+                    <li>Optimize space as final step</li>
+                </ul>
+            </div>
+        </div>
+        
+        <h2>🔑 Quick Reference: DP Templates</h2>
+        
+        <div class="code-block"><pre><span class="comment">// Template 1: 1D DP (Fibonacci style)</span>
+<span class="keyword">int</span>[] dp = <span class="keyword">new int</span>[n + <span class="number">1</span>];
+dp[<span class="number">0</span>] = base1;
+dp[<span class="number">1</span>] = base2;
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i <= n; i++) {
+    dp[i] = f(dp[i<span class="number">-1</span>], dp[i<span class="number">-2</span>]);
+}
+<span class="keyword">return</span> dp[n];
+
+<span class="comment">// Template 2: 2D DP (Grid/Knapsack)</span>
+<span class="keyword">int</span>[][] dp = <span class="keyword">new int</span>[m + <span class="number">1</span>][n + <span class="number">1</span>];
+<span class="comment">// Initialize base cases</span>
+<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i <= m; i++) {
+    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j <= n; j++) {
+        dp[i][j] = f(dp[i<span class="number">-1</span>][j], dp[i][j<span class="number">-1</span>]);
+    }
+}
+<span class="keyword">return</span> dp[m][n];
+
+<span class="comment">// Template 3: Top-Down with Memo</span>
+<span class="keyword">int</span>[] memo = <span class="keyword">new int</span>[n + <span class="number">1</span>];
+Arrays.fill(memo, -<span class="number">1</span>);
+
+<span class="keyword">int</span> <span class="function">solve</span>(<span class="keyword">int</span> i) {
+    <span class="keyword">if</span> (i < <span class="number">0</span> || i == base) <span class="keyword">return</span> baseValue;
+    <span class="keyword">if</span> (memo[i] != -<span class="number">1</span>) <span class="keyword">return</span> memo[i];
+    memo[i] = f(solve(i<span class="number">-1</span>), solve(i<span class="number">-2</span>));
+    <span class="keyword">return</span> memo[i];
+}</pre></div>
+
+        <div style="text-align: center; margin-top: 50px; padding: 40px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border-radius: 10px;">
+            <h2 style="color: white; margin: 0; font-size: 2em;">🎉 Dynamic Programming Mastery Complete!</h2>
+            <p style="margin: 20px 0; font-size: 1.2em;">All 10 Patterns | Top-Down & Bottom-Up | 100+ Problems | Complete Visualizations</p>
+            <p style="margin: 10px 0;">✓ 1D DP | ✓ 0/1 Knapsack | ✓ LCS | ✓ LIS | ✓ Palindromes</p>
+            <p style="margin: 10px 0;">✓ Grid DP | ✓ Unbounded KS | ✓ Tree DP | ✓ State Machine | ✓ Digit DP</p>
+            <p style="margin-top: 30px; font-size: 1.1em; font-weight: bold;">
+                Remember: Draw recursion tree → Identify overlapping → Add memoization!
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+
+
+        <h2>📖 Complete Beginner's Framework: How to Solve ANY DP Problem</h2>
+        
+        <div class="hero-box" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 40px; border-radius: 15px; margin: 40px 0;">
+            <h3 style="color: white; text-align: center; margin: 0;">🎯 The 5-Step DP Framework (Learn This Once, Use Forever)</h3>
+            <p style="text-align: center; margin-top: 15px; font-size: 1.2em;">Follow these 5 steps for EVERY DP problem. Master this framework and you'll never be stuck again!</p>
+        </div>
+        
+        <div class="visual-box" style="background: #e3f2fd; padding: 30px;">
+            <h3 style="color: #1565c0; margin-top: 0;">📍 Step 1: Recognize if it's a DP Problem</h3>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <h4 style="color: #d81b60; margin-top: 0;">Ask These Magic Questions:</h4>
+                
+                <table style="margin: 20px 0;">
+                    <thead>
+                        <tr>
+                            <th style="width: 40%;">Question</th>
+                            <th style="width: 30%;">If YES...</th>
+                            <th style="width: 30%;">Example</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1. Does it ask for optimal value?</strong><br>("maximum", "minimum", "longest", "shortest")</td>
+                            <td style="color: #2e7d32; font-weight: bold;">→ Likely DP!</td>
+                            <td>"Maximum profit", "Shortest path"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. Does it ask to count ways?</strong><br>("how many ways", "number of paths")</td>
+                            <td style="color: #2e7d32; font-weight: bold;">→ Likely DP!</td>
+                            <td>"Count ways to climb stairs"</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3. Can I break it into smaller identical subproblems?</strong></td>
+                            <td style="color: #2e7d32; font-weight: bold;">→ Likely DP!</td>
+                            <td>fib(n) = fib(n-1) + fib(n-2)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4. Do the same subproblems appear multiple times?</strong></td>
+                            <td style="color: #2e7d32; font-weight: bold;">→ Definitely DP!</td>
+                            <td>Computing fib(3) appears twice in fib(5)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="background: #fff9c4; padding: 20px; border-radius: 5px; margin: 20px 0;">
+                    <p style="font-weight: bold; font-size: 1.2em; margin-bottom: 15px;">🔥 The Overlap Test (Most Important!)</p>
+                    <p style="margin: 10px 0;">Draw a small recursion tree for your problem. If you see the SAME function call appearing in MULTIPLE places → It's DP!</p>
+                    
+                    <div style="background: white; padding: 25px; border-radius: 8px; margin: 20px 0; font-family: 'Courier New', monospace; overflow-x: auto;">
+                        <p style="font-weight: bold; margin-bottom: 20px; font-family: 'Segoe UI', sans-serif;">Example: Fibonacci(5) Recursion Tree</p>
+                        <pre style="font-size: 1.1em; line-height: 2; color: #333;">
+                                fib(5)
+                               /      \
+                          fib(4)      fib(3) <span style="background: #ffeb3b; padding: 2px 8px; border-radius: 3px;">← appears here</span>
+                         /      \      /    \
+                    fib(3)    fib(2) fib(2) fib(1)
+                   /     \    /   \
+              fib(2) fib(1) f(1) f(0)
+              /   \
+          f(1)  f(0)
+</pre>
+                        
+                        <div style="background: #ffebee; padding: 15px; border-radius: 5px; margin-top: 20px; font-family: 'Segoe UI', sans-serif;">
+                            <p style="font-weight: bold; color: #c62828; margin-bottom: 10px;">❌ Without DP (Naive Recursion):</p>
+                            <p style="margin: 5px 0;">• <strong style="background: #ffeb3b; padding: 2px 6px;">fib(3)</strong> computed <strong>2 times</strong></p>
+                            <p style="margin: 5px 0;">• <strong>fib(2)</strong> computed <strong>3 times</strong></p>
+                            <p style="margin: 5px 0;">• <strong>fib(1)</strong> computed <strong>5 times</strong></p>
+                            <p style="margin: 10px 0; font-weight: bold;">Total function calls: 15 (for just fib(5)!)</p>
+                            <p style="margin: 10px 0; padding: 10px; background: #fff; border-left: 4px solid #c62828; border-radius: 3px;">
+                                <strong>Time Complexity: O(2<sup>n</sup>) - EXPONENTIAL! 🔥</strong>
+                            </p>
+                        </div>
+                        
+                        <div style="background: #e8f5e9; padding: 15px; border-radius: 5px; margin-top: 15px; font-family: 'Segoe UI', sans-serif;">
+                            <p style="font-weight: bold; color: #2e7d32; margin-bottom: 10px;">✅ With DP (Memoization):</p>
+                            <p style="margin: 5px 0;">• <strong style="background: #ffeb3b; padding: 2px 6px;">fib(3)</strong> computed <strong>ONCE</strong>, then cached!</p>
+                            <p style="margin: 5px 0;">• <strong>fib(2)</strong> computed <strong>ONCE</strong>, then cached!</p>
+                            <p style="margin: 5px 0;">• <strong>fib(1)</strong> computed <strong>ONCE</strong>, then cached!</p>
+                            <p style="margin: 10px 0; font-weight: bold;">Total unique computations: 6 (only compute each once!)</p>
+                            <p style="margin: 10px 0; padding: 10px; background: #fff; border-left: 4px solid #2e7d32; border-radius: 3px;">
+                                <strong>Time Complexity: O(n) - LINEAR! ✨</strong>
+                            </p>
+                        </div>
+                        
+                        <div style="background: #fff3e0; padding: 15px; border-radius: 5px; margin-top: 15px; font-family: 'Segoe UI', sans-serif;">
+                            <p style="font-weight: bold; color: #e65100; margin-bottom: 10px;">💡 The Key Insight:</p>
+                            <p style="font-size: 1.05em; line-height: 1.8;">
+                                We have <strong>overlapping subproblems</strong> (same calculations repeated) AND 
+                                <strong>optimal substructure</strong> (answer built from smaller answers).
+                                This is the PERFECT scenario for Dynamic Programming!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="visual-box" style="background: #f3e5f5; padding: 30px;">
+            <h3 style="color: #6a1b9a; margin-top: 0;">📍 Step 2: Define Your State (THE MOST CRITICAL STEP!)</h3>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <p style="font-size: 1.2em; font-weight: bold; color: #c62828; margin-bottom: 20px;">⚠️ This is where most people get stuck! Master this and DP becomes easy.</p>
+                
+                <h4 style="color: #6a1b9a;">The Question to Ask:</h4>
+                <div class="thinking-box" style="font-size: 1.1em;">
+                    <strong>"What information do I need to uniquely identify a subproblem?"</strong>
+                </div>
+                
+                <div style="margin: 25px 0;">
+                    <h4 style="color: #d81b60;">Let's Practice with Real Examples:</h4>
+                    
+                    <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <p style="font-weight: bold; font-size: 1.2em; color: #1565c0; margin-bottom: 15px;">Example 1: Climbing Stairs</p>
+                        <p><strong>Problem:</strong> How many ways to climb n stairs? (Can take 1 or 2 steps)</p>
+                        
+                        <div class="thinking-box">
+                            <p style="font-weight: bold; margin-bottom: 10px;">Think:</p>
+                            <p>• What am I trying to find? → Ways to reach step n</p>
+                            <p>• What changes as I solve subproblems? → The current step number</p>
+                            <p>• What do I need to know to solve for any step? → Just which step I'm at!</p>
+                        </div>
+                        
+                        <div class="answer-box">
+                            <p style="font-weight: bold; font-size: 1.1em;">State Definition: <code>dp[i]</code> = number of ways to reach step i</p>
+                            <p style="margin-top: 10px;">Why this works: Knowing step number is ENOUGH to solve that subproblem!</p>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #fff3e0; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <p style="font-weight: bold; font-size: 1.2em; color: #e65100; margin-bottom: 15px;">Example 2: Knapsack</p>
+                        <p><strong>Problem:</strong> Max value with weight limit W using items with weights and values?</p>
+                        
+                        <div class="thinking-box">
+                            <p style="font-weight: bold; margin-bottom: 10px;">Think:</p>
+                            <p>• What am I trying to find? → Max value with certain items and capacity</p>
+                            <p>• What changes? → Which items I've considered AND remaining capacity</p>
+                            <p>• Need to track TWO things!</p>
+                        </div>
+                        
+                        <div class="answer-box">
+                            <p style="font-weight: bold; font-size: 1.1em;">State Definition: <code>dp[i][w]</code> = max value using first i items with capacity w</p>
+                            <p style="margin-top: 10px;">Why 2D: Need BOTH pieces of info to solve any subproblem!</p>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f3e5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <p style="font-weight: bold; font-size: 1.2em; color: #6a1b9a; margin-bottom: 15px;">Example 3: Longest Common Subsequence</p>
+                        <p><strong>Problem:</strong> Find LCS of two strings s1 and s2?</p>
+                        
+                        <div class="thinking-box">
+                            <p style="font-weight: bold; margin-bottom: 10px;">Think:</p>
+                            <p>• What am I trying to find? → LCS of two strings</p>
+                            <p>• What changes? → Position in s1 AND position in s2</p>
+                            <p>• Need to track position in BOTH strings!</p>
+                        </div>
+                        
+                        <div class="answer-box">
+                            <p style="font-weight: bold; font-size: 1.1em;">State Definition: <code>dp[i][j]</code> = LCS length of first i chars of s1 and first j chars of s2</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; margin: 20px 0; border: 3px solid #2e7d32;">
+                    <h4 style="color: #2e7d32; margin-top: 0;">💡 Pro Tip: How Many Dimensions?</h4>
+                    <ul style="margin-left: 20px;">
+                        <li style="margin: 10px 0;"><strong>1 variable changing?</strong> → 1D array (dp[i])</li>
+                        <li style="margin: 10px 0;"><strong>2 variables changing?</strong> → 2D array (dp[i][j])</li>
+                        <li style="margin: 10px 0;"><strong>3 variables?</strong> → 3D array (dp[i][j][k])</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="visual-box" style="background: #e8f5e9; padding: 30px;">
+            <h3 style="color: #2e7d32; margin-top: 0;">📍 Step 3: Find the Recurrence Relation (The Magic Formula)</h3>
+            
+            <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <p style="font-size: 1.2em; font-weight: bold; margin-bottom: 20px;">How to express dp[i] using previous states?</p>
+                
+                <div style="background: #fff9c4; padding: 20px; border-radius: 8px; margin: 20px 0; border: 3px dashed #f57c00;">
+                    <h4 style="color: #f57f17; margin-top: 0;">🎯 The Thought Process:</h4>
+                    <ol style="margin-left: 20px; font-size: 1.05em;">
+                        <li style="margin: 12px 0;"><strong>Think:</strong> "How can I reach state i?"</li>
+                        <li style="margin: 12px 0;"><strong>List all options:</strong> What are ALL the ways to get here?</li>
+                        <li style="margin: 12px 0;"><strong>Express mathematically:</strong> Combine those options</li>
+                    </ol>
+                </div>
+                
+                <div style="margin: 25px 0;">
+                    <h4 style="color: #d81b60;">Complete Walkthrough: Climbing Stairs</h4>
+                    
+                    <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                        <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 15px;">Question: How can I reach step 5?</p>
+                        
+                        <div class="thinking-box">
+                            <p style="font-weight: bold; margin-bottom: 10px;">Think step by step:</p>
+                            <p style="margin: 8px 0;">1. I can take 1 step or 2 steps at a time</p>
+                            <p style="margin: 8px 0;">2. To reach step 5, where could I have come from?</p>
+                            <p style="margin: 8px 0; margin-left: 30px;">→ Option A: From step 4 (take 1 step)</p>
+                            <p style="margin: 8px 0; margin-left: 30px;">→ Option B: From step 3 (take 2 steps)</p>
+                            <p style="margin: 8px 0;">3. These are the ONLY two options!</p>
+                            <p style="margin: 8px 0;">4. Total ways = (ways to reach 4) + (ways to reach 3)</p>
+                        </div>
+                        
+                        <div class="answer-box">
+                            <p style="font-weight: bold; font-size: 1.2em; margin-bottom: 10px;">Recurrence Relation:</p>
+                            <p style="font-size: 1.3em; font-family: 'Courier New', monospace; background: white; padding: 15px; border-radius: 5px; text-align: center;">
+                                <strong style="color: #2e7d32;">dp[i] = dp[i-1] + dp[i-2]</strong>
+                            </p>
+                        </div>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                            <p style="font-weight: bold; margin-bottom: 15px; font-size: 1.1em; color: #d81b60;">Visual Representation:</p>
+                            <div style="background: #f5f5f5; padding: 25px; border-radius: 8px; border: 2px solid #e0e0e0;">
+                                <pre style="font-family: 'Courier New', monospace; line-height: 2.2; font-size: 1.1em; color: #333;">
+    Step 3 ──────── take 2 steps ────────→ Step 5
+                                              ↑
+                                              │
+    Step 4 ──────── take 1 step  ────────────┘
+</pre>
+                                
+                                <div style="background: white; padding: 20px; border-radius: 5px; margin-top: 20px;">
+                                    <p style="font-weight: bold; margin-bottom: 15px; color: #1565c0; font-size: 1.1em;">Given Information:</p>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
+                                        <div style="background: #e3f2fd; padding: 15px; border-radius: 5px; border-left: 4px solid #1976d2;">
+                                            <p style="font-size: 1.05em;"><strong>dp[3]</strong> = <span style="font-size: 1.3em; color: #1565c0; font-weight: bold;">3</span></p>
+                                            <p style="margin-top: 5px; color: #666; font-size: 0.95em;">There are 3 ways to reach step 3</p>
+                                        </div>
+                                        <div style="background: #f3e5f5; padding: 15px; border-radius: 5px; border-left: 4px solid #7b1fa2;">
+                                            <p style="font-size: 1.05em;"><strong>dp[4]</strong> = <span style="font-size: 1.3em; color: #6a1b9a; font-weight: bold;">5</span></p>
+                                            <p style="margin-top: 5px; color: #666; font-size: 0.95em;">There are 5 ways to reach step 4</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="background: #c8e6c9; padding: 20px; border-radius: 8px; margin-top: 20px; border: 3px solid #2e7d32;">
+                                        <p style="font-weight: bold; margin-bottom: 10px; font-size: 1.15em; color: #1b5e20;">Therefore:</p>
+                                        <p style="font-size: 1.2em; margin: 10px 0;">
+                                            <strong>dp[5]</strong> = dp[4] + dp[3]
+                                        </p>
+                                        <p style="font-size: 1.2em; margin: 10px 0;">
+                                            <strong>dp[5]</strong> = 5 + 3
+                                        </p>
+                                        <p style="font-size: 1.5em; margin: 15px 0; text-align: center; background: white; padding: 15px; border-radius: 5px;">
+                                            <strong style="color: #2e7d32;">dp[5] = 8 ways</strong> ✓
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: #fff9c4; padding: 15px; border-radius: 5px; margin-top: 20px; border-left: 4px solid #f57c00;">
+                                    <p style="font-weight: bold; margin-bottom: 10px; color: #e65100;">💡 Why This Works:</p>
+                                    <p style="line-height: 1.8;">
+                                        To reach step 5, I <strong>MUST</strong> come from either step 3 or step 4 (no other options!).
+                                        So the total ways = (all ways to reach step 3 where I take 2 steps) + (all ways to reach step 4 where I take 1 step).
+                                        Since these are the ONLY two possibilities, we just add them!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+

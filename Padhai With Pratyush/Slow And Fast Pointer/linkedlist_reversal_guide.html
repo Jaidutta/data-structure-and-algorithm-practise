@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked List Reversal & Rotation - Enhanced Visual Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #9c27b0;
+            --secondary: #7b1fa2;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --info: #00bcd4;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6; color: var(--dark);
+            background: linear-gradient(135deg, #9c27b0 0%, #e91e63 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px; margin: 0 auto; background: white;
+            border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #9c27b0, #e91e63);
+            color: white; padding: 60px 40px; text-align: center;
+        }
+
+        header h1 {
+            font-size: 3.5em; margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .content { padding: 40px; }
+
+        .section {
+            background: white; border-radius: 15px; padding: 40px;
+            margin: 30px 0; border: 2px solid #e0e0e0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .section h2 {
+            color: var(--primary); font-size: 2.2em; margin-bottom: 25px;
+            padding-bottom: 15px; border-bottom: 3px solid var(--primary);
+        }
+
+        .section h3 {
+            color: var(--secondary); font-size: 1.6em; margin: 25px 0 15px 0;
+        }
+
+        .section h4 {
+            color: var(--info); font-size: 1.3em; margin: 20px 0 10px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            border: 3px solid var(--primary); border-radius: 10px;
+            padding: 25px; margin: 25px 0; font-size: 1.15em;
+        }
+
+        .info-box {
+            background: #e3f2fd; border-left: 5px solid #2196f3;
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+
+        .success-box {
+            background: #e8f5e9; border-left: 5px solid #4caf50;
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #fff3e0; border-left: 5px solid #ff9800;
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+
+        .danger-box {
+            background: #ffebee; border-left: 5px solid #f44336;
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+
+        .visual-diagram {
+            background: #f5f5f5; border: 2px solid var(--primary);
+            border-radius: 10px; padding: 30px; margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1em; line-height: 1.8; overflow-x: auto;
+        }
+
+        .code-block {
+            background: #263238; color: #aed581; padding: 25px;
+            border-radius: 10px; margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.05em; line-height: 1.8; overflow-x: auto;
+        }
+
+        .code-block pre { margin: 0; color: inherit; }
+        .keyword { color: #c792ea; font-weight: bold; }
+        .comment { color: #80cbc4; font-style: italic; }
+        .method { color: #82aaff; }
+        .number { color: #f78c6c; }
+
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: var(--primary); color: white; }
+        tr:nth-child(even) { background: var(--light); }
+
+        .toc {
+            background: var(--light); border-radius: 10px;
+            padding: 30px; margin-bottom: 40px;
+        }
+        .toc ul { list-style: none; padding-left: 20px; }
+        .toc li { margin: 10px 0; font-size: 1.1em; }
+        .toc a {
+            color: var(--dark); text-decoration: none; transition: all 0.3s;
+        }
+        .toc a:hover { color: var(--primary); padding-left: 10px; }
+
+        .pattern-card {
+            background: #f9f9f9; border: 3px solid var(--primary);
+            border-radius: 15px; padding: 30px; margin: 30px 0;
+        }
+
+        .analogy-box {
+            background: #fff9e6; border: 3px solid #ffc107;
+            border-radius: 15px; padding: 25px; margin: 25px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔄 Linked List Reversal & Rotation</h1>
+            <p style="font-size: 1.3em;">Master Node Manipulation with Enhanced Visual Arrows</p>
+        </header>
+
+        <div class="content">
+            <!-- TOC -->
+            <div class="toc">
+                <h2>📚 Table of Contents</h2>
+                <ul>
+                    <li><a href="#intro">1. Introduction - The Pattern</a></li>
+                    <li><a href="#recognition">2. How to Recognize These Problems</a></li>
+                    <li><a href="#k-group">3. Problem 1: Reverse Nodes in K-Group</a></li>
+                    <li><a href="#reverse-between">4. Problem 2: Reverse Between Positions</a></li>
+                    <li><a href="#rotate">5. Problem 3: Rotate List</a></li>
+                    <li><a href="#summary">6. Summary & Pattern Recognition</a></li>
+                </ul>
+            </div>
+
+            <!-- SECTION 1: INTRODUCTION -->
+            <section id="intro" class="section">
+                <h2>1️⃣ Introduction - The Reversal Pattern</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">🔧 The Core Concept</h3>
+                    <p style="font-size: 1.2em; line-height: 2;">
+                        Linked List reversal = <strong>rewiring arrows (next pointers)</strong>,<br>
+                        NOT swapping values!
+                    </p>
+                </div>
+
+                <h3>🎯 The "Mechanic & Helper" Analogy</h3>
+                <div class="analogy-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        Think of rewiring train cars:<br><br>
+                        <strong>🔧 Mechanic (curr):</strong> Moves forward<br>
+                        <strong>🤝 Helper (prev):</strong> Holds the connection<br>
+                        <strong>📦 Storage (next):</strong> Saves where to go<br><br>
+                        <strong>Rule:</strong> Always save next BEFORE breaking connection!
+                    </p>
+                </div>
+
+                <h3>📊 ENHANCED Basic Reversal with Proper Arrows</h3>
+                <div class="visual-diagram">
+<pre>
+<strong>🔍 HOW REVERSAL WORKS - STEP BY STEP</strong>
+
+Original List: 1 ──→ 2 ──→ 3 ──→ 4 ──→ null
+
+<strong>╔═══════════════════════════════════════════════════════╗
+║ STEP 0: Initialize Pointers                          ║
+╚═══════════════════════════════════════════════════════╝</strong>
+
+prev = null
+curr = 1
+next = ?
+
+       prev      curr
+        │         │
+        ↓         ↓
+      null      ┌───┐     ┌───┐     ┌───┐     ┌───┐
+                │ 1 │────→│ 2 │────→│ 3 │────→│ 4 │────→ null
+                └───┘     └───┘     └───┘     └───┘
+
+
+<strong>╔═══════════════════════════════════════════════════════╗
+║ STEP 1: Save Next, Reverse Arrow                     ║
+╚═══════════════════════════════════════════════════════╝</strong>
+
+1. next = curr.next     (Save: next = 2)
+2. curr.next = prev     (Reverse: 1 ──→ null)
+3. prev = curr          (Move prev to 1)
+4. curr = next          (Move curr to 2)
+
+                prev            curr
+                 │               │
+                 ↓               ↓
+      null ←────┌───┐     ┌───┐     ┌───┐     ┌───┐
+                │ 1 │     │ 2 │────→│ 3 │────→│ 4 │────→ null
+                └───┘     └───┘     └───┘     └───┘
+                          ↑
+                         next
+
+
+<strong>╔═══════════════════════════════════════════════════════╗
+║ STEP 2: Repeat Process                               ║
+╚═══════════════════════════════════════════════════════╝</strong>
+
+1. next = curr.next     (Save: next = 3)
+2. curr.next = prev     (Reverse: 2 ──→ 1)
+3. prev = curr          (Move prev to 2)
+4. curr = next          (Move curr to 3)
+
+                          prev            curr
+                           │               │
+                           ↓               ↓
+      null ←────┌───┐←────┌───┐     ┌───┐     ┌───┐
+                │ 1 │     │ 2 │     │ 3 │────→│ 4 │────→ null
+                └───┘     └───┘     └───┘     └───┘
+                                    ↑
+                                   next
+
+
+<strong>╔═══════════════════════════════════════════════════════╗
+║ STEP 3: Continue...                                  ║
+╚═══════════════════════════════════════════════════════╝</strong>
+
+                                    prev            curr
+                                     │               │
+                                     ↓               ↓
+      null ←────┌───┐←────┌───┐←────┌───┐     ┌───┐
+                │ 1 │     │ 2 │     │ 3 │     │ 4 │────→ null
+                └───┘     └───┘     └───┘     └───┘
+
+
+<strong>╔═══════════════════════════════════════════════════════╗
+║ STEP 4: Final State                                  ║
+╚═══════════════════════════════════════════════════════╝</strong>
+
+                                              prev       curr
+                                               │          │
+                                               ↓          ↓
+      null ←────┌───┐←────┌───┐←────┌───┐←────┌───┐    null
+                │ 1 │     │ 2 │     │ 3 │     │ 4 │
+                └───┘     └───┘     └───┘     └───┘
+                                               ↑
+                                          NEW HEAD!
+
+<strong>✅ FINAL RESULT:</strong> prev is the new head
+Reversed List: 4 ──→ 3 ──→ 2 ──→ 1 ──→ null
+</pre>
+                </div>
+
+                <h3>💡 Key Insights</h3>
+                <div class="info-box">
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li>✓ <strong>ALWAYS save next BEFORE curr.next = prev</strong></li>
+                        <li>✓ <strong>Arrows show direction:</strong> ──→ (forward), ←──  (backward)</li>
+                        <li>✓ <strong>3 pointers needed:</strong> prev, curr, next</li>
+                        <li>✓ <strong>Loop until curr == null</strong></li>
+                        <li>✓ <strong>After loop: prev is new head!</strong></li>
+                    </ul>
+                </div>
+
+                <h3>🎨 Three Types of Problems</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Problem Type</th>
+                            <th>What Changes</th>
+                            <th>Key Challenge</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>K-Group Reversal</strong></td>
+                            <td>Reverse in chunks of K</td>
+                            <td>Reconnecting groups</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Position Reversal</strong></td>
+                            <td>Reverse middle section</td>
+                            <td>Keeping before/after intact</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rotation</strong></td>
+                            <td>Move tail to front</td>
+                            <td>Breaking & reconnecting</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+
+            <!-- SECTION 2: RECOGNITION (keeping original) -->
+            <section id="recognition" class="section">
+                <h2>2️⃣ How to Recognize These Problems</h2>
+                
+                <div class="highlight-box">
+                    <h3 style="margin-top: 0;">🎯 Pattern Recognition Guide</h3>
+                </div>
+
+                <h3>Quick Decision Tree</h3>
+                <div class="visual-diagram">
+<pre>
+<strong>❓ WHICH PROBLEM IS IT?</strong>
+
+┌────────────────────────────────────────┐
+│ Does problem mention "groups" or "k"?  │
+└────────────────┬───────────────────────┘
+                 │
+        YES ─────┴───── NO
+         ↓              ↓
+    ┌─────────┐    ┌──────────────────────────┐
+    │ K-GROUP │    │ Position indices given?   │
+    └─────────┘    └──────┬───────────────────┘
+                          │
+                 YES ─────┴───── NO
+                  ↓               ↓
+            ┌──────────┐    ┌─────────┐
+            │ POSITION │    │ ROTATE  │
+            │ REVERSAL │    │  LIST   │
+            └──────────┘    └─────────┘
+</pre>
+                </div>
+            </section>
+
+            <!-- SECTION 3: K-GROUP WITH ENHANCED ARROWS -->
+            <section id="k-group" class="section">
+                <h2>3️⃣ Problem 1: Reverse Nodes in K-Group</h2>
+                
+                <div class="pattern-card">
+                    <h3 style="color: #9c27b0; margin-top: 0;">Problem Statement - LeetCode 25</h3>
+                    <p style="font-size: 1.1em; line-height: 1.8;">
+                        Reverse nodes in groups of <strong>k</strong>. If remaining nodes < k, leave them as is.
+                    </p>
+                </div>
+
+                <h3>📊 ENHANCED Visual Walkthrough with Proper Arrows</h3>
+                <div class="visual-diagram">
+<pre>
+<strong>🔍 COMPLETE EXAMPLE: k = 3</strong>
+
+Input: 1 ──→ 2 ──→ 3 ──→ 4 ──→ 5 ──→ 6 ──→ 7 ──→ 8 ──→ null
+
+<strong>╔═══════════════════════════════════════════════════════════╗
+║ GROUP 1: Reverse nodes 1, 2, 3                            ║
+╚═══════════════════════════════════════════════════════════╝</strong>
+
+<strong>BEFORE REVERSAL:</strong>
+
+left                 right
+ │                     │
+ ↓                     ↓
+┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐
+│ 1 │────→│ 2 │────→│ 3 │────→│ 4 │────→│ 5 │────→│ 6 │────→│ 7 │────→│ 8 │──→ null
+└───┘     └───┘     └───┘     └───┘     └───┘     └───┘     └───┘     └───┘
+                               ↑
+                          nextLeft (save this!)
+
+<strong>AFTER REVERSAL:</strong>
+
+        ┌──────────┐
+        ↓          │
+┌───┐  ┌───┐  ┌───┐│    ┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐
+│ 3 │←─│ 2 │←─│ 1 ││────│ 4 │────→│ 5 │────→│ 6 │────→│ 7 │────→│ 8 │──→ null
+└───┘  └───┘  └───┘│    └───┘     └───┘     └───┘     └───┘     └───┘
+  ↑           ↑     │      ↑
+right     prevLeft  │     left (moved here)
+(new HEAD)          │
+                    └─ This connection needs to be made!
+
+<strong>KEY CHANGES:</strong>
+• Arrows within group now point backward (3←2←1)
+• right (3) is now the front of this group
+• left (1) is now the back of this group
+• prevLeft will be 1 for next iteration
+• nextLeft (4) is where we continue
+
+
+<strong>╔═══════════════════════════════════════════════════════════╗
+║ GROUP 2: Reverse nodes 4, 5, 6                            ║
+╚═══════════════════════════════════════════════════════════╝</strong>
+
+<strong>BEFORE REVERSAL:</strong>
+
+                                   prevLeft     left                 right
+                                      │           │                    │
+                                      ↓           ↓                    ↓
+┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐
+│ 3 │────→│ 2 │────→│ 1 │     │ 4 │────→│ 5 │────→│ 6 │────→│ 7 │────→│ 8 │──→ null
+└───┘     └───┘     └───┘     └───┘     └───┘     └───┘     └───┘     └───┘
+                                                              ↑
+                                                         nextLeft (save!)
+
+<strong>AFTER REVERSAL & RECONNECTION:</strong>
+
+                              ┌──────────┐
+                              ↓          │
+┌───┐     ┌───┐     ┌───┐     ┌───┐  ┌───┐  ┌───┐│    ┌───┐     ┌───┐
+│ 3 │────→│ 2 │────→│ 1 │────→│ 6 │←─│ 5 │←─│ 4 ││────│ 7 │────→│ 8 │──→ null
+└───┘     └───┘     └───┘     └───┘  └───┘  └───┘│    └───┘     └───┘
+                      ↑          ↑           ↑     │      ↑
+                  prevLeft     right     new tail  │     left
+                  (old left)                       │
+                                                   └─ Connection point
+
+<strong>CONNECTIONS MADE:</strong>
+1. prevLeft (1) ──→ right (6)  [connects group 1 to group 2]
+2. old left (4) becomes new prevLeft
+
+
+<strong>╔═══════════════════════════════════════════════════════════╗
+║ REMAINDER: Nodes 7, 8 (only 2 < k=3, DON'T REVERSE!)      ║
+╚═══════════════════════════════════════════════════════════╝</strong>
+
+                                                  prevLeft     left
+                                                     │           │
+                                                     ↓           ↓
+┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐
+│ 3 │────→│ 2 │────→│ 1 │────→│ 6 │────→│ 5 │────→│ 4 │────→│ 7 │────→│ 8 │──→ null
+└───┘     └───┘     └───┘     └───┘     └───┘     └───┘     └───┘     └───┘
+                                                              ↑
+                                            Connect prevLeft ─┘
+
+<strong>✅ FINAL RESULT:</strong>
+3 ──→ 2 ──→ 1 ──→ 6 ──→ 5 ──→ 4 ──→ 7 ──→ 8 ──→ null
+
+<strong>GROUP STRUCTURE:</strong>
+[3→2→1] (reversed) → [6→5→4] (reversed) → [7→8] (unchanged)
+</pre>
+                </div>
+
+                <h3>💻 Complete Java Implementation</h3>
+                <div class="code-block">
+<pre>
+<span class="comment">/**
+ * Reverse Nodes in K-Group
+ * LeetCode 25
+ * Time: O(N), Space: O(1)
+ */</span>
+
+<span class="keyword">class</span> Solution {
+    <span class="comment">// Helper: Reverse k nodes starting from head</span>
+    <span class="keyword">private void</span> <span class="method">reverse</span>(ListNode head, <span class="keyword">int</span> k) {
+        ListNode curr = head;
+        ListNode prev = <span class="keyword">null</span>;
+        ListNode next = <span class="keyword">null</span>;
+        
+        <span class="keyword">while</span> (k > <span class="number">0</span>) {
+            next = curr.next;      <span class="comment">// Save next</span>
+            curr.next = prev;      <span class="comment">// Reverse arrow ──→ to ←──</span>
+            prev = curr;           <span class="comment">// Move prev forward</span>
+            curr = next;           <span class="comment">// Move curr forward</span>
+            k--;
+        }
+    }
+    
+    <span class="keyword">public</span> ListNode <span class="method">reverseKGroup</span>(ListNode head, <span class="keyword">int</span> k) {
+        <span class="keyword">if</span> (head == <span class="keyword">null</span>) <span class="keyword">return null</span>;
+        
+        ListNode left = head;
+        ListNode right = <span class="keyword">null</span>;
+        ListNode prevLeft = <span class="keyword">null</span>;
+        ListNode result = <span class="keyword">null</span>;
+        
+        <span class="keyword">while</span> (<span class="keyword">true</span>) {
+            right = left;
+            
+            <span class="comment">// Find right (k-1 steps from left)</span>
+            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i < k - <span class="number">1</span>; i++) {
+                <span class="keyword">if</span> (right == <span class="keyword">null</span>) <span class="keyword">break</span>;
+                right = right.next;
+            }
+            
+            <span class="comment">// Not enough nodes? Connect and break</span>
+            <span class="keyword">if</span> (right == <span class="keyword">null</span>) {
+                <span class="keyword">if</span> (prevLeft != <span class="keyword">null</span>) {
+                    prevLeft.next = left;
+                }
+                <span class="keyword">break</span>;
+            }
+            
+            ListNode nextLeft = right.next;  <span class="comment">// Save!</span>
+            <span class="method">reverse</span>(left, k);               <span class="comment">// Reverse group</span>
+            
+            <span class="comment">// Connect previous group to this group</span>
+            <span class="keyword">if</span> (prevLeft != <span class="keyword">null</span>) {
+                prevLeft.next = right;
+            }
+            
+            <span class="keyword">if</span> (result == <span class="keyword">null</span>) result = right;
+            
+            prevLeft = left;
+            left = nextLeft;
+            
+            <span class="keyword">if</span> (left == <span class="keyword">null</span>) <span class="keyword">break</span>;
+        }
+        
+        <span class="keyword">return</span> result == <span class="keyword">null</span> ? head : result;
+    }
+}
+</pre>
+                </div>
+
+                <div class="success-box">
+                    <h4>💡 Key Takeaways:</h4>
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li>✓ <strong>Arrows reverse:</strong> ──→ becomes ←── within group</li>
+                        <li>✓ <strong>After reversal:</strong> right is new front, left is new back</li>
+                        <li>✓ <strong>prevLeft connects groups</strong> together</li>
+                        <li>✓ <strong>Always save nextLeft</strong> before reversing!</li>
+                    </ul>
+                </div>
+            </section>
+
+
+            <!-- SECTION 4: REVERSE BETWEEN WITH ARROWS -->
+            <section id="reverse-between" class="section">
+                <h2>4️⃣ Problem 2: Reverse Between Positions</h2>
+                
+                <div class="pattern-card">
+                    <h3 style="color: #9c27b0; margin-top: 0;">Problem - LeetCode 92</h3>
+                    <p style="font-size: 1.1em;">
+                        Reverse from position <code>left</code> to <code>right</code>
+                    </p>
+                </div>
+
+                <h3>📊 Enhanced Visual with Proper Arrows - IMPROVED!</h3>
+                <div class="visual-diagram">
+<pre>
+<strong>🔍 EXAMPLE: Reverse positions 2 to 4</strong>
+
+<strong>═══════════════════════════════════════════════════════════════════</strong>
+<strong>STEP 1: BEFORE REVERSAL</strong>
+<strong>═══════════════════════════════════════════════════════════════════</strong>
+
+  before              left                           right
+    ↓                  ↓                               ↓
+  ┌────┐           ┌────┐           ┌────┐           ┌────┐           ┌────┐
+  │ 10 │──────────→│ 20 │──────────→│ 30 │──────────→│ 40 │──────────→│ 50 │──→ null
+  └────┘           └────┘           └────┘           └────┘           └────┘
+   pos:1              2                3                4                5
+
+
+<strong>═══════════════════════════════════════════════════════════════════</strong>
+<strong>STEP 2: AFTER REVERSAL (Segment 20-30-40 is now 40-30-20)</strong>
+<strong>═══════════════════════════════════════════════════════════════════</strong>
+
+  before                                                                after
+    ↓                                                                     ↓
+  ┌────┐           ┌────┐           ┌────┐           ┌────┐           ┌────┐
+  │ 10 │──┐        │ 40 │←──────────│ 30 │←──────────│ 20 │──┐        │ 50 │──→ null
+  └────┘  │        └────┘           └────┘           └────┘  │        └────┘
+          │          ↑                                         │          ↑
+          │          │                                         │          │
+          └──────────┘                                         └──────────┘
+       Connection 1:                                        Connection 2:
+    before.next = 40                                      old_left.next = 50
+    (new head of                                         (tail of reversed
+     reversed segment)                                    segment to after)
+
+
+<strong>═══════════════════════════════════════════════════════════════════</strong>
+<strong>STEP 3: FINAL RESULT - Fully Reconnected</strong>
+<strong>═══════════════════════════════════════════════════════════════════</strong>
+
+  ┌────┐           ┌────┐           ┌────┐           ┌────┐           ┌────┐
+  │ 10 │──────────→│ 40 │──────────→│ 30 │──────────→│ 20 │──────────→│ 50 │──→ null
+  └────┘           └────┘           └────┘           └────┘           └────┘
+
+  Positions:  1              2              3              4              5
+
+
+<strong>🔑 KEY RECONNECTION LOGIC:</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Reverse segment [20, 30, 40] internally → Result: 40 ← 30 ← 20
+
+2. Make TWO critical connections:
+   • Connection 1: before (10) ──→ new head (40)
+   • Connection 2: old left (20) ──→ after (50)
+
+3. These connections "stitch" the reversed segment back into the list!
+</pre>
+                </div>
+
+                <h3>💻 Java Code</h3>
+                <div class="code-block">
+<pre>
+<span class="keyword">public</span> ListNode <span class="method">reverseBetween</span>(ListNode head, <span class="keyword">int</span> left, <span class="keyword">int</span> right) {
+    <span class="keyword">if</span> (head == <span class="keyword">null</span> || left == right) <span class="keyword">return</span> head;
+    
+    ListNode t = head;
+    ListNode before = <span class="keyword">null</span>;
+    <span class="keyword">int</span> pos = <span class="number">1</span>;
+    
+    <span class="comment">// Find "before" node</span>
+    <span class="keyword">while</span> (t != <span class="keyword">null</span> && pos < left) {
+        before = t;
+        t = t.next;
+        pos++;
+    }
+    
+    <span class="comment">// Reverse segment</span>
+    ListNode curr = t;
+    ListNode prev = <span class="keyword">null</span>;
+    ListNode next = <span class="keyword">null</span>;
+    <span class="keyword">int</span> count = right - left + <span class="number">1</span>;
+    
+    <span class="keyword">while</span> (count > <span class="number">0</span>) {
+        next = curr.next;
+        curr.next = prev;
+        prev = curr;
+        curr = next;
+        count--;
+    }
+    
+    <span class="comment">// Reconnect</span>
+    t.next = curr;  <span class="comment">// old left → after</span>
+    
+    <span class="keyword">if</span> (before != <span class="keyword">null</span>) {
+        before.next = prev;  <span class="comment">// before → new head</span>
+        <span class="keyword">return</span> head;
+    } <span class="keyword">else</span> {
+        <span class="keyword">return</span> prev;  <span class="comment">// left==1 case</span>
+    }
+}
+</pre>
+                </div>
+            </section>
+
+            <!-- SECTION 5: ROTATE WITH ARROWS -->
+            <section id="rotate" class="section">
+                <h2>5️⃣ Problem 3: Rotate List</h2>
+                
+                <div class="pattern-card">
+                    <h3 style="color: #9c27b0; margin-top: 0;">Problem - LeetCode 61</h3>
+                    <p style="font-size: 1.1em;">
+                        Rotate list to the <strong>right</strong> by k places
+                    </p>
+                </div>
+
+                <h3>📊 Enhanced Rotation Visual</h3>
+                <div class="visual-diagram">
+<pre>
+<strong>🔍 ROTATION WITH RING FORMATION</strong>
+
+Input: 1 ──→ 2 ──→ 3 ──→ 4 ──→ 5 ──→ null, k = 2
+N = 5, k = 2 % 5 = 2
+
+<strong>╔═══════════════════════════════════════════════════════╗
+║ STEP 1: Original List                                 ║
+╚═══════════════════════════════════════════════════════╝</strong>
+
+┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐
+│ 1 │────→│ 2 │────→│ 3 │────→│ 4 │────→│ 5 │────→ null
+└───┘     └───┘     └───┘     └───┘     └───┘
+                      ↑                    ↑
+                 new tail              last node
+              (position N-k=3)
+
+
+<strong>╔═══════════════════════════════════════════════════════╗
+║ STEP 2: Create Ring (Connect last to first)           ║
+╚═══════════════════════════════════════════════════════╝</strong>
+
+       ┌───────────────────────────────────┐
+       │                                   ↓
+       │  ┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐
+       └──│ 1 │←────│ 2 │←────│ 3 │←────│ 4 │←────│ 5 │
+          └───┘     └───┘     └───┘     └───┘     └───┘
+                                          ↑
+                                     new head
+                                   (position N-k+1=4)
+
+
+<strong>╔═══════════════════════════════════════════════════════╗
+║ STEP 3: Break Ring at New Tail                        ║
+╚═══════════════════════════════════════════════════════╝</strong>
+
+                              new tail
+                                 │
+                                 ↓
+          ┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐
+          │ 1 │────→│ 2 │────→│ 3 │  ╳  │ 4 │────→│ 5 │─┐
+          └───┘     └───┘     └───┘     └───┘     └───┘ │
+            ↑                             ↑              │
+            │                          new head          │
+            └──────────────────────────────────────────  ┘
+
+Set node 3's next = null
+
+
+<strong>╔═══════════════════════════════════════════════════════╗
+║ FINAL RESULT                                           ║
+╚═══════════════════════════════════════════════════════╝</strong>
+
+┌───┐     ┌───┐     ┌───┐     ┌───┐     ┌───┐
+│ 4 │────→│ 5 │────→│ 1 │────→│ 2 │────→│ 3 │────→ null
+└───┘     └───┘     └───┘     └───┘     └───┘
+  ↑
+new HEAD
+
+<strong>Result:</strong> 4 ──→ 5 ──→ 1 ──→ 2 ──→ 3 ──→ null
+</pre>
+                </div>
+
+                <h3>💻 Java Code</h3>
+                <div class="code-block">
+<pre>
+<span class="keyword">public</span> ListNode <span class="method">rotateRight</span>(ListNode head, <span class="keyword">int</span> k) {
+    <span class="keyword">if</span> (head == <span class="keyword">null</span>) <span class="keyword">return null</span>;
+    
+    <span class="comment">// Find length and last node</span>
+    ListNode last = head;
+    <span class="keyword">int</span> n = <span class="number">1</span>;
+    <span class="keyword">while</span> (last.next != <span class="keyword">null</span>) {
+        last = last.next;
+        n++;
+    }
+    
+    <span class="comment">// Optimize k</span>
+    k = k % n;
+    <span class="keyword">if</span> (k == <span class="number">0</span>) <span class="keyword">return</span> head;
+    
+    <span class="comment">// Find new tail at position (n-k)</span>
+    ListNode newTail = head;
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i < n - k; i++) {
+        newTail = newTail.next;
+    }
+    
+    <span class="comment">// Perform rotation</span>
+    ListNode newHead = newTail.next;  <span class="comment">// Save new head</span>
+    last.next = head;                 <span class="comment">// Create ring</span>
+    newTail.next = <span class="keyword">null</span>;              <span class="comment">// Break ring</span>
+    
+    <span class="keyword">return</span> newHead;
+}
+</pre>
+                </div>
+            </section>
+
+            <!-- SUMMARY -->
+            <section id="summary" class="section">
+                <h2>6️⃣ Summary & Quick Reference</h2>
+                
+                <h3>Arrow Legend</h3>
+                <div class="info-box">
+                    <p style="font-size: 1.1em; line-height: 2;">
+                        <strong>──→</strong> Forward arrow (original direction)<br>
+                        <strong>←──</strong> Backward arrow (after reversal)<br>
+                        <strong>╳</strong> Connection to be broken<br>
+                        <strong>│ ↓ ↑</strong> Pointer indicators
+                    </p>
+                </div>
+
+                <h3>Quick Reference</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Problem</th>
+                            <th>Key Technique</th>
+                            <th>Critical Point</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>K-Group</strong></td>
+                            <td>Reverse in chunks</td>
+                            <td>prevLeft connects groups</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Position</strong></td>
+                            <td>Reverse middle only</td>
+                            <td>Find "before" node first</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Rotate</strong></td>
+                            <td>Ring formation</td>
+                            <td>Break at (N-k) position</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="success-box">
+                    <h3>✅ Master Checklist</h3>
+                    <ul style="font-size: 1.1em; line-height: 2;">
+                        <li>□ Arrows show direction: ──→ and ←──</li>
+                        <li>□ Always save next before breaking connection</li>
+                        <li>□ Reversal changes arrow direction within segment</li>
+                        <li>□ After reversal: old start → new end, old end → new start</li>
+                    </ul>
+                </div>
+            </section>
+
+            <div style="margin-top: 50px; padding: 40px; background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); color: white; border-radius: 15px; text-align: center;">
+                <h2 style="margin-top: 0;">🎓 Mastered Linked List Reversal with Proper Arrows!</h2>
+                <p style="font-size: 1.2em; line-height: 2;">
+                    ✓ Clear arrow directions: ──→ and ←──<br>
+                    ✓ Visual node connections<br>
+                    ✓ All reconnection logic illustrated<br>
+                    <br>
+                    <strong style="font-size: 1.3em;">Ready to solve any reversal problem! 🚀</strong>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,2946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sliding Window Pattern - Interactive Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #1e1e2e;
+            --bg-card: #2a2a3e;
+            --border-color: #3d3d5c;
+            --text-primary: #f5f5f5;
+            --text-secondary: #d1d5db;
+            --accent-primary: #818cf8;
+            --accent-secondary: #a78bfa;
+            --accent-tertiary: #6366f1;
+            --accent-green: #34d399;
+            --valid-color: #10b981;
+            --invalid-color: #f87171;
+            --code-bg: #252538;
+            --highlight-bg: #2d2d44;
+            --window-color: #3730a3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(129, 140, 248, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(167, 139, 250, 0.08) 0%, transparent 50%);
+            z-index: -1;
+            animation: bgPulse 10s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 80px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 4.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #cbd5e1;
+            font-weight: 400;
+        }
+
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 50px;
+            margin-bottom: 60px;
+            animation: fadeInUp 0.8s ease-out backwards;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: var(--accent-primary);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            margin: 40px 0 20px 0;
+            color: var(--accent-secondary);
+        }
+
+        p {
+            font-size: 1.05rem;
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+        }
+
+        .highlight-box {
+            background: var(--code-bg);
+            border-left: 4px solid var(--accent-primary);
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+
+        .highlight-box strong {
+            color: var(--accent-tertiary);
+            font-size: 1.1rem;
+        }
+
+        /* Visual array display */
+        .visual-array {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .array-cell {
+
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--code-bg);
+            border: 3px solid #64748b;
+            border-radius: 12px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .array-cell.window {
+            background: var(--window-color);
+            border-color: #818cf8;
+            border-width: 4px;
+            box-shadow: 0 0 20px rgba(129, 140, 248, 0.6);
+            color: #e0e0e0;
+        }
+
+        .array-cell.valid {
+            border-color: #22c55e;
+            border-width: 4px;
+            background: rgba(34, 197, 94, 0.25);
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+        }
+
+        .array-cell.invalid {
+            border-color: #ef4444;
+            border-width: 4px;
+            background: rgba(239, 68, 68, 0.3);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+        }
+
+        .array-cell .pointer {
+            position: absolute;
+            bottom: -35px;
+            font-size: 0.85rem;
+            color: var(--accent-tertiary);
+            font-weight: 600;
+        }
+
+        /* Step-by-step visualization enhancements */
+        .step-viz {
+            margin: 40px 0;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: 700;
+            margin-right: 15px;
+            box-shadow: 0 4px 10px rgba(129, 140, 248, 0.3);
+        }
+
+        .step-content {
+            display: inline-block;
+            vertical-align: top;
+            width: calc(100% - 60px);
+        }
+
+        /* Enhanced pointer labels */
+        .pointer-label {
+            position: absolute;
+            bottom: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--accent-tertiary);
+            font-weight: 700;
+            background: var(--bg-card);
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            border: 1px solid var(--accent-tertiary);
+        }
+
+        .pointer-label.low {
+            color: #22c55e;
+            border-color: #22c55e;
+        }
+
+        .pointer-label.high {
+            color: #ef4444;
+            border-color: #ef4444;
+        }
+
+        /* Interactive demo */
+        .demo-container {
+            margin: 50px 0;
+            padding: 40px;
+            background: var(--code-bg);
+            border-radius: 15px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(129, 140, 248, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.secondary {
+            background: var(--bg-card);
+            border: 2px solid var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-box {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            color: var(--accent-primary);
+            font-weight: 700;
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--code-bg);
+            padding: 30px;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 30px 0;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .code-block::before {
+            content: 'Java';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 0.75rem;
+            color: var(--accent-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        code {
+            color: inherit;
+            background: rgba(99, 102, 241, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .keyword { color: #ff6b9d; }
+        .type { color: #00d9ff; }
+        .function { color: #ffd93d; }
+        .comment { color: #7cb342; font-style: italic; }
+        .string { color: #4ade80; }
+        .number { color: #a78bfa; }
+
+        /* Flowchart */
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 40px 0;
+            align-items: center;
+        }
+
+        /* Enhanced comparison tables */
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+            margin: 40px 0;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, var(--code-bg), #1f2547);
+            padding: 20px;
+            text-align: left;
+            color: var(--accent-primary);
+            font-weight: 700;
+            border-radius: 10px;
+            border: 2px solid var(--accent-primary);
+        }
+
+        .comparison-table td {
+            background: var(--code-bg);
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td:first-child {
+            border-left: 1px solid var(--border-color);
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+
+        .comparison-table td:last-child {
+            border-right: 1px solid var(--border-color);
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .flow-box {
+            background: var(--code-bg);
+            padding: 25px 40px;
+            border-radius: 15px;
+            border: 2px solid var(--accent-primary);
+            text-align: center;
+            font-weight: 600;
+            position: relative;
+            min-width: 300px;
+        }
+
+        .flow-box.decision {
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            padding: 40px;
+            border-color: var(--accent-secondary);
+        }
+
+        .flow-arrow {
+            width: 2px;
+            height: 40px;
+            background: var(--accent-primary);
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .flow-arrow::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -4px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 10px solid var(--accent-primary);
+        }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 15px;
+            margin: 40px 0;
+        }
+
+        .comparison-table th {
+            background: var(--code-bg);
+            padding: 20px;
+            text-align: left;
+            color: var(--accent-primary);
+            font-weight: 700;
+            border-radius: 10px;
+        }
+
+        .comparison-table td {
+            background: var(--code-bg);
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td:first-child {
+            border-left: 1px solid var(--border-color);
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
+
+        .comparison-table td:last-child {
+            border-right: 1px solid var(--border-color);
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        /* Step-by-step visualization */
+        .step-viz {
+            margin: 40px 0;
+        }
+
+        .step {
+            margin: 30px 0;
+            padding: 30px;
+            background: var(--code-bg);
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-tertiary);
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: var(--accent-tertiary);
+            color: var(--bg-dark);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: 700;
+            margin-right: 15px;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+        }
+
+        li {
+            margin: 12px 0;
+            padding-left: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+
+            .section {
+                padding: 30px;
+            }
+
+            .array-cell {
+                width: 50px;
+                height: 50px;
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Stage Boxes */
+        .stage-box {
+            background: var(--code-bg);
+            border: 2px solid #64748b;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .stage-title {
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #0a0a0a;
+            font-size: 1.1em;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #a5d6ff, #7ec8ff);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stage-title::before {
+            content: attr(data-step);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.9em;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+        }
+
+        .stage-info {
+            background: #f8f9fa;
+            color: #0a0a0a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 1em;
+            line-height: 1.8;
+            border: 1px solid #4a5568;
+        }
+
+        /* Section divider */
+        .section-divider {
+            margin: 60px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+        }
+
+        .section-divider span {
+            position: relative;
+            background: var(--bg-dark);
+            padding: 0 20px;
+            color: var(--accent-primary);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sliding Window</h1>
+            <p class="subtitle">Master the Pattern with Interactive Visualizations</p>
+        </header>
+
+        <!-- Pattern Identification -->
+        <section class="section" style="animation-delay: 0.1s;">
+            <h2>🎯 Pattern Identification</h2>
+            <p>Before applying the Sliding Window technique, verify these three conditions:</p>
+            
+            <div class="flowchart">
+                <div class="flow-box">
+                    <strong>Data Structure:</strong> Array or String
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="flow-box">
+                    <strong>Requirement:</strong> Contiguous Subarray/Substring
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="flow-box">
+                    <strong>Objective:</strong> "At most K" / "At least K" / "Exactly K" &nbsp;·&nbsp; "Maximum" / "Minimum" &nbsp;·&nbsp; "Longest" / "Shortest" &nbsp;·&nbsp; "Sum" / "Count" / "Average"
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="flow-box" style="background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border: none;">
+                    ✓ USE SLIDING WINDOW
+                </div>
+            </div>
+
+
+        </section>
+
+        <!-- Window Types -->
+        <section class="section" style="animation-delay: 0.2s;">
+            <h2>📊 Two Types of Windows</h2>
+            
+            <h3>Type A: Fixed Size Window</h3>
+            <p><strong>Situation:</strong> Window size is specified (e.g., "subarray of size K")</p>
+            
+            <div class="demo-container">
+                <p style="color: #6366f1; font-weight: 600; margin-bottom: 20px; font-size: 1.1em;">
+                    Example: Find max sum of subarray with size K=3
+                </p>
+                <p style="color: var(--text-secondary); margin-bottom: 30px;">
+                    Array: [2, 5, 1, 8, 3, 9]
+                </p>
+
+                <!-- Stage 0 -->
+                <div class="stage-box">
+                    <div class="stage-title" data-step="0">Stage 0: Calculate First Window</div>
+                    <div class="visual-array">
+                        <div class="array-cell window">2</div>
+                        <div class="array-cell window">5</div>
+                        <div class="array-cell window">1</div>
+                        <div class="array-cell">8</div>
+                        <div class="array-cell">3</div>
+                        <div class="array-cell">9</div>
+                    </div>
+                    <div class="stage-info">
+                        Window [0-2]: 2 + 5 + 1 = <strong style="font-weight: 500; color: var(--accent-green);">8</strong><br>
+                        maxSum = 8
+                    </div>
+                </div>
+
+                <!-- Stage 1 -->
+                <div class="stage-box">
+                    <div class="stage-title" data-step="1">Stage 1: Slide Window (Remove 2, Add 8)</div>
+                    <div class="visual-array">
+                        <div class="array-cell" style="opacity: 0.3;">2</div>
+                        <div class="array-cell window">5</div>
+                        <div class="array-cell window">1</div>
+                        <div class="array-cell window">8</div>
+                        <div class="array-cell">3</div>
+                        <div class="array-cell">9</div>
+                    </div>
+                    <div class="stage-info">
+                        Window [1-3]: sum = 8 - 2 + 8 = <strong style="font-weight: 500; color: var(--accent-green);">14</strong><br>
+                        maxSum = 14 ✓ (better!)
+                    </div>
+                </div>
+
+                <!-- Stage 2 -->
+                <div class="stage-box">
+                    <div class="stage-title" data-step="2">Stage 2: Slide Window (Remove 5, Add 3)</div>
+                    <div class="visual-array">
+                        <div class="array-cell" style="opacity: 0.3;">2</div>
+                        <div class="array-cell" style="opacity: 0.3;">5</div>
+                        <div class="array-cell window">1</div>
+                        <div class="array-cell window">8</div>
+                        <div class="array-cell window">3</div>
+                        <div class="array-cell">9</div>
+                    </div>
+                    <div class="stage-info">
+                        Window [2-4]: sum = 14 - 5 + 3 = <strong style="font-weight: 500; color: var(--accent-cyan);">12</strong><br>
+                        maxSum = 14 (current window not better)
+                    </div>
+                </div>
+
+                <!-- Stage 3 -->
+                <div class="stage-box">
+                    <div class="stage-title" data-step="3">Stage 3: Slide Window (Remove 1, Add 9)</div>
+                    <div class="visual-array">
+                        <div class="array-cell" style="opacity: 0.3;">2</div>
+                        <div class="array-cell" style="opacity: 0.3;">5</div>
+                        <div class="array-cell" style="opacity: 0.3;">1</div>
+                        <div class="array-cell window">8</div>
+                        <div class="array-cell window">3</div>
+                        <div class="array-cell window">9</div>
+                    </div>
+                    <div class="stage-info">
+                        Window [3-5]: sum = 12 - 1 + 9 = <strong style="font-weight: 500; color: var(--accent-green);">20</strong><br>
+                        maxSum = 20 ✓ (new maximum!)
+                    
+
+                </div>
+
+                <div class="highlight-box" style="margin-top: 30px;">
+                    <strong>🎯 Result:</strong> Maximum sum = 20 (window [8, 3, 9])<br>
+                    <strong>Key Insight:</strong> We slide in O(1) time by removing the element leaving and adding the element entering, instead of recalculating the entire sum each time!
+                </div>
+            </div>
+
+            <!-- LOGIC BEHIND THE SOLUTION -->
+            <div class="info-box" style="background: linear-gradient(135deg, #d1e7ff, #b8d8ff); color: #0a0a0a; border-left: 6px solid #2563eb; margin: 30px 0; padding: 30px;">
+                <h3 style="color: #1e3a8a; margin-top: 0;">🧠 Logic Behind the Solution</h3>
+                
+                <h4 style="color: #1e40af; margin-top: 20px;">Core Strategy: Sliding Window (Fixed Size)</h4>
+                <p style="font-size: 1.05em; line-height: 1.8; color: #0a0a0a;">
+                    <strong>Why this works:</strong> Instead of recalculating sum for every subarray from scratch (O(n*k)),
+                    we "slide" the window by removing the leftmost element and adding the rightmost element.<br>
+                    <strong>Key insight:</strong> Most elements stay in the window - only one leaves, one enters!
+                </p>
+
+                <h4 style="color: #1e40af; margin-top: 20px;">The Mathematical Trick</h4>
+                <div style="background: white; color: #0a0a0a; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <p style="font-size: 1.05em; line-height: 2; color: #0a0a0a;">
+                        When moving from [i...i+k-1] to [i+1...i+k]:<br>
+                        <strong>New Sum = Old Sum - arr[i] + arr[i+k]</strong><br><br>
+                        Example: [1,2,3,4,5], k=3<br>
+                        • Sum[1,2,3] = 6<br>
+                        • Sum[2,3,4] = 6 - 1 + 4 = 9 (instead of recalculating 2+3+4)
+                    </p>
+                </div>
+
+                <h4 style="color: #1e40af; margin-top: 20px;">Step-by-Step Logic</h4>
+                <ol style="font-size: 1.05em; line-height: 2; color: #0a0a0a;">
+                    <li><strong>Calculate first window sum</strong> → arr[0] to arr[k-1]</li>
+                    <li><strong>Slide the window:</strong> For each new position i from k to n-1:
+                        <ul style="margin-top: 10px; color: #0a0a0a;">
+                            <li>Remove: Subtract arr[i-k] (element leaving)</li>
+                            <li>Add: Add arr[i] (element entering)</li>
+                            <li>Compare: Update maxSum if current sum is larger</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h4 style="color: #1e40af; margin-top: 20px;">Why O(N) Time?</h4>
+                <p style="font-size: 1.05em; line-height: 1.8; color: #0a0a0a;">
+                    • We visit each element exactly once<br>
+                    • Each operation (add/subtract) is O(1)<br>
+                    • No nested loops needed!<br>
+                    <strong>vs Brute Force:</strong> O(n*k) - would recalculate sum for each window
+                </p>
+            </div>
+
+            <div class="code-block">
+                <pre><code><span class="comment">/**
+ * FIXED WINDOW PATTERN
+ * Problem: Find maximum sum of subarray with size K
+ * 
+ * Visual Example: arr = [2, 3, 1, 4, 5], k = 3
+ * Step 1: [2, 3, 1] → sum = 6
+ * Step 2: [3, 1, 4] → sum = 8 (remove 2, add 4)
+ * Step 3: [1, 4, 5] → sum = 10 (remove 3, add 5)
+ * 
+ * Time Complexity: O(n)
+ * Space Complexity: O(1)
+ */</span>
+<span class="keyword">public</span> <span class="type">int</span> <span class="function">maxSumSubarray</span>(<span class="type">int</span>[] arr, <span class="type">int</span> k) {
+    <span class="comment">// Edge case: array smaller than window size</span>
+    <span class="keyword">if</span> (arr.length &lt; k) <span class="keyword">return</span> <span class="number">-1</span>;
+    
+    <span class="comment">// STEP 1: Calculate first window sum [0 to k-1]</span>
+    <span class="type">int</span> sum = <span class="number">0</span>;
+    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; k; i++) {
+        sum += arr[i];
+    }
+    
+    <span class="comment">// Initialize max with first window</span>
+    <span class="type">int</span> maxSum = sum;
+    <span class="type">int</span> low = <span class="number">0</span>;        <span class="comment">// Left boundary of window</span>
+    <span class="type">int</span> high = k;       <span class="comment">// Points to next element to include</span>
+    
+    <span class="comment">// STEP 2: Slide the window one position at a time</span>
+    <span class="keyword">while</span> (high &lt; arr.length) {
+        <span class="comment">// 🔑 KEY INSIGHT: Subtract element leaving, add element entering</span>
+        <span class="comment">// This gives O(1) per slide instead of O(k)</span>
+        sum = sum - arr[low] + arr[high];
+        
+        <span class="comment">// Update maximum if current window is better</span>
+        maxSum = Math.max(maxSum, sum);
+        
+        <span class="comment">// Move both pointers forward (maintain window size k)</span>
+        low++;
+        high++;
+    }
+    
+    <span class="keyword">return</span> maxSum;
+}</code></pre>
+            </div>
+
+            <h3>Type B: Variable Size Window</h3>
+            <p><strong>Situation:</strong> Window size is NOT specified, it expands and shrinks dynamically</p>
+            
+            <div class="highlight-box">
+                <strong>🔄 Workplace HR Strategy Analogy:</strong>
+                <p style="margin-top: 15px; color: var(--text-primary);">
+                    <strong style="color: #10b981; font-weight: 700;">Expand (high++):</strong> "Hire" new elements to achieve your goal<br>
+                    <strong style="color: #ef4444; font-weight: 700;">Shrink (low++):</strong> "Fire" elements to optimize or maintain validity
+                </p>
+            </div>
+        </section>
+
+
+        <!-- Minimum/Shortest Pattern — Problem 1: Sum -->
+        <section class="section" style="animation-delay: 0.4s;">
+            <h2>📉 MINIMUM Window — Problem 1: Subarray Sum ≥ Target</h2>
+
+            <div style="background: #e3f2fd; border-left: 6px solid #1976d2; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                <p style="font-size: 1.1em; color: #0a0a0a; margin: 0;">
+                    <strong>Problem:</strong> Given an array of positive numbers and a target, find the <strong>shortest subarray</strong> whose sum is ≥ target.<br><br>
+                    <strong>Example:</strong> nums = [2, 3, 1, 2, 4, 3], target = 7 → Answer: 2 (window [4, 3])<br><br>
+                    <strong>Validity condition:</strong> <code>currentSum &ge; target</code><br>
+                    <strong>Data structure needed:</strong> just a running integer sum — no map, no set
+                </p>
+            </div>
+
+            <div class="highlight-box">
+                <strong>Core Logic:</strong> Shrink WHILE window is VALID (opposite of maximum!)
+                <ol style="margin-top: 15px; color: var(--text-primary);">
+                    <li>Expand high pointer — add element to sum</li>
+                    <li>Check if window is VALID: <code>sum &ge; target</code></li>
+                    <li>While VALID: record current length, then shrink from left to try for smaller</li>
+                    <li>Keep shrinking until sum drops below target</li>
+                </ol>
+            </div>
+
+            <div class="demo-container">
+                <p style="color: #6366f1; font-weight: 600; margin-bottom: 20px; font-size: 1.1em;">
+                    Stage-by-Stage: Minimum Subarray Sum ≥ 7
+                </p>
+                <p style="margin-bottom: 30px; color: var(--text-secondary);">Array: [2, 3, 1, 2, 4, 3] | Goal: Find shortest subarray with sum ≥ 7</p>
+
+                <div class="stage-box">
+                    <div class="stage-title">Stages 0–3: Expand until sum ≥ 7</div>
+                    <div class="visual-array">
+                        <div class="array-cell window">2</div>
+                        <div class="array-cell window">3</div>
+                        <div class="array-cell window">1</div>
+                        <div class="array-cell window">2</div>
+                        <div class="array-cell">4</div>
+                        <div class="array-cell">3</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [2, 3, 1, 2]</strong> | low=0, high=3<br>
+                        Sum: 2+3+1+2 = <strong style="color: var(--valid-color);">8 ≥ 7 ✓ VALID!</strong><br>
+                        minLen = 4 (first valid window)
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Shrink: Remove 2 → becomes invalid</div>
+                    <div class="visual-array">
+                        <div class="array-cell" style="opacity:0.3;">2</div>
+                        <div class="array-cell window invalid">3</div>
+                        <div class="array-cell window invalid">1</div>
+                        <div class="array-cell window invalid">2</div>
+                        <div class="array-cell">4</div>
+                        <div class="array-cell">3</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [3, 1, 2]</strong> | low=1, high=3<br>
+                        Sum: 8−2 = <strong style="color: var(--invalid-color);">6 &lt; 7 ✗ INVALID</strong><br>
+                        Stop shrinking. Go back to expanding.
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Expand: Add 4</div>
+                    <div class="visual-array">
+                        <div class="array-cell" style="opacity:0.3;">2</div>
+                        <div class="array-cell window">3</div>
+                        <div class="array-cell window">1</div>
+                        <div class="array-cell window">2</div>
+                        <div class="array-cell window">4</div>
+                        <div class="array-cell">3</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [3, 1, 2, 4]</strong> | low=1, high=4<br>
+                        Sum: 6+4 = <strong style="color: var(--valid-color);">10 ≥ 7 ✓ VALID!</strong><br>
+                        minLen = 4 (no improvement yet)
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Shrink: Remove 3 → still valid!</div>
+                    <div class="visual-array">
+                        <div class="array-cell" style="opacity:0.3;">2</div>
+                        <div class="array-cell" style="opacity:0.3;">3</div>
+                        <div class="array-cell window">1</div>
+                        <div class="array-cell window">2</div>
+                        <div class="array-cell window">4</div>
+                        <div class="array-cell">3</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [1, 2, 4]</strong> | low=2, high=4<br>
+                        Sum: 10−3 = <strong style="color: var(--valid-color);">7 ≥ 7 ✓ STILL VALID!</strong><br>
+                        minLen = 3 ✓ (found smaller window!)
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Shrink: Remove 1 → becomes invalid</div>
+                    <div class="visual-array">
+                        <div class="array-cell" style="opacity:0.3;">2</div>
+                        <div class="array-cell" style="opacity:0.3;">3</div>
+                        <div class="array-cell" style="opacity:0.3;">1</div>
+                        <div class="array-cell window invalid">2</div>
+                        <div class="array-cell window invalid">4</div>
+                        <div class="array-cell">3</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [2, 4]</strong> | low=3, high=4<br>
+                        Sum: 7−1 = <strong style="color: var(--invalid-color);">6 &lt; 7 ✗ INVALID</strong><br>
+                        Stop shrinking. Expand again.
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Expand: Add 3</div>
+                    <div class="visual-array">
+                        <div class="array-cell" style="opacity:0.3;">2</div>
+                        <div class="array-cell" style="opacity:0.3;">3</div>
+                        <div class="array-cell" style="opacity:0.3;">1</div>
+                        <div class="array-cell window">2</div>
+                        <div class="array-cell window">4</div>
+                        <div class="array-cell window">3</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [2, 4, 3]</strong> | low=3, high=5<br>
+                        Sum: 6+3 = <strong style="color: var(--valid-color);">9 ≥ 7 ✓ VALID!</strong><br>
+                        minLen = 3 (no change)
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Shrink: Remove 2 → still valid!</div>
+                    <div class="visual-array">
+                        <div class="array-cell" style="opacity:0.3;">2</div>
+                        <div class="array-cell" style="opacity:0.3;">3</div>
+                        <div class="array-cell" style="opacity:0.3;">1</div>
+                        <div class="array-cell" style="opacity:0.3;">2</div>
+                        <div class="array-cell window">4</div>
+                        <div class="array-cell window">3</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [4, 3]</strong> | low=4, high=5<br>
+                        Sum: 9−2 = <strong style="color: var(--valid-color);">7 ≥ 7 ✓ STILL VALID!</strong><br>
+                        minLen = <strong style="color: var(--accent-green);">2 ✓ BEST ANSWER!</strong>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top: 30px;">
+                    <strong>🎯 Result:</strong> Minimum length = 2 (window [4, 3])<br>
+                    <strong>Key Pattern:</strong> Shrink WHILE valid to find the smallest valid window. Only when it becomes invalid do we stop and expand again.
+                </div>
+            </div>
+
+            <!-- Logic Box -->
+            <div class="info-box" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-left: 6px solid #1976d2; margin: 30px 0; padding: 30px;">
+                <h3 style="color: #0d47a1; margin-top: 0;">🧠 Logic Behind the Solution</h3>
+
+                <h4 style="color: #1565c0; margin-top: 20px;">Why Shrink While Valid?</h4>
+                <p style="font-size: 1.05em; line-height: 1.8; color: #0a0a0a;">
+                    We want the <strong>shortest</strong> window, so whenever we find a valid window we immediately try to make it smaller. We keep removing from the left as long as the window stays valid. The moment it becomes invalid, we stop — we've found the shortest version of this valid window.
+                </p>
+
+                <h4 style="color: #1565c0; margin-top: 20px;">What Changes Compared to Maximum?</h4>
+                <div style="background: white; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <table style="width: 100%; border-collapse: collapse; color: #0a0a0a;">
+                        <tr style="background: #f5f5f5;">
+                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Goal</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Shrink when</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Record result</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><strong>MAXIMUM</strong></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">While INVALID</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">After shrinking (when valid again)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><strong>MINIMUM</strong></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">While VALID</td>
+                            <td style="padding: 10px; border: 1px solid #ddd;">Before shrinking (while still valid)</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h4 style="color: #1565c0; margin-top: 20px;">Common Mistake</h4>
+                <div style="background: #fecaca; color: #0a0a0a; padding: 15px; border-left: 4px solid #c62828; margin: 15px 0;">
+                    <p style="font-size: 1.05em; color: #0a0a0a;">
+                        ❌ <strong>Recording minLen AFTER shrinking</strong> — the window is no longer valid at that point!<br><br>
+                        ✅ <strong>Record minLen BEFORE shrinking</strong> — while the window is still confirmed valid.
+                    </p>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <pre><code><span class="comment">/**
+ * MINIMUM WINDOW — PROBLEM 1: Subarray Sum ≥ Target
+ *
+ * Validity: currentSum >= target
+ * Data structure: just an int (running sum) — no map needed
+ *
+ * nums = [2,3,1,2,4,3], target = 7
+ *
+ * Expand 2:       [2]       sum=2  < 7
+ * Expand 3:       [2,3]     sum=5  < 7
+ * Expand 1:       [2,3,1]   sum=6  < 7
+ * Expand 2:       [2,3,1,2] sum=8  >= 7 ✓ minLen=4
+ *   Shrink 2:     [3,1,2]   sum=6  < 7  stop
+ * Expand 4:       [3,1,2,4] sum=10 >= 7 ✓ minLen=4
+ *   Shrink 3:     [1,2,4]   sum=7  >= 7 ✓ minLen=3
+ *   Shrink 1:     [2,4]     sum=6  < 7  stop
+ * Expand 3:       [2,4,3]   sum=9  >= 7 ✓ minLen=3
+ *   Shrink 2:     [4,3]     sum=7  >= 7 ✓ minLen=2 🎯
+ *
+ * Time: O(n), Space: O(1)
+ */</span>
+<span class="keyword">public</span> <span class="type">int</span> <span class="function">minSubArrayLen</span>(<span class="type">int</span> target, <span class="type">int</span>[] nums) {
+    <span class="type">int</span> low = <span class="number">0</span>, sum = <span class="number">0</span>;
+    <span class="type">int</span> minLen = Integer.MAX_VALUE;
+
+    <span class="keyword">for</span> (<span class="type">int</span> high = <span class="number">0</span>; high &lt; nums.length; high++) {
+
+        <span class="comment">// EXPAND: add next element</span>
+        sum += nums[high];
+
+        <span class="comment">// SHRINK WHILE VALID: sum still meets target</span>
+        <span class="keyword">while</span> (sum &gt;= target) {
+            <span class="comment">// Record before shrinking — window is valid RIGHT NOW</span>
+            minLen = Math.min(minLen, high - low + <span class="number">1</span>);
+
+            <span class="comment">// Try making it smaller</span>
+            sum -= nums[low];
+            low++;
+        }
+    }
+
+    <span class="keyword">return</span> (minLen == Integer.MAX_VALUE) ? <span class="number">0</span> : minLen;
+}</code></pre>
+            </div>
+        </section>
+
+
+        <!-- Variable Window Template -->
+        <section class="section" style="animation-delay: 0.25s;">
+            <h2>📋 Variable Window — The Template</h2>
+            <p>Every variable window problem follows the same three steps. Only the information you track and the condition you check ever change.</p>
+
+            <div class="highlight-box" style="margin-top: 24px;">
+                <ol style="margin: 0; padding-left: 24px; line-height: 2.6; font-size: 1.0em; color: var(--text-primary);">
+                    <li>For each new element, <strong>add it to your information</strong> (sum, frequency map, count, etc.)</li>
+                    <li>While that information <strong>breaks the constraint</strong>, remove the leftmost element from your information and move left forward.</li>
+                    <li>Once valid, <strong>calculate the window length</strong> and update the result if it is the best so far.</li>
+                </ol>
+            </div>
+        </section>
+
+
+        <!-- Maximum/Longest Pattern — Problem 1: Sum -->
+        <section class="section" style="animation-delay: 0.3s;">
+            <h2>📈 MAXIMUM Window — Problem 1: Longest Subarray with Sum ≤ K</h2>
+
+            <div style="background: #e8f5e9; border-left: 6px solid #2e7d32; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                <p style="font-size: 1.1em; color: #0a0a0a; margin: 0;">
+                    <strong>Problem:</strong> Given an array of positive numbers and a limit K, find the <strong>longest subarray</strong> whose sum is ≤ K.<br><br>
+                    <strong>Example:</strong> nums = [1, 2, 3, 4, 5], K = 7 → Answer: 3 (window [1, 2, 3] or [2, 3] ... longest is [1,2,3] or [3,4])<br><br>
+                    <strong>Validity condition:</strong> <code>currentSum &le; K</code><br>
+                    <strong>Data structure needed:</strong> just a running integer sum — no map, no set
+                </p>
+            </div>
+
+            <div class="highlight-box">
+                <strong>Core Logic:</strong> Shrink ONLY when window becomes INVALID
+                <ol style="margin-top: 15px; color: var(--text-primary);">
+                    <li>Expand high pointer — add element to sum</li>
+                    <li>Check if window is INVALID: <code>sum &gt; K</code></li>
+                    <li>While INVALID: shrink from left until sum drops back to ≤ K</li>
+                    <li>Record result — window is now valid again</li>
+                </ol>
+            </div>
+
+            <div class="demo-container">
+                <p style="color: #2e7d32; font-weight: 600; margin-bottom: 20px; font-size: 1.1em;">
+                    Stage-by-Stage: Longest Subarray with Sum ≤ 7
+                </p>
+                <p style="margin-bottom: 30px; color: var(--text-secondary);">Array: [1, 2, 3, 4, 5] | K = 7 | Goal: longest subarray with sum ≤ 7</p>
+
+                <div class="stage-box">
+                    <div class="stage-title">Stages 0–2: Expand — sum stays ≤ 7</div>
+                    <div class="visual-array">
+                        <div class="array-cell window">1</div>
+                        <div class="array-cell window">2</div>
+                        <div class="array-cell window">3</div>
+                        <div class="array-cell">4</div>
+                        <div class="array-cell">5</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [1, 2, 3]</strong> | low=0, high=2<br>
+                        Sum: 1+2+3 = <strong style="color: var(--valid-color);">6 ≤ 7 ✓ VALID</strong><br>
+                        maxLen = 3
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Expand: Add 4 → sum exceeds K</div>
+                    <div class="visual-array">
+                        <div class="array-cell window invalid">1</div>
+                        <div class="array-cell window invalid">2</div>
+                        <div class="array-cell window invalid">3</div>
+                        <div class="array-cell window invalid">4</div>
+                        <div class="array-cell">5</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [1, 2, 3, 4]</strong> | low=0, high=3<br>
+                        Sum: 6+4 = <strong style="color: var(--invalid-color);">10 &gt; 7 ✗ INVALID</strong><br>
+                        Must shrink from left.
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Shrink: Remove 1 → still invalid</div>
+                    <div class="visual-array">
+                        <div class="array-cell" style="opacity:0.3;">1</div>
+                        <div class="array-cell window invalid">2</div>
+                        <div class="array-cell window invalid">3</div>
+                        <div class="array-cell window invalid">4</div>
+                        <div class="array-cell">5</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [2, 3, 4]</strong> | low=1, high=3<br>
+                        Sum: 10−1 = <strong style="color: var(--invalid-color);">9 &gt; 7 ✗ still INVALID</strong><br>
+                        Keep shrinking.
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Shrink: Remove 2 → valid again</div>
+                    <div class="visual-array">
+                        <div class="array-cell" style="opacity:0.3;">1</div>
+                        <div class="array-cell" style="opacity:0.3;">2</div>
+                        <div class="array-cell window">3</div>
+                        <div class="array-cell window">4</div>
+                        <div class="array-cell">5</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [3, 4]</strong> | low=2, high=3<br>
+                        Sum: 9−2 = <strong style="color: var(--valid-color);">7 ≤ 7 ✓ VALID</strong><br>
+                        maxLen = 3 (no improvement — length 2 is shorter)
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Expand: Add 5 → invalid again</div>
+                    <div class="visual-array">
+                        <div class="array-cell" style="opacity:0.3;">1</div>
+                        <div class="array-cell" style="opacity:0.3;">2</div>
+                        <div class="array-cell window invalid">3</div>
+                        <div class="array-cell window invalid">4</div>
+                        <div class="array-cell window invalid">5</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [3, 4, 5]</strong> | low=2, high=4<br>
+                        Sum: 7+5 = <strong style="color: var(--invalid-color);">12 &gt; 7 ✗ INVALID</strong><br>
+                        Shrink again.
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Shrink until valid: Remove 3, then 4</div>
+                    <div class="visual-array">
+                        <div class="array-cell" style="opacity:0.3;">1</div>
+                        <div class="array-cell" style="opacity:0.3;">2</div>
+                        <div class="array-cell" style="opacity:0.3;">3</div>
+                        <div class="array-cell" style="opacity:0.3;">4</div>
+                        <div class="array-cell window">5</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [5]</strong> | low=4, high=4<br>
+                        Sum: 12−3−4 = <strong style="color: var(--valid-color);">5 ≤ 7 ✓ VALID</strong><br>
+                        maxLen = 3 (no change). End of array — done.
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top: 30px;">
+                    <strong>🎯 Result:</strong> Maximum length = 3 (window [1, 2, 3])<br>
+                    <strong>Key Pattern:</strong> Expand freely while sum ≤ K. The moment sum exceeds K, shrink from the left until it's valid again, then record the length.
+                </div>
+            </div>
+
+            <!-- Logic box -->
+            <div class="info-box" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-left: 6px solid #2e7d32; margin: 30px 0; padding: 30px;">
+                <h3 style="color: #1b5e20; margin-top: 0;">🧠 Logic Behind the Solution</h3>
+
+                <h4 style="color: #2e7d32; margin-top: 20px;">Why Shrink Only When Invalid?</h4>
+                <p style="font-size: 1.05em; line-height: 1.8; color: #0a0a0a;">
+                    We want the <strong>longest</strong> window, so we expand as greedily as possible. We only shrink when we're <em>forced to</em> — when the sum exceeds K. Once valid again, we immediately record the length and go back to expanding.
+                </p>
+
+                <h4 style="color: #2e7d32; margin-top: 20px;">Critical Detail: While vs If for Shrinking</h4>
+                <div style="background: #fecaca; color: #0a0a0a; padding: 15px; border-left: 4px solid #c62828; margin: 15px 0;">
+                    <p style="font-size: 1.05em; color: #0a0a0a;">
+                        ❌ <code>if (sum &gt; K)</code> — Wrong! Only removes one element. If adding 10 to a sum of 5 with K=7, removing one small element won't fix it.<br><br>
+                        ✅ <code>while (sum &gt; K)</code> — Correct! Keeps removing until the sum is back within K.
+                    </p>
+                </div>
+
+                <h4 style="color: #2e7d32; margin-top: 20px;">Where to Record maxLen</h4>
+                <p style="font-size: 1.05em; line-height: 1.8; color: #0a0a0a;">
+                    Record <strong>after</strong> the shrink loop — at that point the window is guaranteed valid. Every valid state is a candidate for the answer.
+                </p>
+            </div>
+
+            <div class="code-block">
+                <pre><code><span class="comment">/**
+ * MAXIMUM WINDOW — PROBLEM 1: Longest Subarray with Sum ≤ K
+ *
+ * Validity: currentSum <= K
+ * Data structure: just an int (running sum) — no map needed
+ *
+ * nums = [1, 2, 3, 4, 5], K = 7
+ *
+ * Expand 1: [1]       sum=1  ≤ 7 ✓ maxLen=1
+ * Expand 2: [1,2]     sum=3  ≤ 7 ✓ maxLen=2
+ * Expand 3: [1,2,3]   sum=6  ≤ 7 ✓ maxLen=3
+ * Expand 4: [1,2,3,4] sum=10 > 7 ✗
+ *   Shrink 1: [2,3,4] sum=9  > 7 ✗
+ *   Shrink 2: [3,4]   sum=7  ≤ 7 ✓ maxLen=3 (no change)
+ * Expand 5: [3,4,5]   sum=12 > 7 ✗
+ *   Shrink 3: [4,5]   sum=9  > 7 ✗
+ *   Shrink 4: [5]     sum=5  ≤ 7 ✓ maxLen=3 (no change)
+ *
+ * Time: O(n), Space: O(1)
+ */</span>
+<span class="keyword">public</span> <span class="type">int</span> <span class="function">longestSubarraySumK</span>(<span class="type">int</span>[] nums, <span class="type">int</span> k) {
+    <span class="type">int</span> low = <span class="number">0</span>, sum = <span class="number">0</span>, maxLen = <span class="number">0</span>;
+
+    <span class="keyword">for</span> (<span class="type">int</span> high = <span class="number">0</span>; high &lt; nums.length; high++) {
+
+        <span class="comment">// EXPAND: add next element</span>
+        sum += nums[high];
+
+        <span class="comment">// SHRINK WHILE INVALID: sum exceeds K</span>
+        <span class="keyword">while</span> (sum &gt; k) {
+            sum -= nums[low];
+            low++;
+        }
+
+        <span class="comment">// Record after shrinking — window is valid now</span>
+        maxLen = Math.max(maxLen, high - low + <span class="number">1</span>);
+    }
+
+    <span class="keyword">return</span> maxLen;
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- Maximum/Longest Pattern -->
+        <section class="section" style="animation-delay: 0.3s;">
+            <h2>📈 MAXIMUM Window — Problem 2: Longest Substring with K Distinct Characters</h2>
+
+            <div style="background: #e3f2fd; border-left: 6px solid #1976d2; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                <p style="font-size: 1.1em; color: #0a0a0a; margin: 0;">
+                    <strong>Problem:</strong> Given a string and a limit K, find the <strong>longest substring</strong> with at most K distinct characters.<br><br>
+                    <strong>Example:</strong> s = "AABAC", K = 2 → Answer: 4 (window "AABA")<br><br>
+                    <strong>Validity condition:</strong> <code>map.size() &le; K</code><br>
+                    <strong>Data structure needed:</strong> HashMap to track character frequencies in the current window
+                </p>
+            </div>
+            
+            
+            <div class="highlight-box">
+                <strong>Core Logic:</strong> Shrink ONLY when window becomes INVALID
+                <ol style="margin-top: 15px; color: var(--text-primary);">
+                    <li>Expand high pointer (add element)</li>
+                    <li>Check if window is INVALID (e.g., > K distinct chars)</li>
+                    <li>While INVALID: Shrink low pointer until valid again</li>
+                    <li>Update maximum result</li>
+                </ol>
+            </div>
+
+            <div class="demo-container">
+                <p style="color: #6366f1; font-weight: 600; margin-bottom: 20px; font-size: 1.1em;">
+                    Stage-by-Stage: Longest Substring with K=2 Distinct Characters
+                </p>
+                <p style="margin-bottom: 30px; color: var(--text-secondary);">String: "AABAC" | Goal: Find longest substring with at most 2 distinct characters</p>
+
+                <!-- Stage 0 -->
+                <div class="stage-box">
+                    <div class="stage-title" data-step="0">Stage 0: Start with first character</div>
+                    <div class="visual-array">
+                        <div class="array-cell window">A</div>
+                        <div class="array-cell">A</div>
+                        <div class="array-cell">B</div>
+                        <div class="array-cell">A</div>
+                        <div class="array-cell">C</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [A]</strong> | low=0, high=0<br>
+                        <strong>Map: {A:1}</strong> | Distinct: <strong style="font-weight: 500; color: var(--valid-color);">1 ≤ 2 ✓ VALID</strong><br>
+                        maxLen = 1
+                    </div>
+                </div>
+
+                <!-- Stage 1 -->
+                <div class="stage-box">
+                    <div class="stage-title" data-step="1">Stage 1: Expand - Add 'A'</div>
+                    <div class="visual-array">
+                        <div class="array-cell window">A</div>
+                        <div class="array-cell window">A</div>
+                        <div class="array-cell">B</div>
+                        <div class="array-cell">A</div>
+                        <div class="array-cell">C</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [A, A]</strong> | low=0, high=1<br>
+                        <strong>Map: {A:2}</strong> | Distinct: <strong style="font-weight: 500; color: var(--valid-color);">1 ≤ 2 ✓ VALID</strong><br>
+                        maxLen = 2
+                    </div>
+                </div>
+
+                <!-- Stage 2 -->
+                <div class="stage-box">
+                    <div class="stage-title" data-step="2">Stage 2: Expand - Add 'B'</div>
+                    <div class="visual-array">
+                        <div class="array-cell window">A</div>
+                        <div class="array-cell window">A</div>
+                        <div class="array-cell window">B</div>
+                        <div class="array-cell">A</div>
+                        <div class="array-cell">C</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [A, A, B]</strong> | low=0, high=2<br>
+                        <strong>Map: {A:2, B:1}</strong> | Distinct: <strong style="font-weight: 500; color: var(--valid-color);">2 ≤ 2 ✓ VALID</strong><br>
+                        maxLen = 3
+                    </div>
+                </div>
+
+                <!-- Stage 3 -->
+                <div class="stage-box">
+                    <div class="stage-title" data-step="3">Stage 3: Expand - Add 'A'</div>
+                    <div class="visual-array">
+                        <div class="array-cell window">A</div>
+                        <div class="array-cell window">A</div>
+                        <div class="array-cell window">B</div>
+                        <div class="array-cell window">A</div>
+                        <div class="array-cell">C</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [A, A, B, A]</strong> | low=0, high=3<br>
+                        <strong>Map: {A:3, B:1}</strong> | Distinct: <strong style="font-weight: 500; color: var(--valid-color);">2 ≤ 2 ✓ VALID</strong><br>
+                        maxLen = 4
+                    </div>
+                </div>
+
+                <!-- Stage 4 -->
+                <div class="stage-box">
+                    <div class="stage-title" data-step="4">Stage 4: Expand - Add 'C' (INVALID!)</div>
+                    <div class="visual-array">
+                        <div class="array-cell window invalid">A</div>
+                        <div class="array-cell window invalid">A</div>
+                        <div class="array-cell window invalid">B</div>
+                        <div class="array-cell window invalid">A</div>
+                        <div class="array-cell window invalid">C</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [A, A, B, A, C]</strong> | low=0, high=4<br>
+                        <strong>Map: {A:3, B:1, C:1}</strong> | Distinct: <strong style="font-weight: 500; color: var(--invalid-color);">3 > 2 ✗ INVALID</strong><br>
+                        Must shrink!
+                    </div>
+                </div>
+
+                <!-- Stage 5 -->
+                <div class="stage-box">
+                    <div class="stage-title" data-step="5">Stage 5: Shrink - Remove 'A' (still invalid)</div>
+                    <div class="visual-array">
+                        <div class="array-cell" style="opacity: 0.3;">A</div>
+                        <div class="array-cell window invalid">A</div>
+                        <div class="array-cell window invalid">B</div>
+                        <div class="array-cell window invalid">A</div>
+                        <div class="array-cell window invalid">C</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [A, B, A, C]</strong> | low=1, high=4<br>
+                        <strong>Map: {A:2, B:1, C:1}</strong> | Distinct: <strong style="font-weight: 500; color: var(--invalid-color);">3 > 2 ✗ STILL INVALID</strong><br>
+                        Keep shrinking!
+                    </div>
+                </div>
+
+                <!-- Stage 6 -->
+                <div class="stage-box">
+                    <div class="stage-title" data-step="6">Stage 6: Shrink - Remove 'A' (now valid!)</div>
+                    <div class="visual-array">
+                        <div class="array-cell" style="opacity: 0.3;">A</div>
+                        <div class="array-cell" style="opacity: 0.3;">A</div>
+                        <div class="array-cell window">B</div>
+                        <div class="array-cell window">A</div>
+                        <div class="array-cell window">C</div>
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: [B, A, C]</strong> | low=2, high=4<br>
+                        <strong>Map: {B:1, A:1, C:1}</strong> → Still 3 distinct!<br>
+                        Must shrink more! Remove <strong style="color: #f87171;">B from LEFT</strong><br>
+                        Distinct: <strong style="font-weight: 500; color: #f87171;">3 > 2 ✓ VALID AGAIN</strong><br>
+                        maxLen = 4 (no update, current window = 3)
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top: 30px;">
+                    <strong>🎯 Result:</strong> Maximum length = 4 (window [A, A, B, A])<br>
+                    <strong>Key Pattern:</strong> We only shrink when the window becomes INVALID (too many distinct characters). Once valid again, we continue expanding!
+                </div>
+            </div>
+
+            
+
+            <!-- LOGIC BEHIND THE SOLUTION -->
+            <div class="info-box" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-left: 6px solid #1976d2; margin: 30px 0; padding: 30px;">
+                <h3 style="color: #0d47a1; margin-top: 0;">🧠 Logic Behind the Solution</h3>
+                
+                <h4 style="color: #1565c0; margin-top: 20px;">Core Strategy: Expand Until Invalid, Then Shrink</h4>
+                <p style="font-size: 1.05em; line-height: 1.8; color: #0a0a0a;">
+                    <strong>Why this works:</strong> We want the LONGEST valid window, so we expand greedily and only shrink when forced.<br>
+                    Think of it like filling a container - keep adding until it overflows, then remove from the start just enough to make it valid again.
+                </p>
+
+                <h4 style="color: #1565c0; margin-top: 20px;">The Key Insights</h4>
+                <div style="background: white; color: #0a0a0a; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <p style="font-size: 1.05em; line-height: 2; color: #0a0a0a;">
+                        🎯 <strong>Expand first, shrink only when invalid</strong><br>
+                        📊 <strong>HashMap tracks distinct characters</strong> - size() = count of unique chars<br>
+                        ⚖️ <strong>While loop for shrinking</strong> - might need multiple removals<br>
+                        📈 <strong>Update max continuously</strong> - every valid window could be the answer
+                    </p>
+                </div>
+
+                <h4 style="color: #1565c0; margin-top: 20px;">Why HashMap?</h4>
+                <ul style="font-size: 1.05em; line-height: 1.8; color: #f5f5f5;">
+                    <li style="color: #1e293b;"><strong>map.size()</strong> gives us distinct character count instantly</li>
+                    <li style="color: #1e293b;"><strong>map.get(char)</strong> tracks frequency for proper removal</li>
+                    <li><span style="color: #1e293b; font-weight: 500;">Remove from map when count reaches 0 (keeps size() accurate)</span></li>
+                </ul>
+
+                <h4 style="color: #1565c0; margin-top: 20px;">Decision Flow</h4>
+                <div style="background: #d1e7ff; color: #0a0a0a; padding: 15px; border-left: 4px solid #2563eb; margin: 15px 0;">
+                    <ol style="font-size: 1.05em; line-height: 2; color: #0a0a0a;">
+                        <li><strong>Add character</strong> → map.put(char, freq + 1)</li>
+                        <li><strong>Check validity</strong> → is map.size() > k?</li>
+                        <li><strong>If INVALID:</strong> Shrink left until map.size() ≤ k</li>
+                        <li><strong>If VALID:</strong> maxLen = max(maxLen, windowSize)</li>
+                        <li><strong>Continue</strong> → Move high pointer</li>
+                    </ol>
+                </div>
+
+                <h4 style="color: #1565c0; margin-top: 20px;">Critical Detail: While vs If</h4>
+                <div style="background: #fecaca; color: #0a0a0a; padding: 15px; border-left: 4px solid #c62828; margin: 15px 0;">
+                    <p style="font-size: 1.05em; color: #0a0a0a;">
+                        ❌ <code>if (map.size() > k)</code> - Wrong! Only shrinks once<br>
+                        ✅ <code>while (map.size() > k)</code> - Correct! Shrinks until valid<br><br>
+                        <strong>Example:</strong> "AAAAB" with k=1 needs to remove 4 A's, not just 1
+                    </p>
+                </div>
+            </div>
+
+<div class="code-block">
+                <pre><code><span class="comment">/**
+ * Longest Substring with K Distinct Characters
+ *
+ * s = "araaci", k = 2
+ *
+ * Expand a: freq={a:1}         size=1 ≤ 2 → valid,  res=1
+ * Expand r: freq={a:1,r:1}     size=2 ≤ 2 → valid,  res=2
+ * Expand a: freq={a:2,r:1}     size=2 ≤ 2 → valid,  res=3
+ * Expand a: freq={a:3,r:1}     size=2 ≤ 2 → valid,  res=4  ← exactly k=2 ✓
+ * Expand c: freq={a:3,r:1,c:1} size=3 > 2 → INVALID
+ *   Shrink a: freq={a:2,r:1,c:1} still 3 → still invalid
+ *   Shrink r: freq={a:2,c:1}     size=2 → valid again
+ * Expand i: freq={a:2,c:1,i:1} size=3 > 2 → INVALID
+ *   Shrink a: freq={a:1,c:1,i:1} still 3 → still invalid
+ *   Shrink a: freq={c:1,i:1}     size=2 → valid, but size=2 not exactly k=2... wait it is!
+ *
+ * res = 4  ("araa")
+ *
+ * 🔑 Only update res when freq.size() == k (exactly k distinct)
+ * Time: O(n)  Space: O(k)
+ */</span>
+<span class="keyword">public</span> <span class="type">int</span> <span class="function">longestSubstringKDistinct</span>(<span class="type">String</span> s, <span class="type">int</span> k) {
+    <span class="type">int</span> n = s.length();
+    <span class="type">int</span> low = <span class="number">0</span>, res = -<span class="number">1</span>;
+    <span class="type">Map&lt;Character, Integer&gt;</span> freq = <span class="keyword">new</span> HashMap&lt;&gt;();
+
+    <span class="keyword">for</span> (<span class="type">int</span> high = <span class="number">0</span>; high &lt; n; high++) {
+        <span class="type">char</span> c = s.charAt(high);
+
+        <span class="comment">// EXPAND: add character at high into the frequency map</span>
+        freq.put(c, freq.getOrDefault(c, <span class="number">0</span>) + <span class="number">1</span>);
+
+        <span class="comment">// SHRINK: if we now have more than k distinct chars, move low forward</span>
+        <span class="comment">// Use while — removing one char may not be enough (e.g. "AAAB" with k=1)</span>
+        <span class="keyword">while</span> (freq.size() &gt; k) {
+            <span class="type">char</span> leftChar = s.charAt(low);
+            freq.put(leftChar, freq.get(leftChar) - <span class="number">1</span>);
+
+            <span class="comment">// Remove the entry entirely when count hits 0</span>
+            <span class="comment">// — this keeps freq.size() accurate as our distinct-char counter</span>
+            <span class="keyword">if</span> (freq.get(leftChar) == <span class="number">0</span>)
+                freq.remove(leftChar);
+
+            low++;
+        }
+
+        <span class="comment">// UPDATE: only record when we have EXACTLY k distinct chars</span>
+        <span class="comment">// (windows with fewer than k don't satisfy the problem)</span>
+        <span class="keyword">if</span> (freq.size() == k)
+            res = Math.max(res, high - low + <span class="number">1</span>);
+    }
+
+    <span class="keyword">return</span> res; <span class="comment">// returns -1 if no valid window with exactly k distinct chars found</span>
+}</code></pre>
+            </div>
+
+            <!-- Code explanation -->
+            <div class="info-box" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-left: 6px solid #1976d2; margin: 24px 0; padding: 28px;">
+                <h3 style="color: #0d47a1; margin-top: 0;">🧠 Code Explanation</h3>
+
+                <h4 style="color: #1565c0; margin-top: 18px;">Variables</h4>
+                <div style="background: white; border-radius: 8px; padding: 16px; color: #0a0a0a; font-size: 0.9em; line-height: 2;">
+                    <code>freq</code> — HashMap tracking how many times each character appears in the current window. <code>freq.size()</code> tells us the number of distinct characters.<br>
+                    <code>low</code> — left boundary of the window, advances when we need to shrink.<br>
+                    <code>res = -1</code> — initialised to -1 (not 0) so we can detect when no valid window was ever found.
+                </div>
+
+                <h4 style="color: #1565c0; margin-top: 18px;">Expand step</h4>
+                <div style="background: white; border-radius: 8px; padding: 16px; color: #0a0a0a; font-size: 0.9em; line-height: 1.8;">
+                    <code>freq.put(c, freq.getOrDefault(c, 0) + 1)</code><br>
+                    Adds the new character to the map. If it's already there, increments its count. If it's new, inserts it with count 1. After this, <code>freq.size()</code> may have grown by 1 if it was a new distinct character.
+                </div>
+
+                <h4 style="color: #1565c0; margin-top: 18px;">Shrink step</h4>
+                <div style="background: white; border-radius: 8px; padding: 16px; color: #0a0a0a; font-size: 0.9em; line-height: 1.8;">
+                    <code>while (freq.size() &gt; k)</code> — keeps shrinking until we're back to k or fewer distinct chars.<br><br>
+                    Inside: decrement the left character's count, then <strong>remove the entry entirely if it hits 0</strong>. This is the critical step — if you leave a zero-count entry in the map, <code>freq.size()</code> will be wrong and you'll shrink too much.
+                </div>
+
+                <h4 style="color: #1565c0; margin-top: 18px;">Why <code>freq.size() == k</code> and not <code>≤ k</code>?</h4>
+                <div style="background: #fff9c4; border-left: 4px solid #fbc02d; border-radius: 8px; padding: 14px 16px; color: #0a0a0a; font-size: 0.9em; line-height: 1.8;">
+                    The problem asks for <strong>exactly k distinct characters</strong>. A window with only 1 distinct char when k=2 is not a valid answer. Checking <code>== k</code> ensures we only record windows that fully satisfy the constraint. If the problem said "at most k", you'd use <code>≤ k</code> instead.
+                </div>
+
+                <h4 style="color: #1565c0; margin-top: 18px;">Return value</h4>
+                <div style="background: white; border-radius: 8px; padding: 16px; color: #0a0a0a; font-size: 0.9em; line-height: 1.8;">
+                    Returns <code>res</code>, which stays <code>-1</code> if no window with exactly k distinct characters was ever found (e.g. the string has fewer than k unique characters). This is safer than returning 0, which could be mistaken for an empty valid window.
+                </div>
+            </div>
+
+            <div class="step-viz">
+                <h3>Step-by-Step Visualization</h3>
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>String: [A, A, B, A, C], K=2</strong><br>
+                    Add A → <strong>Map: {A:1}</strong> → Valid (1 ≤ 2) → maxLen = 1
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong><strong>Window: [A, A]</strong></strong><br>
+                    Add A → <strong>Map: {A:2}</strong> → Valid (1 ≤ 2) → maxLen = 2
+                </div>
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong><strong>Window: [A, A, B]</strong></strong><br>
+                    Add B → <strong>Map: {A:2, B:1}</strong> → Valid (2 ≤ 2) → maxLen = 3
+                </div>
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong><strong>Window: [A, A, B, A]</strong></strong><br>
+                    Add A → <strong>Map: {A:3, B:1}</strong> → Valid (2 ≤ 2) → maxLen = 4
+                </div>
+                <div class="step">
+                    <span class="step-number">5</span>
+                    <strong><strong>Window: [A, A, B, A, C]</strong></strong><br>
+                    Add C → <strong>Map: {A:3, B:1, C:1}</strong> → <span style="color: var(--invalid-color);">INVALID (3 > 2)</span><br>
+                    Shrink: Remove A → <strong>Map: {A:2, B:1, C:1}</strong> → Still invalid<br>
+                    Shrink: Remove A → <strong>Map: {B:1, C:1}</strong> → Valid → <strong>Window: [B, A, C]</strong>, length = 3
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Comparison Table -->
+        <section class="section" style="animation-delay: 0.5s;">
+            <h2>⚖️ Pattern Comparison</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin: 40px 0;">
+                <div style="background: var(--code-bg); padding: 30px; border-radius: 15px; border-left: 4px solid var(--accent-primary);">
+                    <h3 style="color: var(--accent-primary); margin-top: 0;">📈 MAXIMUM Pattern Logic</h3>
+                    <div style="font-family: monospace; margin: 20px 0; padding: 20px; background: var(--bg-card); border-radius: 10px;">
+                        <div style="color: var(--valid-color);">✓ Window is VALID</div>
+                        <div style="margin-left: 20px; color: var(--text-secondary);">→ Keep expanding</div>
+                        <div style="margin-left: 20px; color: var(--text-secondary);">→ Update max result</div>
+                        <br>
+                        <div style="color: var(--invalid-color);">✗ Window becomes INVALID</div>
+                        <div style="margin-left: 20px; color: var(--text-secondary);">→ Shrink until valid</div>
+                        <div style="margin-left: 20px; color: var(--text-secondary);">→ Then continue expanding</div>
+                    </div>
+                    <p style="color: var(--accent-tertiary); font-weight: 600;">Goal: Make window as LARGE as possible while staying valid</p>
+                </div>
+
+                <div style="background: var(--code-bg); padding: 30px; border-radius: 15px; border-left: 4px solid var(--accent-secondary);">
+                    <h3 style="color: var(--accent-secondary); margin-top: 0;">📉 MINIMUM Pattern Logic</h3>
+                    <div style="font-family: monospace; margin: 20px 0; padding: 20px; background: var(--bg-card); border-radius: 10px;">
+                        <div style="color: var(--invalid-color);">✗ Window is INVALID</div>
+                        <div style="margin-left: 20px; color: var(--text-secondary);">→ Keep expanding</div>
+                        <div style="margin-left: 20px; color: var(--text-secondary);">→ Looking for valid window</div>
+                        <br>
+                        <div style="color: var(--valid-color);">✓ Window becomes VALID</div>
+                        <div style="margin-left: 20px; color: var(--text-secondary);">→ Update min result</div>
+                        <div style="margin-left: 20px; color: var(--text-secondary);">→ Shrink to find smaller</div>
+                    </div>
+                    <p style="color: var(--accent-tertiary); font-weight: 600;">Goal: Make window as SMALL as possible while staying valid</p>
+                </div>
+            </div>
+            
+            
+        <div style="background: #1e293b; border-radius: 15px; padding: 40px; margin: 40px 0;">
+            <h3 style="color: #a5b4fc; text-align: center; margin-bottom: 40px; font-size: 2rem;">📊 Pattern Comparison: Fixed vs Variable Windows</h3>
+            
+            <!-- Fixed Window -->
+            <div style="background: linear-gradient(135deg, #0f766e, #14b8a6); border-radius: 12px; padding: 30px; margin-bottom: 30px;">
+                <h4 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 10px;">
+                    🔒 Fixed Window (Size K is Given)
+                </h4>
+                <div style="display: grid; grid-template-columns: 150px 1fr; gap: 15px; color: #ffffff; font-size: 1.1rem;">
+                    <div style="font-weight: 700; color: #ccfbf1;">Window Size:</div>
+                    <div>Constant (K)</div>
+                    
+                    <div style="font-weight: 700; color: #ccfbf1;">Expand Logic:</div>
+                    <div>Slide both pointers by 1</div>
+                    
+                    <div style="font-weight: 700; color: #ccfbf1;">Shrink Logic:</div>
+                    <div>Slide by 1 (maintain size K)</div>
+                    
+                    <div style="font-weight: 700; color: #ccfbf1;">When to Update:</div>
+                    <div>Every slide</div>
+                    
+                    <div style="font-weight: 700; color: #ccfbf1;">Example:</div>
+                    <div>Max sum of subarray with size K=3</div>
+                </div>
+            </div>
+            
+            <!-- Variable Maximum -->
+            <div style="background: linear-gradient(135deg, #7c3aed, #a78bfa); border-radius: 12px; padding: 30px; margin-bottom: 30px;">
+                <h4 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 10px;">
+                    📈 Variable Window - MAXIMUM/LONGEST
+                </h4>
+                <div style="display: grid; grid-template-columns: 150px 1fr; gap: 15px; color: #ffffff; font-size: 1.1rem;">
+                    <div style="font-weight: 700; color: #e9d5ff;">Window Size:</div>
+                    <div>Dynamic (changes)</div>
+                    
+                    <div style="font-weight: 700; color: #e9d5ff;">Expand Logic:</div>
+                    <div>Always move <code style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 4px;">high++</code></div>
+                    
+                    <div style="font-weight: 700; color: #e9d5ff;">Shrink Trigger:</div>
+                    <div><strong>When INVALID</strong> (condition broken)</div>
+                    
+                    <div style="font-weight: 700; color: #e9d5ff;">Shrink Goal:</div>
+                    <div>Make valid again</div>
+                    
+                    <div style="font-weight: 700; color: #e9d5ff;">When to Update:</div>
+                    <div><strong>When valid</strong> (after fixing)</div>
+                    
+                    <div style="font-weight: 700; color: #e9d5ff;">Example:</div>
+                    <div>Longest substring with K distinct characters</div>
+                </div>
+                
+                <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 15px; margin-top: 20px;">
+                    <div style="color: #fde047; font-weight: 700; margin-bottom: 8px;">💡 Key Pattern:</div>
+                    <div style="color: #ffffff; font-size: 1.05rem;">
+                        <code style="background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: 4px; display: inline-block; margin: 4px 0;">
+                        while (INVALID) { shrink_left; }
+                        </code><br>
+                        <span style="color: #a5f3fc; margin-top: 8px; display: inline-block;">
+                        → Shrink only when forced to (window too large/invalid)
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Variable Minimum -->
+            <div style="background: linear-gradient(135deg, #dc2626, #f87171); border-radius: 12px; padding: 30px;">
+                <h4 style="color: #ffffff; font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 10px;">
+                    📉 Variable Window - MINIMUM/SHORTEST
+                </h4>
+                <div style="display: grid; grid-template-columns: 150px 1fr; gap: 15px; color: #ffffff; font-size: 1.1rem;">
+                    <div style="font-weight: 700; color: #fecaca;">Window Size:</div>
+                    <div>Dynamic (changes)</div>
+                    
+                    <div style="font-weight: 700; color: #fecaca;">Expand Logic:</div>
+                    <div>Always move <code style="background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 4px;">high++</code></div>
+                    
+                    <div style="font-weight: 700; color: #fecaca;">Shrink Trigger:</div>
+                    <div><strong>While VALID</strong> (condition met)</div>
+                    
+                    <div style="font-weight: 700; color: #fecaca;">Shrink Goal:</div>
+                    <div>Find smaller valid window</div>
+                    
+                    <div style="font-weight: 700; color: #fecaca;">When to Update:</div>
+                    <div><strong>While valid</strong> (before shrinking)</div>
+                    
+                    <div style="font-weight: 700; color: #fecaca;">Example:</div>
+                    <div>Minimum window substring</div>
+                </div>
+                
+                <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 15px; margin-top: 20px;">
+                    <div style="color: #fde047; font-weight: 700; margin-bottom: 8px;">💡 Key Pattern:</div>
+                    <div style="color: #ffffff; font-size: 1.05rem;">
+                        <code style="background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: 4px; display: inline-block; margin: 4px 0;">
+                        while (VALID) { update_result; shrink_left; }
+                        </code><br>
+                        <span style="color: #fef08a; margin-top: 8px; display: inline-block;">
+                        → Shrink while possible (try to make window smaller)
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Difference Highlight -->
+            <div style="background: linear-gradient(135deg, #fbbf24, #f59e0b); border-radius: 12px; padding: 30px; margin-top: 30px;">
+                <h4 style="color: #78350f; font-size: 1.4rem; margin-bottom: 15px; text-align: center;">
+                    ⚡ THE CRITICAL DIFFERENCE
+                </h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; color: #78350f;">
+                    <div style="background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px;">
+                        <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 10px; color: #7c3aed;">
+                            📈 MAXIMUM
+                        </div>
+                        <div style="font-size: 1.05rem; line-height: 1.8;">
+                            Shrink when <strong>INVALID</strong><br>
+                            <span style="color: #6b21a8;">
+                            (Fix it, then measure)
+                            </span>
+                        </div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px;">
+                        <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 10px; color: #dc2626;">
+                            📉 MINIMUM
+                        </div>
+                        <div style="font-size: 1.05rem; line-height: 1.8;">
+                            Shrink while <strong>VALID</strong><br>
+                            <span style="color: #991b1b;">
+                            (Measure, then optimize)
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        </section>
+
+        
+        <!-- PROBLEM 4: FRUITS INTO BASKETS -->
+        <div class="problem-section" style="background: white; color: #0a0a0a; border-left: 6px solid #7c3aed; padding: 40px; margin: 40px 0; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
+            <h3 style="color: #e91e63; font-size: 2rem; margin-bottom: 25px;">🧺 Problem 4: Fruits Into Baskets (At Most 2 Distinct)</h3>
+
+            <div class="core-concept" style="background: linear-gradient(135deg, #c7d2fe, #a5b4fc); color: #0a0a0a; border: 3px solid #7c3aed; border-radius: 12px; padding: 30px; margin: 25px 0;">
+                <h4 style="color: #c2185b; margin-top: 0; font-size: 1.5rem;">🎯 Core Concept</h4>
+                <p style="font-size: 1.15rem; line-height: 2; color: #0a0a0a;">
+                    You have 2 baskets. Each basket can hold only <strong>one type</strong> of fruit. Pick from a row of trees, but you must pick continuously. Find the <strong>maximum number of fruits</strong> you can collect.<br><br>
+                    <strong style="color: #c2185b;">Translation:</strong> Find the longest subarray with <strong>at most 2 distinct</strong> values.<br><br>
+                    <strong>Key:</strong> "At most 2" → valid when <code>freq.size() ≤ 2</code> → update <code>maxLen</code> after every valid window.
+                </p>
+                <div style="background: white; color: #0a0a0a; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <p style="font-size: 1.1rem; line-height: 2; color: #0a0a0a;">
+                        <strong>Input:</strong> <code>fruits = [1, 2, 1, 2, 3]</code><br>
+                        <strong>Baskets:</strong> can hold type 1 and type 2 — but not type 3<br>
+                        <strong>Output:</strong> <code>4</code> (collect [1, 2, 1, 2])
+                    </p>
+                </div>
+            </div>
+
+            <!-- Visual step-by-step based on the code: left/right/freq -->
+            <div class="visualization" style="background: #f5f5f5; color: #0a0a0a; padding: 30px; border-radius: 12px; margin: 25px 0; border: 2px solid #ddd;">
+                <h4 style="color: #e91e63; font-size: 1.4rem;">📊 Visual Step-by-Step</h4>
+                <pre style="background: white; color: #0a0a0a; padding: 25px; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 1.05rem; line-height: 2.1; overflow-x: auto;">
+<span style="color: #2196f3;">fruits = [1, 2, 1, 2, 3]   left=0, maxLen=0</span>
+<span style="color: #2196f3;">Baskets (freq map) can hold at most 2 types</span>
+
+<strong>right=0:</strong> pick fruits[0]=1
+  freq={1:1}   size=1 ≤ 2 ✓
+  maxLen = max(0, 0-0+1) = <strong style="color:#4caf50;">1</strong>
+  [<span style="color:#4caf50;">1</span>] 2 1 2 3
+
+<strong>right=1:</strong> pick fruits[1]=2
+  freq={1:1, 2:1}   size=2 ≤ 2 ✓
+  maxLen = max(1, 1-0+1) = <strong style="color:#4caf50;">2</strong>
+  [<span style="color:#4caf50;">1 2</span>] 1 2 3
+
+<strong>right=2:</strong> pick fruits[2]=1
+  freq={1:2, 2:1}   size=2 ≤ 2 ✓
+  maxLen = max(2, 2-0+1) = <strong style="color:#4caf50;">3</strong>
+  [<span style="color:#4caf50;">1 2 1</span>] 2 3
+
+<strong>right=3:</strong> pick fruits[3]=2
+  freq={1:2, 2:2}   size=2 ≤ 2 ✓
+  maxLen = max(3, 3-0+1) = <strong style="color:#4caf50;">4</strong>
+  [<span style="color:#4caf50;">1 2 1 2</span>] 3
+
+<strong>right=4:</strong> pick fruits[4]=3
+  freq={1:2, 2:2, 3:1}   size=3 &gt; 2 ❌ INVALID — shrink!
+  [1 2 1 2 <span style="color:#f44336;">3</span>]
+
+  <strong>Shrink left=0:</strong> leftFruit=fruits[0]=1 → freq={1:1,2:2,3:1} → size=3 still &gt; 2
+  <strong>Shrink left=1:</strong> leftFruit=fruits[1]=2 → freq={1:1,2:1,3:1} → size=3 still &gt; 2
+  <strong>Shrink left=2:</strong> leftFruit=fruits[2]=1 → freq[1]→0 → remove → freq={2:1,3:1} → size=2 ✓
+  left=3
+  maxLen = max(4, 4-3+1) = <strong style="color:#4caf50;">4</strong>  (no improvement)
+  [<span style="color:#4caf50;">2 3</span>]
+
+<strong style="color:#4caf50;">Return maxLen = 4</strong>
+</pre>
+            </div>
+
+            <!-- Code block -->
+            <div class="code-section" style="background: #263238; color: #aed581; padding: 30px; border-radius: 12px; margin: 25px 0;">
+                <h4 style="color: #81c784; margin-top: 0;">💻 Java Implementation</h4>
+                <pre style="margin: 0; font-family: 'Courier New', monospace; font-size: 1.05rem; line-height: 1.9;">
+<span style="color: #7986cb;">/**
+ * Fruits Into Baskets
+ * = Longest subarray with at most 2 distinct values
+ *
+ * fruits = [1, 2, 1, 2, 3]
+ *
+ * right=0: freq={1:1}       size=1 ≤ 2  maxLen=1
+ * right=1: freq={1:1,2:1}   size=2 ≤ 2  maxLen=2
+ * right=2: freq={1:2,2:1}   size=2 ≤ 2  maxLen=3
+ * right=3: freq={1:2,2:2}   size=2 ≤ 2  maxLen=4
+ * right=4: freq={1:2,2:2,3:1} size=3 &gt; 2 → shrink
+ *   left=0 remove 1: freq={1:1,2:2,3:1} still 3
+ *   left=1 remove 2: freq={1:1,2:1,3:1} still 3
+ *   left=2 remove 1: freq={2:1,3:1}     size=2 ✓  maxLen=4
+ *
+ * Time: O(n)  Space: O(1) — freq holds at most 3 entries
+ */</span>
+<span style="color: #f06292;">public</span> <span style="color: #4fc3f7;">int</span> <span style="color: #fff176;">totalFruit</span>(<span style="color: #4fc3f7;">int</span>[] fruits) {
+    <span style="color: #4fc3f7;">int</span> n = fruits.length;
+    <span style="color: #4fc3f7;">int</span> left = <span style="color: #ffab91;">0</span>, maxLen = <span style="color: #ffab91;">0</span>;
+    Map&lt;Integer, Integer&gt; freq = <span style="color: #f06292;">new</span> HashMap&lt;&gt;();
+
+    <span style="color: #f06292;">for</span> (<span style="color: #4fc3f7;">int</span> right = <span style="color: #ffab91;">0</span>; right &lt; n; right++) {
+
+        <span style="color: #7986cb;">// EXPAND: put fruit at right into a basket</span>
+        freq.put(fruits[right], freq.getOrDefault(fruits[right], <span style="color: #ffab91;">0</span>) + <span style="color: #ffab91;">1</span>);
+
+        <span style="color: #7986cb;">// SHRINK: too many fruit types — empty from the left basket</span>
+        <span style="color: #f06292;">while</span> (freq.size() &gt; <span style="color: #ffab91;">2</span>) {
+            <span style="color: #4fc3f7;">int</span> leftFruit = fruits[left];
+            freq.put(leftFruit, freq.get(leftFruit) - <span style="color: #ffab91;">1</span>);
+            <span style="color: #7986cb;">// empty basket completely before moving on</span>
+            <span style="color: #f06292;">if</span> (freq.get(leftFruit) == <span style="color: #ffab91;">0</span>)
+                freq.remove(leftFruit);
+            left++;
+        }
+
+        <span style="color: #7986cb;">// valid window (≤ 2 types) — record if longest so far</span>
+        maxLen = Math.max(maxLen, right - left + <span style="color: #ffab91;">1</span>);
+    }
+
+    <span style="color: #f06292;">return</span> maxLen;
+}
+</pre>
+            </div>
+
+            <!-- Explanation -->
+            <div class="info-box" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-left: 6px solid #1976d2; margin: 24px 0; padding: 28px; border-radius: 8px;">
+                <h3 style="color: #0d47a1; margin-top: 0;">🧠 Code Explanation</h3>
+
+                <h4 style="color: #1565c0; margin-top: 18px;">Variables</h4>
+                <div style="background: white; border-radius: 8px; padding: 16px; color: #0a0a0a; font-size: 0.9em; line-height: 2;">
+                    <code>freq</code> — maps each fruit type to how many of that type are in the current window. <code>freq.size()</code> = number of distinct types in the baskets.<br>
+                    <code>left</code> — left boundary; advances when we have more than 2 types.<br>
+                    <code>maxLen</code> — tracks the longest valid window seen so far.
+                </div>
+
+                <h4 style="color: #1565c0; margin-top: 18px;">Expand step</h4>
+                <div style="background: white; border-radius: 8px; padding: 16px; color: #0a0a0a; font-size: 0.9em; line-height: 1.8;">
+                    <code>freq.put(fruits[right], freq.getOrDefault(fruits[right], 0) + 1)</code><br>
+                    Picks the fruit at <code>right</code> and adds it to the basket. If this fruit type is already there, increments its count. If it's new, inserts it with count 1 — potentially pushing <code>freq.size()</code> to 3.
+                </div>
+
+                <h4 style="color: #1565c0; margin-top: 18px;">Shrink step</h4>
+                <div style="background: white; border-radius: 8px; padding: 16px; color: #0a0a0a; font-size: 0.9em; line-height: 1.8;">
+                    <code>while (freq.size() &gt; 2)</code> — keeps emptying the left of the window until we're back to 2 types.<br><br>
+                    Inside: decrement the left fruit's count. If it hits 0, <strong>remove the entry from the map</strong> — this is what reduces <code>freq.size()</code> back down. Without the remove, <code>freq.size()</code> would stay at 3 even with a zero-count entry and the loop would never exit.
+                </div>
+
+                <h4 style="color: #1565c0; margin-top: 18px;">Why update maxLen outside the while loop?</h4>
+                <div style="background: #fff9c4; border-left: 4px solid #fbc02d; border-radius: 8px; padding: 14px 16px; color: #0a0a0a; font-size: 0.9em; line-height: 1.8;">
+                    By the time we reach <code>maxLen = Math.max(...)</code>, the while loop has already finished — meaning <code>freq.size() ≤ 2</code> is guaranteed. The window is valid, so it's safe to record. This is the MAXIMUM pattern: shrink when invalid, record when valid.
+                </div>
+
+                <h4 style="color: #1565c0; margin-top: 18px;">At most 2 vs exactly 2</h4>
+                <div style="background: white; border-radius: 8px; padding: 16px; color: #0a0a0a; font-size: 0.9em; line-height: 1.8;">
+                    <strong>Exactly 2</strong> — window is only valid when <code>freq.size() == 2</code><br>
+                    <strong>At most 2</strong> — window is valid when <code>freq.size() == 2</code> or <code>freq.size() &lt; 2</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROBLEM 5: LONGEST SUBSTRING WITHOUT REPEATING CHARACTERS -->
+        <div class="problem-section" style="background: white; color: #0a0a0a; border-left: 6px solid #7c3aed; padding: 40px; margin: 40px 0; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
+            <h3 style="color: #9c27b0; font-size: 2rem; margin-bottom: 25px;">🔤 Problem 5: Longest Substring Without Repeating Characters</h3>
+            
+            <div class="core-concept" style="background: linear-gradient(135deg, #c7d2fe, #a5b4fc); color: #0a0a0a; border: 3px solid #7c3aed; border-radius: 12px; padding: 30px; margin: 25px 0;">
+                <h4 style="color: #7b1fa2; margin-top: 0; font-size: 1.5rem;">🎯 Core Concept</h4>
+                <p style="font-size: 1.15rem; line-height: 2; color: #0a0a0a;">
+                    <strong>Goal:</strong> Find longest substring where all characters are <strong>unique</strong> (no repeats)<br><br>
+                    
+                    <strong style="color: #7b1fa2;">Key Check:</strong> Window is valid if <code>map.size() == window_length</code><br>
+                    → If map.size() < window_length, there are duplicates!<br><br>
+                    
+                    <strong>Shrink Strategy:</strong> While map.size() < (high - low + 1), shrink low<br>
+                    → Remove duplicates until all characters are unique again
+                </p>
+                
+                <div style="background: white; color: #0a0a0a; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <p style="font-size: 1.1rem; line-height: 2; color: #0a0a0a;">
+                        <strong>Input:</strong> <code>"abcabcbb"</code><br>
+                        <strong>Output:</strong> <code>3</code> (substring "abc")
+                    </p>
+                </div>
+            </div>
+
+            <div class="visualization" style="background: #f5f5f5; color: #0a0a0a; padding: 30px; border-radius: 12px; margin: 25px 0; border: 2px solid #ddd;">
+                <h4 style="color: #9c27b0; font-size: 1.4rem;">📊 Visual Step-by-Step</h4>
+                <pre style="background: white; color: #0a0a0a; padding: 25px; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 1.05rem; line-height: 2; overflow-x: auto;">
+<span style="color: #2196f3;">String: "abcabcbb"</span>
+<span style="color: #2196f3;">Goal: All unique characters</span>
+
+<strong>Step 1:</strong> Add 'a'
+<strong>Map: {a:1}</strong>  Size:1 == Length:1 ✓  Unique!
+[<span style="color: #4caf50;">a</span>]bcabcbb  Max: 1
+
+<strong>Step 2:</strong> Add 'b'
+<strong>Map: {a:1, b:1}</strong>  Size:2 == Length:2 ✓  Unique!
+[<span style="color: #4caf50;">ab</span>]cabcbb  Max: 2
+
+<strong>Step 3:</strong> Add 'c'
+<strong>Map: {a:1, b:1, c:1}</strong>  Size:3 == Length:3 ✓  Unique!
+[<span style="color: #4caf50;">abc</span>]abcbb  Max: 3
+
+<strong>Step 4:</strong> Add 'a' (duplicate!)
+<strong>Map: {a:2, b:1, c:1}</strong>  Size:3 < Length:4 ❌ <strong style="color: #f44336;">DUPLICATE!</strong>
+[abc<span style="color: #f44336;">a</span>]bcbb
+
+<strong>Shrink:</strong> Remove 'a'
+<strong>Map: {a:1, b:1, c:1}</strong>  Size:3 == Length:3 ✓ Unique!
+a[<span style="color: #4caf50;">bca</span>]bcbb  Length: 3
+
+<strong>Step 5:</strong> Add 'b' (duplicate!)
+<strong>Map: {a:1, b:2, c:1}</strong>  Size:3 < Length:4 ❌
+a[bca<span style="color: #f44336;">b</span>]cbb
+
+<strong>Shrink:</strong> Remove 'b'
+<strong>Map: {a:1, b:1, c:1}</strong>  Size:3 == Length:3 ✓
+ab[<span style="color: #4caf50;">cab</span>]cbb
+
+<strong style="color: #4caf50;">Maximum Length: 3</strong>
+</pre>
+            </div>
+
+            <div class="code-section" style="background: #263238; color: #aed581; padding: 30px; border-radius: 12px; margin: 25px 0;">
+                <h4 style="color: #81c784; margin-top: 0;">💻 Java Implementation</h4>
+                <pre style="margin: 0; font-family: 'Courier New', monospace; font-size: 1.05rem; line-height: 1.9;">
+<span style="color: #7986cb;">/**
+ * Problem: Longest Substring Without Repeating Characters
+ * Type: Variable Window - Maximum/Longest
+ * Pattern: Shrink when INVALID (duplicates exist)
+ * Check: map.size() should equal window length
+ */</span>
+<span style="color: #f06292;">public</span> <span style="color: #4fc3f7;">int</span> <span style="color: #fff176;">lengthOfLongestSubstring</span>(String s) {
+    Map&lt;Character, Integer&gt; map = <span style="color: #f06292;">new</span> HashMap&lt;&gt;();
+    <span style="color: #4fc3f7;">int</span> low = <span style="color: #ffab91;">0</span>, maxLen = <span style="color: #ffab91;">0</span>;
+    
+    <span style="color: #f06292;">for</span> (<span style="color: #4fc3f7;">int</span> high = <span style="color: #ffab91;">0</span>; high &lt; s.length(); high++) {
+        <span style="color: #7986cb;">// Expand: Add character</span>
+        <span style="color: #4fc3f7;">char</span> c = s.charAt(high);
+        map.put(c, map.getOrDefault(c, <span style="color: #ffab91;">0</span>) + <span style="color: #ffab91;">1</span>);
+        
+        <span style="color: #7986cb;">// Shrink WHILE INVALID (duplicates exist)</span>
+        <span style="color: #7986cb;">// Invalid = map.size() &lt; window_length</span>
+        <span style="color: #f06292;">while</span> (map.size() &lt; (high - low + <span style="color: #ffab91;">1</span>)) {
+            <span style="color: #4fc3f7;">char</span> leftChar = s.charAt(low);
+            map.put(leftChar, map.get(leftChar) - <span style="color: #ffab91;">1</span>);
+            <span style="color: #f06292;">if</span> (map.get(leftChar) == <span style="color: #ffab91;">0</span>) {
+                map.remove(leftChar);
+            }
+            low++;
+        }
+        
+        <span style="color: #7986cb;">// Update result (all unique now)</span>
+        maxLen = Math.max(maxLen, high - low + <span style="color: #ffab91;">1</span>);
+    }
+    
+    <span style="color: #f06292;">return</span> maxLen;
+}
+
+<span style="color: #7986cb;">/*
+ * Time Complexity: O(n) - each character visited at most twice
+ * Space Complexity: O(min(n, 26)) - at most 26 lowercase letters
+ */</span>
+</pre>
+            </div>
+
+            <div style="background: #e8f5e9; border-left: 5px solid #4caf50; padding: 20px; border-radius: 8px; margin-top: 25px;">
+                <h4 style="color: #2e7d32; margin-top: 0;">💡 Key Insight</h4>
+                <p style="font-size: 1.1rem; line-height: 2; color: #0a0a0a;">
+                    <strong>Uniqueness Check:</strong> map.size() == window_length<br>
+                    → If sizes don't match, there are duplicates!<br>
+                    → Shrink until uniqueness is restored
+                </p>
+            </div>
+        </div>
+
+        <!-- PROBLEM 6: CHARACTER REPLACEMENT -->
+        <div class="problem-section" style="background: white; color: #0a0a0a; border-left: 6px solid #ff5722; padding: 40px; margin: 40px 0; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
+            <h3 style="color: #ff5722; font-size: 2rem; margin-bottom: 25px;">🔄 Problem 6: Longest Repeating Character Replacement</h3>
+
+            <div class="core-concept" style="background: linear-gradient(135deg, #fbe9e7, #ffccbc); border: 3px solid #ff5722; border-radius: 12px; padding: 30px; margin: 25px 0;">
+                <h4 style="color: #d84315; margin-top: 0; font-size: 1.5rem;">🎯 Core Concept</h4>
+                <p style="font-size: 1.15rem; line-height: 2; color: #0a0a0a;">
+                    You can replace at most <code>K</code> characters in a window. You want to make all characters the same — so keep the most frequent character and replace everything else.<br><br>
+                    <strong>A window is valid when:</strong> <code>(window length − most frequent char count) ≤ K</code><br>
+                    The left side tells you how many replacements you need. If that exceeds K, shrink.<br><br>
+                    <strong>Input:</strong> <code>s = "AABABBA"</code>, <code>K = 1</code> → <strong>Output:</strong> <code>4</code>
+                </p>
+
+                <div class="demo-container" style="margin-top: 25px;">
+
+                    <!-- Stage 1: AABA valid -->
+                    <div class="stage-box">
+                        <div class="stage-title" data-step="0">Window [AABA] — len=4, freq={A:3, B:1}, maxCnt=3</div>
+                        <div class="visual-array">
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window" style="background:#c62828; border-color:#e53935; box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">A</div>
+                        </div>
+                        <div class="stage-info">
+                            Keep A×3 (most frequent) — replace B×1 → costs <strong>1 replacement</strong><br>
+                            diff = len − maxCnt = 4 − 3 = <strong style="color:var(--accent-green);">1 ≤ K(1) ✓ VALID</strong>
+                        </div>
+                    </div>
+
+                    <!-- Stage 2: AABAB invalid -->
+                    <div class="stage-box">
+                        <div class="stage-title" data-step="1">Window [AABAB] — len=5, freq={A:3, B:2}, maxCnt=3</div>
+                        <div class="visual-array">
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window" style="background:#c62828; border-color:#e53935; box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window" style="background:#c62828; border-color:#e53935; box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">A</div>
+                        </div>
+                        <div class="stage-info">
+                            Keep A×3 (most frequent) — replace B×2 → costs <strong>2 replacements</strong><br>
+                            diff = len − maxCnt = 5 − 3 = <strong style="color:#f44336;">2 > K(1) ✗ INVALID — shrink!</strong>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="visualization" style="background: #f5f5f5; color: #0a0a0a; padding: 30px; border-radius: 12px; margin: 25px 0; border: 2px solid #ddd;">
+                <h4 style="color: #ff5722; font-size: 1.4rem;">📊 Visual Step-by-Step</h4>
+                <p style="color:#555; margin-bottom: 20px; font-size:1rem;">
+                    <strong>s = "AABABBA"</strong> &nbsp;|&nbsp; k = 1 &nbsp;|&nbsp;
+                    <span style="display:inline-block;width:18px;height:18px;background:var(--window-color);border:3px solid #818cf8;border-radius:4px;vertical-align:middle;"></span> in window &nbsp;
+                    <span style="display:inline-block;width:18px;height:18px;background:#c62828;border:3px solid #e53935;border-radius:4px;vertical-align:middle;"></span> being replaced &nbsp;
+                    <span style="display:inline-block;width:18px;height:18px;background:var(--code-bg);border:3px solid #64748b;border-radius:4px;opacity:0.3;vertical-align:middle;"></span> outside window
+                </p>
+
+                <div class="demo-container">
+
+                    <!-- high=0: add A -->
+                    <div class="stage-box">
+                        <div class="stage-title" data-step="0">high=0: Add A → freq={A:1}</div>
+                        <div class="visual-array">
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell" style="opacity:0.3;">A</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">A</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">A</div>
+                        </div>
+                        <div class="stage-info">
+                            diff = len - maxCnt = 1 - 1 = 0 ≤ 1 ✓<br>
+                            <strong style="color:var(--accent-green);">res=1</strong>
+                        </div>
+                    </div>
+
+                    <!-- high=1: add A -->
+                    <div class="stage-box">
+                        <div class="stage-title" data-step="1">high=1: Add A → freq={A:2}</div>
+                        <div class="visual-array">
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">A</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">A</div>
+                        </div>
+                        <div class="stage-info">
+                            diff = len - maxCnt = 2 - 2 = 0 ≤ 1 ✓<br>
+                            <strong style="color:var(--accent-green);">res=2</strong>
+                        </div>
+                    </div>
+
+                    <!-- high=2: add B -->
+                    <div class="stage-box">
+                        <div class="stage-title" data-step="2">high=2: Add B → freq={A:2, B:1}</div>
+                        <div class="visual-array">
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell" style="opacity:0.3;">A</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">A</div>
+                        </div>
+                        <div class="stage-info">
+                            diff = len - maxCnt = 3 - 2 = 1 ≤ 1 ✓ — replace B×1<br>
+                            <strong style="color:var(--accent-green);">res=3</strong>
+                        </div>
+                    </div>
+
+                    <!-- high=3: add A -->
+                    <div class="stage-box">
+                        <div class="stage-title" data-step="3">high=3: Add A → freq={A:3, B:1}</div>
+                        <div class="visual-array">
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">A</div>
+                        </div>
+                        <div class="stage-info">
+                            diff = len - maxCnt = 4 - 3 = 1 ≤ 1 ✓ — replace B×1<br>
+                            <strong style="color:var(--accent-green);">res=4 ← best!</strong>
+                        </div>
+                    </div>
+
+                    <!-- high=4: add B → invalid → shrink x2 -->
+                    <div class="stage-box">
+                        <div class="stage-title" data-step="4">high=4: Add B → freq={A:3, B:2} — diff=2 &gt; 1 ❌ INVALID</div>
+                        <div class="visual-array">
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">A</div>
+                        </div>
+                        <div class="stage-info" style="color:#c62828;">
+                            diff = len - maxCnt = 5 - 3 = 2 &gt; 1 ❌ — need 2 replacements, only have 1 → shrink
+                        </div>
+                    </div>
+
+                    <div class="stage-box">
+                        <div class="stage-title" data-step="4a">↳ Shrink: Remove A at low=0 → freq={A:2, B:2} — diff=2 &gt; 1 ❌ still invalid</div>
+                        <div class="visual-array">
+                            <div class="array-cell" style="opacity:0.15;border-style:dashed;">A</div>
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">A</div>
+                        </div>
+                        <div class="stage-info" style="color:#c62828;">
+                            low moves to 1 — window=[ABAB], diff = 4 - 2 = 2 &gt; 1 ❌ keep shrinking
+                        </div>
+                    </div>
+
+                    <div class="stage-box">
+                        <div class="stage-title" data-step="4b">↳ Shrink: Remove A at low=1 → freq={A:1, B:2} — diff=1 ≤ 1 ✓ stop</div>
+                        <div class="visual-array">
+                            <div class="array-cell" style="opacity:0.15;border-style:dashed;">A</div>
+                            <div class="array-cell" style="opacity:0.15;border-style:dashed;">A</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell" style="opacity:0.3;">B</div>
+                            <div class="array-cell" style="opacity:0.3;">A</div>
+                        </div>
+                        <div class="stage-info">
+                            low moves to 2 — window=[BAB], diff = 3 - 2 = 1 ≤ 1 ✓<br>
+                            <strong>res=4 (no change)</strong>
+                        </div>
+                    </div>
+
+                    <!-- high=5: add B -->
+                    <div class="stage-box">
+                        <div class="stage-title" data-step="5">high=5: Add B → freq={A:1, B:3}</div>
+                        <div class="visual-array">
+                            <div class="array-cell" style="opacity:0.15;border-style:dashed;">A</div>
+                            <div class="array-cell" style="opacity:0.15;border-style:dashed;">A</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell window">A</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell" style="opacity:0.3;">A</div>
+                        </div>
+                        <div class="stage-info">
+                            diff = len - maxCnt = 4 - 3 = 1 ≤ 1 ✓ — replace A×1<br>
+                            <strong>res=4 (no change)</strong>
+                        </div>
+                    </div>
+
+                    <!-- high=6: add A → invalid → shrink x2 -->
+                    <div class="stage-box">
+                        <div class="stage-title" data-step="6">high=6: Add A → freq={A:2, B:3} — diff=2 &gt; 1 ❌ INVALID</div>
+                        <div class="visual-array">
+                            <div class="array-cell" style="opacity:0.15;border-style:dashed;">A</div>
+                            <div class="array-cell" style="opacity:0.15;border-style:dashed;">A</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">A</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell window">A</div>
+                        </div>
+                        <div class="stage-info" style="color:#c62828;">
+                            diff = len - maxCnt = 5 - 3 = 2 &gt; 1 ❌ — need 2 replacements, only have 1 → shrink
+                        </div>
+                    </div>
+
+                    <div class="stage-box">
+                        <div class="stage-title" data-step="6a">↳ Shrink: Remove B at low=2 → freq={A:2, B:2} — diff=2 &gt; 1 ❌ still invalid</div>
+                        <div class="visual-array">
+                            <div class="array-cell" style="opacity:0.15;border-style:dashed;">A</div>
+                            <div class="array-cell" style="opacity:0.15;border-style:dashed;">A</div>
+                            <div class="array-cell" style="opacity:0.15;border-style:dashed;">B</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">A</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell window">A</div>
+                        </div>
+                        <div class="stage-info" style="color:#c62828;">
+                            low moves to 3 — window=[ABBA], diff = 4 - 2 = 2 &gt; 1 ❌ keep shrinking
+                        </div>
+                    </div>
+
+                    <div class="stage-box">
+                        <div class="stage-title" data-step="6b">↳ Shrink: Remove A at low=3 → freq={A:1, B:2} — diff=1 ≤ 1 ✓ stop</div>
+                        <div class="visual-array">
+                            <div class="array-cell" style="opacity:0.15;border-style:dashed;">A</div>
+                            <div class="array-cell" style="opacity:0.15;border-style:dashed;">A</div>
+                            <div class="array-cell" style="opacity:0.15;border-style:dashed;">B</div>
+                            <div class="array-cell" style="opacity:0.15;border-style:dashed;">A</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell window" style="background:#c62828;border-color:#e53935;box-shadow:0 0 20px rgba(229,57,53,0.6);">B</div>
+                            <div class="array-cell window">A</div>
+                        </div>
+                        <div class="stage-info">
+                            low moves to 4 — window=[BBA], diff = 3 - 2 = 1 ≤ 1 ✓<br>
+                            <strong>res=4 (no change)</strong>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box" style="margin-top:30px;">
+                        <strong>🎯 Return 4</strong> — longest valid window was [AABA] at high=3
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="code-section" style="background: #263238; color: #aed581; padding: 30px; border-radius: 12px; margin: 25px 0;">
+                <h4 style="color: #81c784; margin-top: 0;">💻 Java Implementation</h4>
+                <pre style="margin: 0; font-family: 'Courier New', monospace; font-size: 1.05rem; line-height: 1.9;">
+<span style="color: #7986cb;">/**
+ * Longest Repeating Character Replacement
+ *
+ * s = "AABABBA", k = 1
+ *
+ * high=0: freq={A:1}       maxCnt=1, len=1, diff=0 ≤ 1 ✓  res=1
+ * high=1: freq={A:2}       maxCnt=2, len=2, diff=0 ≤ 1 ✓  res=2
+ * high=2: freq={A:2,B:1}   maxCnt=2, len=3, diff=1 ≤ 1 ✓  res=3
+ * high=3: freq={A:3,B:1}   maxCnt=3, len=4, diff=1 ≤ 1 ✓  res=4
+ * high=4: freq={A:3,B:2}   maxCnt=3, len=5, diff=2 &gt; 1 ✗
+ *   low=0 remove A: freq={A:2,B:2} maxCnt=2, len=4, diff=2 &gt; 1 ✗
+ *   low=1 remove A: freq={A:1,B:2} maxCnt=2, len=3, diff=1 ≤ 1 ✓  res=4
+ * high=5: freq={A:1,B:3}   maxCnt=3, len=4, diff=1 ≤ 1 ✓  res=4
+ * high=6: freq={A:2,B:3}   maxCnt=3, len=5, diff=2 &gt; 1 ✗
+ *   low=2 remove B: freq={A:2,B:2} maxCnt=2, len=4, diff=2 &gt; 1 ✗
+ *   low=3 remove A: freq={A:1,B:2} maxCnt=2, len=3, diff=1 ≤ 1 ✓  res=4
+ *
+ * Time: O(n * d) where d = distinct chars in window → O(n)
+ * Space: O(d) = O(26) for lowercase letters = O(1)
+ */</span>
+<span style="color: #7986cb;">// Helper: find the highest frequency value in the map</span>
+<span style="color: #f06292;">private</span> <span style="color: #4fc3f7;">int</span> <span style="color: #fff176;">findMax</span>(Map&lt;Character, Integer&gt; freq) {
+    <span style="color: #4fc3f7;">int</span> maxc = -<span style="color: #ffab91;">1</span>;
+    <span style="color: #f06292;">for</span> (<span style="color: #4fc3f7;">int</span> count : freq.values())
+        maxc = Math.max(maxc, count);
+    <span style="color: #f06292;">return</span> maxc;
+}
+
+<span style="color: #f06292;">public</span> <span style="color: #4fc3f7;">int</span> <span style="color: #fff176;">characterReplacement</span>(String s, <span style="color: #4fc3f7;">int</span> k) {
+    <span style="color: #4fc3f7;">int</span> n = s.length();
+    Map&lt;Character, Integer&gt; freq = <span style="color: #f06292;">new</span> HashMap&lt;&gt;();
+    <span style="color: #4fc3f7;">int</span> low = <span style="color: #ffab91;">0</span>, res = Integer.MIN_VALUE;
+
+    <span style="color: #f06292;">for</span> (<span style="color: #4fc3f7;">int</span> high = <span style="color: #ffab91;">0</span>; high &lt; n; high++) {
+        <span style="color: #4fc3f7;">char</span> c = s.charAt(high);
+
+        <span style="color: #7986cb;">// Step 1: add high to information</span>
+        freq.put(c, freq.getOrDefault(c, <span style="color: #ffab91;">0</span>) + <span style="color: #ffab91;">1</span>);
+
+        <span style="color: #7986cb;">// Step 2: while invalid, shrink from left</span>
+        <span style="color: #7986cb;">// Valid   when: diff = len - maxCnt ≤ k  (replacements needed ≤ budget)</span>
+        <span style="color: #7986cb;">// Invalid when: diff = len - maxCnt > k  (would need more replacements than allowed)</span>
+        <span style="color: #7986cb;">// Why? len - maxCnt = number of non-dominant chars = chars that must be replaced</span>
+        <span style="color: #7986cb;">// e.g. window [AABAB]: len=5, maxCnt=3(A) → 5-3=2 replacements needed, k=1 → INVALID</span>
+        <span style="color: #4fc3f7;">int</span> maxCnt = findMax(freq);       <span style="color: #7986cb;">// most frequent char in window</span>
+        <span style="color: #4fc3f7;">int</span> len    = high - low + <span style="color: #ffab91;">1</span>;
+        <span style="color: #4fc3f7;">int</span> diff   = len - maxCnt;        <span style="color: #7986cb;">// number of chars that need replacing</span>
+        <span style="color: #f06292;">while</span> (diff &gt; k) {
+            <span style="color: #4fc3f7;">char</span> leftChar = s.charAt(low);
+            freq.put(leftChar, freq.get(leftChar) - <span style="color: #ffab91;">1</span>);
+            <span style="color: #f06292;">if</span> (freq.get(leftChar) == <span style="color: #ffab91;">0</span>)
+                freq.remove(leftChar);  <span style="color: #7986cb;">// keep map clean so values() stays accurate</span>
+            low++;
+            maxCnt = findMax(freq);
+            len    = high - low + <span style="color: #ffab91;">1</span>;
+            diff   = len - maxCnt;
+        }
+
+        <span style="color: #7986cb;">// Step 3: window is valid — record result</span>
+        len = high - low + <span style="color: #ffab91;">1</span>;
+        res = Math.max(res, len);
+    }
+
+    <span style="color: #f06292;">return</span> res;
+}
+</pre>
+            </div>
+
+
+        </div>
+
+<!-- Advanced Problem -->
+
+        <!-- Minimum/Shortest Pattern — Problem 2: Window Substring -->
+        <section class="section" style="animation-delay: 0.6s;">
+            <h2>📉 MINIMUM Window — Problem 2: Smallest Window Containing All Characters</h2>
+
+            <div style="background: #f3e5f5; border-left: 6px solid #8e24aa; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                <p style="font-size: 1.1em; color: #0a0a0a; margin: 0;">
+                    <strong>Problem:</strong> Given strings S and T, find the <strong>smallest substring of S</strong> that contains every character in T (including duplicates).<br><br>
+                    <strong>Example:</strong> S = "ADOBECODEBANC", T = "ABC" → Answer: "BANC"<br><br>
+                    <strong>Validity condition:</strong> <code>have[c] &ge; need[c]</code> for every character in T<br>
+                    <strong>Data structure needed:</strong> two frequency arrays — one for what T requires, one for what the current window has
+                </p>
+            </div>
+
+            <div style="background: #fff9c4; border-left: 5px solid #fbc02d; padding: 18px; border-radius: 8px; margin-bottom: 25px; color: #0a0a0a;">
+                <h4 style="color: #f57f17; margin-top: 0;">⚠️ Notice the difference from Problem 1</h4>
+                <p style="color: #0a0a0a; margin: 0; font-size: 1.0em; line-height: 1.8;">
+                    Problem 1 checks a single number: <code>sum &ge; target</code> — one comparison.<br>
+                    Problem 2 checks across every character: <code>have[c] &ge; need[c] for all c</code> — needs a helper function.<br><br>
+                    The <strong>shrink-while-valid pattern is identical</strong>. Only the validity check is different.
+                </p>
+            </div>
+
+            <div class="highlight-box">
+                <strong>Core Logic:</strong> Same pattern as Problem 1 — shrink WHILE valid
+                <ol style="margin-top: 15px; color: var(--text-primary);">
+                    <li>Build <code>need[]</code> from T — how many of each character we require</li>
+                    <li>Expand high pointer — add character to <code>have[]</code></li>
+                    <li>Check validity: does <code>have[]</code> satisfy <code>need[]</code> for every character?</li>
+                    <li>While VALID: record current window, then shrink from left to try for smaller</li>
+                </ol>
+            </div>
+
+            <!-- Stage-by-stage visual -->
+            <div class="demo-container">
+                <p style="color: #8e24aa; font-weight: 600; margin-bottom: 20px; font-size: 1.1em;">
+                    Stage-by-Stage: Smallest Substring Containing "ABC"
+                </p>
+                <p style="margin-bottom: 30px; color: var(--text-secondary);">
+                    S = "ADOBECODEBANC" &nbsp;|&nbsp; T = "ABC" &nbsp;|&nbsp; need = {A:1, B:1, C:1}
+                </p>
+
+                <div class="stage-box">
+                    <div class="stage-title">Stages 0–5: Expand until window contains A, B, and C</div>
+                    <div style="font-family: monospace; font-size: 1.05em; padding: 10px; background: #f0f0f0; border-radius: 6px; margin-bottom: 10px; color: #333; letter-spacing: 2px;">
+                        [<span style="color:#1976d2; font-weight:bold;">A D O B E C</span>] O D E B A N C
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: "ADOBEC"</strong> | low=0, high=5<br>
+                        have = {A:1, D:1, O:1, B:1, E:1, C:1}<br>
+                        <strong style="color: var(--valid-color);">✓ VALID — has at least 1 of A, B, C</strong><br>
+                        minLen = 6, startInd = 0
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Shrink: Remove A → becomes invalid</div>
+                    <div style="font-family: monospace; font-size: 1.05em; padding: 10px; background: #f0f0f0; border-radius: 6px; margin-bottom: 10px; color: #333; letter-spacing: 2px;">
+                        A [<span style="color:#c62828; font-weight:bold;">D O B E C</span>] O D E B A N C
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: "DOBEC"</strong> | low=1, high=5<br>
+                        have = {A:0, D:1, O:1, B:1, E:1, C:1}<br>
+                        <strong style="color: var(--invalid-color);">✗ INVALID — A is now missing (have[A]=0, need[A]=1)</strong><br>
+                        Stop shrinking. Expand again.
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Expand further: Continue until next valid window</div>
+                    <div style="font-family: monospace; font-size: 1.05em; padding: 10px; background: #f0f0f0; border-radius: 6px; margin-bottom: 10px; color: #333; letter-spacing: 2px;">
+                        A [<span style="color:#1976d2; font-weight:bold;">D O B E C O D E B A N C</span>]
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: "DOBECODEB<u>A</u>NC"</strong> | low=1, high=12<br>
+                        have = {A:1, B:2, C:1, ...}<br>
+                        <strong style="color: var(--valid-color);">✓ VALID — has A, B, and C again</strong><br>
+                        minLen = 6 (no improvement — window is bigger)
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Shrink aggressively while still valid</div>
+                    <div style="font-family: monospace; font-size: 1.05em; padding: 10px; background: #f0f0f0; border-radius: 6px; margin-bottom: 10px; color: #333; letter-spacing: 2px;">
+                        A D O B E C O D E [<span style="color:#1976d2; font-weight:bold;">B A N C</span>]
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: "BANC"</strong> | low=9, high=12<br>
+                        have = {B:1, A:1, N:1, C:1}<br>
+                        <strong style="color: var(--valid-color);">✓ VALID — still has A, B, C</strong><br>
+                        minLen = <strong style="color: var(--accent-green);">4 ✓ BEST ANSWER!</strong>
+                    </div>
+                </div>
+
+                <div class="stage-box">
+                    <div class="stage-title">Shrink: Remove B → becomes invalid</div>
+                    <div style="font-family: monospace; font-size: 1.05em; padding: 10px; background: #f0f0f0; border-radius: 6px; margin-bottom: 10px; color: #333; letter-spacing: 2px;">
+                        A D O B E C O D E B [<span style="color:#c62828; font-weight:bold;">A N C</span>]
+                    </div>
+                    <div class="stage-info">
+                        <strong>Window: "ANC"</strong> | low=10, high=12<br>
+                        have = {A:1, N:1, C:1}<br>
+                        <strong style="color: var(--invalid-color);">✗ INVALID — B is now missing</strong><br>
+                        High pointer is at end. Loop exits. Return "BANC".
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top: 30px;">
+                    <strong>🎯 Result:</strong> "BANC" (length 4)<br>
+                    <strong>Key Pattern:</strong> Identical shrink-while-valid logic as Problem 1. Only the validity check changed — from <code>sum &ge; target</code> to <code>isValid(have, need)</code>.
+                </div>
+            </div>
+
+            <!-- Logic box -->
+            <div class="info-box" style="background: linear-gradient(135deg, #c7d2fe, #a5b4fc); color: #0a0a0a; border-left: 6px solid #8e24aa; margin: 30px 0; padding: 30px;">
+                <h3 style="color: #4a148c; margin-top: 0;">🧠 Logic Behind the Solution</h3>
+
+                <h4 style="color: #6a1b9a; margin-top: 20px;">The Validity Check</h4>
+                <p style="font-size: 1.05em; line-height: 1.8; color: #0a0a0a;">
+                    A window is valid when it has enough of every character T requires. We track this with two arrays:<br>
+                    • <code>need[c]</code> = how many times character c appears in T<br>
+                    • <code>have[c]</code> = how many times c is currently in our window<br>
+                    Valid when <code>have[c] &ge; need[c]</code> for every c.
+                </p>
+
+                <h4 style="color: #6a1b9a; margin-top: 20px;">Why a Helper Function?</h4>
+                <div style="background: white; color: #0a0a0a; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <p style="font-size: 1.05em; line-height: 1.8; color: #0a0a0a;">
+                        Problem 1: validity = one number comparison → inline check<br>
+                        Problem 2: validity = 256 character comparisons → extract to <code>isValid(have, need)</code><br><br>
+                        The helper loops over all characters and returns false the moment any character is under-supplied. Same logic, just more complex to express inline.
+                    </p>
+                </div>
+
+                <h4 style="color: #6a1b9a; margin-top: 20px;">Common Mistake</h4>
+                <div style="background: #fecaca; color: #0a0a0a; padding: 15px; border-left: 4px solid #c62828; margin: 15px 0;">
+                    <p style="font-size: 1.05em; color: #0a0a0a;">
+                        ❌ <strong>Recording the window AFTER shrinking</strong> — the window is invalid at that point.<br><br>
+                        ✅ <strong>Record startInd and minLen BEFORE removing from the left</strong> — while the window is still valid.
+                    </p>
+                </div>
+
+                <h4 style="color: #6a1b9a; margin-top: 20px;">The Pattern Stays the Same</h4>
+                <div style="background: white; color: #0a0a0a; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <table style="width: 100%; border-collapse: collapse; color: #0a0a0a;">
+                        <tr style="background: #f5f5f5;">
+                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;"></th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Problem 1 (Sum)</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Problem 2 (Substring)</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><strong>Expand step</strong></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><code>sum += nums[high]</code></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><code>have[s[high]]++</code></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><strong>Valid check</strong></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><code>sum &ge; target</code></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><code>isValid(have, need)</code></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><strong>Record result</strong></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><code>minLen = min(minLen, size)</code></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><code>minLen = size; startInd = low</code></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><strong>Shrink step</strong></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><code>sum -= nums[low]; low++</code></td>
+                            <td style="padding: 10px; border: 1px solid #ddd;"><code>have[s[low]]--; low++</code></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="code-block">
+                <pre><code><span class="comment">/**
+ * MINIMUM WINDOW — PROBLEM 2: Smallest Substring Containing All of T
+ *
+ * Validity: have[c] >= need[c] for every character c in T
+ * Data structure: two int[256] frequency arrays
+ *
+ * S = "ADOBECODEBANC", T = "ABC"
+ * need = {A:1, B:1, C:1}
+ *
+ * Expand to "ADOBEC"  → valid (has A,B,C) → record len=6
+ *   Shrink: "DOBEC"   → invalid (no A) → stop
+ * Expand to "DOBECODEB A NC" → valid → len=12, no improvement
+ *   Shrink down to "BANC" → valid → record len=4 🎯
+ *   Shrink: "ANC"     → invalid (no B) → stop
+ *
+ * Time: O(|S| + |T|), Space: O(1) — fixed 256-char arrays
+ */</span>
+<span class="keyword">public</span> <span class="type">String</span> <span class="function">minWindow</span>(<span class="type">String</span> s, <span class="type">String</span> t) {
+    <span class="keyword">if</span> (s.length() == <span class="number">0</span> || t.length() == <span class="number">0</span>) <span class="keyword">return</span> <span class="string">""</span>;
+
+    <span class="type">int</span>[] need = <span class="keyword">new</span> <span class="type">int</span>[<span class="number">256</span>]; <span class="comment">// what T requires</span>
+    <span class="type">int</span>[] have = <span class="keyword">new</span> <span class="type">int</span>[<span class="number">256</span>]; <span class="comment">// what current window contains</span>
+
+    <span class="comment">// Build need[] from T</span>
+    <span class="keyword">for</span> (<span class="type">char</span> c : t.toCharArray()) need[c]++;
+
+    <span class="type">int</span> low = <span class="number">0</span>, minLen = Integer.MAX_VALUE, startInd = -<span class="number">1</span>;
+
+    <span class="keyword">for</span> (<span class="type">int</span> high = <span class="number">0</span>; high &lt; s.length(); high++) {
+
+        <span class="comment">// EXPAND: add character to window</span>
+        have[s.charAt(high)]++;
+
+        <span class="comment">// SHRINK WHILE VALID: window satisfies all of T's requirements</span>
+        <span class="keyword">while</span> (isValid(have, need)) {
+            <span class="comment">// Record before shrinking — window is valid RIGHT NOW</span>
+            <span class="keyword">if</span> (high - low + <span class="number">1</span> &lt; minLen) {
+                minLen = high - low + <span class="number">1</span>;
+                startInd = low;
+            }
+
+            <span class="comment">// Try making it smaller</span>
+            have[s.charAt(low)]--;
+            low++;
+        }
+    }
+
+    <span class="keyword">return</span> minLen == Integer.MAX_VALUE ? <span class="string">""</span> : s.substring(startInd, startInd + minLen);
+}
+
+<span class="comment">// Valid when current window has enough of every required character</span>
+<span class="keyword">private</span> <span class="type">boolean</span> <span class="function">isValid</span>(<span class="type">int</span>[] have, <span class="type">int</span>[] need) {
+    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">256</span>; i++) {
+        <span class="keyword">if</span> (have[i] &lt; need[i]) <span class="keyword">return</span> <span class="keyword">false</span>;
+    }
+    <span class="keyword">return</span> <span class="keyword">true</span>;
+}</code></pre>
+            </div>
+        </section>
+
+        </section>
+
+        <!-- Max vs Min Summary -->
+        <section class="section" style="animation-delay: 0.65s;">
+            <h2>⚖️ Maximum vs Minimum — Summary</h2>
+            <div class="highlight-box">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.95em;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--border-color);">
+                            <th style="padding: 12px 16px; text-align: left; color: var(--text-primary);"></th>
+                            <th style="padding: 12px 16px; text-align: left; color: var(--accent-primary);">📈 MAXIMUM / Longest</th>
+                            <th style="padding: 12px 16px; text-align: left; color: var(--accent-secondary);">📉 MINIMUM / Shortest</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 12px 16px; font-weight: 600; color: var(--text-primary);">Goal</td>
+                            <td style="padding: 12px 16px; color: var(--text-secondary);">Find the longest valid window</td>
+                            <td style="padding: 12px 16px; color: var(--text-secondary);">Find the shortest valid window</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 12px 16px; font-weight: 600; color: var(--text-primary);">Shrink when</td>
+                            <td style="padding: 12px 16px; color: var(--text-secondary);">Window is <strong>invalid</strong></td>
+                            <td style="padding: 12px 16px; color: var(--text-secondary);">Window is <strong>valid</strong></td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid var(--border-color);">
+                            <td style="padding: 12px 16px; font-weight: 600; color: var(--text-primary);">Record result</td>
+                            <td style="padding: 12px 16px; color: var(--text-secondary);">After shrinking — window is valid</td>
+                            <td style="padding: 12px 16px; color: var(--text-secondary);">Before shrinking — window is still valid</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px 16px; font-weight: 600; color: var(--text-primary);">Keywords</td>
+                            <td style="padding: 12px 16px; color: var(--text-secondary);">"at most K", "longest", "maximum"</td>
+                            <td style="padding: 12px 16px; color: var(--text-secondary);">"at least K", "shortest", "minimum"</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Common Patterns -->
+        <section class="section" style="animation-delay: 0.7s;">
+            <h2>🎓 Common Problem Patterns</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px;">
+                <div class="stat-box" style="padding: 30px;">
+                    <h3 style="color: var(--accent-primary); margin: 0 0 15px 0; font-size: 1.3rem;">Fixed Window</h3>
+                    <ul>
+                        <li>Max/Min sum of size K</li>
+                        <li>Average of subarrays</li>
+                        <li>Find anagrams of length K</li>
+                    </ul>
+                </div>
+                
+                <div class="stat-box" style="padding: 30px;">
+                    <h3 style="color: var(--accent-secondary); margin: 0 0 15px 0; font-size: 1.3rem;">Variable - Maximum</h3>
+                    <ul>
+                        <li>Longest K distinct chars</li>
+                        <li>Longest without repeating</li>
+                        <li>Max consecutive ones</li>
+                        <li>Fruits into baskets</li>
+                    </ul>
+                </div>
+                
+                <div class="stat-box" style="padding: 30px;">
+                    <h3 style="color: var(--accent-tertiary); margin: 0 0 15px 0; font-size: 1.3rem;">Variable - Minimum</h3>
+                    <ul>
+                        <li>Min subarray sum ≥ target</li>
+                        <li>Min window substring</li>
+                        <li>Smallest covering substring</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Reference -->
+        <section class="section" style="animation-delay: 0.8s;">
+            <h2>📌 Quick Reference Guide & Code Templates</h2>
+            
+            <div class="highlight-box" style="background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(255, 107, 157, 0.1)); border-color: var(--accent-primary);">
+                <h3 style="color: var(--accent-primary); margin-top: 0;">When to Use Each Pattern:</h3>
+                <br>
+                <strong>Fixed Window:</strong> Problem explicitly states window size
+                <br><br>
+                <strong>Variable Maximum:</strong> Keywords like "longest", "maximum", constraints like "at most K"
+                → Shrink when INVALID
+                <br><br>
+                <strong>Variable Minimum:</strong> Keywords like "shortest", "minimum", constraints like "at least K" or "≥ target"
+                → Shrink while VALID
+            </div>
+
+            <h3 style="margin-top: 50px;">📝 Code Templates</h3>
+
+            <div style="display: grid; grid-template-columns: 1fr; gap: 30px; margin-top: 30px;">
+                <!-- Fixed Window Template -->
+                
+            <!-- LOGIC BEHIND THE SOLUTION -->
+            <div class="info-box" style="background: linear-gradient(135deg, #ffebee, #ffcdd2); border-left: 6px solid #d32f2f; margin: 30px 0; padding: 30px;">
+                <h3 style="color: #b71c1c; margin-top: 0;">🧠 Logic Behind the Solution</h3>
+                
+                <h4 style="color: #c62828; margin-top: 20px;">The Challenge</h4>
+                <p style="font-size: 1.05em; line-height: 1.8; color: #0a0a0a;">
+                    <strong>Most complex sliding window problem!</strong><br>
+                    • Must contain ALL characters from T (including duplicates)<br>
+                    • Want MINIMUM length window<br>
+                    • Characters in S can be in any order<br>
+                    • T can have repeated characters (e.g., "AAB")
+                </p>
+
+                <h4 style="color: #c62828; margin-top: 20px;">Two HashMap Strategy</h4>
+                <div style="background: white; color: #0a0a0a; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <p style="font-size: 1.05em; line-height: 2; color: #0a0a0a;">
+                        <strong>HashMap 1 (targetMap):</strong> Frequency of each char in T<br>
+                        • Example: T = "AAB" → {A:2, B:1}<br>
+                        • This never changes<br><br>
+                        
+                        <strong>HashMap 2 (windowMap):</strong> Frequency of chars in current window<br>
+                        • Updates as we expand/shrink window<br>
+                        • Example: Window = "BA" → {B:1, A:1}<br><br>
+                        
+                        <strong>formed variable:</strong> Count of characters that have met their requirement<br>
+                        • If T needs 2 A's and we have 2 A's → formed++<br>
+                        • Need formed == targetMap.size() for valid window
+                    </p>
+                </div>
+
+                <h4 style="color: #c62828; margin-top: 20px;">The "formed" Logic Explained</h4>
+                <div style="background: #d1e7ff; color: #0a0a0a; padding: 15px; border-left: 4px solid #2563eb; margin: 15px 0;">
+                    <p style="font-size: 1.05em; line-height: 2; color: #0a0a0a;">
+                        <strong>Example:</strong> T = "AAB"<br>
+                        • targetMap = {A:2, B:1}<br>
+                        • required = 2 (need both 'A' and 'B' satisfied)<br><br>
+                        
+                        <strong>Window processing:</strong><br>
+                        • Add 'A': windowMap={A:1}, formed=0 (need 2 A's)<br>
+                        • Add 'A': windowMap={A:2}, formed=1 ✓ (A satisfied)<br>
+                        • Add 'B': windowMap={A:2,B:1}, formed=2 ✓ (Both satisfied)<br>
+                        • <strong>Now valid!</strong> formed == required
+                    </p>
+                </div>
+
+                <h4 style="color: #c62828; margin-top: 20px;">Expand and Shrink Logic</h4>
+                <ol style="font-size: 1.05em; line-height: 2; color: #0a0a0a;">
+                    <li><strong>EXPAND (right pointer):</strong>
+                        <ul>
+                            <li>Add character to windowMap</li>
+                            <li>If this char is in T and frequencies now match → formed++</li>
+                        </ul>
+                    </li>
+                    <li><strong>CHECK VALIDITY:</strong> Is formed == required?</li>
+                    <li><strong>SHRINK (left pointer) - while valid:</strong>
+                        <ul>
+                            <li>Update result if current window is smaller</li>
+                            <li>Remove leftmost character</li>
+                            <li>If removed char was required and now insufficient → formed--</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h4 style="color: #c62828; margin-top: 20px;">Complete Example</h4>
+                <div style="background: #e1f5fe; padding: 15px; border-radius: 8px;">
+                    <p style="font-size: 1.05em; line-height: 2; color: #0a0a0a;">
+                        <strong>S = "ADOBECODEBANC", T = "ABC"</strong><br>
+                        targetMap = {A:1, B:1, C:1}, required = 3<br><br>
+                        
+                        <strong>Process:</strong><br>
+                        • [A,D,O,B,E,C] → formed=3 ✓ First valid! minLen=6<br>
+                        • Shrink: [D,O,B,E,C] → formed=2 (lost A), invalid<br>
+                        • Expand: [D,O,B,E,C,O,D,E,B,A] → formed=3 ✓<br>
+                        • Shrink: [B,E,C,O,D,E,B,A] → ...<br>
+                        • Shrink: [B,A,N,C] → formed=3 ✓, len=4 (NEW MIN!)<br>
+                        • Shrink: [A,N,C] → formed=2 (lost B), stop<br>
+                        <strong>Answer:</strong> "BANC" (length 4)
+                    </p>
+                </div>
+
+                <h4 style="color: #c62828; margin-top: 20px;">Key Insights</h4>
+                <ul style="font-size: 1.05em; line-height: 1.8; color: #f5f5f5;">
+                    <li style="color: #1e293b;"><strong>Two pointers never backtrack</strong> → O(N + M) time</li>
+                    <li><strong>formed variable</strong> provides O(1) validity check</li>
+                    <li><strong>Shrink while valid</strong> (opposite of maximum problems)</li>
+                    <li><strong>Update result BEFORE shrinking</strong> (window is valid NOW)</li>
+                </ul>
+            </div>
+
+<div class="code-block">
+                    <h4 style="color: var(--accent-primary); margin-top: 0; margin-bottom: 20px;">Template 1: Fixed Window</h4>
+                    <pre><code><span class="comment">// Use when: Window size K is given</span>
+<span class="keyword">public</span> <span class="type">int</span> <span class="function">fixedWindowTemplate</span>(<span class="type">int</span>[] arr, <span class="type">int</span> k) {
+    <span class="type">int</span> windowSum = <span class="number">0</span>;
+    <span class="type">int</span> result = <span class="number">0</span>; <span class="comment">// or Integer.MIN_VALUE/MAX_VALUE</span>
+    
+    <span class="comment">// Calculate first window</span>
+    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; k; i++) {
+        windowSum += arr[i];
+    }
+    result = windowSum;
+    
+    <span class="comment">// Slide window</span>
+    <span class="keyword">for</span> (<span class="type">int</span> i = k; i &lt; arr.length; i++) {
+        windowSum = windowSum - arr[i - k] + arr[i];
+        result = Math.max(result, windowSum); <span class="comment">// or min, or other operation</span>
+    }
+    
+    <span class="keyword">return</span> result;
+}</code></pre>
+                </div>
+
+                <!-- Variable Maximum Template -->
+                <div class="code-block">
+                    <h4 style="color: var(--accent-secondary); margin-top: 0; margin-bottom: 20px;">Template 2: Variable Window - MAXIMUM/LONGEST</h4>
+                    <pre><code><span class="comment">// Use when: Finding longest/maximum with constraint "at most K" or "≤ K"</span>
+<span class="keyword">public</span> <span class="type">int</span> <span class="function">variableMaxTemplate</span>(<span class="type">int</span>[] arr, <span class="type">int</span> k) {
+    <span class="type">Map&lt;Integer, Integer&gt;</span> map = <span class="keyword">new</span> HashMap&lt;&gt;(); <span class="comment">// or other data structure</span>
+    <span class="type">int</span> low = <span class="number">0</span>, maxResult = <span class="number">0</span>;
+    
+    <span class="keyword">for</span> (<span class="type">int</span> high = <span class="number">0</span>; high &lt; arr.length; high++) {
+        <span class="comment">// 1. EXPAND: Add arr[high] to window</span>
+        <span class="comment">// Update map/sum/count...</span>
+        
+        <span class="comment">// 2. SHRINK: While window is INVALID (condition violated)</span>
+        <span class="keyword">while</span> (<span class="comment">/* window is invalid */</span>) {
+            <span class="comment">// Remove arr[low] from window</span>
+            <span class="comment">// Update map/sum/count...</span>
+            low++;
+        }
+        
+        <span class="comment">// 3. UPDATE RESULT: Window is guaranteed valid here</span>
+        maxResult = Math.max(maxResult, high - low + <span class="number">1</span>);
+    }
+    
+    <span class="keyword">return</span> maxResult;
+}
+
+<span class="comment">// 🎯 REMEMBER: Shrink when INVALID to restore validity</span>
+<span class="comment">// Examples:</span>
+<span class="comment">// - while (map.size() &gt; k)           // Too many distinct</span>
+<span class="comment">// - while (sum &gt; target)              // Sum exceeds limit</span>
+<span class="comment">// - while (windowLength - maxFreq &gt; k) // Too many replacements needed</span></code></pre>
+                </div>
+
+                <!-- Variable Minimum Template -->
+                <div class="code-block">
+                    <h4 style="color: var(--accent-tertiary); margin-top: 0; margin-bottom: 20px;">Template 3: Variable Window - MINIMUM/SHORTEST</h4>
+                    <pre><code><span class="comment">// Use when: Finding shortest/minimum with constraint "at least K" or "≥ target"</span>
+<span class="keyword">public</span> <span class="type">int</span> <span class="function">variableMinTemplate</span>(<span class="type">int</span>[] arr, <span class="type">int</span> target) {
+    <span class="type">int</span> low = <span class="number">0</span>, sum = <span class="number">0</span>;
+    <span class="type">int</span> minResult = Integer.MAX_VALUE;
+    
+    <span class="keyword">for</span> (<span class="type">int</span> high = <span class="number">0</span>; high &lt; arr.length; high++) {
+        <span class="comment">// 1. EXPAND: Add arr[high] to window</span>
+        sum += arr[high];
+        
+        <span class="comment">// 2. SHRINK: While window is VALID (condition satisfied)</span>
+        <span class="keyword">while</span> (<span class="comment">/* window is valid */</span>) {
+            <span class="comment">// 3. UPDATE RESULT: Record this valid window</span>
+            minResult = Math.min(minResult, high - low + <span class="number">1</span>);
+            
+            <span class="comment">// Try to shrink further</span>
+            sum -= arr[low];
+            low++;
+        }
+    }
+    
+    <span class="keyword">return</span> minResult == Integer.MAX_VALUE ? <span class="number">0</span> : minResult;
+}
+
+<span class="comment">// 🎯 REMEMBER: Shrink WHILE VALID to find smallest valid window</span>
+<span class="comment">// Examples:</span>
+<span class="comment">// - while (sum &gt;= target)           // Sum meets requirement</span>
+<span class="comment">// - while (isValid(have, need))     // Contains all required chars</span>
+<span class="comment">// - while (count == k)              // Has exactly k elements</span></code></pre>
+                </div>
+            </div>
+
+            <div style="margin-top: 50px; padding: 30px; background: var(--code-bg); border-radius: 15px; border: 2px solid var(--accent-primary);">
+                <h3 style="color: var(--accent-primary); margin-top: 0;">🧠 Memory Aid: The Golden Rule</h3>
+                <div style="font-size: 1.2rem; line-height: 2; color: var(--text-primary);">
+                    <p><strong style="color: var(--accent-secondary);">For MAXIMUM/LONGEST problems:</strong></p>
+                    <p style="margin-left: 30px;">Think: "I want the window as BIG as possible"</p>
+                    <p style="margin-left: 30px;">→ Only shrink when forced to (when INVALID)</p>
+                    <br>
+                    <p><strong style="color: var(--accent-tertiary);">For MINIMUM/SHORTEST problems:</strong></p>
+                    <p style="margin-left: 30px;">Think: "I want the window as SMALL as possible"</p>
+                    <p style="margin-left: 30px;">→ Keep shrinking while possible (while VALID)</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Stage-by-stage visualizations - no animations needed
+        // All demos now use static stage boxes for better clarity
+    </script>
+</body>

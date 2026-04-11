@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Algorithm Decision Tree</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 50px;
+        }
+
+        .flowchart {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .step {
+            margin-bottom: 50px;
+            border-left: 5px solid #3498db;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .step::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 0;
+            width: 15px;
+            height: 15px;
+            background: #3498db;
+            border-radius: 50%;
+        }
+
+        .step-number {
+            position: absolute;
+            left: -50px;
+            top: 0;
+            width: 35px;
+            height: 35px;
+            background: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .question-text {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .question-hint {
+            color: #7f8c8d;
+            font-size: 0.95em;
+            margin-bottom: 25px;
+        }
+
+        .paths {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .path {
+            padding: 25px;
+            border-radius: 12px;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .path:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .path-yes {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 3px solid #28a745;
+        }
+
+        .path-no {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 3px solid #ffc107;
+        }
+
+        .path-label {
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 12px;
+        }
+
+        .path-yes .path-label {
+            background: #28a745;
+            color: white;
+        }
+
+        .path-no .path-label {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .path-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .path-yes .path-title {
+            color: #155724;
+        }
+
+        .path-no .path-title {
+            color: #856404;
+        }
+
+        .path-desc {
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .path-yes .path-desc {
+            color: #155724;
+        }
+
+        .path-no .path-desc {
+            color: #856404;
+        }
+
+        .path-examples {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            font-size: 0.85em;
+            font-style: italic;
+        }
+
+        /* Sub-decision styling */
+        .sub-decision {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 10px;
+            border: 2px dashed #28a745;
+        }
+
+        .sub-question {
+            font-weight: 600;
+            color: #155724;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .sub-paths {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .sub-path {
+            padding: 15px;
+            background: white;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .sub-path-title {
+            font-weight: 700;
+            color: #155724;
+            margin-bottom: 5px;
+        }
+
+        .sub-path-desc {
+            font-size: 0.85em;
+            color: #155724;
+        }
+
+        /* Important note box */
+        .note {
+            background: #e7f3ff;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .note-title {
+            font-weight: 700;
+            color: #1565c0;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .note-content {
+            color: #1976d2;
+            line-height: 1.6;
+        }
+
+        /* Examples section */
+        .examples {
+            margin-top: 60px;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .examples h2 {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .example-card {
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .example-card:hover {
+            border-left-color: #28a745;
+            transform: translateX(5px);
+        }
+
+        .example-problem {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .example-arrow {
+            color: #3498db;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .example-solution {
+            color: #28a745;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 968px) {
+            .paths, .sub-paths, .example-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .flowchart {
+                padding: 30px 20px;
+            }
+
+            .step {
+                padding-left: 20px;
+            }
+
+            .step-number {
+                left: -40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Complete Algorithm Decision Guide</h1>
+        <p class="subtitle">Comprehensive decision tree for array/string problems</p>
+
+        <div class="flowchart">
+            <div class="note">
+                <div class="note-title">🔍 First: Understand the Problem Type</div>
+                <div class="note-content">
+                    <strong>Subarray vs Subsequence:</strong> Subarrays are CONTIGUOUS (elements must be adjacent), Subsequences can skip elements.<br>
+                    <strong>Single vs Multiple Arrays:</strong> Working with one array or comparing/merging multiple?<br>
+                    <strong>Modify vs Find:</strong> Can you modify the array or just find/count things?
+                </div>
+            </div>
+
+            <!-- Step 1: Subarray vs Subsequence -->
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="question-text">Are elements CONTIGUOUS (subarray) or can they be NON-CONTIGUOUS (subsequence)?</div>
+                <div class="question-hint">This is the most important distinction</div>
+                
+                <div class="paths">
+                    <div class="path path-yes">
+                        <div class="path-label">CONTIGUOUS (Subarray/Substring)</div>
+                        <div class="path-title">Continue to Step 2</div>
+                        <div class="path-desc">
+                            Elements must be adjacent. Use Sliding Window, Prefix Sum, Kadane, Two Pointers, etc.
+                        </div>
+                        <div class="path-examples">
+                            Examples: "longest substring", "subarray with sum k", "max sum subarray"
+                        </div>
+                    </div>
+
+                    <div class="path path-no">
+                        <div class="path-label">NON-CONTIGUOUS (Subsequence)</div>
+                        <div class="path-title">✅ Dynamic Programming or Greedy</div>
+                        <div class="path-desc">
+                            Elements can be picked from anywhere. Usually DP or Greedy algorithms.
+                        </div>
+                        <div class="path-examples">
+                            Examples: "longest increasing subsequence", "longest common subsequence", "subset sum"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Range Queries -->
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="question-text">Do you need RANGE SUM queries or count ALL subarrays with a property?</div>
+                <div class="question-hint">Multiple queries on sums, or counting subarrays</div>
+                
+                <div class="paths">
+                    <div class="path path-yes">
+                        <div class="path-label">YES ✓</div>
+                        <div class="path-title">✅ Prefix Sum (+ HashMap)</div>
+                        <div class="path-desc">
+                            Precompute cumulative sums for O(1) range queries.
+                            <br><br>
+                            <strong>Prefix Sum alone:</strong> Range sum queries<br>
+                            <strong>Prefix Sum + HashMap:</strong> Count subarrays with sum = k, divisible by k, etc.
+                        </div>
+                        <div class="path-examples">
+                            Examples: "sum from i to j", "count subarrays with sum = k", "subarray sum divisible by k"
+                        </div>
+                    </div>
+
+                    <div class="path path-no">
+                        <div class="path-label">NO →</div>
+                        <div class="path-title">Continue to Step 3</div>
+                        <div class="path-desc">Not about range sums or counting all subarrays</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Max/Min Sum -->
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="question-text">Looking for MAXIMUM or MINIMUM subarray sum/product?</div>
+                <div class="question-hint">Finding the optimal subarray, possibly with special constraints</div>
+                
+                <div class="paths">
+                    <div class="path path-yes">
+                        <div class="path-label">YES ✓</div>
+                        <div class="path-title">✅ Kadane's Algorithm (or variant)</div>
+                        <div class="path-desc">
+                            Track max/min ending at each position.
+                            <br><br>
+                            <strong>Standard:</strong> Max subarray sum<br>
+                            <strong>Circular:</strong> Max of (normal Kadane OR total - min subarray)<br>
+                            <strong>Product:</strong> Track both max and min (negatives flip signs)
+                        </div>
+                        <div class="path-examples">
+                            Examples: "max sum subarray", "max product subarray", "max sum circular subarray"
+                        </div>
+                    </div>
+
+                    <div class="path path-no">
+                        <div class="path-label">NO →</div>
+                        <div class="path-title">Continue to Step 4</div>
+                        <div class="path-desc">Not finding optimal sum/product</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Contiguous with Constraints -->
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="question-text">Contiguous elements with CONSTRAINTS or FREQUENCY tracking?</div>
+                <div class="question-hint">Longest/shortest substring/subarray satisfying some condition, or tracking character/element frequency</div>
+                
+                <div class="paths">
+                    <div class="path path-yes">
+                        <div class="path-label">YES ✓</div>
+                        <div class="path-title">✅ Sliding Window (+ HashMap/Set)</div>
+                        <div class="path-desc">
+                            Maintain a window that expands/shrinks to satisfy constraints.
+                            <br><br>
+                            <strong>When to use:</strong> Longest/shortest with condition, frequency problems, anagrams/permutations in string
+                        </div>
+
+                        <div class="sub-decision">
+                            <div class="sub-question">🔍 What type of window?</div>
+                            <div class="sub-paths">
+                                <div class="sub-path">
+                                    <div class="sub-path-title">Fixed Size</div>
+                                    <div class="sub-path-desc">Window always has exactly k elements. Slide one at a time.</div>
+                                    <div class="path-examples" style="margin-top: 10px;">
+                                        "Max sum of k consecutive elements"
+                                    </div>
+                                </div>
+                                <div class="sub-path">
+                                    <div class="sub-path-title">Variable Size</div>
+                                    <div class="sub-path-desc">Window grows/shrinks based on validity. Often uses HashMap/Set.</div>
+                                    <div class="path-examples" style="margin-top: 10px;">
+                                        "Longest substring with ≤ k distinct chars", "min window substring"
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="path-examples">
+                            Examples: "longest substring without repeating chars", "permutation in string", "find all anagrams"
+                        </div>
+                    </div>
+
+                    <div class="path path-no">
+                        <div class="path-label">NO →</div>
+                        <div class="path-title">Continue to Step 5</div>
+                        <div class="path-desc">Not about constrained windows</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Sorted Array Operations -->
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="question-text">Working with SORTED array(s) to find pairs/triplets or merge/compare?</div>
+                <div class="question-hint">Array is sorted or you're merging/comparing sorted arrays</div>
+                
+                <div class="paths">
+                    <div class="path path-yes">
+                        <div class="path-label">YES ✓</div>
+                        <div class="path-title">✅ Two Pointers (or Multiple Pointers)</div>
+                        <div class="path-desc">
+                            Use pointers moving from opposite ends or in parallel.
+                            <br><br>
+                            <strong>Opposite ends:</strong> Two sum, three sum, container with most water<br>
+                            <strong>Parallel:</strong> Merge sorted arrays, intersection of arrays<br>
+                            <strong>In-place modification:</strong> Remove duplicates, move zeros
+                        </div>
+                        <div class="path-examples">
+                            Examples: "two sum (sorted)", "3sum", "merge sorted arrays", "remove duplicates", "intersection of arrays"
+                        </div>
+                    </div>
+
+                    <div class="path path-no">
+                        <div class="path-label">NO →</div>
+                        <div class="path-title">Continue to Step 6</div>
+                        <div class="path-desc">Not using sorted property</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Min/Max in Window -->
+            <div class="step">
+                <div class="step-number">6</div>
+                <div class="question-text">Track MIN/MAX efficiently in sliding window?</div>
+                <div class="question-hint">Need min/max for each window position as you slide through array</div>
+                
+                <div class="paths">
+                    <div class="path path-yes">
+                        <div class="path-label">YES ✓</div>
+                        <div class="path-title">✅ Monotonic Deque</div>
+                        <div class="path-desc">
+                            Maintain elements in monotonically increasing/decreasing order.
+                            <br><br>
+                            <strong>When to use:</strong> Sliding window max/min in O(n) time
+                        </div>
+                        <div class="path-examples">
+                            Examples: "max in each window of size k", "min in sliding window"
+                        </div>
+                    </div>
+
+                    <div class="path path-no">
+                        <div class="path-label">NO →</div>
+                        <div class="path-title">Continue to Step 7</div>
+                        <div class="path-desc">Not tracking window min/max</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 7: Monotonic Stack -->
+            <div class="step">
+                <div class="step-number">7</div>
+                <div class="question-text">Finding NEXT/PREVIOUS greater/smaller element?</div>
+                <div class="question-hint">Problems involving monotonic increasing/decreasing patterns</div>
+                
+                <div class="paths">
+                    <div class="path path-yes">
+                        <div class="path-label">YES ✓</div>
+                        <div class="path-title">✅ Monotonic Stack</div>
+                        <div class="path-desc">
+                            Maintain stack in monotonic order to find next/previous greater/smaller.
+                            <br><br>
+                            <strong>When to use:</strong> Next greater element, largest rectangle, stock span, valid parentheses variations
+                        </div>
+                        <div class="path-examples">
+                            Examples: "next greater element", "largest rectangle in histogram", "trapping rain water", "daily temperatures"
+                        </div>
+                    </div>
+
+                    <div class="path path-no">
+                        <div class="path-label">NO →</div>
+                        <div class="path-title">Continue to Step 8</div>
+                        <div class="path-desc">Not about next/previous element relationships</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 8: Binary Search -->
+            <div class="step">
+                <div class="step-number">8</div>
+                <div class="question-text">Can you use BINARY SEARCH on answer or sorted data?</div>
+                <div class="question-hint">Search space is monotonic or you're searching in sorted array</div>
+                
+                <div class="paths">
+                    <div class="path path-yes">
+                        <div class="path-label">YES ✓</div>
+                        <div class="path-title">✅ Binary Search</div>
+                        <div class="path-desc">
+                            Search in sorted space or binary search on answer.
+                            <br><br>
+                            <strong>Standard:</strong> Search in sorted array<br>
+                            <strong>On answer:</strong> "Minimize maximum" or "Maximize minimum" problems
+                        </div>
+                        <div class="path-examples">
+                            Examples: "find in rotated sorted array", "capacity to ship packages", "koko eating bananas", "median of two sorted arrays"
+                        </div>
+                    </div>
+
+                    <div class="path path-no">
+                        <div class="path-label">NO →</div>
+                        <div class="path-title">Other Techniques</div>
+                        <div class="path-desc">
+                            Consider: <br>
+                            • Dynamic Programming (overlapping subproblems)<br>
+                            • Greedy (local optimal leads to global)<br>
+                            • Divide & Conquer<br>
+                            • Graph algorithms (BFS/DFS)<br>
+                            • Backtracking (generate all possibilities)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Examples -->
+        <div class="examples">
+            <h2>📚 Comprehensive Problem Examples</h2>
+            <div class="example-grid">
+                <div class="example-card">
+                    <div class="example-problem">"Sum from index 3 to 7?" (multiple queries)</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Prefix Sum</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Count subarrays with sum = k"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Prefix Sum + HashMap</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Find maximum sum subarray"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Kadane's Algorithm</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Maximum sum in circular array"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Kadane's (Circular Variant)</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Longest substring with at most k distinct chars"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Sliding Window (Variable) + HashMap</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Max sum of k consecutive elements"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Sliding Window (Fixed)</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Find all anagrams in string"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Sliding Window + HashMap</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Two sum in sorted array"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Two Pointers</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Remove duplicates from sorted array"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Two Pointers</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Merge two sorted arrays"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Two Pointers</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Maximum in each window of size k"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Monotonic Deque</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Next greater element"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Monotonic Stack</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Largest rectangle in histogram"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Monotonic Stack</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Daily temperatures (next warmer day)"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Monotonic Stack</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Longest increasing subsequence"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Dynamic Programming</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Search in rotated sorted array"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Binary Search</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Koko eating bananas"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Binary Search (on answer)</div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-problem">"Trapping rain water"</div>
+                    <div class="example-arrow">↓</div>
+                    <div class="example-solution">Monotonic Stack or Two Pointers</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

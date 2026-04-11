@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prefix Sum - Complete Master Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6; color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px; margin: 0 auto; background: white;
+            border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 50px;
+        }
+        h1 {
+            color: #667eea; text-align: center; font-size: 3em;
+            margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .subtitle {
+            text-align: center; color: #666; font-size: 1.3em; margin-bottom: 50px;
+        }
+        h2 {
+            color: #764ba2; margin-top: 50px; margin-bottom: 25px;
+            padding-bottom: 15px; border-bottom: 4px solid #667eea; font-size: 2.2em;
+        }
+        h3 { color: #667eea; margin-top: 30px; margin-bottom: 15px; font-size: 1.6em; }
+        h4 { color: #764ba2; margin-top: 20px; margin-bottom: 10px; font-size: 1.3em; }
+        .toc {
+            background: #fff9c4; padding: 30px; border-radius: 15px;
+            margin-bottom: 40px; border-left: 5px solid #667eea;
+        }
+        .toc h2 { margin-top: 0; border: none; }
+        .toc ul { list-style: none; }
+        .toc li { margin: 10px 0; }
+        .toc a {
+            color: #333; text-decoration: none; font-size: 1.1em;
+            transition: all 0.3s; display: inline-block;
+            padding: 5px 10px; border-radius: 5px;
+        }
+        .toc a:hover { background: #667eea; color: white; }
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white; padding: 30px; border-radius: 15px; margin: 30px 0;
+        }
+        .highlight-box h3 { color: white; margin-top: 0; }
+        .info-box {
+            background: #e3f2fd; border-left: 5px solid #2196f3;
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+        .success-box {
+            background: #e8f5e9; border-left: 5px solid #4caf50;
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+        .warning-box {
+            background: #fff3e0; border-left: 5px solid #ff9800;
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+        .danger-box {
+            background: #ffebee; border-left: 5px solid #f44336;
+            padding: 20px; margin: 20px 0; border-radius: 5px;
+        }
+        .visual-diagram {
+            background: #f5f5f5; border: 2px solid #667eea; border-radius: 10px;
+            padding: 30px; margin: 25px 0; font-family: 'Courier New', monospace;
+            font-size: 1em; line-height: 1.8; overflow-x: auto;
+        }
+        .code-block {
+            background: #263238; color: #aed581; padding: 25px;
+            border-radius: 10px; margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.05em; line-height: 1.8; overflow-x: auto;
+        }
+        .code-block pre { margin: 0; color: inherit; }
+        .keyword { color: #c792ea; font-weight: bold; }
+        .comment { color: #80cbc4; font-style: italic; }
+        .string { color: #c3e88d; }
+        .number { color: #f78c6c; }
+        .method { color: #82aaff; }
+        table {
+            width: 100%; border-collapse: collapse; margin: 25px 0;
+        }
+        th {
+            background: #667eea; color: white; padding: 15px;
+            text-align: left; font-weight: bold;
+        }
+        td { padding: 12px 15px; border-bottom: 1px solid #ddd; }
+        tr:nth-child(even) { background: #f5f5f5; }
+        .pattern-card {
+            background: #f9f9f9; border: 3px solid #667eea;
+            border-radius: 15px; padding: 30px; margin: 30px 0;
+        }
+        .step-box {
+            background: white; border: 2px solid #2196f3;
+            border-radius: 10px; padding: 20px; margin: 15px 0;
+        }
+        .step-number {
+            display: inline-block; background: #2196f3; color: white;
+            padding: 5px 15px; border-radius: 20px;
+            font-weight: bold; margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Prefix Sum Master Guide</h1>
+        <p class="subtitle">Master the Art of Subarray Calculations with Visual Explanations</p>
+
+        
+        <!-- TABLE OF CONTENTS -->
+        <div class="toc">
+            <h2>📋 Table of Contents</h2>
+            <ul>
+                <li><a href="#what-is">1. What is Prefix Sum?</a></li>
+                <li><a href="#when-to-use">2. When to Use Prefix Sum</a></li>
+                <li><a href="#vs-others">3. Prefix Sum vs Kadane vs Sliding Window</a></li>
+                <li><a href="#master-template">4. The Master Template: Red vs Green</a></li>
+                <li><a href="#pivot">5. Problem 1: Find Pivot Index</a></li>
+                <li><a href="#sum-k">6. Problem 2: Subarray Sum Equals K</a></li>
+                <li><a href="#div-k">7. Problem 3: Subarray Sums Divisible by K</a></li>
+                <li><a href="#contiguous">8. Problem 4: Contiguous Array</a></li>
+                <li><a href="#summary">9. Quick Reference Summary</a></li>
+            </ul>
+        </div>
+
+        <!-- SECTION 1 -->
+        <section id="what-is">
+            <h2>1. What is Prefix Sum? 🤔</h2>
+            
+            <div class="highlight-box">
+                <h3>Simple Definition:</h3>
+                <p style="font-size: 1.2em; line-height: 1.8;">
+                    Prefix Sum stores the <strong>cumulative sum</strong> from the start up to each index.
+                    This enables <strong>O(1) subarray sum queries</strong> and works with negative numbers!
+                </p>
+            </div>
+
+            <h3>Visual Explanation:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>📊 BUILDING A PREFIX SUM ARRAY</strong>
+
+Original Array:  [ 2,  4,  1,  5,  3]
+Index:             0   1   2   3   4
+
+<strong>Step-by-step building Prefix:</strong>
+
+Index 0: prefix[0] = 2
+         ●
+         2
+
+Index 1: prefix[1] = prefix[0] + arr[1] = 2 + 4 = 6
+         ●━━━●
+         2   6
+
+Index 2: prefix[2] = prefix[1] + arr[2] = 6 + 1 = 7
+         ●━━━●━━━●
+         2   6   7
+
+Index 3: prefix[3] = prefix[2] + arr[3] = 7 + 5 = 12
+         ●━━━●━━━●━━━●
+         2   6   7  12
+
+Index 4: prefix[4] = prefix[3] + arr[4] = 12 + 3 = 15
+         ●━━━●━━━●━━━●━━━●
+         2   6   7  12  15
+
+<strong>Prefix Array: [2, 6, 7, 12, 15]</strong>
+
+<strong>Quick Query:</strong> Sum of subarray [1 to 3]?
+Answer: prefix[3] - prefix[0] = 12 - 2 = 10 ✅
+Verification: arr[1] + arr[2] + arr[3] = 4 + 1 + 5 = 10 ✅
+</pre>
+            </div>
+
+            <h3>Key Characteristics:</h3>
+            <div class="info-box">
+                <ul style="line-height: 2; margin-left: 20px; font-size: 1.1em;">
+                    <li>✓ Works with <strong>negative numbers</strong> (Sliding Window fails!)</li>
+                    <li>✓ O(1) subarray sum queries after O(n) preprocessing</li>
+                    <li>✓ Often paired with <strong>HashMap</strong> for exact conditions</li>
+                    <li>✓ Perfect for "exact" targets: sum = k, sum % k = 0</li>
+                </ul>
+            </div>
+        </section>
+
+
+        <!-- SECTION 2 -->
+        <section id="when-to-use">
+            <h2>2. When to Use Prefix Sum 🎯</h2>
+            
+            <div class="highlight-box">
+                <h3>Decision Flowchart:</h3>
+            </div>
+
+            <div class="visual-diagram">
+<pre>
+<strong>🎯 WHEN TO USE PREFIX SUM</strong>
+
+START: Do you have an array/subarray problem?
+  ↓ YES
+  
+Question 1: Does it involve NEGATIVES?
+  ↓ YES                    ↓ NO
+  ✅ Prefix Sum        Consider Sliding Window
+  
+Question 2: What are you finding?
+  ├─→ Max/Min Sum          → Use Kadane's
+  ├─→ Exact Sum = k        → Use Prefix Sum + HashMap
+  ├─→ Sum divisible by k   → Use Prefix Sum + HashMap
+  ├─→ Equal 0s and 1s      → Use Prefix Sum + HashMap
+  └─→ Left sum = Right sum → Use Prefix Sum (simple)
+
+<strong>KEY TRIGGERS:</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ "Subarray with sum EXACTLY k"
+✅ "Count subarrays where sum is divisible by k"
+✅ "Find length of subarray with equal 0s and 1s"
+✅ "Pivot index where left sum = right sum"
+✅ Array contains NEGATIVE numbers
+✅ Need to query many subarray sums
+</pre>
+            </div>
+
+            <h3>Recognition Checklist:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Criterion</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Subarray Problem</strong></td>
+                        <td>Involves contiguous elements</td>
+                        <td>"Find subarray where..."</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Exact Condition</strong></td>
+                        <td>Sum = k, Sum % k = 0</td>
+                        <td>"Sum equals 5", "divisible by 3"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Count or Length</strong></td>
+                        <td>How many? How long?</td>
+                        <td>"Count of subarrays", "maximum length"</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. Negative Numbers</strong></td>
+                        <td>Array has negatives</td>
+                        <td>[1, -3, 5, -2, 4]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+        <!-- SECTION 3 -->
+        <section id="vs-others">
+            <h2>3. Prefix Sum vs Kadane vs Sliding Window 🆚</h2>
+            
+            <div class="warning-box">
+                <h3 style="color: #f44336; margin-top: 0;">⚠️ Understanding the Differences is CRITICAL!</h3>
+                <p style="font-size: 1.1em;">Each pattern solves different types of problems. Choose wisely!</p>
+            </div>
+
+            <h3>Comparison Table:</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pattern</th>
+                        <th>Goal</th>
+                        <th>Condition</th>
+                        <th>Negatives?</th>
+                        <th>Data Structure</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Kadane's</strong></td>
+                        <td>Find MAX/MIN sum</td>
+                        <td>Optimization (best sum)</td>
+                        <td>✅ Works</td>
+                        <td>Variables (O(1) space)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sliding Window</strong></td>
+                        <td>Subarray with condition</td>
+                        <td>sum ≥ k, length ≤ k</td>
+                        <td>❌ Fails</td>
+                        <td>Two pointers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Prefix Sum</strong></td>
+                        <td>Count/Length</td>
+                        <td>sum = k, sum % k = 0</td>
+                        <td>✅ Works</td>
+                        <td>HashMap (O(n) space)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Visual Decision Making:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>❓ WHICH PATTERN TO USE?</strong>
+
+<strong>Question: "Find maximum subarray sum"</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Goal: OPTIMIZATION (find best)
+Condition: COMPARATIVE (is this bigger?)
+Answer: ✅ KADANE'S ALGORITHM
+
+<strong>Question: "Find length of subarray with sum = k"</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Goal: SPECIFIC VALUE (exactly k)
+Condition: EXACT (sum must equal k)
+Answer: ✅ PREFIX SUM + HASHMAP
+
+<strong>Question: "Find subarray with sum ≥ k" (no negatives)</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Goal: FIND SUBARRAY
+Condition: COMPARATIVE (at least k)
+Negatives: NO
+Answer: ✅ SLIDING WINDOW
+
+<strong>Question: "Count subarrays divisible by k"</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Goal: COUNT (how many?)
+Condition: EXACT (remainder = 0)
+Answer: ✅ PREFIX SUM + HASHMAP
+</pre>
+            </div>
+
+            <div class="success-box">
+                <h4>💡 Quick Decision Rule:</h4>
+                <ul style="line-height: 2; margin-left: 20px;">
+                    <li>Need <strong>MAX/MIN</strong>? → Kadane's</li>
+                    <li>Exact <strong>sum = k</strong>? → Prefix Sum</li>
+                    <li>No negatives + <strong>sum ≥ k</strong>? → Sliding Window</li>
+                    <li>Has negatives + <strong>any exact condition</strong>? → Prefix Sum</li>
+                </ul>
+            </div>
+        </section>
+
+
+        <!-- SECTION 4 - MASTER TEMPLATE -->
+        <section id="master-template">
+            <h2>4. The Master Template: Red vs Green 🎨</h2>
+            
+            <div class="highlight-box">
+                <h3>🔑 THE CORE INSIGHT</h3>
+                <p style="font-size: 1.3em; line-height: 2;">
+                    Every Prefix Sum problem (except pivot index) uses the<br>
+                    <strong>"RED PART vs GREEN PART"</strong> strategy!
+                </p>
+            </div>
+
+            <h3>The Universal Visual Template:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>🎨 RED vs GREEN: The Master Visualization</strong>
+
+You are at index i, calculating CurrentSum from start (0 to i)
+
+┌─────────────────────────────────────────────────────┐
+│             THE ARRAY                                │
+│  Index:  0       j           i                       │
+│  Array:  [ . . . . . . . . . . ]                     │
+│          <─────────────────────>                     │
+│            CurrentSum (Total)                        │
+└─────────────────────────────────────────────────────┘
+                     ↓
+         ┌───────────┴───────────┐
+         ↓                       ↓
+┏━━━━━━━━━━━━━━┓     ┏━━━━━━━━━━━━━━┓
+┃  RED PART    ┃     ┃  GREEN PART  ┃
+┃ (Remove this)┃     ┃ (Want this!) ┃
+┗━━━━━━━━━━━━━━┛     ┗━━━━━━━━━━━━━━┛
+  Sum = ???           Target Condition
+  (Query HashMap)     (e.g., Sum = k)
+
+<strong>THE LOGIC:</strong>
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. GREEN PART = What we want (target)
+2. CURRENT SUM = Red + Green
+3. RED PART = CurrentSum - Green
+4. Check HashMap: "Have we seen Red Part before?"
+5. If YES → Found valid Green Part!
+
+<strong>FORMULA:</strong>
+Red = CurrentSum - Target
+</pre>
+            </div>
+
+            <h3>Step-by-Step Template Process:</h3>
+            <div class="step-box">
+                <h4><span class="step-number">Step 1</span> Initialize HashMap</h4>
+                <p style="line-height: 1.8; font-size: 1.05em;">
+                    Start with an empty HashMap to store previous states.<br>
+                    <code>Map&lt;Condition, Frequency or Index&gt;</code><br>
+                    Often initialize: <code>map.put(0, 1)</code> or <code>map.put(0, -1)</code>
+                </p>
+            </div>
+
+            <div class="step-box">
+                <h4><span class="step-number">Step 2</span> Iterate Through Array</h4>
+                <p style="line-height: 1.8; font-size: 1.05em;">
+                    For each index i (end of GREEN PART):<br>
+                    • Calculate CurrentSum (or CurrentDiff, or CurrentRemainder)<br>
+                    • This represents: 0 to i (Red + Green combined)
+                </p>
+            </div>
+
+            <div class="step-box">
+                <h4><span class="step-number">Step 3</span> Define GREEN PART Target</h4>
+                <p style="line-height: 1.8; font-size: 1.05em;">
+                    What do you want GREEN to be?<br>
+                    • Sum = k?<br>
+                    • Sum % k = 0?<br>
+                    • Diff (zeros - ones) = 0?
+                </p>
+            </div>
+
+            <div class="step-box">
+                <h4><span class="step-number">Step 4</span> Calculate RED PART</h4>
+                <p style="line-height: 1.8; font-size: 1.05em;">
+                    What must RED be for GREEN to satisfy the condition?<br>
+                    <code>Red = CurrentSum - Target</code><br>
+                    or<br>
+                    <code>Red = Current state that would leave target state</code>
+                </p>
+            </div>
+
+            <div class="step-box">
+                <h4><span class="step-number">Step 5</span> Query HashMap</h4>
+                <p style="line-height: 1.8; font-size: 1.05em;">
+                    Check: <code>if (map.containsKey(Red))</code><br>
+                    • For COUNT problems: <code>count += map.get(Red)</code><br>
+                    • For LENGTH problems: <code>length = i - map.get(Red)</code>
+                </p>
+            </div>
+
+            <div class="step-box">
+                <h4><span class="step-number">Step 6</span> Update HashMap</h4>
+                <p style="line-height: 1.8; font-size: 1.05em;">
+                    Store current state for future iterations:<br>
+                    • For COUNT: <code>map.put(current, frequency + 1)</code><br>
+                    • For LENGTH: <code>if (!map.containsKey(current)) map.put(current, i)</code>
+                </p>
+            </div>
+
+            <h3>Example Application:</h3>
+            <div class="visual-diagram">
+<pre>
+<strong>📝 EXAMPLE: Find subarrays with sum = 5</strong>
+
+Array: [1, 2, 3, -1, 4]
+At index i=3: arr[3] = -1
+
+CurrentSum (0 to 3) = 1 + 2 + 3 + (-1) = 5
+                     └──────┬──────┘ └──┬─┘
+                        RED?        GREEN?
+
+<strong>Question:</strong> Can GREEN PART have sum = 5?
+
+<strong>If GREEN = 5:</strong>
+  Red + Green = CurrentSum
+  Red + 5 = 5
+  Red = 0
+
+<strong>Check HashMap:</strong> "Have I seen prefix sum = 0 before?"
+  → YES! (at index -1, before array started)
+  → So subarray [0 to 3] has sum = 5 ✅
+
+<strong>Visual:</strong>
+[ 1   2   3  -1 ]  ← Sum = 5
+<─────────────────>
+    GREEN PART
+(No red part to remove!)
+</pre>
+            </div>
+        </section>
+
