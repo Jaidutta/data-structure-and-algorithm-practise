@@ -1,0 +1,16 @@
+https://codeforces.com/group/4vcXCPx8NY/contest/666169
+
+1. Factorial
+2. Binomial Coefficient
+3. PrintSquare
+4. SumOfTwoNumbers
+5. SumOfThreeNumbers
+6. Print1ToN
+7. PrintNTo1
+8. FactorsOfN
+9. PrimeNumber
+10. PrintAllPrimeFrom1ToN
+
+https://www.notion.so/C-Important-things-to-know-2f7bc94496e2806fa962c3812474962e
+https://www.notion.so/Variable-Scoping-in-C-2f7bc94496e28025af47daff41a4757c
+
