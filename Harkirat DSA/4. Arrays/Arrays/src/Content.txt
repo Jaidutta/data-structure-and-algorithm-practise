@@ -1,0 +1,13 @@
+1. CreateArraysAndTakeInputs
+2. PrintArrayInReverse
+3. SumOfArray
+4. MinimumElementAndItsPosition
+5. MaximumElementAndItsPosition
+6. SearchElementInArray
+7. CountOccurances
+8. CheckIfArraySorted
+9. Sort01
+10. Swap2Numbers
+11. ReverseArray
+12. SwapAlternateElements
+13. MissNumber
