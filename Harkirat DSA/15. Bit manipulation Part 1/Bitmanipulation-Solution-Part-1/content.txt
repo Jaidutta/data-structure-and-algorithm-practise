@@ -1,0 +1,12 @@
+1. PowersOf2
+2. BreakdownN
+3. DecimalToBinary
+4. BinaryToDecimal
+5. BitwiseOperatorsI
+6. BitwiseQueries
+7. power_of_2
+9. odd_or_even_without_modulo.cpp
+10. count_set_bits.cpp
+11. single_number_1.cpp
+12. single_number_2.cpp
+13. single_number_3.cpp
