@@ -1,0 +1,13 @@
+count-all-digits-of-a-number-sol-1.cpp
+count-all-digits-of-a-number-sol-2-optimised.cpp
+count-number-of-odd-digits.cpp
+reverse-a-number.cpp 
+palindrome-number.cpp 
+largest-digit-in-a-number.cpp 
+factorial.cpp
+check-for-perfect-number.cpp
+check-for-perfect-number-optimised.cpp
+count-of-prime-number.cpp
+gcd.cpp
+gcd-better.cpp
+gcd-best.cpp
